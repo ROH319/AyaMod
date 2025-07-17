@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AyaMod.Core.Prefabs.BaseCameraProj">
+    <Position X="1.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QQCUQg4gQLCAgAAAaIFAAxMFQABRAAwRAgLAAIABYEA=</HashCode>
+      <FileName>Core\Prefabs\BaseCameraProj.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AyaMod.Core.Prefabs.BaseCamera">
+    <Position X="8.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAEAAUAAAhAAQAARAAAAAABAAAAQAQAIAAAAAAAg=</HashCode>
+      <FileName>Core\Prefabs\BaseCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AyaMod.Content.Items.Cameras.BeeCamera" Collapsed="true">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Content\Items\Cameras\BeeCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AyaMod.Content.Items.Cameras.BeeCameraProj">
+    <Position X="4" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAIFAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Content\Items\Cameras\BeeCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AyaMod.Content.Items.Films.CameraFilm">
+    <Position X="6" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Content\Items\Films\CameraFilm.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AyaMod.Core.Prefabs.BaseFilm">
+    <Position X="4" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAQAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Core\Prefabs\BaseFilm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AyaMod.Content.Items.Lens.DefaultLens">
+    <Position X="5.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQACAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Content\Items\Lens\DefaultLens.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AyaMod.Core.CameraPlayer">
+    <Position X="10.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgACQABAAACAAAABAgYEEAAEAAAAAAAgAAAEAAAA=</HashCode>
+      <FileName>Core\CameraPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="AyaMod.Content.Items.Lens.ILens">
+    <Position X="3.75" Y="4" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQACAgAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Content\Items\Lens\ILens.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="AyaMod.Content.Items.Films.IFilm">
+    <Position X="8.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Content\Items\Films\IFilm.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>

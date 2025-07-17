@@ -1,0 +1,15 @@
+Blurred.DisplayName: 虚焦
+Dazzling.DisplayName: 炫目
+Deceptive.DisplayName: 虚妄
+Ephemeral.DisplayName: 瞬息
+Fashionable.DisplayName: 风靡
+Global.DisplayName: 全域
+Jammed.DisplayName: 卡卷
+Overexposed.DisplayName: 过曝
+Peerless.DisplayName: 无双
+Realistic.DisplayName: 写实
+Sensitive.DisplayName: 感光
+Wideangle.DisplayName: 广角
+SizeTooltip: "{0}%镜头大小"
+StunTooltip: "{0}%眩晕时间"
+PrefixFocusSpeed: "{0}%聚焦速度"

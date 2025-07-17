@@ -1,0 +1,65 @@
+DamageClasses.ReporterDamage.DisplayName: Reporter Damage
+
+Projectiles: {
+	GoldenCameraProj.DisplayName: Golden Camera Proj
+	BaseCameraProj.DisplayName: Base Camera Proj
+	GoldenFlash.DisplayName: Golden Flash
+	LightRipperProj.DisplayName: Light Ripper Proj
+	LusterFrameGem.DisplayName: Luster Frame Gem
+	LusterFrameProj.DisplayName: Luster Frame Proj
+	LightRipperSlash.DisplayName: Light Ripper Slash
+	LuminvoreProj.DisplayName: Luminvore Proj
+	LuminvoreVeil.DisplayName: Luminvore Veil
+	ScaleWave.DisplayName: Scale Wave
+	WaveCameraProj.DisplayName: Wave Camera Proj
+	JungleCameraLeaf.DisplayName: Jungle Camera Leaf
+	JungleCameraProj.DisplayName: Jungle Camera Proj
+	MeteorCameraProj.DisplayName: Meteor Camera Proj
+	DigitalCameraProj.DisplayName: Digital Camera Proj
+	VitricElectric.DisplayName: Vitric Electric
+	VitricLightningProj.DisplayName: Vitric Lightning Proj
+	MeteorStar.DisplayName: Meteor Star
+	BeeCameraProj.DisplayName: Bee Camera Proj
+	ColdMist.DisplayName: Cold Mist
+	ColdSnapProj.DisplayName: Cold Snap Proj
+	LegilimencyProj.DisplayName: Legilimency Proj
+	ColdBlade.DisplayName: Cold Blade
+	HellCameraProj.DisplayName: Hell Camera Proj
+	HellSpirit.DisplayName: Hell Spirit
+	HandmadeCameraProj.DisplayName: Handmade Camera Proj
+	HellSpiritShot.DisplayName: Hell Spirit Shot
+	ToyCameraProj.DisplayName: Toy Camera Proj
+	ShadowCameraProj.DisplayName: Shadow Camera Proj
+	ShadowZone.DisplayName: Shadow Zone
+	ShadowFeather.DisplayName: Shadow Feather
+	FlawlessCameraProj.DisplayName: Flawless Camera Proj
+	JungleCameraLeaf2.DisplayName: Jungle Camera Leaf2
+	JungleCameraProj2.DisplayName: Jungle Camera Proj2
+}
+
+Buffs: {
+	AcidBuff: {
+		DisplayName: Acid Buff
+		Description: Mods.AyaMod.Buffs.AcidBuff.Description
+	}
+
+	ScaredBuff: {
+		DisplayName: Scared Buff
+		Description: Mods.AyaMod.Buffs.ScaredBuff.Description
+	}
+
+	ConfusedBuff: {
+		DisplayName: Confused Buff
+		Description: Mods.AyaMod.Buffs.ConfusedBuff.Description
+	}
+
+	ElectrifiedBuff: {
+		DisplayName: Electrified Buff
+		Description: Mods.AyaMod.Buffs.ElectrifiedBuff.Description
+	}
+
+	ShadowSuckBuff: {
+		DisplayName: Shadow Suck Buff
+		Description: Mods.AyaMod.Buffs.ShadowSuckBuff.Description
+	}
+}

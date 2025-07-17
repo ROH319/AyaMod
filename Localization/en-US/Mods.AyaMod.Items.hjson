@@ -1,0 +1,119 @@
+GoldenCamera: {
+	DisplayName: Golden Camera
+	Tooltip: ""
+}
+
+SquareLens: {
+	DisplayName: Square Lens
+	Tooltip: ""
+}
+
+LightRipper: {
+	DisplayName: Light Ripper
+	Tooltip: ""
+}
+
+LusterFrame: {
+	DisplayName: Luster Frame
+	Tooltip: ""
+}
+
+Luminvore: {
+	DisplayName: Luminvore
+	Tooltip: ""
+}
+
+WaveCamera: {
+	DisplayName: Wave Camera
+	Tooltip: ""
+}
+
+JungleCamera: {
+	DisplayName: Jungle Camera
+	Tooltip: ""
+}
+
+MeteorCamera: {
+	Tooltip: ""
+	DisplayName: Meteor Camera
+}
+
+DigitalCamera: {
+	DisplayName: Digital Camera
+	Tooltip: ""
+}
+
+VitricLightning: {
+	DisplayName: Vitric Lightning
+	Tooltip: ""
+}
+
+BeeCamera: {
+	DisplayName: Bee Camera
+	Tooltip: ""
+}
+
+ColdSnap: {
+	DisplayName: Cold Snap
+	Tooltip: ""
+}
+
+Legilimency: {
+	DisplayName: Legilimency
+	Tooltip: ""
+}
+
+HellCamera: {
+	DisplayName: Hell Camera
+	Tooltip: ""
+}
+
+CameraFilm: {
+	DisplayName: Camera Film
+	Tooltip: ""
+}
+
+HandmadeCamera: {
+	DisplayName: Handmade Camera
+	Tooltip: ""
+}
+
+ToyCamera: {
+	DisplayName: Toy Camera
+	Tooltip: ""
+}
+
+ShadowCamera: {
+	DisplayName: Shadow Camera
+	Tooltip: ""
+}
+
+AcidFilm: {
+	DisplayName: Acid Film
+	Tooltip: ""
+}
+
+GrimFilm: {
+	DisplayName: Grim Film
+	Tooltip: ""
+}
+
+HadesFilm: {
+	DisplayName: Hades Film
+	Tooltip: ""
+}
+
+PixieFilm: {
+	DisplayName: Pixie Film
+	Tooltip: ""
+}
+
+FlawlessCamera: {
+	DisplayName: Flawless Camera
+	Tooltip: ""
+}
+
+JungleCamera2: {
+	DisplayName: Jungle Camera2
+	Tooltip: ""
+}

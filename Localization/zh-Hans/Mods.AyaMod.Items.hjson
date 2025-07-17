@@ -1,0 +1,119 @@
+GoldenCamera: {
+	DisplayName: 闪金相机
+	Tooltip: ""
+}
+
+SquareLens: {
+	DisplayName: 方形镜头
+	Tooltip: ""
+}
+
+LightRipper: {
+	DisplayName: 光线撕裂者
+	Tooltip: ""
+}
+
+LusterFrame: {
+	DisplayName: 珠光宝镜
+	Tooltip: ""
+}
+
+Luminvore: {
+	DisplayName: 噬光食影
+	Tooltip: ""
+}
+
+WaveCamera: {
+	DisplayName: 波光鳞影
+	Tooltip: ""
+}
+
+JungleCamera: {
+	DisplayName: 旋叶木隐
+	Tooltip: ""
+}
+
+MeteorCamera: {
+	Tooltip: ""
+	DisplayName: 星雨刻录机
+}
+
+DigitalCamera: {
+	DisplayName: 数码相机
+	Tooltip: ""
+}
+
+VitricLightning: {
+	DisplayName: 琉璃电光闪
+	Tooltip: ""
+}
+
+BeeCamera: {
+	DisplayName: 捕蜂捉影
+	Tooltip: ""
+}
+
+ColdSnap: {
+	DisplayName: 急冻摄线
+	Tooltip: ""
+}
+
+Legilimency: {
+	DisplayName: 摄神取念
+	Tooltip: ""
+}
+
+HellCamera: {
+	DisplayName: 废狱焦点
+	Tooltip: ""
+}
+
+CameraFilm: {
+	DisplayName: 相机胶卷
+	Tooltip: ""
+}
+
+HandmadeCamera: {
+	DisplayName: 手工相机
+	Tooltip: ""
+}
+
+ToyCamera: {
+	DisplayName: 玩具相机
+	Tooltip: ""
+}
+
+ShadowCamera: {
+	DisplayName: 暗夜剪影
+	Tooltip: ""
+}
+
+AcidFilm: {
+	DisplayName: 酸性胶卷
+	Tooltip: ""
+}
+
+GrimFilm: {
+	DisplayName: 恐怖胶卷
+	Tooltip: ""
+}
+
+HadesFilm: {
+	DisplayName: 冥王胶卷
+	Tooltip: ""
+}
+
+PixieFilm: {
+	DisplayName: 妖精胶卷
+	Tooltip: ""
+}
+
+FlawlessCamera: {
+	// DisplayName: Flawless Camera
+	// Tooltip: ""
+}
+
+JungleCamera2: {
+	// DisplayName: Jungle Camera2
+	// Tooltip: ""
+}

@@ -1,0 +1,4 @@
+displayName = 幻想记者
+author = ROH
+version = 0.1
+buildIgnore = BuildIgnore/*

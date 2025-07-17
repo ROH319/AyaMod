@@ -1,0 +1,77 @@
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Terraria;
+
+namespace AyaMod.Helpers
+{
+    public static class RenderHelper
+    {
+        public static Color AdditiveColor(this Color color) => color with { A = 0 };
+
+        public static BlendState ReverseSubtract = new BlendState()
+        {
+            ColorSourceBlend = Blend.SourceAlpha,
+            AlphaSourceBlend = Blend.SourceAlpha,
+            ColorDestinationBlend = Blend.One,
+            AlphaDestinationBlend = Blend.One,
+            ColorBlendFunction = BlendFunction.ReverseSubtract,
+            
+        };
+
+        public static BlendState MaxAdditive = new BlendState()
+        {
+            ColorSourceBlend = Blend.SourceAlpha,
+            AlphaSourceBlend = Blend.SourceAlpha,
+            ColorDestinationBlend = Blend.One,
+            AlphaDestinationBlend = Blend.One,
+            ColorBlendFunction = BlendFunction.Max
+        };
+
+        public static void DrawCameraFrame(SpriteBatch spriteBatch, Vector2[] boundries, Color borderColor, float borderWidth, float lengthPercent)
+        {
+            Vector2 dirx = boundries[0].DirectionToSafe(boundries[2]);
+            Vector2 diry = dirx.RotatedBy(MathHelper.PiOver2);
+
+            float sizex = boundries[0].Distance(boundries[2]);
+            float sizey = boundries[0].Distance(boundries[1]);
+
+            float lengthX = sizex * lengthPercent;
+            float lengthY = sizey * lengthPercent;
+
+            Utils.DrawLine(spriteBatch, boundries[0], boundries[0] + dirx * lengthX, borderColor, borderColor, borderWidth);
+            Utils.DrawLine(spriteBatch, boundries[2], boundries[2] - dirx * lengthX, borderColor, borderColor, borderWidth);
+            Utils.DrawLine(spriteBatch, boundries[1], boundries[1] + dirx * lengthX, borderColor, borderColor, borderWidth);
+            Utils.DrawLine(spriteBatch, boundries[3], boundries[3] - dirx * lengthX, borderColor, borderColor, borderWidth);
+            Utils.DrawLine(spriteBatch, boundries[0], boundries[0] + diry * lengthY, borderColor, borderColor, borderWidth);
+            Utils.DrawLine(spriteBatch, boundries[1], boundries[1] - diry * lengthY, borderColor, borderColor, borderWidth);
+            Utils.DrawLine(spriteBatch, boundries[2], boundries[2] + diry * lengthY, borderColor, borderColor, borderWidth);
+            Utils.DrawLine(spriteBatch, boundries[3], boundries[3] - diry * lengthY, borderColor, borderColor, borderWidth);
+        }
+
+        public static void DrawBloom(int repeat, float offset, Texture2D texture, Vector2 center, Rectangle? source, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effect = SpriteEffects.None)
+        {
+            for (int i = 0; i < repeat; i++)
+            {
+                float factor = (float)i / repeat;
+                Vector2 posmove = (MathHelper.TwoPi / repeat * i).ToRotationVector2() * offset;
+                Main.EntitySpriteDraw(texture, center + posmove, source, color, rotation, origin, scale, effect);
+            }
+        }
+
+        public static void DrawBloom(int repeat, float offset, Texture2D texture, Vector2 center, Rectangle? source, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effect = SpriteEffects.None)
+        {
+            for (int i = 0; i < repeat; i++)
+            {
+                float factor = (float)i / repeat;
+                Vector2 posmove = (MathHelper.TwoPi / repeat * i).ToRotationVector2() * offset;
+                Main.EntitySpriteDraw(texture, center + posmove, source, color, rotation, origin, scale, effect);
+            }
+        }
+
+        //public static void DrawBloomScaled(int repeat)
+    }
+}

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Import tModLoader mod properties -->
+	<Import Project="..\tModLoader.targets" />
+
+	<!-- General -->
+	<PropertyGroup>
+		
+	</PropertyGroup>
+	<ItemGroup>
+	  <Folder Include="Localization\zh-Hans\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Update="tModLoader.CodeAssist" Version="0.1.5" />
+	</ItemGroup>
+
+	<!-- References -->
+
+</Project>

@@ -1,0 +1,19 @@
+﻿ClientConfig: {
+	DisplayName: 客户端配置
+	Headers.CameraRelated: 相机相关
+
+	SnapVolume: {
+		Label: 拍摄音量
+		Tooltip: ""
+	}
+
+	SnapFlash: {
+		Label: 闪光特效可见性
+		Tooltip: ""
+	}
+
+	SnapFlashAlpha: {
+		Label: 闪光特效透明度
+		Tooltip: ""
+	}
+}
