@@ -8,12 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.GameContent;
 
 namespace AyaMod.Content.Particles
 {
     public class SoulsParticle : Particle
     {
-        public override string Texture => AssetDirectory.Extras + "Ball";
+        public override string Texture => AssetDirectory.Extras + "Ball1";
         public float Fadeout;
         public float ScaleFadeout;
 
@@ -31,12 +32,15 @@ namespace AyaMod.Content.Particles
             if (Scale > 0f) Scale -= ScaleFadeout;
 
             if (Scale < 0.001f) active = false;
+
+            Velocity *= 0.96f;
             base.AI();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D texture = GetTexture().Value;
+            Texture2D texture = GetTexture().Value;/*TextureAssets.BlackTile.Value*/;
+            
             Color color = this.color;
             float basebloomScale = 0.6f;
             float bloomScale = 0.4f;

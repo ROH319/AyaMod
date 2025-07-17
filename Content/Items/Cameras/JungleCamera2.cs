@@ -54,7 +54,7 @@ namespace AyaMod.Content.Items.Cameras
                 float rotdir = 1;
                 if (i % 2 == 0) rotdir *= -1;
                 int type = ModContent.ProjectileType<JungleCameraLeaf2>();
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + dir * 40, dir, type, (int)(Projectile.damage * 0.75f), Projectile.knockBack / 4, Projectile.owner, 0.15f * rotdir);
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + dir * 40, dir, type, (int)(Projectile.damage * 0.75f), Projectile.knockBack / 4, Projectile.owner, 0.1f * rotdir);
             }
         }
     }
@@ -78,7 +78,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.idStaticNPCHitCooldown = 8;
             Projectile.scale = 1f + (float)Main.rand.Next(30) * 0.01f;
             Projectile.extraUpdates = 0;
-            Projectile.timeLeft = 120 * Projectile.MaxUpdates;
+            Projectile.timeLeft = 90 * Projectile.MaxUpdates;
 
             Projectile.ArmorPenetration = 20;
         }
@@ -102,15 +102,15 @@ namespace AyaMod.Content.Items.Cameras
             }
             float timeleftFactor = Projectile.TimeleftFactor();
             float fromValue = 60 - Projectile.timeLeft;
-            float fromMin = Projectile.ai[1] - 10f;
-            float fromMax = Projectile.ai[1] + 10f;
-            float num4 = Utils.Remap(fromValue, fromMin, fromMax, 0.3f, 0.6f) 
-                * Utils.Remap(fromValue, fromMin, Projectile.ai[1] + 60f, 0.4f, 0.2f);
+            float fromMin = Projectile.ai[1];
+            float fromMax = Projectile.ai[1] + 20f;
+            float num4 = Utils.Remap(fromValue, fromMin, fromMax, 0f, 1f) 
+                * Utils.Remap(fromValue, fromMin, Projectile.ai[1] + 60f, 1f, 0f);
 
-            float rotspeedFactor = Utils.Remap(timeleftFactor, 0.6f, 1f, 0.125f, 0.4f)
-                + Utils.Remap(timeleftFactor, 0f, 0.6f, 0.3f, 0.125f) + 0.3f;
+            float rotspeedFactor = Utils.Remap(timeleftFactor, 0.4f, 1f, 0.75f, 1f)
+                /*+ Utils.Remap(timeleftFactor, 0f, 0.6f, 0.3f, 0.125f) + 0.3f*/;
             Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.ai[0] * rotspeedFactor);
-            Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitY) * (16f - 14f * num4);
+            Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitY) * (16f - 12f * num4);
             Projectile.Opacity = Utils.Remap(fromValue, 0f, 10f, 0f, 1f) * Utils.Remap(fromValue, 30f, 60f, 1f, 0f);
             num = 0f;
             if (Main.rand.Next(2) == 0)
