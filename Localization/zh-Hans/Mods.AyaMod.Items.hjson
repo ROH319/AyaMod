@@ -117,3 +117,8 @@ JungleCamera2: {
 	// DisplayName: Jungle Camera2
 	// Tooltip: ""
 }
+
+ScarletCamera: {
+	// DisplayName: Scarlet Camera
+	// Tooltip: ""
+}

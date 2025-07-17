@@ -35,6 +35,9 @@ Projectiles: {
 	FlawlessCameraProj.DisplayName: Flawless Camera Proj
 	JungleCameraLeaf2.DisplayName: Jungle Camera Leaf2
 	JungleCameraProj2.DisplayName: Jungle Camera Proj2
+	FlyingKnife.DisplayName: Flying Knife
+	KillerDoll.DisplayName: Killer Doll
+	ScarletCameraProj.DisplayName: Scarlet Camera Proj
 }
 
 Buffs: {
