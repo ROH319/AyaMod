@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using AyaMod.Core;
 using AyaMod.Common.Easer;
+using ReLogic.Content;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -127,7 +128,7 @@ namespace AyaMod.Content.Items.Cameras
             {
                 Projectile.localAI[2] += 3;
             }
-            if(Projectile.timeLeft % 4 == 0 && Projectile.timeLeft > 40)
+            if(Projectile.timeLeft % 6 == 0 && Projectile.timeLeft > 40)
             {
                 float radius = Projectile.localAI[2];
                 for(int i = 0; i < 2; i++)
@@ -166,6 +167,16 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.SetImmune(20);
             Projectile.timeLeft = 7 * 60;
         }
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            int dustcount = 10;
+            for(int i = 0;i < dustcount; i++)
+            {
+                Vector2 vel = AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(3f, 8f);
+                Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.SilverFlame, vel);
+                d.noGravity = true;
+            }
+        }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             return base.OnTileCollide(oldVelocity);
@@ -202,37 +213,48 @@ namespace AyaMod.Content.Items.Cameras
                 {
                     Vector2 offset = Projectile.localAI[0].ToRotationVector2() * Projectile.localAI[1];
                     Projectile.Center = proj.Center + offset;
-                    Projectile.rotation += 0.2f;
+                    Projectile.rotation += 0.25f;
                 }
                 else
                 {
                     Projectile.Kill();
                 }
             }
-            Projectile.position += Projectile.velocity;
+            Projectile.position += Projectile.velocity * 1.5f;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Vector2 origin = texture.Size() / 2;
+            Texture2D star = TextureAssets.Extra[98].Value;
 
             float timeleftFactor = MathHelper.Clamp(Projectile.ai[0] / 45f, 0f, 1f);
             if (Projectile.ai[0] < 0) timeleftFactor = 1f;
             float alpha = Projectile.Opacity * timeleftFactor;
-            Color color = Color.White.AdditiveColor() * alpha * 0.6f;
+            Color color = Color.White.AdditiveColor() * alpha * 0.7f;
+            Color trailBaseColor = new Color(192,192,192).AdditiveColor() * alpha * 0.7f;
             for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
                 if (Projectile.oldPos[i] == Vector2.Zero) continue;
                 float factor = 1f - (float)i / Projectile.oldPos.Length;
                 float rot = i == 0 ? Projectile.rotation : Projectile.oldRot[i];
                 Vector2 drawpos = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
-                Color trailColor = color * factor * 0.6f;
-                if (Projectile.velocity.Length() < 0.1f) trailColor *= 0.6f;
+                Color trailColor = trailBaseColor * factor * 0.6f;
+                if (Projectile.velocity.Length() < 0.1f)
+                {
+                    trailColor *= 0.6f;
+                    Vector2 tipPos = drawpos + rot.ToRotationVector2() * 18;
+                    Vector2 starScale = new Vector2(0.15f, 0.5f) * Projectile.scale;
+                    for (int j = 0; j < 2; j++)
+                    {
+                        Main.spriteBatch.Draw(star, tipPos, null, trailColor.AdditiveColor()*1.4f, rot, star.Size() / 2, starScale, 0, 0);
+                    }
+                }
                 Main.spriteBatch.Draw(texture, drawpos, null, trailColor, rot, origin, Projectile.scale, 0, 0);
             }
 
-            RenderHelper.DrawBloom(6, 2, texture, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * alpha * 0.8f, Projectile.rotation, origin, Projectile.scale);
+            RenderHelper.DrawBloom(10, 4, texture, Projectile.Center - Main.screenPosition, null, trailBaseColor.AdditiveColor() * alpha * 0.25f, Projectile.rotation, origin, Projectile.scale);
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, new Color(210,210,210) * alpha, Projectile.rotation, origin, Projectile.scale, 0);
 
             return false;
