@@ -95,17 +95,20 @@ namespace AyaMod.Content.Items.Cameras
                     slash.rotation = dir;
                 }
 
-                int slashcount = 10;
+                int slashcount = 8;
+                float baseRot = AyaUtils.RandAngle;
                 for(int i = 0;i < slashcount;i++)
                 {
                     Helper.PlayPitched("BladeSlash", 0.1f, position: player.Center);
 
 
-                    Vector2 pos = Projectile.Center +  (MathHelper.TwoPi / slashcount * i + Main.rand.NextFloat(-0.5f,0.5f)).ToRotationVector2() * Main.rand.NextFloat(240, 300);
+                    Vector2 pos = Projectile.Center +  (MathHelper.TwoPi / slashcount * i + baseRot).ToRotationVector2() * 240;
 
-                    float dir = pos.AngleTo(Projectile.Center) + Main.rand.NextFloat(-0.5f,0.5f);
+                    float dir = pos.AngleTo(Projectile.Center) + MathHelper.PiOver4;
+                    
                     Vector2 vel = dir.ToRotationVector2() * 18;
-                    float length = 300;
+                    pos -= vel * 3.5f;
+                    float length = 340;
                     var slash = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ProjectileType<YoumuSlash>(), Projectile.damage, Projectile.knockBack, Projectile.owner, length,25);
                     slash.rotation = dir;
                 }
@@ -139,7 +142,7 @@ namespace AyaMod.Content.Items.Cameras
         public override bool? CanDamage() => false;
         public override void OnSpawn(IEntitySource source)
         {
-            base.OnSpawn(source);
+            Projectile.localAI[2] = Main.rand.NextBool() ? 1 : -1;
         }
 
         public override void AI()
@@ -165,6 +168,7 @@ namespace AyaMod.Content.Items.Cameras
                 Projectile.Opacity -= 0.02f;
                 if (Projectile.Opacity < 0.02f) Projectile.Kill();
             }
+            Projectile.velocity = Projectile.velocity.RotatedBy(0.02f * Projectile.localAI[2]);
             Projectile.rotation = Projectile.velocity.ToRotation();
         }
 
