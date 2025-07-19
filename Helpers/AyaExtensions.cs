@@ -212,6 +212,29 @@ namespace AyaMod.Helpers
             return target;
         }
 
+        public static float AngleBetween(this Vector2 a, Vector2 b)
+        {
+            // 使用长度的平方来避免开方
+            float magSquaredA = a.LengthSquared();
+            float magSquaredB = b.LengthSquared();
+
+            // 检查是否为零向量
+            if (magSquaredA < float.Epsilon || magSquaredB < float.Epsilon)
+                return 0f;
+
+            // 计算点积
+            float dot = Vector2.Dot(a, b);
+
+            // 计算夹角的余弦值
+            float cosTheta = dot / (float)Math.Sqrt(magSquaredA * magSquaredB);
+
+            // 处理浮点精度问题
+            if (cosTheta >= 1f) return 0f;
+            if (cosTheta <= -1f) return MathHelper.Pi;
+
+            return (float)Math.Acos(cosTheta);
+        }
+
         public static Vector2 Reflect(this Vector2 vector, Vector2 axis)
         {
             Vector2 n = axis.SafeNormalize(Vector2.One);

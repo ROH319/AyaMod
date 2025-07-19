@@ -49,13 +49,14 @@ namespace AyaMod.Content.Items.Cameras
         public override void OnSpawn(IEntitySource source)
         {
             Vector2 pos = player.Center/*AyaUtils.RandAngle.ToRotationVector2() * 400 + player.GetModPlayer<CameraPlayer>().MouseWorld*/;
-            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<YinYangBall>(), Projectile.damage, Projectile.knockBack / 2, Projectile.owner,Projectile.whoAmI);
+            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<YinYangBall>(), Projectile.damage, 12, Projectile.owner,Projectile.whoAmI);
         }
         public override void OnSnapProjectile(Projectile projectile)
         {
             if (projectile.type != ProjectileType<YinYangBall>()) return;
             if (projectile.localAI[2] < 1)
             {
+                projectile.localAI[0] = -1;
                 projectile.localAI[2] = 6f;
                 Vector2 dir = Projectile.DirectionToSafe(projectile.Center);
                 projectile.velocity = dir * 18f;
@@ -108,7 +109,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.localAI[1] = target.whoAmI;
             Projectile.localAI[2]--;
 
-            var othertarget = Projectile.FindCloestNPCIgnoreIndex(4000, false, !Projectile.tileCollide, (int)Projectile.localAI[1]);
+            var othertarget = Projectile.FindCloestNPCIgnoreIndex(800, false, !Projectile.tileCollide, (int)Projectile.localAI[1]);
             if (othertarget == null)
             {
                 Projectile.localAI[1] = -1;
@@ -121,13 +122,15 @@ namespace AyaMod.Content.Items.Cameras
                 Projectile.velocity = Projectile.velocity.Length(10);
             }
 
+            float knockBackFactor = target.knockBackResist;
+            if (target.life <= 0) knockBackFactor = 1;
             Vector2 totarget = Projectile.Center.DirectionToSafe(target.Center);
             if (Projectile.localAI[2] == 0 && prev > 0) totarget = totarget.RotatedBy(MathHelper.PiOver4 * (Main.rand.NextBool()?1:-1));
             Vector2 vec = (-Projectile.velocity).Reflect(totarget.RotatedBy(MathHelper.PiOver2));
-            Projectile.velocity = vec;
+            Projectile.velocity = Vector2.Lerp(vec, Projectile.velocity, knockBackFactor);
             //Projectile.velocity *= -1;
             //Projectile.velocity = Projectile.velocity.RotatedBy(dir * MathHelper.PiOver2);
-            if (Projectile.velocity.Length() < 6f) Projectile.velocity = Projectile.velocity.Length(8);
+            if (Projectile.velocity.Length() < 4f) Projectile.velocity = Projectile.velocity.Length(4);
 
             if (Projectile.velocity.Length() > 5f) CreateWaveDust(Projectile.Center + totarget * 22f, totarget.ToRotation());
 
@@ -140,9 +143,15 @@ namespace AyaMod.Content.Items.Cameras
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             float dir = oldVelocity.ToRotation();
-            if (oldVelocity.Length() > 1f) CreateWaveDust(Projectile.Center + dir.ToRotationVector2() * 22f,dir);
+
             Projectile.BounceOverTile(oldVelocity);
-            Projectile.velocity *= .8f;
+            float angle = Projectile.velocity.AngleBetween(oldVelocity);
+            if (angle >= MathHelper.PiOver4)
+            {
+
+                if (oldVelocity.Length() > 1f) CreateWaveDust(Projectile.Center + dir.ToRotationVector2() * 22f, dir);
+                Projectile.velocity *= .8f;
+            }
 
             Projectile.localAI[1] = -1;
             
@@ -188,8 +197,8 @@ namespace AyaMod.Content.Items.Cameras
                 else
                 {
                     //if (Projectile.velocity.Length() < 4f) Projectile.localAI[2] = 0;
-                    float range = 3000;
-                    NPC target = Main.npc[(int)Projectile.localAI[0]];
+                    float range = 800;
+                    NPC target = Projectile.localAI[0] < 0 ? null : Main.npc[(int)Projectile.localAI[0]];
                     if (target == null || !target.CanBeChasedBy() || Projectile.localAI[0] == Projectile.localAI[1])
                     {
                         target = Projectile.FindCloestNPCIgnoreIndex(range, false, !Projectile.tileCollide, (int)Projectile.localAI[1]);
@@ -201,7 +210,7 @@ namespace AyaMod.Content.Items.Cameras
 
                     if (target != null)
                     {
-                        float speed = 28f;
+                        float speed = Utils.Remap(Projectile.localAI[2] / 6f,0f,1f, 14f, 28f);
                         float speedFactor = Utils.Remap(Projectile.Distance(target.Center), 500, 1000, 1.3f, 2.8f);
                         
                         Projectile.velocity = Projectile.DirectionToSafe(target.Center) * speed;
