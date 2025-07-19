@@ -127,3 +127,8 @@ YukariCamera: {
 	DisplayName: Yukari Camera
 	Tooltip: ""
 }
+
+YuyukoCamera: {
+	DisplayName: Yuyuko Camera
+	Tooltip: ""
+}

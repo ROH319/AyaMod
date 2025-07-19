@@ -51,7 +51,7 @@ namespace AyaMod.Helpers
             {
                 Volume = volume,
                 Pitch = pitch,
-                MaxInstances = 10
+                MaxInstances = 40
             };
             return SoundEngine.PlaySound(style, position);
         }
