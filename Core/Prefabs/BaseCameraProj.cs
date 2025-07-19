@@ -213,6 +213,7 @@ namespace AyaMod.Core.Prefabs
             MoveMent(mplr);
 
             CheckHoverNPC();
+            CheckHoverProjectile();
             
             if (player.itemTime != 0)
             {
@@ -302,6 +303,20 @@ namespace AyaMod.Core.Prefabs
         public virtual void HoverNPC(NPC npc) { }
         public virtual void NotHoverNPC(NPC npc) { }
 
+        public void CheckHoverProjectile()
+        {
+            foreach(var projectile in Main.ActiveProjectiles)
+            {
+                var hitbox = projectile.GetHitbox();
+                if(lens.Colliding(Projectile.Center,Size, Projectile.rotation, hitbox))
+                    HoverProjectile(projectile);
+                else NotHoverProjectile(projectile);
+            }
+        }
+
+        public virtual void HoverProjectile(Projectile projectile) { }
+        public virtual void NotHoverProjectile(Projectile projectile) { }
+
         public void Snap()
         {
             var rects = lens.GetRectanglesAgainstEntity(Projectile.Center, Size, Projectile.rotation);
@@ -322,12 +337,24 @@ namespace AyaMod.Core.Prefabs
             if (canhit)
                 UpdateFilm((film => film.OnSnapInSight()));
 
+            CheckSnapProjectile(rects);
+
             if (ClientConfig.Instance.SnapFlash)
             {
                 SpawnFlash();
             }
 
+            PostSnap();
+        }
 
+        public void CheckSnapProjectile(List<Rectangle> rects)
+        {
+            foreach(var projectile in Main.ActiveProjectiles)
+            {
+                var hitbox = projectile.GetHitbox();
+                if (lens.Colliding(Projectile.Center, Size, Projectile.rotation, hitbox))
+                    OnSnapProjectile(projectile);
+            }
         }
 
         /// <summary>
@@ -339,6 +366,10 @@ namespace AyaMod.Core.Prefabs
         /// 拍摄时触发
         /// </summary>
         public virtual void OnSnap() { }
+
+        public virtual void OnSnapProjectile(Projectile projectile) { }
+
+        public virtual void PostSnap() { }
 
         public void UpdateFilm(Action<BaseFilm> action)
         {

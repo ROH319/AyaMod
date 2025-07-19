@@ -57,6 +57,13 @@ namespace AyaMod.Helpers
             if (projectile.velocity.Y < YMax) projectile.velocity.Y += YAdd;
         }
 
+        public static void BounceOverTile(this Projectile projectile,Vector2 oldVelocity)
+        {
+            ref Vector2 velocity = ref projectile.velocity;
+            if (velocity.X != oldVelocity.X) velocity.X = -oldVelocity.X;
+            if (velocity.Y != oldVelocity.Y) velocity.Y = -oldVelocity.Y;
+        }
+
         public static Rectangle GetHitbox(this Projectile projectile)
         {
             Rectangle result = new Rectangle((int)projectile.position.X, (int)projectile.position.Y, (int)projectile.width, (int)projectile.height);
@@ -179,6 +186,39 @@ namespace AyaMod.Helpers
             return target;
         }
 
+        public static NPC FindCloestNPCIgnoreIndex(this Projectile projectile, float range = int.MaxValue,bool ignoreImmune = false, bool ignoreTile = false, params int[] whoamis)
+        {
+            NPC target = null;
+            float minDist = range;
+            foreach (var npc in Main.ActiveNPCs)
+            {
+                if (whoamis.Length > 0 && whoamis.Contains(npc.whoAmI)) continue;
+                if (npc.CanBeChasedBy())
+                {
+                    if (ignoreImmune || (!(projectile.usesLocalNPCImmunity && projectile.localNPCImmunity[npc.whoAmI] != 0)
+                    && !(projectile.usesIDStaticNPCImmunity && Projectile.perIDStaticNPCImmunity[projectile.type][npc.whoAmI] > Main.GameUpdateCount) && !(npc.immune[projectile.owner] != 0)))
+                    {
+                        if (minDist == -1 || npc.Distance(projectile.Center) < minDist)
+                        {
+                            if (ignoreTile || Collision.CanHit(projectile.Center, 1, 1, npc.position, npc.width, npc.height))
+                            {
+                                target = npc;
+                                minDist = npc.Distance(projectile.Center);
+                            }
+                        }
+                    }
+                }
+            }
+            return target;
+        }
+
+        public static Vector2 Reflect(this Vector2 vector, Vector2 axis)
+        {
+            Vector2 n = axis.SafeNormalize(Vector2.One);
+            float dot = Vector2.Dot(vector, n);
+            return vector - (2 * dot) * n;
+        }
+
         public static Vector2 Length(this Vector2 vector, float length) => vector.Length() == 0 ? Vector2.Zero : vector / vector.Length() * length;
 
         public static float AngleFromSafe(this Entity entity, Vector2 position)
@@ -219,6 +259,7 @@ namespace AyaMod.Helpers
             return -self.DirectionToSafe(position);
         }
 
+        public static bool TypeAlive(this Projectile projectile, params int[] type) => projectile.Alive() && (type.Length == 0 || type.Contains(projectile.type));
         public static bool Alive(this Player player) => player != null && player.active && !player.dead && !player.ghost;
         public static bool Alive(this Projectile projectile) => projectile != null && projectile.active;
         public static bool Alive(this NPC npc) => npc != null && npc.active;

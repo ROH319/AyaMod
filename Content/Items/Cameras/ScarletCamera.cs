@@ -143,13 +143,6 @@ namespace AyaMod.Content.Items.Cameras
 
             Projectile.rotation += MathHelper.Pi / 10f / 3f * Projectile.localAI[0];
         }
-
-        public override bool PreDraw(ref Color lightColor)
-        {
-
-
-            return false;
-        }
     }
 
     public class FlyingKnife : ModProjectile

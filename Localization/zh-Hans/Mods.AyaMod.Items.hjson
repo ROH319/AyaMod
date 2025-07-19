@@ -122,3 +122,8 @@ ScarletCamera: {
 	// DisplayName: Scarlet Camera
 	// Tooltip: ""
 }
+
+YukariCamera: {
+	// DisplayName: Yukari Camera
+	// Tooltip: ""
+}

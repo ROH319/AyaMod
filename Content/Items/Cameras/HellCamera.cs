@@ -69,17 +69,10 @@ namespace AyaMod.Content.Items.Cameras
             }
             base.OnSnapInSight();
         }
-
-        public override void PostAI()
+        public override void HoverProjectile(Projectile projectile)
         {
-            base.PostAI();
-            foreach (var projectile in Main.ActiveProjectiles)
-            {
-                if (projectile.type != ModContent.ProjectileType<HellSpirit>()) continue;
-                var hitbox = projectile.Hitbox;
-                if (lens.Colliding(Projectile.Center, Size, Projectile.rotation, hitbox))
-                    projectile.ai[0]++;
-            }
+            if (projectile.type != ProjectileType<HellSpirit>()) return;
+            projectile.ai[0]++;
         }
     }
 
@@ -102,10 +95,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.localNPCHitCooldown = 15;
             Projectile.timeLeft = 90;
         }
-        public override bool? CanDamage()
-        {
-            return false;
-        }
+        public override bool? CanDamage() => false;
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
@@ -117,7 +107,6 @@ namespace AyaMod.Content.Items.Cameras
         {
             Projectile.Opacity = 0;
             Projectile.scale = 0.75f;
-            base.OnSpawn(source);
         }
 
         public override void AI()
@@ -133,7 +122,6 @@ namespace AyaMod.Content.Items.Cameras
                 var ball = SoulsParticle.Spawn(Projectile.Center + offset, Vector2.UnitY * -2.7f + Projectile.velocity * 0.8f, color.AdditiveColor(), 0.015f, 0.025f);
                 ball.Scale = Projectile.scale;
             }
-            base.AI();
         }
         public override void OnKill(int timeLeft)
         {
@@ -217,7 +205,6 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            base.OnHitNPC(target, hit, damageDone);
             Projectile.localAI[2]++;
         }
 

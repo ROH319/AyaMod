@@ -38,6 +38,9 @@ Projectiles: {
 	FlyingKnife.DisplayName: Flying Knife
 	KillerDoll.DisplayName: Killer Doll
 	ScarletCameraProj.DisplayName: Scarlet Camera Proj
+	YinYangBall.DisplayName: Yin Yang Ball
+	YukariCameraProj.DisplayName: Yukari Camera Proj
+	Needle.DisplayName: Needle
 }
 
 Buffs: {
