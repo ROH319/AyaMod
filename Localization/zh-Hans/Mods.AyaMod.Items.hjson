@@ -132,3 +132,8 @@ YuyukoCamera: {
 	// DisplayName: Yuyuko Camera
 	// Tooltip: ""
 }
+
+AliceCamera: {
+	// DisplayName: Alice Camera
+	// Tooltip: ""
+}

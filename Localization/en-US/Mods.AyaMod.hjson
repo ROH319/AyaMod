@@ -44,6 +44,9 @@ Projectiles: {
 	YoumuSlash.DisplayName: Youmu Slash
 	YoumuSpirit.DisplayName: Youmu Spirit
 	YuyukoCameraProj.DisplayName: Yuyuko Camera Proj
+	AliceCameraProj.DisplayName: Alice Camera Proj
+	MarisaCircle.DisplayName: Marisa Circle
+	MarisaStar.DisplayName: Marisa Star
 }
 
 Buffs: {

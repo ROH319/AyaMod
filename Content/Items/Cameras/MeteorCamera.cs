@@ -88,7 +88,6 @@ namespace AyaMod.Content.Items.Cameras
         public override void SetStaticDefaults()
         {
             Projectile.SetTrail(2, 20);
-            base.SetStaticDefaults();
         }
         public override void SetDefaults()
         {
@@ -97,8 +96,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             //Projectile.penetrate = -1;
-            Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 15;
+            Projectile.SetImmune(15);
             Projectile.timeLeft = 120;
             Projectile.extraUpdates = 2;
         }
@@ -196,24 +194,24 @@ namespace AyaMod.Content.Items.Cameras
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, RenderHelper.MaxAdditive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
 
 
-            DrawStar(texture, Projectile.Center, new Color(255, 255, 128), 1f, 0.5f, 0.8f, 0.9f);
+            DrawStar(Projectile, texture, Projectile.Center, new Color(255, 255, 128), 1f, 0.5f, 0.8f, 0.9f);
             
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
 
 
-            DrawStar(texture, Projectile.Center, Color.White, 0.7f, 0.5f, 0.8f, 0.4f);
+            DrawStar(Projectile, texture, Projectile.Center, Color.White, 0.7f, 0.5f, 0.8f, 0.4f);
 
             return false;
         }
 
-        public void DrawStar(Texture2D texture, Vector2 center, Color color, float alpha, float scalex, float scaley, float scaleMult)
+        public static void DrawStar(Projectile projectile, Texture2D texture, Vector2 center, Color color, float alpha, float scalex, float scaley, float scaleMult)
         {
-            color = color.AdditiveColor() * alpha * Projectile.Opacity;
-            Vector2 scale = new Vector2(scalex, scaley) * scaleMult * Projectile.scale;
+            color = color.AdditiveColor() * alpha * projectile.Opacity;
+            Vector2 scale = new Vector2(scalex, scaley) * scaleMult * projectile.scale;
             for (int i = 0; i < 5; i++)
             {
-                float rot = MathHelper.TwoPi * (float)i / 5 + Projectile.rotation;
+                float rot = MathHelper.TwoPi * (float)i / 5 + projectile.rotation;
                 Vector2 pos = center + rot.ToRotationVector2() * 7 - Main.screenPosition;
                 Main.spriteBatch.Draw(texture, pos, null, color, rot + MathHelper.PiOver2, texture.Size() / 2, scale, 0, 0);
 

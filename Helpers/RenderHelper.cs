@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.GameContent;
 
 namespace AyaMod.Helpers
 {
@@ -30,6 +31,17 @@ namespace AyaMod.Helpers
             AlphaDestinationBlend = Blend.One,
             ColorBlendFunction = BlendFunction.Max
         };
+
+        public static void DrawRing(int pointCount, Vector2 center, float radius, Color drawcolor, float rot, Vector2 scale)
+        {
+            var star = TextureAssets.Extra[98].Value;
+            for (int i = 0; i < pointCount; i++)
+            {
+                float dir = MathHelper.TwoPi / pointCount * i + rot;
+                Vector2 drawpos = center + dir.ToRotationVector2() * radius;
+                Main.spriteBatch.Draw(star, drawpos - Main.screenPosition, null, drawcolor, dir, new Vector2(36, 36), scale, 0, 0);
+            }
+        }
 
         public static void DrawCameraFrame(SpriteBatch spriteBatch, Vector2[] boundries, Color borderColor, float borderWidth, float lengthPercent)
         {

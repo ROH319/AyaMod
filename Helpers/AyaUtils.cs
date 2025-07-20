@@ -66,5 +66,103 @@ namespace AyaMod.Helpers
 
         public static float RandAngle => Main.rand.NextFloat(0, MathHelper.TwoPi);
 
+        public static Vector3 RGB2HSL(this Color color)
+        {
+            // 将RGB值归一化到[0,1]
+            float r = color.R / 255f;
+            float g = color.G / 255f;
+            float b = color.B / 255f;
+
+            float max = Math.Max(Math.Max(r, g), b);
+            float min = Math.Min(Math.Min(r, g), b);
+            float delta = max - min;
+
+            // 计算亮度
+            float l = (max + min) / 2f;
+
+            // 灰度情况（饱和度为0）
+            if (delta < 1e-6)
+                return new(0f, 0f, l);
+
+            // 计算饱和度
+            float s = l < 0.5f ?
+                delta / (max + min) :
+                delta / (2f - max - min);
+
+            // 计算色相
+            float h = 0f;
+            if (max == r)
+            {
+                h = (g - b) / delta;
+                if (h < 0) h += 6f;
+            }
+            else if (max == g)
+                h = 2f + (b - r) / delta;
+            else if (max == b)
+                h = 4f + (r - g) / delta;
+
+            // 将色相转换到[0,360]度
+            h *= 60f;
+            if (h < 0f) h += 360f;
+
+            return new(h, s, l);
+        }
+        public static Color HSL2RGB(float h, float s, float l, byte alpha = 255)
+        {
+            // 规范化输入
+            h = MathHelper.Clamp(h, 0f, 360f) % 360f;
+            s = MathHelper.Clamp(s, 0f, 1f);
+            l = MathHelper.Clamp(l, 0f, 1f);
+
+            // 饱和度接近0 -> 灰度
+            if (s < 1e-6)
+            {
+                byte value = (byte)(l * 255);
+                return new Color(value, value, value, alpha);
+            }
+
+            // 转换色相到[0,6)范围
+            float h6 = h / 60f;
+            // 中间计算变量
+            float c = (1f - Math.Abs(2f * l - 1f)) * s;
+            float x = c * (1f - Math.Abs(h6 % 2f - 1f));
+
+            float r = 0f, g = 0f, b = 0f;
+
+            // 6个色相区段计算RGB值
+            switch ((int)Math.Floor(h6))
+            {
+                case 0: // 红-黄: 0-60°
+                    (r, g, b) = (c, x, 0);
+                    break;
+                case 1: // 黄-绿: 60-120°
+                    (r, g, b) = (x, c, 0);
+                    break;
+                case 2: // 绿-青: 120-180°
+                    (r, g, b) = (0, c, x);
+                    break;
+                case 3: // 青-蓝: 180-240°
+                    (r, g, b) = (0, x, c);
+                    break;
+                case 4: // 蓝-紫: 240-300°
+                    (r, g, b) = (x, 0, c);
+                    break;
+                case 5: // 紫-红: 300-360°
+                    (r, g, b) = (c, 0, x);
+                    break;
+            }
+
+            // 调整明度
+            float m = l - c / 2f;
+
+            // 合并并转换到[0,255]范围
+            return new Color(
+                (byte)((r + m) * 255),
+                (byte)((g + m) * 255),
+                (byte)((b + m) * 255),
+                alpha
+            );
+        }
+        public static Color HSL2RGB(Vector3 hsl, byte alpha = 255) => HSL2RGB(hsl.X, hsl.Y, hsl.Z, alpha);
     }
 }
