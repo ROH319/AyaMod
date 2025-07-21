@@ -37,10 +37,10 @@ namespace AyaMod.Content.Items.Cameras
 
     public class AliceCameraProj : BaseCameraProj
     {
-        public override Color outerFrameColor => new Color(231, 145, 172);
-        public override Color innerFrameColor => new Color(162, 244, 238) * 0.7f;
+        public override Color outerFrameColor => new Color(174, 238, 180);
+        public override Color innerFrameColor => new Color(248, 222, 96) * 0.7f;
         public override Color focusCenterColor => base.focusCenterColor;
-        public override Color flashColor => new Color(235, 220, 225).AdditiveColor() * 0.5f;
+        public override Color flashColor => new Color(196, 243, 240).AdditiveColor() * 0.5f;
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -81,7 +81,7 @@ namespace AyaMod.Content.Items.Cameras
                     {
                         Projectile.localAI[1]++;
                     }
-                    if (Projectile.localAI[1] > 14)
+                    if (Projectile.localAI[1] > 12)
                     {
                         Vector2 target = camera.Center + camera.DirectionToSafe(Projectile.Center).RotatedBy(MathHelper.PiOver4 * 1.5f) * 120f;
                         Vector2 vel = Projectile.Center.DirectionToSafe(target) * 8f;
@@ -93,14 +93,15 @@ namespace AyaMod.Content.Items.Cameras
                 }
 
                 Vector2 targetpos = camera.Center + (MathHelper.TwoPi / 5 * Projectile.ai[0] + Projectile.localAI[2]).ToRotationVector2() * radius;
-                Projectile.Center = Vector2.Lerp(Projectile.Center, targetpos, 0.06f);
+                Projectile.Center = Vector2.Lerp(Projectile.Center, targetpos, 0.9f);
 
             }
             else
             {
                 Projectile.Kill();
             }
-            Projectile.localAI[2] += 0.015f;
+            float rotFactor = -MathF.Abs(MathF.Sin(Main.GameUpdateCount * 0.005f));
+            Projectile.localAI[2] += 0.035f + rotFactor * 0.027f;
             Projectile.rotation += 0.02f;
         }
         public override bool PreDraw(ref Color lightColor)
@@ -109,16 +110,16 @@ namespace AyaMod.Content.Items.Cameras
             Vector2 origin = texture.Size() / 2;
             Color color = new Color(242, 104, 20).AdditiveColor();
 
-            float ringRadius = 52;
+            float ringRadius = 42;
 
-            RenderHelper.DrawRing(72, Projectile.Center, 64, color, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.6f);
-            RenderHelper.DrawRing(72, Projectile.Center, 56, color, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.6f);
+            RenderHelper.DrawRing(72, Projectile.Center, ringRadius, color, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.6f);
+            RenderHelper.DrawRing(72, Projectile.Center, ringRadius * 0.8f, color, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.6f);
 
             Vector2 offset = Projectile.Center - Main.screenPosition;
             Vector2 scale1 = new Vector2(8 / 64f, 24 / 64f);
             for (int j = 0; j < 2; j++)
             {
-                float radius = 48 + j * 32;
+                float radius = ringRadius * 0.9f + j * ringRadius * 0.4f;
                 for (int i = 0; i < 5; i++)
                 {
                     float dir1 = MathHelper.TwoPi / 5 * i + Projectile.rotation;
@@ -146,10 +147,10 @@ namespace AyaMod.Content.Items.Cameras
             for(int i = 0; i < 5; i++)
             {
                 float dir1 = MathHelper.TwoPi / 5 * i + -Projectile.rotation * 0.7f;
-                Vector2 vec1 = dir1.ToRotationVector2() * 64;
+                Vector2 vec1 = dir1.ToRotationVector2() * ringRadius;
                 Vector2 tonext = (dir1 + MathHelper.ToRadians(126)).ToRotationVector2();
 
-                var dist = (int)(2 * 72f * MathF.Sin(MathHelper.ToRadians(36)) / 4f);
+                var dist = (int)(2 * ringRadius * 1.15f * MathF.Sin(MathHelper.ToRadians(36)) / 4f);
                 for(int j = 1;j < dist - 2;j++)
                 {
                     float factor = j / (float)dist;
@@ -217,15 +218,15 @@ namespace AyaMod.Content.Items.Cameras
             {
                 float factor = 1f - (float)i / Projectile.oldPos.Length;
 
-                MeteorStar.DrawStar(Projectile, texture, Projectile.oldPos[i], color, factor * 0.5f, 0.6f, 0.8f, 0.3f);
+                MeteorStar.DrawStar(Projectile, texture, Projectile.oldPos[i] + Projectile.Size / 2, color, factor * 0.4f, 0.6f, 0.8f, 0.3f);
 
             }
-            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, color, 1f, 0.6f, 0.8f, 0.3f);
+            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, color, 0.8f, 0.6f, 0.8f, 0.3f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
 
-            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, Color.White, 1f, 0.6f, 0.8f, 0.23f);
+            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, Color.White, 0.8f, 0.6f, 0.8f, 0.23f);
 
 
             return false;
