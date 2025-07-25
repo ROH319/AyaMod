@@ -109,31 +109,31 @@ PixieFilm: {
 }
 
 FlawlessCamera: {
-	// DisplayName: Flawless Camera
-	// Tooltip: ""
+	DisplayName: 无暇相机
+	Tooltip: ""
 }
 
 JungleCamera2: {
-	// DisplayName: Jungle Camera2
-	// Tooltip: ""
+	DisplayName: 风神木叶
+	Tooltip: ""
 }
 
 ScarletCamera: {
-	// DisplayName: Scarlet Camera
-	// Tooltip: ""
+	DisplayName: 银光绯月镜
+	Tooltip: ""
 }
 
 YukariCamera: {
-	// DisplayName: Yukari Camera
-	// Tooltip: ""
+	DisplayName: 阴阳界限镜
+	Tooltip: ""
 }
 
 YuyukoCamera: {
-	// DisplayName: Yuyuko Camera
-	// Tooltip: ""
+	DisplayName: 摄魂夜樱镜
+	Tooltip: ""
 }
 
 AliceCamera: {
-	// DisplayName: Alice Camera
-	// Tooltip: ""
+	DisplayName: 恋色魔女镜
+	Tooltip: ""
 }

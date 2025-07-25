@@ -66,7 +66,8 @@ namespace AyaMod.Content.Items.Cameras
         {
             Projectile.timeLeft++;
 
-            float radius =MathF.Sin(Main.GameUpdateCount * 0.005f) * 350f;
+            float radiusFactor = MathF.Sin(Main.GameUpdateCount * 0.005f);
+            float radius =radiusFactor * 350f;
             
             Projectile camera = Main.projectile[(int)Projectile.ai[1]];
             if (camera.TypeAlive(ProjectileType<AliceCameraProj>()))
@@ -81,10 +82,10 @@ namespace AyaMod.Content.Items.Cameras
                     {
                         Projectile.localAI[1]++;
                     }
-                    if (Projectile.localAI[1] > 12)
+                    if (Projectile.localAI[1] > 14)
                     {
                         Vector2 target = camera.Center + camera.DirectionToSafe(Projectile.Center).RotatedBy(MathHelper.PiOver4 * 1.5f) * 120f;
-                        Vector2 vel = Projectile.Center.DirectionToSafe(target) * 8f;
+                        Vector2 vel = Projectile.Center.DirectionToSafe(target) * 20f;
                         Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ProjectileType<MarisaStar>(), (int)(Projectile.damage * 0.2f), Projectile.knockBack, Projectile.owner);
 
                         Projectile.localAI[1] = 0;
@@ -178,22 +179,32 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.ignoreWater = true;
             Projectile.SetImmune(-1);
             Projectile.timeLeft = 10 * 60;
-            Projectile.penetrate = 2;
+            Projectile.penetrate = 1;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
             Projectile.localAI[2] = Main.rand.Next(11) * 36;
+            //Projectile.localAI[2] = 10 * 36;
             Projectile.Opacity = 0f;
+            Projectile.localAI[1] = Projectile.velocity.ToRotation();
+            Projectile.localAI[0] = Projectile.velocity.Length();
         }
 
         public override void AI()
         {
             float factor = Projectile.TimeleftFactor();
 
-            if(factor < 0.85f)
+            if(factor < 0.84f)
             {
-                Projectile.Chase(2000, 20f, 0.05f);
+                Projectile.Chase(2000, 26f, 0.1f);
+            }
+            else
+            {
+                float min = -1.3f * Projectile.localAI[0];
+                float length = Utils.Remap(factor, 0.8f, 1f, min, Projectile.localAI[0]);
+                Projectile.velocity = Projectile.localAI[1].ToRotationVector2() * length;
+                //Projectile.velocity -= Projectile.localAI[1].ToRotationVector2() * (0.2f - Projectile.velocity.Length() * 0.05f);
             }
             Projectile.Opacity += 0.03f;
             if(Projectile.Opacity > 1f)Projectile.Opacity = 1f;
@@ -202,7 +213,36 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnKill(int timeLeft)
         {
-            
+            int dusttype = (Projectile.localAI[2]) switch
+            {
+                0 * 36 => DustID.TheDestroyer,
+                1 * 36 => DustID.GemTopaz,
+                2 * 36 => DustID.DryadsWard,
+                3 * 36 => DustID.CursedTorch,
+                4 * 36 => DustID.PureSpray,
+                5 * 36 => DustID.HallowSpray,
+                6 * 36 => DustID.MushroomSpray,
+                7 * 36 => DustID.GiantCursedSkullBolt,
+                8 * 36 => DustID.VenomStaff,
+                9 * 36 => DustID.CrystalPulse,
+                10 * 36 => DustID.TheDestroyer,
+                _ => DustID.GemTopaz
+            };
+
+            int dustamount = 60;
+            float startRot = Projectile.rotation + MathHelper.TwoPi / 10 + AyaUtils.RandAngle;
+            float length = 10;
+            for (int i = 0; i < dustamount; i++)
+            {
+                float factor = (float)i / dustamount;
+                float rot = MathHelper.TwoPi * factor + startRot;
+                Vector2 dir = rot.ToRotationVector2();
+                float radius = length * 0.8f + MathF.Sin(factor * MathHelper.TwoPi * 5) * length / 1.5f;
+                Vector2 pos = Projectile.Center + dir * radius;
+                Vector2 vel = (pos - Projectile.Center).Length(2);
+                Dust d = Dust.NewDustPerfect(pos, dusttype, vel, Scale: 1f);
+                d.noGravity = true;
+            }
         }
 
         public override bool PreDraw(ref Color lightColor)
