@@ -131,7 +131,12 @@ namespace AyaMod.Core.Globals
                 case NPCID.Deerclops:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ColdSnap>(), 4));
                     break;
-
+                case NPCID.WallofFlesh:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<YukariCamera>(), 4));
+                    break;
+                case NPCID.BloodNautilus:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ScarletCamera>(), 1));
+                    break;
                 default: break;
             }
         }
