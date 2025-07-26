@@ -47,6 +47,9 @@ Projectiles: {
 	// AliceCameraProj.DisplayName: Alice Camera Proj
 	// MarisaCircle.DisplayName: Marisa Circle
 	// MarisaStar.DisplayName: Marisa Star
+	// SpiderCameraProj.DisplayName: Spider Camera Proj
+	// SpiderCursedFlame.DisplayName: Spider Cursed Flame
+	// SpiderWispShot.DisplayName: Spider Wisp Shot
 }
 
 Buffs: {

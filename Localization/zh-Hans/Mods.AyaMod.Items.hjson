@@ -137,3 +137,8 @@ AliceCamera: {
 	DisplayName: 恋色魔女镜
 	Tooltip: ""
 }
+
+SpiderCamera: {
+	// DisplayName: Spider Camera
+	// Tooltip: ""
+}

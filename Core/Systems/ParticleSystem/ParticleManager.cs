@@ -49,7 +49,7 @@ namespace AyaMod.Core.Systems.ParticleSystem
             orig(self);
             if (Main.gameMenu) return;
 
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,Main.DefaultSamplerState,DepthStencilState.None,RasterizerState.CullNone,null,Main.GameViewMatrix.ZoomMatrix);
             for (int i = 0; i < ParticleManager.Particles.Count; i++)
             {
                 Particle particle = ParticleManager.Particles[i];

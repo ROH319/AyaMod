@@ -137,3 +137,8 @@ AliceCamera: {
 	DisplayName: Alice Camera
 	Tooltip: ""
 }
+
+SpiderCamera: {
+	DisplayName: Spider Camera
+	Tooltip: ""
+}

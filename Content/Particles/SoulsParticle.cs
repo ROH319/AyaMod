@@ -1,4 +1,5 @@
 ﻿using AyaMod.Common.Easer;
+using AyaMod.Core;
 using AyaMod.Core.Systems.ParticleSystem;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,25 +16,29 @@ namespace AyaMod.Content.Particles
     public class SoulsParticle : Particle
     {
         public override string Texture => AssetDirectory.Extras + "Ball1";
-        public float Fadeout;
-        public float ScaleFadeout;
+        public FloatModifier AlphaFadeout;
+        public FloatModifier ScaleFadeout;
+        public FloatModifier VelocityFadeout;
 
-        public static SoulsParticle Spawn(Vector2 center, Vector2 velocity, Color color, float fadeout = 0, float scalefade = 0, float scale = 1f, float alpha = 1f)
+        public static SoulsParticle Spawn(Vector2 center, Vector2 velocity, Color color, float scale = 1f, float alpha = 1f)
         {
             SoulsParticle ball = NewParticle<SoulsParticle>(center, velocity, color, scale, 0f, alpha);
-            ball.Fadeout = fadeout;
-            ball.ScaleFadeout = scalefade;
             return ball;
         }
 
+        public void SetAlphaFadeout(FloatModifier alphaFadeout) {  AlphaFadeout = alphaFadeout; }
+        public void SetScaleFadeout(FloatModifier scaleFadeout) {  ScaleFadeout = scaleFadeout; }
+        public void SetVelFadeout(FloatModifier velFadeout) { VelocityFadeout = velFadeout; }
+
         public override void AI()
         {
-            if (alpha > 0f) alpha -= Fadeout;
-            if (Scale > 0f) Scale -= ScaleFadeout;
+            if (alpha > 0f) alpha = AlphaFadeout.Apply(alpha);
+            if (Scale > 0f) Scale = ScaleFadeout.Apply(Scale);
 
             if (Scale < 0.001f) active = false;
 
-            Velocity *= 0.96f;
+            Velocity.X = VelocityFadeout.Apply(Velocity.X);
+            Velocity.Y = VelocityFadeout.Apply(Velocity.Y);
             base.AI();
         }
 
