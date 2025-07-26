@@ -20,6 +20,8 @@ namespace AyaMod.Helpers
 
         public const string Items = Textures + "Items/";
 
+        public const string Accessories = Items + "Accessories/";
+
         public const string Cameras = Items + "Cameras/";
 
         public const string Lens = Items + "Lens/";

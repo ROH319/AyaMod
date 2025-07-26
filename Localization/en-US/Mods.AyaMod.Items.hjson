@@ -142,3 +142,8 @@ SpiderCamera: {
 	DisplayName: Spider Camera
 	Tooltip: ""
 }
+
+ReporterEmblem: {
+	DisplayName: Reporter Emblem
+	Tooltip: ""
+}

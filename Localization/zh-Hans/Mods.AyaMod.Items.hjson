@@ -139,6 +139,11 @@ AliceCamera: {
 }
 
 SpiderCamera: {
-	// DisplayName: Spider Camera
-	// Tooltip: ""
+	DisplayName: 鬼火蛛网目
+	Tooltip: ""
+}
+
+ReporterEmblem: {
+	DisplayName: 记者徽章
+	Tooltip: 增加{0}%记者伤害
 }
