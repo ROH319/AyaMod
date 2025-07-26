@@ -1,0 +1,24 @@
+AcidBuff: {
+	// DisplayName: Acid Buff
+	// Description: Mods.AyaMod.Buffs.AcidBuff.Description
+}
+
+ScaredBuff: {
+	// DisplayName: Scared Buff
+	// Description: Mods.AyaMod.Buffs.ScaredBuff.Description
+}
+
+ConfusedBuff: {
+	// DisplayName: Confused Buff
+	// Description: Mods.AyaMod.Buffs.ConfusedBuff.Description
+}
+
+ElectrifiedBuff: {
+	// DisplayName: Electrified Buff
+	// Description: Mods.AyaMod.Buffs.ElectrifiedBuff.Description
+}
+
+ShadowSuckBuff: {
+	// DisplayName: Shadow Suck Buff
+	// Description: Mods.AyaMod.Buffs.ShadowSuckBuff.Description
+}

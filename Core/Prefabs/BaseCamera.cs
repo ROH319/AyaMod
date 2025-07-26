@@ -62,7 +62,7 @@ namespace AyaMod.Core.Prefabs
         {
             if (player.ownedProjectileCounts[Item.shoot] <= 0)
             {
-                ShootCameraProj(player, new EntitySource_ItemUse_WithAmmo(player, Item, ModContent.ItemType<CameraFilm>()), Item.damage, Item.knockBack);
+                ShootCameraProj(player, new EntitySource_ItemUse_WithAmmo(player, Item, ModContent.ItemType<CameraFilm>()), player.GetWeaponDamage(Item), Item.knockBack);
             }
             foreach (Projectile projectile in Main.ActiveProjectiles)
             {

@@ -102,7 +102,7 @@ namespace AyaMod.Content.Items.Cameras
                 Projectile.Kill();
             }
             float rotFactor = -MathF.Abs(MathF.Sin(Main.GameUpdateCount * 0.005f));
-            Projectile.localAI[2] += 0.035f + rotFactor * 0.027f;
+            Projectile.localAI[2] += 0.044f + rotFactor * 0.036f;
             Projectile.rotation += 0.02f;
         }
         public override bool PreDraw(ref Color lightColor)
