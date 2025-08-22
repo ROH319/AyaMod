@@ -1,7 +1,10 @@
-﻿using AyaMod.Core.Globals;
+﻿using AyaMod.Core.Attributes;
+using AyaMod.Core.Globals;
+using AyaMod.Core.ModPlayers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
@@ -286,9 +289,24 @@ namespace AyaMod.Helpers
         public static bool Alive(this Player player) => player != null && player.active && !player.dead && !player.ghost;
         public static bool Alive(this Projectile projectile) => projectile != null && projectile.active;
         public static bool Alive(this NPC npc) => npc != null && npc.active;
+        public static AyaPlayer Aya(this Player player) => player.GetModPlayer<AyaPlayer>();
         public static AyaGlobalNPC Aya(this NPC npc) => npc.GetGlobalNPC<AyaGlobalNPC>();
         public static AyaGlobalProjectile Aya(this Projectile projectile) => projectile.GetGlobalProjectile<AyaGlobalProjectile>();
+        public static CameraPlayer Camera(this Player player) => player.GetModPlayer<CameraPlayer>();
         public static CameraGlobalNPC Camera(this NPC npc) => npc.GetGlobalNPC<CameraGlobalNPC>();
         public static CameraGlobalProjectile Camera(this Projectile projectile) => projectile.GetGlobalProjectile<CameraGlobalProjectile>();
+
+        public static bool HasEffect(this Player player, string effectName) => player.Aya().HasEffect(effectName);
+        public static bool HasEffect<T>(this Player player) where T : class
+        {
+            var attr = typeof(T).GetCustomAttribute<PlayerEffectAttribute>();
+            return player.Aya().HasEffect(attr?.OverrideEffectName ?? typeof(T).Name);
+        }
+        public static bool AddEffect(this Player player, string effectName) => player.Aya().AddEffect(effectName);
+        public static bool AddEffect<T>(this Player player) where T : class
+        {
+            var attr = typeof(T).GetCustomAttribute<PlayerEffectAttribute>();
+            return player.Aya().AddEffect(attr?.OverrideEffectName ?? typeof(T).Name);
+        }
     }
 }

@@ -1,1 +1,4 @@
-PlayerStats.Reporter: 记者
+PlayerStats: {
+	Reporter: 记者
+	FocusSpeed: 聚焦速度
+}

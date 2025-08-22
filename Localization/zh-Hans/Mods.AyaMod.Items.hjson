@@ -147,3 +147,50 @@ ReporterEmblem: {
 	DisplayName: 记者徽章
 	Tooltip: 增加{0}%记者伤害
 }
+
+FalsePHDJ: {
+	DisplayName: 伪造新闻学博士证
+	Tooltip:
+		'''
+		增加{0}%记者伤害
+		增加{1}%记者暴击率
+		受到的伤害增加{2}%
+		'''
+}
+
+FalseReporterEmblem: {
+	DisplayName: 伪造记者徽章
+	Tooltip:
+		'''
+		增加{0}%记者伤害
+		减少{1}防御
+		'''
+}
+
+LensOfCthulhu: {
+	DisplayName: 克苏鲁晶状体
+	Tooltip: 增加{0}%聚焦速度
+}
+
+PHDJ: {
+	DisplayName: 新闻学博士证
+	Tooltip:
+		'''
+		增加{0}%记者伤害
+		增加{1}%记者暴击率
+		'''
+}
+
+ReporterBadge: {
+	DisplayName: 记者胸牌
+	Tooltip:
+		'''
+		增加{0}%记者伤害
+		增加{1}%记者暴击率
+		'''
+}
+
+ReporterCard: {
+	DisplayName: 记者名片
+	Tooltip: 增加{0}%记者伤害
+}

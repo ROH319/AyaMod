@@ -24,9 +24,17 @@ namespace AyaMod.Compat.ImproveGame
                 qot.Call("AddStatCategory", category, texture, nameKey, modIcon);
 
                 string damageNameKey = "Mods.ImproveGame.UI.PlayerStats.Damage";
-                bool value = (bool)qot.Call("AddStat", category, damageNameKey,
+                qot.Call("AddStat", category, damageNameKey,
                     () => BonusSyntax(ReporterDamage(),true));
-                int a = 0;
+
+                string critNameKey = "Mods.ImproveGame.UI.PlayerStats.Crit";
+                qot.Call("AddStat", category, critNameKey,
+                    () => BonusSyntax(ReporterCrit(), true));
+
+                string speedNameKey = "Mods.AyaMod.UI.PlayerStats.FocusSpeed";
+                qot.Call("AddStat", category, speedNameKey,
+                    () => BonusSyntax(ReporterAttackSpeed(), true));
+
             }
         }
         public static float ReporterDamage()
@@ -34,6 +42,10 @@ namespace AyaMod.Compat.ImproveGame
             var dmg = Main.LocalPlayer.GetTotalDamage<ReporterDamage>();
             return (dmg.Additive * dmg.Multiplicative - 1) * 100f;
         }
+
+        public static float ReporterCrit() => Main.LocalPlayer.GetTotalCritChance<ReporterDamage>();
+
+        public static float ReporterAttackSpeed() => Main.LocalPlayer.GetTotalAttackSpeed<ReporterDamage>() * 100f - 100f;
 
         /// <summary>
         /// 对于传入的value，以加成格式显示 (四舍五入并保留两位小数) <br/>

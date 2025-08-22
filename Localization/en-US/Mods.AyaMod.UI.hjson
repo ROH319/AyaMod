@@ -1,1 +1,4 @@
-﻿PlayerStats.Reporter: Reporter
+PlayerStats: {
+	Reporter: Reporter
+	FocusSpeed: Focus Speed
+}

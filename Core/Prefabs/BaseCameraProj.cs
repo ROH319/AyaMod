@@ -2,6 +2,7 @@
 using AyaMod.Content.Items.Lens;
 using AyaMod.Core.Configs;
 using AyaMod.Core.Globals;
+using AyaMod.Core.ModPlayers;
 using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;

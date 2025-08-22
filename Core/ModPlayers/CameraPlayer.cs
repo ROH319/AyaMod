@@ -11,7 +11,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 
-namespace AyaMod.Core
+namespace AyaMod.Core.ModPlayers
 {
     public class CameraPlayer : ModPlayer
     {
@@ -20,6 +20,8 @@ namespace AyaMod.Core
 
         public ILens CurrentLens;
         public static ILens DefaultLens;
+
+        public StatModifier SizeBonus;
 
         public float FlashTimer;
 
@@ -44,6 +46,8 @@ namespace AyaMod.Core
         public override void ResetEffects()
         {
             CurrentLens = null;
+
+            SizeBonus = new StatModifier();
         }
 
         public override void PreUpdate()

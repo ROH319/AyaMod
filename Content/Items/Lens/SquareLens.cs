@@ -1,4 +1,4 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;

@@ -10,6 +10,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
 {
     public class HadesFilm : BaseDyeFilm
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
 

@@ -1,4 +1,4 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Core.ModPlayers;
 using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;

@@ -145,5 +145,35 @@ SpiderCamera: {
 
 ReporterEmblem: {
 	DisplayName: Reporter Emblem
+	Tooltip: Increase {0} Reporter Damage
+}
+
+FalsePHDJ: {
+	DisplayName: False PHDJ
+	Tooltip: ""
+}
+
+FalseReporterEmblem: {
+	DisplayName: False Reporter Emblem
+	Tooltip: ""
+}
+
+LensOfCthulhu: {
+	DisplayName: Lens Of Cthulhu
+	Tooltip: ""
+}
+
+PHDJ: {
+	DisplayName: PHDJ
+	Tooltip: ""
+}
+
+ReporterBadge: {
+	DisplayName: Reporter Badge
+	Tooltip: ""
+}
+
+ReporterCard: {
+	DisplayName: Reporter Card
 	Tooltip: ""
 }
