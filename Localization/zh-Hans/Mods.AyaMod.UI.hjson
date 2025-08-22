@@ -1,4 +1,5 @@
 PlayerStats: {
 	Reporter: 记者
 	FocusSpeed: 聚焦速度
+	Size: 镜头大小
 }

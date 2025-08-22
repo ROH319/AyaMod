@@ -177,3 +177,8 @@ ReporterCard: {
 	DisplayName: Reporter Card
 	Tooltip: ""
 }
+
+CorruptPupil: {
+	DisplayName: Corrupt Pupil
+	Tooltip: ""
+}

@@ -35,6 +35,9 @@ namespace AyaMod.Compat.ImproveGame
                 qot.Call("AddStat", category, speedNameKey,
                     () => BonusSyntax(ReporterAttackSpeed(), true));
 
+                string sizeNameKey = "Mods.AyaMod.UI.PlayerStats.Size";
+                qot.Call("AddStat", category, sizeNameKey,
+                    () => BonusSyntax(ReporterSize(), true));
             }
         }
         public static float ReporterDamage()
@@ -47,6 +50,11 @@ namespace AyaMod.Compat.ImproveGame
 
         public static float ReporterAttackSpeed() => Main.LocalPlayer.GetTotalAttackSpeed<ReporterDamage>() * 100f - 100f;
 
+        public static float ReporterSize()
+        {
+            var size = Main.LocalPlayer.Camera().SizeBonus;
+            return (size.Additive * size.Multiplicative - 1) * 100f;
+        }
         /// <summary>
         /// 对于传入的value，以加成格式显示 (四舍五入并保留两位小数) <br/>
         /// 不带符号：value% <br/>

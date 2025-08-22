@@ -194,3 +194,8 @@ ReporterCard: {
 	DisplayName: 记者名片
 	Tooltip: 增加{0}%记者伤害
 }
+
+CorruptPupil: {
+	DisplayName: 紫幽之瞳
+	Tooltip: 增加{0}%镜头大小
+}

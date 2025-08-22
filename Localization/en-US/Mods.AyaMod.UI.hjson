@@ -1,4 +1,5 @@
 PlayerStats: {
 	Reporter: Reporter
 	FocusSpeed: Focus Speed
+	Size: Frame Size
 }
