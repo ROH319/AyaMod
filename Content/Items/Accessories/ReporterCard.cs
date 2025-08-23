@@ -26,6 +26,6 @@ namespace AyaMod.Content.Items.Accessories
             player.GetDamage<ReporterDamage>() += (float)DamageIncrease / 100f;
         }
 
-        public static readonly int DamageIncrease = 8;
+        public static int DamageIncrease = 8;
     }
 }

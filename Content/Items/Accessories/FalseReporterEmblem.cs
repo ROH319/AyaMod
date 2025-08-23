@@ -26,7 +26,7 @@ namespace AyaMod.Content.Items.Accessories
             player.statDefense -= DefenceDecrease;
         }
 
-        public static readonly int DamageIncrease = 15;
-        public static readonly int DefenceDecrease = 6;
+        public static int DamageIncrease = 15;
+        public static int DefenceDecrease = 6;
     }
 }

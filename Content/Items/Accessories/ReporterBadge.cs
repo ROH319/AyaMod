@@ -28,8 +28,8 @@ namespace AyaMod.Content.Items.Accessories
             player.GetCritChance<ReporterDamage>() += CritIncrease;
         }
 
-        public static readonly int DamageIncrease = 7;
-        public static readonly int CritIncrease = 7;
+        public static int DamageIncrease = 7;
+        public static int CritIncrease = 7;
 
         public override void AddRecipes()
         {

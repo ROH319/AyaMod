@@ -26,7 +26,7 @@ namespace AyaMod.Content.Items.Accessories
             player.Camera().SizeBonus += (float)SizeIncrease / 100f;
         }
 
-        public static readonly int SizeIncrease = 15;
+        public static int SizeIncrease = 15;
 
     }
 }

@@ -25,7 +25,7 @@ namespace AyaMod.Content.Items.Accessories
             player.GetAttackSpeed<ReporterDamage>() += (float)SpeedIncrease / 100f;
         }
 
-        public static readonly int SpeedIncrease = 10;
+        public static int SpeedIncrease = 10;
 
     }
 }

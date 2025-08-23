@@ -31,9 +31,9 @@ namespace AyaMod.Content.Items.Accessories
             var b = player.AddEffect<FalsePHDJ>();
         }
 
-        public static readonly int DamageIncrease = 15;
-        public static readonly int CritIncrease = 10;
-        public static readonly int HurtIncrease = 10;
+        public static int DamageIncrease = 15;
+        public static int CritIncrease = 10;
+        public static int HurtIncrease = 10;
 
         public override void AddRecipes()
         {
