@@ -285,6 +285,17 @@ namespace AyaMod.Helpers
             return -self.DirectionToSafe(position);
         }
 
+        public static bool TryGetHeldModItem(this Player player, out ModItem modItem)
+        {
+            modItem = null;
+            if (player.HeldItem != null && player.HeldItem.ModItem != null)
+            {
+                modItem = player.HeldItem.ModItem;
+                return true;
+            }
+            return false;
+        }
+
         public static bool TypeAlive(this Projectile projectile, params int[] type) => projectile.Alive() && (type.Length == 0 || type.Contains(projectile.type));
         public static bool Alive(this Player player) => player != null && player.active && !player.dead && !player.ghost;
         public static bool Alive(this Projectile projectile) => projectile != null && projectile.active;

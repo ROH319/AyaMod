@@ -3,3 +3,8 @@ PlayerStats: {
 	FocusSpeed: 聚焦速度
 	Size: 镜头大小
 }
+
+BuilderToggles: {
+	CameraToggleOn: 自动拍摄：开
+	CameraToggleOff: 自动拍摄：关
+}

@@ -13,6 +13,8 @@ namespace AyaMod.Core.ModPlayers
 {
     public partial class AyaPlayer : ModPlayer
     {
+        public int itemTimeLastFrame;
+
         public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
         {
             ModifyHitByBoth(ref modifiers);
@@ -29,6 +31,11 @@ namespace AyaMod.Core.ModPlayers
             {
                 modifiers.FinalDamage *= 1f + (float)FalsePHDJ.HurtIncrease / 100f;
             }
+        }
+
+        public override void PostUpdate()
+        {
+            itemTimeLastFrame = Player.itemTime;
         }
     }
 }

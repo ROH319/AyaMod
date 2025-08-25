@@ -13,6 +13,7 @@ using Terraria;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using AyaMod.Core.Globals;
+using Terraria.Audio;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -55,6 +56,9 @@ namespace AyaMod.Content.Items.Cameras
     {
         public override string Texture => AssetDirectory.Extras + "Ball";
         public int TrailCount = 10;
+
+        public ref float CurrentRadius => ref Projectile.ai[0];
+
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 48;
@@ -69,12 +73,23 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnSpawn(IEntitySource source)
         {
+
+
             Projectile.oldRot = new float[TrailCount];
             for(int i = 0;i < TrailCount; i++)
             {
                 Projectile.oldRot[i] = 25;
             }
-            Projectile.ai[0] = 25;
+            CurrentRadius = 25;
+
+            for (int i = 0; i < 4; i++)
+            {
+                SoundEngine.PlaySound(SoundID.Splash with
+                {
+                    MaxInstances = 30,
+                    Volume = 1f
+                }, Projectile.Center);
+            }
         }
 
         public override bool? CanHitNPC(NPC target)
@@ -84,14 +99,13 @@ namespace AyaMod.Content.Items.Cameras
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            return Helper.CheckRingCollision(targetHitbox, Projectile.Center, Projectile.ai[0] - 10, Projectile.ai[0] + 10);
+            return Helper.CheckRingCollision(targetHitbox, Projectile.Center, CurrentRadius - 10, CurrentRadius + 10);
         }
 
         public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
             float factor = Projectile.TimeleftFactor();
             modifiers.FinalDamage *= Utils.Remap(factor, 0, 1, 0.5f, 1f);
-            base.ModifyHitNPC(target, ref modifiers);
         }
 
         public override void AI()
@@ -101,28 +115,36 @@ namespace AyaMod.Content.Items.Cameras
 
             vel = Utils.Remap(factor, 1f, 0f, 6f, 0f);
             Projectile.Opacity = factor;
-            Projectile.oldRot[0] = Projectile.ai[0];
+            Projectile.oldRot[0] = CurrentRadius;
             for(int i = TrailCount - 1; i > 0; i--)
             {
                 Projectile.oldRot[i] = Projectile.oldRot[0] - i * 6;
             }
 
-            Projectile.ai[0] += vel * 0.8f;
 
-            int checkCount = (int)Utils.Remap(Projectile.ai[0], 25, 500, 4, 46);
+            int dustcount = 16;
+            for (int i = 0; i < dustcount; i++)
+            {
+                Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * CurrentRadius;
+                Dust d = Dust.NewDustPerfect(pos, DustID.Water, Projectile.Center.DirectionToSafe(pos) * vel * 0.4f);
+                d.noGravity = true;
+            }
+
+            CurrentRadius += vel * 0.8f;
+
+            int checkCount = (int)Utils.Remap(CurrentRadius, 25, 500, 4, 46);
             for(int i = 0; i < checkCount - 1; i++)
             {
-                Vector2 p1 = Projectile.Center + (MathHelper.TwoPi / (float)checkCount * i).ToRotationVector2() * Projectile.ai[0];
-                Vector2 p2 = Projectile.Center + (MathHelper.TwoPi / (float)checkCount * (i + 1)).ToRotationVector2() * Projectile.ai[0];
+                Vector2 p1 = Projectile.Center + (MathHelper.TwoPi / (float)checkCount * i).ToRotationVector2() * CurrentRadius;
+                Vector2 p2 = Projectile.Center + (MathHelper.TwoPi / (float)checkCount * (i + 1)).ToRotationVector2() * CurrentRadius;
                 Utils.PlotTileLine(p1, p2,3, new Utils.TileActionAttempt(DelegateMethods.CutTiles));
             }
             {
-                Vector2 p1 = Projectile.Center + (MathHelper.TwoPi / (float)checkCount * (checkCount - 1)).ToRotationVector2() * Projectile.ai[0];
-                Vector2 p2 = Projectile.Center + Vector2.UnitX * Projectile.ai[0];
+                Vector2 p1 = Projectile.Center + (MathHelper.TwoPi / (float)checkCount * (checkCount - 1)).ToRotationVector2() * CurrentRadius;
+                Vector2 p2 = Projectile.Center + Vector2.UnitX * CurrentRadius;
                 Utils.PlotTileLine(p1, p2, 3, new Utils.TileActionAttempt(DelegateMethods.CutTiles));
 
             }
-            //Utils.PlotTileLine()
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -133,7 +155,7 @@ namespace AyaMod.Content.Items.Cameras
 
             float timeleftFactor = Projectile.TimeleftFactor();
 
-            int drawcount = (int)Utils.Remap(Projectile.ai[0],25,500,25,500);
+            int drawcount = (int)Utils.Remap(CurrentRadius,25,500,25,500);
             for(int j = 0;j < drawcount; j++)
             {
                 float rotFactor = MathHelper.TwoPi / drawcount * j;

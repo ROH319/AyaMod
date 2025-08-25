@@ -3,3 +3,8 @@ PlayerStats: {
 	FocusSpeed: Focus Speed
 	Size: Frame Size
 }
+
+BuilderToggles: {
+	CameraToggleOn: Auto Camera: On
+	CameraToggleOff: Auto Camera: Off
+}

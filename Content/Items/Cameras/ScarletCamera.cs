@@ -100,6 +100,10 @@ namespace AyaMod.Content.Items.Cameras
     {
         public override string Texture => AssetDirectory.EmptyTexturePass;
 
+        public ref float rotDirection => ref Projectile.localAI[0];
+        public ref float rotOffset => ref Projectile.localAI[1];
+        public ref float radius => ref Projectile.localAI[2];
+
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 32;
@@ -112,7 +116,7 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.localAI[0] = Main.rand.NextBool() ? 1 : -1;
+            rotDirection = Main.rand.NextBool() ? 1 : -1;
         }
         public override bool? CanDamage() => false;
         public override void AI()
@@ -123,17 +127,16 @@ namespace AyaMod.Content.Items.Cameras
             {
                 Projectile.Center = /*Vector2.Lerp(Projectile.Center, owner.Center, 0.2f);*/owner.Center;
             }
-            Projectile.localAI[1] -= 0.05f * Projectile.localAI[0];
-            if (Projectile.localAI[2] < 100)
+            rotOffset -= 0.05f * rotDirection;
+            if (radius < 100)
             {
-                Projectile.localAI[2] += 3;
+                radius += 3;
             }
             if(Projectile.timeLeft % 6 == 0 && Projectile.timeLeft > 40)
             {
-                float radius = Projectile.localAI[2];
                 for(int i = 0; i < 2; i++)
                 {
-                    float rot = Projectile.rotation + Projectile.localAI[1] + i * MathHelper.Pi;
+                    float rot = Projectile.rotation + rotOffset + i * MathHelper.Pi;
                     Vector2 dir = rot.ToRotationVector2();
 
                     Vector2 pos = Projectile.Center + dir * radius;
@@ -141,7 +144,7 @@ namespace AyaMod.Content.Items.Cameras
                 }
             }
 
-            Projectile.rotation += MathHelper.Pi / 10f / 3f * Projectile.localAI[0];
+            Projectile.rotation += MathHelper.Pi / 10f / 3f * rotDirection;
         }
     }
 

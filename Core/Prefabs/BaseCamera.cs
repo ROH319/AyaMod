@@ -2,6 +2,9 @@
 using AyaMod.Content.Items.Lens;
 using AyaMod.Content.Prefixes.CameraPrefixes;
 using AyaMod.Core;
+using AyaMod.Core.BuilderToggles;
+using AyaMod.Core.Configs;
+using AyaMod.Core.ModPlayers;
 using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
@@ -68,6 +71,21 @@ namespace AyaMod.Core.Prefabs
             {
                 if (projectile.type == Item.shoot) projectile.timeLeft = 2;
             }
+
+            if (!CameraToggle.AutoSnapEnabled)
+            {
+                if (!player.controlUseItem && player.itemTime > 2)
+                    player.itemTime = 0;
+                if (player.itemTime == 2)
+                    if (!player.releaseUseItem)
+                        player.itemTime = 3;
+                if(player.Aya().itemTimeLastFrame == 4 && player.itemTime == 3)
+                {
+                    Helper.PlayPitched("FocusReady", 0.8f, 0.3f, position: player.Center);
+
+                }
+            }
+            //Main.NewText($"{player.itemTime}");
         }
 
         public virtual void ShootCameraProj(Player player, EntitySource_ItemUse_WithAmmo source, int damage, float knockback)
@@ -75,6 +93,21 @@ namespace AyaMod.Core.Prefabs
             var p = Projectile.NewProjectileDirect(source, player.Center, Vector2.Zero, Item.shoot, damage, knockback, Main.myPlayer);
            
         }
+        public override bool? CanAutoReuseItem(Player player)
+        {
+            return CameraToggle.AutoSnapEnabled;
+        }
 
+        public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
+        {
+            if (CameraToggle.AutoSnapEnabled)
+            {
+                damage *= CameraPlayer.CameraAutoSnapDamageModifier;
+            }
+            else
+            {
+                damage *= CameraPlayer.CameraManualSnapDamageModifier;
+            }
+        }
     }
 }

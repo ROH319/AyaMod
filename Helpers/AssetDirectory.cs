@@ -33,6 +33,8 @@ namespace AyaMod.Helpers
         public const string Particles = Textures + "Particles/";
 
         public const string Projectiles = Textures + "Projectiles/";
+
+        public const string UI = Textures + "UI/";
         
         public const string EmptyTexturePass = Textures + "A";
 

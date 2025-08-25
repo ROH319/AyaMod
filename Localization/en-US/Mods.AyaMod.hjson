@@ -1,1 +1,8 @@
 DamageClasses.ReporterDamage.DisplayName: Reporter Damage
+
+BuilderToggles: {
+	CameraToggle: {
+		OnText: AutoSnap : On
+		OffText: AutoSnap : Off
+	}
+}

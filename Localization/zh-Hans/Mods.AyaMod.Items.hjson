@@ -3,6 +3,7 @@ CommonItemTooltip: {
 	PercentIncreasedReporterCritChance: 增加{0}%记者暴击率
 	PercentIncreasedFocusSpeed: 增加{0}%聚焦速度
 	IncreaseCameraSize: 增加{0}%镜头大小
+	DecreaseCameraSize: 减少{0}%镜头大小
 }
 
 GoldenCamera: {
@@ -205,4 +206,18 @@ ReporterCard: {
 CorruptPupil: {
 	DisplayName: 紫幽之瞳
 	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize}"
+}
+
+CrimsonPupil: {
+	DisplayName: 绯红之瞳
+	Tooltip: 
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize}
+		对拍摄框内血量最多的敌人造成16%额外伤害
+		'''
+}
+
+CaptainCamera: {
+	DisplayName: 航海记录仪
+	Tooltip: ""
 }

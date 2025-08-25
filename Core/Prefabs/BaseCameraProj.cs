@@ -30,6 +30,8 @@ namespace AyaMod.Core.Prefabs
 
         public bool DealDamageThisFrame;
 
+        public Vector2 ComputedVelocity;
+
         // 额外伤害点（0~1之间，基于进度百分比）
         public List<float> DamagePoints { get; } = new();
 
@@ -246,8 +248,10 @@ namespace AyaMod.Core.Prefabs
         public virtual void MoveMent(CameraPlayer mplr)
         {
             float slowedchase = CameraStats.ChaseFactor;
-            if (mplr.Player.itemTime != 0) slowedchase *= CameraStats.SlowFactor;
+            //if (mplr.Player.itemTime != 0) slowedchase *= CameraStats.SlowFactor;
+            Vector2 previous = Projectile.Center;
             Projectile.Center = Vector2.Lerp(Projectile.Center, mplr.MouseWorld, slowedchase);
+            ComputedVelocity = Projectile.Center - previous;
             Projectile.rotation = mplr.Player.AngleToSafe(Projectile.Center);
         }
 

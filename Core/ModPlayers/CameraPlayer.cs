@@ -1,5 +1,6 @@
 ﻿using AyaMod.Content.Items.Cameras;
 using AyaMod.Content.Items.Lens;
+using AyaMod.Core.BuilderToggles;
 using AyaMod.Core.Configs;
 using AyaMod.Helpers;
 using System;
@@ -66,6 +67,11 @@ namespace AyaMod.Core.ModPlayers
             if (CameraAltCooldown > 0) CameraAltCooldown--;
         }
 
+        public override void PostUpdateMiscEffects()
+        {
+
+        }
+
         public void OnSnap()
         {
             FlashTimer = FlashTimerMax;
@@ -94,5 +100,9 @@ namespace AyaMod.Core.ModPlayers
             }
 
         }
+
+        public static float CameraAutoSnapDamageModifier = 0.8f;
+
+        public static float CameraManualSnapDamageModifier = 1.1f;
     }
 }

@@ -3,6 +3,7 @@ CommonItemTooltip: {
 	PercentIncreasedReporterCritChance: "{0}% increased reporter crit chance"
 	PercentIncreasedFocusSpeed: "{0}% increased focus speed"
 	IncreaseCameraSize: Increase camera size by {0}%
+	DecreaseCameraSize: Decrease camera size by {0}%
 }
 
 GoldenCamera: {
@@ -187,5 +188,15 @@ ReporterCard: {
 
 CorruptPupil: {
 	DisplayName: Corrupt Pupil
+	Tooltip: ""
+}
+
+CrimsonPupil: {
+	DisplayName: Crimson Pupil
+	Tooltip: ""
+}
+
+CaptainCamera: {
+	DisplayName: Captain Camera
 	Tooltip: ""
 }
