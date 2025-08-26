@@ -210,7 +210,7 @@ CorruptPupil: {
 
 CrimsonPupil: {
 	DisplayName: 绯红之瞳
-	Tooltip: 
+	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize}
 		对拍摄框内血量最多的敌人造成16%额外伤害
@@ -220,4 +220,9 @@ CrimsonPupil: {
 CaptainCamera: {
 	DisplayName: 航海记录仪
 	Tooltip: ""
+}
+
+DukeCamera: {
+	// DisplayName: Duke Camera
+	// Tooltip: ""
 }

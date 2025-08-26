@@ -200,3 +200,8 @@ CaptainCamera: {
 	DisplayName: Captain Camera
 	Tooltip: ""
 }
+
+DukeCamera: {
+	DisplayName: Duke Camera
+	Tooltip: ""
+}
