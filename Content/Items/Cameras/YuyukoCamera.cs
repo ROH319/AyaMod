@@ -14,6 +14,7 @@ using Terraria.GameContent;
 using Terraria.Audio;
 using AyaMod.Core.Configs;
 using AyaMod.Core.ModPlayers;
+using AyaMod.Common.Easer;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -91,8 +92,16 @@ namespace AyaMod.Content.Items.Cameras
 
                     Projectile.Center = mouseworld + vel * 4;
 
-                    var slash = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), prev, vel, ProjectileType<YoumuSlash>(), Projectile.damage, Projectile.knockBack, Projectile.owner, length,15);
+                    var slash = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), prev, vel, ProjectileType<YoumuSlash>(), Projectile.damage, Projectile.knockBack, Projectile.owner, length,15,2);
                     slash.rotation = dir;
+                }
+
+                int sakuracount = 8;
+                for(int i = 0;i < sakuracount; i++)
+                {
+                    Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.Next(5, 15);
+                    Vector2 vel = Projectile.Center.DirectionToSafe(pos) * 4f + Main.rand.NextVector2Unit() * 2.5f;
+                    var sakura = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ProjectileType<SakuraBlossom>(), (int)(Projectile.damage * 0.5f), Projectile.knockBack, Projectile.owner, 0, 1f);
                 }
 
                 int slashcount = 8;
@@ -102,7 +111,7 @@ namespace AyaMod.Content.Items.Cameras
                     Helper.PlayPitched("BladeSlash", 0.1f, position: player.Center);
 
 
-                    Vector2 pos = Projectile.Center +  (MathHelper.TwoPi / slashcount * i + baseRot).ToRotationVector2() * 240;
+                    Vector2 pos = Projectile.Center + (MathHelper.TwoPi / slashcount * i + baseRot).ToRotationVector2() * 240;
 
                     float dir = pos.AngleTo(Projectile.Center) + MathHelper.PiOver4;
                     
@@ -157,6 +166,8 @@ namespace AyaMod.Content.Items.Cameras
                 {
                     Helper.PlayPitched("BladeSlash", 0.5f, position: Projectile.Center);
 
+                    var sakura = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + totarget * 4, totarget * 0.3f, ProjectileType<SakuraBlossom>(), (int)(Projectile.damage * 0.5f), Projectile.knockBack, Projectile.owner, 0,1f);
+
                     float length = 400;
                     var slash = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, totarget, ProjectileType<YoumuSlash>(), Projectile.damage, Projectile.knockBack, Projectile.owner, length);
                     slash.rotation = totarget.ToRotation();
@@ -197,6 +208,8 @@ namespace AyaMod.Content.Items.Cameras
     {
         public override string Texture => AssetDirectory.Extras + "Ball4";
 
+        public ref float length => ref Projectile.ai[0];
+
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 16;
@@ -210,17 +223,31 @@ namespace AyaMod.Content.Items.Cameras
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float point = 0f;
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + Projectile.rotation.ToRotationVector2() * Projectile.ai[0], 4, ref point);
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + Projectile.rotation.ToRotationVector2() * length, 4, ref point);
         }
         public override void OnSpawn(IEntitySource source)
         {
-            if (Projectile.ai[1] > 0)
-            {
-                Projectile.timeLeft = (int)Projectile.ai[1];
-            }
+            //if (Projectile.ai[1] > 0)
+            //{
+            //    Projectile.timeLeft = (int)Projectile.ai[1];
+            //}
         }
         public override void AI()
         {
+            for (int i = 0; i < 6; i++)
+            {
+                if (Projectile.ai[1] < length && Projectile.ai[2] > 1)
+                {
+
+                    Projectile.ai[1] += Main.rand.NextFloat(5f, 8f) * 20;
+                    Vector2 vec = Main.rand.NextVector2Unit();
+                    Vector2 pos = Projectile.Center + Projectile.rotation.ToRotationVector2() * Projectile.ai[1];
+                    Vector2 vel = Projectile.rotation.ToRotationVector2();
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vec * 2.5f + vel * 4, ProjectileType<SakuraBlossom>(), Projectile.damage, Projectile.knockBack, Projectile.owner, 0, 1f);
+
+                }
+            }
+
             //Projectile.position -= Projectile.velocity * 0.8f;
             Projectile.velocity *= 0.85f;
 
@@ -233,9 +260,80 @@ namespace AyaMod.Content.Items.Cameras
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Vector2 origin = new Vector2(0,texture.Height / 2);
             float alpha = Projectile.Opacity;
-            Vector2 scale = new Vector2(Projectile.ai[0] / 256, 4f / 256) * Projectile.scale;
+            Vector2 scale = new Vector2(length / 256, 4f / 256) * Projectile.scale;
 
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White * alpha, Projectile.rotation, origin, scale, 0, 0);
+
+            return false;
+        }
+    }
+    public class SakuraBlossom : ModProjectile
+    {
+        public override string Texture => AssetDirectory.Projectiles + "SakuraPetal2";
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 48;
+            Projectile.penetrate = -1;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.SetImmune(25);
+            Projectile.timeLeft = 90;
+            base.SetDefaults();
+        }
+        public override void OnSpawn(IEntitySource source)
+        {
+            Projectile.Opacity = 1 - Main.rand.NextFloat(0f,0.3f);
+            Projectile.scale = 0.1f;
+            Projectile.ai[2] = Main.rand.NextFloat(-0.5f, 0.4f);
+            //Projectile.ai[2] = -0.5f;
+        }
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            base.OnHitNPC(target, hit, damageDone);
+        }
+        public override void AI()
+        {
+            Lighting.AddLight((int)(Projectile.Center.X / 16f), (int)(Projectile.Center.Y / 16f), TorchID.Pink, 0.8f * Projectile.Opacity);
+
+            Projectile.velocity *= 0.98f;
+            Projectile.rotation += 0.04f;
+            if (Projectile.scale < Projectile.ai[1]) Projectile.scale += Projectile.ai[1] / 20f;
+
+            //Projectile.Opacity -= Projectile.ai[0];
+            //if (Projectile.Opacity < 0.01f) Projectile.Kill();
+            base.AI();
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+
+
+            float factor = Projectile.TimeleftFactor();
+            float fadeinFactor = Utils.Remap(factor, 0.7f, 1f, 1f, 0f);
+            var fac = MathHelper.Lerp(0, 1, EaseManager.Evaluate(Ease.InCubic, factor, 1));
+            float fadeoutFactor = Utils.Remap(fac, 0f, 0.5f, 0f, 1f);
+            float alpha = fadeinFactor * fadeoutFactor;
+            int way = 5;
+            float length = 11 * Projectile.scale;
+            float scale = Projectile.scale * 0.4f;
+            //Color baseColor = Color.Lerp(new Color(255,20,147), new Color(80,0,137), 0.5f + Projectile.ai[2]);
+            Color baseColor = Color.Lerp(new Color(255,81,176), new Color(155,76,211), 0.5f + Projectile.ai[2]);
+            Color color = baseColor * (Projectile.GetAlpha(lightColor).A / 255f) * alpha * 1.3f;
+            color = color.AdditiveColor() * 1.4f;
+            for (int i = 0; i < way; i++)
+            {
+                float rot = Projectile.rotation + (float)i * MathHelper.TwoPi / way;
+                Vector2 vec = rot.ToRotationVector2() * length;
+                //RenderHelper.DrawBloom(6, 4, texture, Projectile.Center + vec - Main.screenPosition, null, color, rot, texture.Size() / 2, scale);
+                //if (Main.dayTime)
+                {
+                    Main.spriteBatch.Draw(texture, Projectile.Center + vec - Main.screenPosition, null, Color.Black * (Projectile.GetAlpha(lightColor).A / 255f) * alpha, rot, texture.Size() / 2, scale, 0, 0);
+
+                }
+                Main.spriteBatch.Draw(texture, Projectile.Center + vec - Main.screenPosition, null, color, rot, texture.Size()/2, scale, 0, 0);
+            }
 
             return false;
         }

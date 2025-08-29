@@ -89,7 +89,7 @@ namespace AyaMod.Content.Items.Cameras
                 if (Projectile.velocity.Length() < 0.1f) Projectile.timeLeft -= 1;
 
             }
-            Projectile.Opacity += 0.1f;
+            Projectile.Opacity += 0.07f;
             if(Projectile.Opacity > 1f)Projectile.Opacity = 1f;
         }
 
@@ -135,7 +135,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.friendly = true;
             Projectile.penetrate = 1;
             Projectile.SetImmune(10);
-            Projectile.timeLeft = (int)(180 + MathF.Cos(Projectile.whoAmI * 0.5f) * 30f);
+            Projectile.timeLeft = (int)(180 + MathF.Cos(Projectile.whoAmI * 0.5f) * 20f);
         }
         public override void OnSpawn(IEntitySource source)
         {
@@ -148,16 +148,20 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void AI()
         {
-            var chasing = Projectile.Chase(800, 22 + MathF.Sin(Projectile.whoAmI * 0.5f) * 5f, 0.05f);
-            if (!chasing)
+            if (Projectile.timeLeft <= 165)
             {
-                //Projectile.velocity *= 0.93f;
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, Vector2.UnitY * -(2.4f + MathF.Sin(Projectile.whoAmI * 0.5f)* 0.6f), 0.05f);
+                var chasing = Projectile.Chase(800, 22 + MathF.Sin(Projectile.whoAmI * 0.5f) * 5f, 0.05f);
+                if (!chasing)
+                {
+                    Projectile.velocity.X *= 0.97f;
+                    Projectile.velocity.Y = MathHelper.Lerp(Projectile.velocity.Y, -(2.4f + MathF.Sin(Projectile.whoAmI * 0.5f) * 0.6f), 0.05f);
+                }
+                //else Projectile.velocity *= 0.97f;
             }
-            else Projectile.velocity *= 0.97f;
+            else Projectile.velocity *= 0.96f;
             if (Projectile.velocity.Length() < 0.1f) Projectile.timeLeft -= 1;
 
-            Projectile.Opacity += 0.15f;
+            Projectile.Opacity += 0.1f;
             if (Projectile.Opacity > 1f) Projectile.Opacity = 1f;
         }
         public override void OnKill(int timeLeft)
