@@ -76,11 +76,6 @@ HellCamera: {
 	Tooltip: ""
 }
 
-CameraFilm: {
-	DisplayName: 相机胶卷
-	Tooltip: ""
-}
-
 HandmadeCamera: {
 	DisplayName: 手工相机
 	Tooltip: ""
@@ -93,26 +88,6 @@ ToyCamera: {
 
 ShadowCamera: {
 	DisplayName: 暗夜剪影
-	Tooltip: ""
-}
-
-AcidFilm: {
-	DisplayName: 酸性胶卷
-	Tooltip: ""
-}
-
-GrimFilm: {
-	DisplayName: 恐怖胶卷
-	Tooltip: ""
-}
-
-HadesFilm: {
-	DisplayName: 冥王胶卷
-	Tooltip: ""
-}
-
-PixieFilm: {
-	DisplayName: 妖精胶卷
 	Tooltip: ""
 }
 
@@ -229,5 +204,230 @@ DukeCamera: {
 
 HallowCamera: {
 	DisplayName: 神光圣映
+	Tooltip: ""
+}
+
+CameraFilm: {
+	DisplayName: 相机胶片
+	Tooltip: ""
+}
+
+AcidFilm: {
+	DisplayName: 酸性胶片
+	Tooltip: ""
+}
+
+BloodbathFilm: {
+	DisplayName: 大屠杀胶片
+	Tooltip: ""
+}
+
+BlueAcidFilm: {
+	DisplayName: 蓝酸性胶片
+	Tooltip: ""
+}
+
+BurningHadesFilm: {
+	DisplayName: 烈焰冥王胶片
+	Tooltip: ""
+}
+
+ChlorophyteFilm: {
+	DisplayName: 叶绿胶片
+	Tooltip: ""
+}
+
+FogboundFilm: {
+	DisplayName: 灰雾胶片
+	Tooltip: ""
+}
+
+GelFilm: {
+	DisplayName: 凝胶胶片
+	Tooltip: ""
+}
+
+GlowingMushroomFilm: {
+	DisplayName: 发光蘑菇胶片
+	Tooltip: ""
+}
+
+GrimFilm: {
+	DisplayName: 恐怖胶片
+	Tooltip: ""
+}
+
+HadesFilm: {
+	DisplayName: 冥王胶片
+	Tooltip: ""
+}
+
+InfernalWispFilm: {
+	DisplayName: 地狱妖灵胶片
+	Tooltip: ""
+}
+
+LivingFlameFilm: {
+	DisplayName: 鲜艳红焰胶片
+	Tooltip: ""
+}
+
+LivingOceanFilm: {
+	DisplayName: 鲜艳海蓝胶片
+	Tooltip: ""
+}
+
+LivingRainbowFilm: {
+	DisplayName: 鲜艳彩虹胶片
+	Tooltip: ""
+}
+
+LokisFilm: {
+	DisplayName: Loki的胶片
+	Tooltip: ""
+}
+
+MartianFilm: {
+	DisplayName: 火星胶片
+	Tooltip: ""
+}
+
+MidnightRainbowFilm: {
+	DisplayName: 午夜彩虹胶片
+	Tooltip: ""
+}
+
+MirageFilm: {
+	DisplayName: 幻象胶片
+	Tooltip: ""
+}
+
+NebulaFilm: {
+	DisplayName: 星云胶片
+	Tooltip: ""
+}
+
+NegativeFilm: {
+	DisplayName: 阴暗胶片
+	Tooltip: ""
+}
+
+PhaseFilm: {
+	DisplayName: 相位胶片
+	Tooltip: ""
+}
+
+PinkGelFilm: {
+	DisplayName: 粉凝胶胶片
+	Tooltip: ""
+}
+
+PixieFilm: {
+	DisplayName: 妖精胶卷
+	Tooltip: ""
+}
+
+PrismaticFilm: {
+	DisplayName: 七彩胶片
+	Tooltip: ""
+}
+
+PurpleOozeFilm: {
+	DisplayName: 紫泥胶片
+	Tooltip: ""
+}
+
+RedAcidFilm: {
+	DisplayName: 红酸性胶片
+	Tooltip: ""
+}
+
+ReflectiveCopperFilm: {
+	DisplayName: 反光铜胶片
+	Tooltip: ""
+}
+
+ReflectiveFilm: {
+	DisplayName: 反光胶片
+	Tooltip: ""
+}
+
+ReflectiveGoldFilm: {
+	DisplayName: 反光金胶片
+	Tooltip: ""
+}
+
+ReflectiveMetalFilm: {
+	DisplayName: 反光金属胶片
+	Tooltip: ""
+}
+
+ReflectiveObsidianFilm: {
+	DisplayName: 反光黑曜石胶片
+	Tooltip: ""
+}
+
+ReflectiveSilverFilm: {
+	DisplayName: 反光银胶片
+	Tooltip: ""
+}
+
+ShadowFilm: {
+	DisplayName: 暗影胶片
+	Tooltip: ""
+}
+
+ShadowflameHadesFilm: {
+	DisplayName: 暗影焰冥王胶片
+	Tooltip: ""
+}
+
+ShiftingPearlsandsFilm: {
+	DisplayName: 珍珠流沙胶片
+	Tooltip: ""
+}
+
+ShiftingSandsFilm: {
+	DisplayName: 珍珠流沙胶片
+	Tooltip: ""
+}
+
+SkiphsBloodFilm: {
+	DisplayName: Skiphs的胶片
+	Tooltip: ""
+}
+
+SolarFilm: {
+	DisplayName: 日耀胶片
+	Tooltip: ""
+}
+
+StardustFilm: {
+	DisplayName: 星尘胶片
+	Tooltip: ""
+}
+
+TwilightFilm: {
+	DisplayName: 暮光胶片
+	Tooltip: ""
+}
+
+UnicornWispFilm: {
+	DisplayName: 独角妖灵胶片
+	Tooltip: ""
+}
+
+VoidFilm: {
+	DisplayName: 虚空胶片
+	Tooltip: ""
+}
+
+VortexFilm: {
+	DisplayName: 星旋胶片
+	Tooltip: ""
+}
+
+WispFilm: {
+	DisplayName: 妖灵胶片
 	Tooltip: ""
 }

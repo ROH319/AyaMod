@@ -76,11 +76,6 @@ HellCamera: {
 	Tooltip: ""
 }
 
-CameraFilm: {
-	DisplayName: Camera Film
-	Tooltip: ""
-}
-
 HandmadeCamera: {
 	DisplayName: Handmade Camera
 	Tooltip: ""
@@ -93,26 +88,6 @@ ToyCamera: {
 
 ShadowCamera: {
 	DisplayName: Shadow Camera
-	Tooltip: ""
-}
-
-AcidFilm: {
-	DisplayName: Acid Film
-	Tooltip: ""
-}
-
-GrimFilm: {
-	DisplayName: Grim Film
-	Tooltip: ""
-}
-
-HadesFilm: {
-	DisplayName: Hades Film
-	Tooltip: ""
-}
-
-PixieFilm: {
-	DisplayName: Pixie Film
 	Tooltip: ""
 }
 
@@ -208,5 +183,230 @@ DukeCamera: {
 
 HallowCamera: {
 	DisplayName: Hallow Camera
+	Tooltip: ""
+}
+
+CameraFilm: {
+	DisplayName: Camera Film
+	Tooltip: ""
+}
+
+AcidFilm: {
+	DisplayName: Acid Film
+	Tooltip: ""
+}
+
+BloodbathFilm: {
+	DisplayName: Bloodbath Film
+	Tooltip: ""
+}
+
+BlueAcidFilm: {
+	DisplayName: Blue Acid Film
+	Tooltip: ""
+}
+
+BurningHadesFilm: {
+	DisplayName: Burning Hades Film
+	Tooltip: ""
+}
+
+ChlorophyteFilm: {
+	DisplayName: Chlorophyte Film
+	Tooltip: ""
+}
+
+FogboundFilm: {
+	DisplayName: Fogbound Film
+	Tooltip: ""
+}
+
+GelFilm: {
+	DisplayName: Gel Film
+	Tooltip: ""
+}
+
+GlowingMushroomFilm: {
+	DisplayName: Glowing Mushroom Film
+	Tooltip: ""
+}
+
+GrimFilm: {
+	DisplayName: Grim Film
+	Tooltip: ""
+}
+
+HadesFilm: {
+	DisplayName: Hades Film
+	Tooltip: ""
+}
+
+InfernalWispFilm: {
+	DisplayName: Infernal Wisp Film
+	Tooltip: ""
+}
+
+LivingFlameFilm: {
+	DisplayName: Living Flame Film
+	Tooltip: ""
+}
+
+LivingOceanFilm: {
+	DisplayName: Living Ocean Film
+	Tooltip: ""
+}
+
+LivingRainbowFilm: {
+	DisplayName: Living Rainbow Film
+	Tooltip: ""
+}
+
+LokisFilm: {
+	DisplayName: Lokis Film
+	Tooltip: ""
+}
+
+MartianFilm: {
+	DisplayName: Martian Film
+	Tooltip: ""
+}
+
+MidnightRainbowFilm: {
+	DisplayName: Midnight Rainbow Film
+	Tooltip: ""
+}
+
+MirageFilm: {
+	DisplayName: Mirage Film
+	Tooltip: ""
+}
+
+NebulaFilm: {
+	DisplayName: Nebula Film
+	Tooltip: ""
+}
+
+NegativeFilm: {
+	DisplayName: Negative Film
+	Tooltip: ""
+}
+
+PhaseFilm: {
+	DisplayName: Phase Film
+	Tooltip: ""
+}
+
+PinkGelFilm: {
+	DisplayName: Pink Gel Film
+	Tooltip: ""
+}
+
+PixieFilm: {
+	DisplayName: Pixie Film
+	Tooltip: ""
+}
+
+PrismaticFilm: {
+	DisplayName: Prismatic Film
+	Tooltip: ""
+}
+
+PurpleOozeFilm: {
+	DisplayName: Purple Ooze Film
+	Tooltip: ""
+}
+
+RedAcidFilm: {
+	DisplayName: Red Acid Film
+	Tooltip: ""
+}
+
+ReflectiveCopperFilm: {
+	DisplayName: Reflective Copper Film
+	Tooltip: ""
+}
+
+ReflectiveFilm: {
+	DisplayName: Reflective Film
+	Tooltip: ""
+}
+
+ReflectiveGoldFilm: {
+	DisplayName: Reflective Gold Film
+	Tooltip: ""
+}
+
+ReflectiveMetalFilm: {
+	DisplayName: Reflective Metal Film
+	Tooltip: ""
+}
+
+ReflectiveObsidianFilm: {
+	DisplayName: Reflective Obsidian Film
+	Tooltip: ""
+}
+
+ReflectiveSilverFilm: {
+	DisplayName: Reflective Silver Film
+	Tooltip: ""
+}
+
+ShadowFilm: {
+	DisplayName: Shadow Film
+	Tooltip: ""
+}
+
+ShadowflameHadesFilm: {
+	DisplayName: Shadowflame Hades Film
+	Tooltip: ""
+}
+
+ShiftingPearlsandsFilm: {
+	DisplayName: Shifting Pearlsands Film
+	Tooltip: ""
+}
+
+ShiftingSandsFilm: {
+	DisplayName: Shifting Sands Film
+	Tooltip: ""
+}
+
+SkiphsBloodFilm: {
+	DisplayName: Skiphs Blood Film
+	Tooltip: ""
+}
+
+SolarFilm: {
+	DisplayName: Solar Film
+	Tooltip: ""
+}
+
+StardustFilm: {
+	DisplayName: Stardust Film
+	Tooltip: ""
+}
+
+TwilightFilm: {
+	DisplayName: Twilight Film
+	Tooltip: ""
+}
+
+UnicornWispFilm: {
+	DisplayName: Unicorn Wisp Film
+	Tooltip: ""
+}
+
+VoidFilm: {
+	DisplayName: Void Film
+	Tooltip: ""
+}
+
+VortexFilm: {
+	DisplayName: Vortex Film
+	Tooltip: ""
+}
+
+WispFilm: {
+	DisplayName: Wisp Film
 	Tooltip: ""
 }

@@ -174,13 +174,6 @@ namespace AyaMod.Content.Items.Cameras
                     float alphaFactor = Utils.Remap(factor, 0, 0.6f, 0f, 1f);
                     var light = LightParticle.Spawn(pos, vel * Main.rand.NextFloat(0.15f,0.35f), color * alphaFactor, 15);
                     light.Scale = 1.5f;
-                    //Dust d = Dust.NewDustPerfect(pos, type, Vector2.Zero,0, new Color(250, 232, 136));
-                    //d.scale = 0.7f;
-                    //d.noGravity = true;
-
-                    //Dust d = Dust.NewDustPerfect(Projectile.Center, 228, Vector2.Zero,80,new Color(250,232,136));
-                    //d.scale = 0.5f;
-                    //d.noGravity = true;
                 }
             }
         }
