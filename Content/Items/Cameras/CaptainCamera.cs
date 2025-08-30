@@ -84,21 +84,6 @@ namespace AyaMod.Content.Items.Cameras
 
 
         }
-
-        public override void PostAI()
-        {
-            //if (ComputedVelocity.Length() > 8)
-            //{
-            //    int dustcount = 3;
-            //    for (int i = 0; i < dustcount; i++)
-            //    {
-            //        Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(5, 150);
-            //        Dust d = Dust.NewDustPerfect(pos, DustID.Water, ComputedVelocity * 0.6f, Scale: Main.rand.NextFloat(1, 1.5f));
-            //        d.noGravity = true;
-            //    }
-            //}
-            base.PostAI();
-        }
     }
 
     public class CaptainAnchor : ModProjectile

@@ -205,3 +205,8 @@ DukeCamera: {
 	DisplayName: Duke Camera
 	Tooltip: ""
 }
+
+HallowCamera: {
+	DisplayName: Hallow Camera
+	Tooltip: ""
+}

@@ -223,6 +223,11 @@ CaptainCamera: {
 }
 
 DukeCamera: {
-	// DisplayName: Duke Camera
-	// Tooltip: ""
+	DisplayName: 梦幻泡影
+	Tooltip: ""
+}
+
+HallowCamera: {
+	DisplayName: 神光圣映
+	Tooltip: ""
 }
