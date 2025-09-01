@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using AyaMod.Content.Particles;
 using AyaMod.Common.Easer;
+using AyaMod.Core;
 
 namespace AyaMod.Content.Items.Cameras
 {

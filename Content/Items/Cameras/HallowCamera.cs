@@ -1,5 +1,6 @@
 ﻿using AyaMod.Common.Easer;
 using AyaMod.Content.Particles;
+using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;

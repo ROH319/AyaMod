@@ -15,6 +15,7 @@ using Terraria.GameContent;
 using System.Collections;
 using Terraria.Audio;
 using AyaMod.Content.Buffs;
+using AyaMod.Core;
 
 namespace AyaMod.Content.Items.Cameras
 {

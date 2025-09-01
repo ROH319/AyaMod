@@ -1,7 +1,6 @@
 ﻿using AyaMod.Content.Items.Films;
 using AyaMod.Content.Items.Lens;
 using AyaMod.Content.Prefixes.CameraPrefixes;
-using AyaMod.Core;
 using AyaMod.Core.BuilderToggles;
 using AyaMod.Core.Configs;
 using AyaMod.Core.ModPlayers;

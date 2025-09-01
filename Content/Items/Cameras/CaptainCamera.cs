@@ -14,6 +14,7 @@ using Terraria.GameContent;
 using AyaMod.Common.Easer;
 using ReLogic.Content;
 using Terraria.Audio;
+using AyaMod.Core;
 
 namespace AyaMod.Content.Items.Cameras
 {

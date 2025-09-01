@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Terraria.Audio;
 using Terraria.ModLoader;
 
-namespace AyaMod.Helpers
+namespace AyaMod.Core
 {
     public static class AssetDirectory
     {
@@ -42,11 +42,24 @@ namespace AyaMod.Helpers
 
         public const string Extras = Textures + "Extra/";
 
+        public const string Effects = "AyaMod/Effects/";
+
+
         public static Texture2D StarTexture;
+
+        public static Effect RevertTooltip;
 
         public static void LoadAsset()
         {
-            StarTexture = ModContent.Request<Texture2D>(StarTexturePass,AssetRequestMode.ImmediateLoad).Value;
+            StarTexture = Request<Texture2D>(StarTexturePass,AssetRequestMode.ImmediateLoad).Value;
+
+            RevertTooltip = Request<Effect>(Effects + "RevertTooltip", AssetRequestMode.ImmediateLoad).Value;
+        }
+
+        public static void UnloadAsset()
+        {
+            StarTexture = null;
+            RevertTooltip = null;
         }
 
         public static string VanillaTexturePath(string path) => $"Terraria/Images/{path}";

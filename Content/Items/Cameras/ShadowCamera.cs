@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using Terraria.DataStructures;
 using AyaMod.Content.Buffs;
+using AyaMod.Core;
 
 namespace AyaMod.Content.Items.Cameras
 {

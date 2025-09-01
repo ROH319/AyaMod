@@ -431,3 +431,8 @@ WispFilm: {
 	DisplayName: 妖灵胶片
 	Tooltip: ""
 }
+
+SeijaCamera: {
+	DisplayName: 正邪相机
+	Tooltip: ""
+}

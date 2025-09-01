@@ -11,7 +11,16 @@ namespace AyaMod.Helpers
 {
     public static class RenderHelper
     {
-        public static Color AdditiveColor(this Color color) => color with { A = 0 };
+        public static RenderTarget2D render;
+
+        public static void CreateRender()
+        {
+            GraphicsDevice gd = Main.instance.GraphicsDevice;
+            int width = gd.PresentationParameters.BackBufferWidth;
+            int height = gd.PresentationParameters.BackBufferHeight;
+            SurfaceFormat format = gd.PresentationParameters.BackBufferFormat;
+            render = new RenderTarget2D(gd, width, height, false, format, 0);
+        }
 
         public static BlendState ReverseSubtract = new BlendState()
         {
@@ -85,5 +94,9 @@ namespace AyaMod.Helpers
         }
 
         //public static void DrawBloomScaled(int repeat)
+
+
+        public static Color AdditiveColor(this Color color) => color with { A = 0 };
+
     }
 }

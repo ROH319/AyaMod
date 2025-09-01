@@ -11,6 +11,7 @@ using AyaMod.Helpers;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
+using AyaMod.Core;
 
 namespace AyaMod.Content.Items.Cameras
 {

@@ -1,4 +1,5 @@
-﻿using AyaMod.Core.Systems.ParticleSystem;
+﻿using AyaMod.Core;
+using AyaMod.Core.Systems.ParticleSystem;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using System;

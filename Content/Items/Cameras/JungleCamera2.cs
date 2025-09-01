@@ -10,6 +10,7 @@ using Terraria.GameContent;
 using Terraria;
 using Terraria.ID;
 using Terraria.Enums;
+using AyaMod.Core;
 
 namespace AyaMod.Content.Items.Cameras
 {

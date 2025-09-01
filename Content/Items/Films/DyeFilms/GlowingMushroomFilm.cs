@@ -1,5 +1,5 @@
-﻿using AyaMod.Core.Prefabs;
-using AyaMod.Helpers;
+﻿using AyaMod.Core;
+using AyaMod.Core.Prefabs;
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
     public class GlowingMushroomFilm : BaseDyeFilm
