@@ -28,7 +28,7 @@ namespace AyaMod.Content.Items.Accessories
         {
             player.GetDamage<ReporterDamage>() += (float)DamageIncrease / 100f;
             player.GetCritChance<ReporterDamage>() += CritIncrease;
-            var b = player.AddEffect<FalsePHDJ>();
+            player.AddEffect<FalsePHDJ>();
         }
 
         public static int DamageIncrease = 15;

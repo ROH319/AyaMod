@@ -415,3 +415,8 @@ SeijaCamera: {
 	DisplayName: Seija Camera
 	Tooltip: ""
 }
+
+GaleGeta: {
+	DisplayName: Gale Geta
+	Tooltip: ""
+}

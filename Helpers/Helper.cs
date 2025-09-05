@@ -56,6 +56,52 @@ namespace AyaMod.Helpers
             return SoundEngine.PlaySound(style, position);
         }
 
+        public static void DashHandle(this Player player, out int dir, out bool dashing)
+        {
+            dir = 0;
+            dashing = true;
+            if(player.controlRight && player.releaseRight)
+            {
+                dir = 1;
+                dashing = true;
+                player.timeSinceLastDashStarted = 0;
+            }
+            else if (player.controlLeft && player.releaseLeft)
+            {
+                dir = -1;
+                dashing = true;
+                player.timeSinceLastDashStarted = 0;
+            }
+
+            //dir = 0;
+            //dashing = true;
+            //if (player.dashTime > 0) player.dashTime--;
+            //if (player.dashTime < 0) player.dashTime++;
+
+            //if(player.controlRight && player.releaseRight)
+            //{
+            //    if (player.dashTime > 0)
+            //    {
+            //        dir = 1;
+            //        dashing = true;
+            //        player.dashTime = 0;
+            //        player.timeSinceLastDashStarted = 0;
+            //    }
+            //    else player.dashTime = 15;
+            //}
+            //else if (player.controlLeft && player.releaseLeft)
+            //{
+            //    if (player.dashTime < 0)
+            //    {
+            //        dir = -1;
+            //        dashing = true;
+            //        player.dashTime = 0;
+            //        player.timeSinceLastDashStarted = 0;
+            //    }
+            //    else player.dashTime = -15;
+            //}
+        }
+
         /// <summary>
         /// 检测矩形与圆环的碰撞
         /// </summary>

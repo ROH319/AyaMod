@@ -436,3 +436,12 @@ SeijaCamera: {
 	DisplayName: 正邪相机
 	Tooltip: ""
 }
+
+GaleGeta: {
+	DisplayName: 疾风木屐
+	Tooltip:
+		'''
+		增加8%移动速度
+		提高跳跃速度，并允许自动跳跃
+		'''
+}
