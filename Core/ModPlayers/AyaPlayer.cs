@@ -71,6 +71,9 @@ namespace AyaMod.Core.ModPlayers
         {
             AddDashes(Player);
             UpdateDash();
+
+            //Main.NewText($"{Player.dashDelay}");
+            //Console.WriteLine($"{Player.dashDelay} {DashDelay}");
         }
 
         public override void PostUpdate()

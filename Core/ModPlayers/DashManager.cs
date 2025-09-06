@@ -69,10 +69,26 @@ namespace AyaMod.Core.ModPlayers
                 var dashing = true;
                 var dir = modPlayer.DashDir == 2 ? 1 : -1;
 
-                Main.NewText($"{modPlayer.DashDir} {player.controlRight} {player.releaseRight} {dir} {dashing}");
+                //Main.NewText($"{modPlayer.DashDir} {player.controlRight} {player.releaseRight} {dir} {dashing}");
                 if (dashing && modPlayer.DashDir != -1)
                 {
                 }
+            }
+        }
+
+        public static void WhileDashing(Player player)
+        {
+            if (player.whoAmI != Main.myPlayer)
+                return;
+            AyaPlayer modPlayer = player.Aya();
+            if (modPlayer.AyaDash == DashType.None)
+                return;
+
+            switch (modPlayer.AyaDash)
+            {
+                case DashType.GaleGeta0:
+                    GaleGeta.WhileDashing0(player, modPlayer.DashDir);
+                    break;
             }
         }
 
@@ -94,12 +110,8 @@ namespace AyaMod.Core.ModPlayers
                 BanVanallaDash();
                 DashDelay--;
 
-                if(!Player.controlRight && !Player.controlLeft)
-                {
-                    float factor = Utils.Remap(DashDelay, 0, 20, 0.9f, 0.96f);
-                    Player.velocity.X *= factor;
-                }
-                Player.velocity.Y = 0.000001f;
+                WhileDashing(Player);
+
             }
 
             if(DashTimer > 0)

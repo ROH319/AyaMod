@@ -48,18 +48,21 @@ namespace AyaMod.Core
         public static Texture2D StarTexture;
 
         public static Effect RevertTooltip;
+        public static Effect Trail;
 
         public static void LoadAsset()
         {
             StarTexture = Request<Texture2D>(StarTexturePass,AssetRequestMode.ImmediateLoad).Value;
 
             RevertTooltip = Request<Effect>(Effects + "RevertTooltip", AssetRequestMode.ImmediateLoad).Value;
+            Trail = Request<Effect>(Effects + "Trail", AssetRequestMode.ImmediateLoad).Value;
         }
 
         public static void UnloadAsset()
         {
             StarTexture = null;
             RevertTooltip = null;
+            Trail = null;
         }
 
         public static string VanillaTexturePath(string path) => $"Terraria/Images/{path}";

@@ -1,4 +1,6 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Common.Easer;
+using AyaMod.Content.Particles;
+using AyaMod.Core;
 using AyaMod.Core.Attributes;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
@@ -11,7 +13,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent;
+using Terraria.ID;
 using static AyaMod.Core.ModPlayers.AyaPlayer;
 
 namespace AyaMod.Content.Items.Accessories.Movements
@@ -71,12 +76,28 @@ namespace AyaMod.Content.Items.Accessories.Movements
             player.velocity.Y = 0.000001f;
 
             player.direction = (int)dashDirection;
-            modPlayer.DashDelay = 40;
+            modPlayer.DashDelay = GaleGetaDashDelay;
             modPlayer.DashTimer = 10;
 
             Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, player.velocity, ModContent.ProjectileType<GaleGetaDash>(), 0, 0, player.whoAmI);
             //player.dashDelay = 30;
         }
+
+        public static void WhileDashing0(Player player, int direction)
+        {
+            var modPlayer = player.Aya();
+            if (modPlayer.DashDelay < 30) return;
+            if (!player.controlRight && !player.controlLeft)
+            {
+                float factor = Utils.Remap(modPlayer.DashDelay, 0, 20, 0.9f, 0.96f);
+                player.velocity.X *= factor;
+            }
+            player.velocity.Y = 0.000001f;
+            player.doorHelper.AllowOpeningDoorsByVelocityAloneForATime(12 * 3);
+
+        }
+
+        public static int GaleGetaDashDelay = 100;
     }
 
     public class GaleGetaDash : ModProjectile
@@ -94,8 +115,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.timeLeft = 80;
-            Projectile.scale = 1.2f;
+            Projectile.timeLeft = GaleGeta.GaleGetaDashDelay * 2;
         }
 
         public override void AI()
@@ -107,36 +127,221 @@ namespace AyaMod.Content.Items.Accessories.Movements
             //{
             //    Projectile.velocity = player.Center - Projectile.Center;
             //}
-            float factor = Utils.Remap(player.Aya().DashDelay, 0, 20, 0.94f, 0.99f);
-            Projectile.velocity *= factor;
-            if (Projectile.timeLeft < 40)
-                Projectile.Opacity -= 0.07f;
+            if (!player.controlRight && !player.controlLeft)
+            {
+                float factor = Utils.Remap(player.Aya().DashDelay, 0, 20, 0.9f, 0.96f);
+                Projectile.velocity *= factor;
+                Projectile.Opacity -= 0.03f;
+            }
+            if (Projectile.timeLeft < GaleGeta.GaleGetaDashDelay * 2f * 5f / 8f)
+                Projectile.Opacity -= Projectile.Opacity > 0.5f ? 0.07f : 0.03f;
             if (Projectile.Opacity < 0.05f) Projectile.Kill();
-            Projectile.rotation = Projectile.velocity.ToRotation();
+            for(int i = 0;i<2;i++)
+            {
+                float velFactor = MathF.Abs(Projectile.velocity.X) / 12f;
+                Vector2 dir = (Projectile.rotation * (8 + 8 * i)).ToRotationVector2().RotatedByRandom(0.5f);
+                dir.X *= 0.5f;
+                Vector2 pos = Projectile.Center + dir * Main.rand.NextFloat(8,16);
+                Vector2 vel = Projectile.Center.DirectionToSafe(pos) * Main.rand.NextFloat(2, 4) * 0.5f;
+                //Vector2 pos = Projectile.Center + Main.rand.NextVector2Circular(10, 20);
+                //Vector2 vel = Projectile.velocity * 0.3f + Projectile.velocity.RotatedBy(MathHelper.PiOver2) * 0.15f * (Main.rand.NextBool() ? 1 : -1);/*Vector2.Zero*/;
+                var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(),
+                   pos,
+                    vel, ModContent.ProjectileType<GaleGetaMist>(), 0, 0, Projectile.owner, 25 * velFactor * Projectile.Opacity);
+                p.scale = 0.75f;
+                p.Opacity *= velFactor * Projectile.Opacity;
+
+                Vector2 dustPos = (Projectile.Center - Projectile.velocity * 10f * i) + dir * Main.rand.NextFloat(12, 16) * (2 + i);
+                var toPos = Projectile.Center.DirectionToSafe(dustPos);
+                Vector2 dustVel = toPos.RotatedBy(MathHelper.PiOver2 * MathF.Sign(Projectile.velocity.X))
+                     * Main.rand.NextFloat(2, 4) * 1.5f + toPos * 2.5f;
+
+                StarParticle.Spawn(dustPos,dustVel, Color.White.AdditiveColor(), Projectile.scale, 0.1f, 0.35f, 0.7f, 1f, dustVel.ToRotation(), Projectile.Opacity);
+
+                //Dust d = Dust.NewDustPerfect(dustPos, DustID.SilverCoin, dustVel, (int)(Projectile.Opacity * 255 * velFactor),Scale:Projectile.Opacity * velFactor * 0.6f);
+                //d.noGravity = true;
+
+            }
+            Projectile.rotation += 0.1f;
+
+
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = Request<Texture2D>(AssetDirectory.Extras + "spellBulletAa013", AssetRequestMode.ImmediateLoad).Value;
-            Vector2 origin = texture.Size() / 2;
-            Vector2 baseScale = new Vector2(0.5f, 0.5f);
+            Texture2D mainColor = Request<Texture2D>(AssetDirectory.Extras + "White-Map", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D shape = TextureAssets.Extra[197].Value;
+            Texture2D sampler = TextureAssets.Extra[189].Value;
+            Texture2D star = TextureAssets.Extra[98].Value;
 
-            for(int i = 0; i < Projectile.oldPos.Length; i++)
+            Effect effect = AssetDirectory.Trail;
+
+            List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
+
+            float width = 60f;
+            float maxRadius = 64f;
+            float minRadius = 12f;
+
+            float mult = 64;
+            int total = (int)(Projectile.oldPos.Length * mult - mult);
+            float innerRot = 0;
+            Vector2 lastTrailPos = Vector2.Zero;
+            
+            for (int i = 0; i < total - 1; i++)
             {
-                if (Projectile.oldPos[i] == Vector2.Zero) continue;
-                float factor = 1f - (float)i / Projectile.oldPos.Length;
-                float rot = (i == 0 ? Projectile.rotation : /*(Projectile.oldPos[i - 1] - Projectile.oldPos[i]).ToRotation()*/Projectile.oldRot[i]) 
-                    + MathF.Sin(Main.GameUpdateCount * 0.5f) * (i % 2 == 0 ? 1 : -1);
-                Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
-                Color color = Color.White.AdditiveColor() * factor * 0.4f * Projectile.Opacity;
+                if (Projectile.oldPos[(int)(i / mult)] == Vector2.Zero || Projectile.oldPos[(int)(i / mult) + 1] == Vector2.Zero) continue;
+                float factor = 1f - (float)i / total;//factor 1为轨迹头部， 0为轨迹尾部
+                float lerpFactor = Utils.Remap(i % mult, 0, mult - 1, 1/mult, 1f);
+                float radius = MathHelper.Lerp(maxRadius, minRadius, EaseManager.Evaluate(Ease.InCirc, factor, 1f));
+                radius *= 1f;
+                Vector2 oldpos = Vector2.Lerp(Projectile.oldPos[(int)(i / mult)], Projectile.oldPos[(int)(i / mult) + 1], lerpFactor);
+                oldpos += Projectile.Size / 2;
+                Vector2 dir = (innerRot + Projectile.rotation).ToRotationVector2();
+                dir.X *= 0.5f;
+                //dir = dir.RotatedBy(Projectile.rotation);
+                Vector2 trailPos = oldpos + dir * radius;
 
-                float scaleFactor = Utils.Remap(factor, 0, 1f, 0.5f, 1f);
-                var trailScale = baseScale * scaleFactor * Projectile.scale;
+                var color = Color.Lerp(Color.Black, Color.White, factor) * Projectile.Opacity;
+                var alpha = EaseManager.Evaluate(Ease.InOutSine, factor, 1f) * Projectile.Opacity;
+                float fadeinFactor = Utils.Remap(factor, 0.93f, 1, 1, 0);
+                alpha *= fadeinFactor;
+                if (dir.X > 0 && Projectile.velocity.X > 0) alpha *= Utils.Remap(dir.X, 0, 0.5f, 1f, 0f);
+                if (dir.X < 0 && Projectile.velocity.X < 0) alpha *= Utils.Remap(dir.X, 0, -0.5f, 1f, 0f);
+                var normalDir = lastTrailPos - trailPos;
+                normalDir = normalDir.RotatedBy(MathHelper.PiOver2);
+                normalDir = normalDir.SafeNormalize(Vector2.Zero);
 
-                Main.spriteBatch.Draw(texture, drawPos, null, color, rot, origin, trailScale, 0, 0);
+                lastTrailPos = trailPos;
+
+                innerRot -= 0.035f;
+                if (i == 0/* || i % 3 != 0*/) continue;
+
+                Vector2 top = trailPos + normalDir * width * 0.5f;
+                Vector2 bottom = trailPos - normalDir * width * 0.5f;
+
+                bars.Add(new CustomVertexInfo(top, color * alpha, new Vector3(factor, 1, alpha)));
+                bars.Add(new CustomVertexInfo(bottom, color * alpha, new Vector3(factor, 0, alpha)));
+
+                //Main.spriteBatch.Draw(star, trailPos - Main.screenPosition, null, color.AdditiveColor(), normalDir.ToRotation(), star.Size() / 2, Projectile.scale * 0.25f, 0, 0);
+
+                //float rot = (i == 0 ? Projectile.rotation : (Projectile.oldPos[i - 1] - Projectile.oldPos[i]).ToRotation()/*Projectile.oldRot[i]*/)
+                //    /*+ MathF.Sin(Main.GameUpdateCount * 0.5f) * (i % 2 == 0 ? 1 : -1)*/;
+                //Vector2 drawPos = oldpos + Projectile.Size / 2f;
+                //Color color = Color.White.AdditiveColor() * factor * 0.4f * Projectile.Opacity;
+                //Vector2 right = rot.ToRotationVector2().RotatedBy(MathHelper.PiOver2) * width * 0.5f * factor;
+                //bars.Add(new CustomVertexInfo(drawPos + right - Main.screenPosition, color, new Vector3(1, factor, 0)));
+                //bars.Add(new CustomVertexInfo(drawPos - right - Main.screenPosition, color, new Vector3(0, factor, 0)));
 
             }
+
+            if(bars.Count > 2)
+            {
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, default, Main.GameViewMatrix.ZoomMatrix);
+                RasterizerState originalState = Main.graphics.GraphicsDevice.RasterizerState;
+                // 干掉注释掉就可以只显示三角形栅格
+                //RasterizerState rasterizerState = new RasterizerState();
+                //rasterizerState.CullMode = CullMode.None;
+                //rasterizerState.FillMode = FillMode.WireFrame;
+                //Main.graphics.GraphicsDevice.RasterizerState = rasterizerState;
+
+                var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
+                var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
+                // 把变换和所需信息丢给shader
+                effect.Parameters["uTransform"].SetValue(model * projection);
+                effect.Parameters["timer"].SetValue((float)Main.timeForVisualEffects * 0.02f);
+                Main.graphics.GraphicsDevice.Textures[0] = mainColor;//颜色
+                Main.graphics.GraphicsDevice.Textures[1] = shape;//形状
+                Main.graphics.GraphicsDevice.Textures[2] = sampler;//蒙版
+                //Main.graphics.GraphicsDevice.Textures[0] = (Texture)TextureAssets.MagicPixel;
+                //Main.graphics.GraphicsDevice.Textures[1] = (Texture)TextureAssets.MagicPixel;
+                //Main.graphics.GraphicsDevice.Textures[2] = (Texture)TextureAssets.MagicPixel;
+
+                Main.graphics.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
+                Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointWrap;
+                Main.graphics.GraphicsDevice.SamplerStates[2] = SamplerState.PointWrap;
+
+                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                    Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
+
+                }
+
+                Main.graphics.GraphicsDevice.RasterizerState = originalState;
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            }
+
+            Texture2D ball4 = ModContent.Request<Texture2D>(AssetDirectory.Extras + "Ball4", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D ball1 = ModContent.Request<Texture2D>(AssetDirectory.Extras + "Ball1", AssetRequestMode.ImmediateLoad).Value;
+            Color ballColor = new Color(73, 93, 115);
+            Main.spriteBatch.Draw(ball4, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, ballColor * Projectile.Opacity * 0.15f, Projectile.rotation, ball4.Size() / 2, Projectile.scale * 0.6f, 0, 0);
+            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor,Color.White,0.3f).AdditiveColor() * Projectile.Opacity * 0.5f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.8f, 0, 0);
+            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor,Color.White,0.3f).AdditiveColor() * Projectile.Opacity * 0.4f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.6f, 0, 0);
+            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor,Color.White,0.3f).AdditiveColor() * Projectile.Opacity * 0.3f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.4f, 0, 0);
+            //Texture2D texture = Request<Texture2D>(AssetDirectory.Extras + "spellBulletAa013", AssetRequestMode.ImmediateLoad).Value;
+            //Vector2 origin = texture.Size() / 2;
+            //Vector2 baseScale = new Vector2(0.5f, 0.5f);
+
+            //for(int i = 0; i < Projectile.oldPos.Length; i++)
+            //{
+            //    if (Projectile.oldPos[i] == Vector2.Zero) continue;
+            //    float factor = 1f - (float)i / Projectile.oldPos.Length;
+            //    float rot = (i == 0 ? Projectile.rotation : /*(Projectile.oldPos[i - 1] - Projectile.oldPos[i]).ToRotation()*/Projectile.oldRot[i]) 
+            //        + MathF.Sin(Main.GameUpdateCount * 0.5f) * (i % 2 == 0 ? 1 : -1);
+            //    Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
+            //    Color color = Color.White.AdditiveColor() * factor * 0.4f * Projectile.Opacity;
+
+            //    float scaleFactor = Utils.Remap(factor, 0, 1f, 0.5f, 1f);
+            //    var trailScale = baseScale * scaleFactor * Projectile.scale;
+
+            //    Main.spriteBatch.Draw(texture, drawPos, null, color, rot, origin, trailScale, 0, 0);
+
+            //}
             return true;
+        }
+    }
+
+    public class GaleGetaMist : ModProjectile
+    {
+        public override string Texture => AssetDirectory.Extras + "bulletGa000";
+        public ref float MaxTimeleft => ref Projectile.ai[0];
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 40;
+            Projectile.ignoreWater = true;
+            
+        }
+        public override void OnSpawn(IEntitySource source)
+        {
+            Projectile.timeLeft = (int)MaxTimeleft;
+        }
+        public override bool? CanDamage() => false;
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            Projectile.velocity *= 0.9f;
+            return false;
+        }
+        public override void AI()
+        {
+            var factor = Projectile.TimeleftFactor();
+            Projectile.velocity *= 0.95f;
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            var tex = TextureAssets.Projectile[Projectile.type].Value;
+            float factor = Projectile.TimeleftFactor();
+            Color baseColor = Color.Lerp(Color.Black, new Color(67, 86, 112),  factor);
+            baseColor *= lightColor.A / 255f * 0.5f;
+            Main.spriteBatch.Draw(tex, 
+                Projectile.Center - Main.screenPosition, null,
+                baseColor.AdditiveColor() * Projectile.Opacity, Projectile.rotation,
+                tex.Size() / 2, 
+                Projectile.scale, 0, 0);
+            return false;
         }
     }
 }
