@@ -420,3 +420,13 @@ GaleGeta: {
 	DisplayName: Gale Geta
 	Tooltip: ""
 }
+
+GaleGeta1: {
+	DisplayName: Gale Geta1
+	Tooltip: ""
+}
+
+GaleGeta2: {
+	DisplayName: Gale Geta2
+	Tooltip: ""
+}

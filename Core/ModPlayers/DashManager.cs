@@ -52,6 +52,14 @@ namespace AyaMod.Core.ModPlayers
             {
                 GaleGeta.AddDash(player);
             }
+            if(player.HasEffect<GaleGeta1>())
+            {
+                GaleGeta1.AddDash(player);
+            }
+            if(player.HasEffect<GaleGeta2>())
+            {
+                GaleGeta2.AddDash(player);
+            }
         }
 
         public static void HandleDashes(Player player)
@@ -86,6 +94,12 @@ namespace AyaMod.Core.ModPlayers
 
             switch (modPlayer.AyaDash)
             {
+                case DashType.GaleGeta2:
+                    GaleGeta2.WhileDashing2(player, modPlayer.DashDir);
+                    break;
+                case DashType.GaleGeta1:
+                    GaleGeta1.WhileDashing1(player, modPlayer.DashDir);
+                    break;
                 case DashType.GaleGeta0:
                     GaleGeta.WhileDashing0(player, modPlayer.DashDir);
                     break;
@@ -102,6 +116,13 @@ namespace AyaMod.Core.ModPlayers
                     case DashType.GaleGeta0:
                         GaleGeta.GetaDash0(Player, DashDir);
                         break;
+                    case DashType.GaleGeta1:
+                        GaleGeta1.GetaDash1(Player, DashDir);
+                        break;
+                    case DashType.GaleGeta2:
+                        GaleGeta2.GetaDash2(Player, DashDir);
+                        break;
+                    default:break;
                 }
             }
             

@@ -20,7 +20,7 @@ namespace AyaMod.Core.BuilderToggles
     {
         public override string Texture => AssetDirectory.UI + "BuilderToggles/" + Name;
         public override string HoverTexture => Texture;
-        public override bool Active() => Main.player[Main.myPlayer].TryGetHeldModItem(out ModItem moditem) && moditem is BaseCamera;
+        public override bool Active() => Main.player[Main.myPlayer].HeldCamera();
 
         public override Position OrderPosition => new After(TorchBiome);
 

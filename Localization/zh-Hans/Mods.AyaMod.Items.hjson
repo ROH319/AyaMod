@@ -445,3 +445,13 @@ GaleGeta: {
 		提高跳跃速度，并允许自动跳跃
 		'''
 }
+
+GaleGeta1: {
+	DisplayName: 流风迅步
+	Tooltip: ""
+}
+
+GaleGeta2: {
+	DisplayName: 风神御渡
+	Tooltip: ""
+}

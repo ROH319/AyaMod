@@ -1,6 +1,7 @@
 ﻿using AyaMod.Core.Attributes;
 using AyaMod.Core.Globals;
 using AyaMod.Core.ModPlayers;
+using AyaMod.Core.Prefabs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -295,6 +296,8 @@ namespace AyaMod.Helpers
             }
             return false;
         }
+
+        public static bool HeldCamera(this Player player) => player.TryGetHeldModItem(out ModItem modItem) && modItem is BaseCamera;
 
         public static bool TypeAlive(this Projectile projectile, params int[] type) => projectile.Alive() && (type.Length == 0 || type.Contains(projectile.type));
         public static bool Alive(this Player player) => player != null && player.active && !player.dead && !player.ghost;

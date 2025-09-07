@@ -9,65 +9,77 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.ModLoader;
 using static AyaMod.Core.ModPlayers.AyaPlayer;
 
 namespace AyaMod.Content.Items.Accessories.Movements
 {
     [PlayerEffect]
-    public class GaleGeta : BaseAccessories
+    public class GaleGeta1 : BaseAccessories
     {
         public override string Texture => AssetDirectory.Accessories + "Movements/" + Name;
+
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
-            Item.SetShopValues(ItemRarityColor.Pink5, Item.sellPrice(gold: 1));
+            Item.SetShopValues(ItemRarityColor.LightPurple6, Item.sellPrice(gold: 2));
 
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            var ayaPlayer = player.Aya();
+
             player.accRunSpeed = 6.75f;
             player.rocketBoots = (player.vanityRocketBoots = 2);
-            player.moveSpeed += 0.08f;
+            player.moveSpeed += 0.1f;
             player.jumpSpeedBoost += 1.4f;
             Player.jumpHeight += 8;
             player.autoJump = true;
+            ayaPlayer.AccSpeedModifier += 0.5f;
 
             if (player.HeldCamera())
             {
-                player.moveSpeed += 0.04f;
-                player.AddEffect<GaleGeta>();
-                player.Aya().WingTimeModifier.Flat += 10;//增加10帧飞行时间
+                var a = player.AddEffect<GaleGeta1>();
+                player.moveSpeed += 0.05f;
+                ayaPlayer.AccSpeedModifier += 0.25f;
+                ayaPlayer.WingTimeModifier.Flat += 10;//增加10帧飞行时间
+
             }
         }
 
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ItemID.LightningBoots)
-                .AddIngredient(ItemID.AmphibianBoots)
-                .AddIngredient(ItemID.SoulofFlight, 7)
+                .AddIngredient(ItemType<GaleGeta>())
+                .AddIngredient(ItemID.Magiluminescence)
+                .AddIngredient(ItemID.SoulofMight, 3)
+                .AddIngredient(ItemID.SoulofSight, 3)
+                .AddIngredient(ItemID.SoulofFright, 3)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }
 
         public static void AddDash(Player player)
         {
-            var modPlayer = player.Aya();
-            modPlayer.AyaDash = DashType.GaleGeta0;
-            modPlayer.HasDash = true;
+            var ayaPlayer = player.Aya();
+            ayaPlayer.HasDash = true;
+            ayaPlayer.AyaDash = DashType.GaleGeta1;
         }
 
-        public static void GetaDash0(Player player, int direction)
+        public static void GetaDash1(Player player, int direction)
         {
-            AyaPlayer modPlayer = player.Aya();
+            AyaPlayer ayaPlayer = player.Aya();
 
-            float speed = 15f;
+
+            float speed = 16f;
             float dashDirection;
             switch (direction)
             {
@@ -85,16 +97,21 @@ namespace AyaMod.Content.Items.Accessories.Movements
             player.velocity.Y = 0.000001f;
 
             player.direction = (int)dashDirection;
-            modPlayer.DashDelay = GaleGetaDashDelay;
-            modPlayer.DashTimer = 10;
+            ayaPlayer.DashDelay = GaleGetaDashDelay;
+            ayaPlayer.DashTimer = 10;
 
-            Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, player.velocity, ModContent.ProjectileType<GaleGetaDash>(), 0, 0, player.whoAmI);
+            int damage = GaleGetaDamage;
+            damage = (int)(player.GetTotalDamage<ReporterDamage>().ApplyTo(damage));
+            Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, player.velocity, ModContent.ProjectileType<GaleGetaDash1>(), damage, 0, player.whoAmI);
+
         }
 
-        public static void WhileDashing0(Player player, int direction)
+        public static void WhileDashing1(Player player, int direction)
         {
             var modPlayer = player.Aya();
-            if (modPlayer.DashDelay < 30) return;
+            if (modPlayer.DashDelay < 20) return;
+
+            //运动部分
             if (!player.controlRight && !player.controlLeft)
             {
                 float factor = Utils.Remap(modPlayer.DashDelay, 0, 20, 0.9f, 0.96f);
@@ -103,16 +120,38 @@ namespace AyaMod.Content.Items.Accessories.Movements
             player.velocity.Y = 0.000001f;
             player.doorHelper.AllowOpeningDoorsByVelocityAloneForATime(12 * 3);
 
+            //对NPC造成伤害并获得无敌帧
+            Rectangle rectangle = new Rectangle((int)(player.Center.X - DamageBoxSize / 2), (int)(player.Center.Y - DamageBoxSize / 2), DamageBoxSize, DamageBoxSize);
+            foreach(var npc in Main.ActiveNPCs)
+            {
+                if (npc.dontTakeDamage || npc.friendly || !player.CanNPCBeHitByPlayerOrPlayerProjectile(npc)) 
+                    continue;
+                Rectangle targetRect = npc.getRect();
+
+                if(rectangle.Intersects(targetRect) && (npc.noTileCollide || player.CanHit(npc)))
+                {
+                    float damage = player.GetTotalDamage<ReporterDamage>().ApplyTo(GaleGetaDamage);
+                    float knockBack = player.GetTotalKnockback<ReporterDamage>().ApplyTo(9.5f);
+                    bool crit = Main.rand.NextBool((int)player.GetTotalCritChance<ReporterDamage>(), 100);
+
+                    if (player.whoAmI == Main.myPlayer)
+                        player.ApplyDamageToNPC(npc, (int)damage, knockBack, direction, crit, ReporterDamage.Instance, false);
+
+                    player.GiveImmuneTimeForCollisionAttack(6);
+                }
+
+            }
         }
 
-        public static int GaleGetaDashDelay = 60;
+        public static int DamageBoxSize = 72;
+        public static int GaleGetaDamage = 100;
+        public static int GaleGetaDashDelay = 50;
     }
-
-    public class GaleGetaDash : ModProjectile
+    public class GaleGetaDash1 : ModProjectile
     {
         public override string Texture => AssetDirectory.EmptyTexturePass;
 
-        public static Color DrawColor = new Color(158, 65, 20);
+        public static Color DrawColor = new Color(73, 93, 115);
 
         public override void SetStaticDefaults()
         {
@@ -125,7 +164,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.timeLeft = GaleGeta.GaleGetaDashDelay * 2;
+            Projectile.timeLeft = GaleGeta1.GaleGetaDashDelay * 2;
         }
 
         public override void AI()
@@ -139,19 +178,19 @@ namespace AyaMod.Content.Items.Accessories.Movements
             //}
             if (!player.controlRight && !player.controlLeft)
             {
-                float factor = Utils.Remap(player.Aya().DashDelay, 0, 20, 0.9f, 0.96f);
+                float factor = Utils.Remap(player.Aya().DashDelay, 0, 10, 0.9f, 0.96f);
                 Projectile.velocity *= factor;
                 Projectile.Opacity -= 0.03f;
             }
-            if (Projectile.timeLeft < GaleGeta.GaleGetaDashDelay * 2f * 5f / 8f)
+            if (Projectile.timeLeft < GaleGeta1.GaleGetaDashDelay * 2f * 5f / 8f)
                 Projectile.Opacity -= Projectile.Opacity > 0.5f ? 0.07f : 0.03f;
             if (Projectile.Opacity < 0.05f) Projectile.Kill();
-            for(int i = 0; i < 2; i++)
+            for (int i = 0; i < 2; i++)
             {
                 float velFactor = MathF.Abs(Projectile.velocity.X) / 12f;
                 Vector2 dir = (Projectile.rotation * (8 + 8 * i)).ToRotationVector2().RotatedByRandom(0.5f);
                 dir.X *= 0.5f;
-                Vector2 pos = Projectile.Center + dir * Main.rand.NextFloat(8,16);
+                Vector2 pos = Projectile.Center + dir * Main.rand.NextFloat(8, 16);
                 Vector2 vel = Projectile.Center.DirectionToSafe(pos) * Main.rand.NextFloat(2, 4) * 0.5f;
 
                 var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(),
@@ -165,7 +204,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 Vector2 dustVel = toPos.RotatedBy(MathHelper.PiOver2 * MathF.Sign(Projectile.velocity.X))
                      * Main.rand.NextFloat(2, 4) * 1.5f + toPos * 2.5f;
 
-                StarParticle.Spawn(dustPos,dustVel, Color.White.AdditiveColor(), Projectile.scale, 0.1f, 0.35f, 0.7f, 1f, dustVel.ToRotation(), Projectile.Opacity);
+                StarParticle.Spawn(dustPos, dustVel, Color.White.AdditiveColor(), Projectile.scale, 0.1f, 0.35f, 0.7f, 1f, dustVel.ToRotation(), Projectile.Opacity);
 
             }
             Projectile.rotation += 0.1f;
@@ -175,7 +214,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D mainColor = Request<Texture2D>(AssetDirectory.Extras + "Maple-Map", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D mainColor = Request<Texture2D>(AssetDirectory.Extras + "White-Map", AssetRequestMode.ImmediateLoad).Value;
             Texture2D shape = TextureAssets.Extra[197].Value;
             Texture2D sampler = TextureAssets.Extra[189].Value;
             Texture2D star = TextureAssets.Extra[98].Value;
@@ -192,12 +231,12 @@ namespace AyaMod.Content.Items.Accessories.Movements
             int total = (int)(Projectile.oldPos.Length * mult - mult);
             float innerRot = 0;
             Vector2 lastTrailPos = Vector2.Zero;
-            
+
             for (int i = 0; i < total - 1; i++)
             {
                 if (Projectile.oldPos[(int)(i / mult)] == Vector2.Zero || Projectile.oldPos[(int)(i / mult) + 1] == Vector2.Zero) continue;
                 float factor = 1f - (float)i / total;//factor 1为轨迹头部， 0为轨迹尾部
-                float lerpFactor = Utils.Remap(i % mult, 0, mult - 1, 1/mult, 1f);
+                float lerpFactor = Utils.Remap(i % mult, 0, mult - 1, 1 / mult, 1f);
                 float radius = MathHelper.Lerp(maxRadius, minRadius, EaseManager.Evaluate(Ease.InCirc, factor, 1f));
                 radius *= 1f;
                 Vector2 oldpos = Vector2.Lerp(Projectile.oldPos[(int)(i / mult)], Projectile.oldPos[(int)(i / mult) + 1], lerpFactor);
@@ -208,7 +247,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 Vector2 trailPos = oldpos + dir * radius;
 
                 var color = Color.Lerp(Color.Black, Color.White, factor) * Projectile.Opacity;
-                var alpha = EaseManager.Evaluate(Ease.InOutSine, factor, 1f) * Projectile.Opacity;
+                var alpha = EaseManager.Evaluate(Ease.InOutSine, factor, 1f) * 0.7f * Projectile.Opacity;
                 float fadeinFactor = Utils.Remap(factor, 0.93f, 1, 1, 0);
                 alpha *= fadeinFactor;
                 if (dir.X > 0 && Projectile.velocity.X > 0) alpha *= Utils.Remap(dir.X, 0, 0.5f, 1f, 0f);
@@ -230,7 +269,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
 
             }
 
-            if(bars.Count > 2)
+            if (bars.Count > 2)
             {
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, default, Main.GameViewMatrix.ZoomMatrix);
@@ -275,51 +314,11 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Texture2D ball1 = ModContent.Request<Texture2D>(AssetDirectory.Extras + "Ball1", AssetRequestMode.ImmediateLoad).Value;
             Color ballColor = DrawColor;
             Main.spriteBatch.Draw(ball4, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, ballColor * Projectile.Opacity * 0.15f, Projectile.rotation, ball4.Size() / 2, Projectile.scale * 0.6f, 0, 0);
-            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor,Color.White,0.3f).AdditiveColor() * Projectile.Opacity * 0.5f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.8f, 0, 0);
-            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor,Color.White,0.3f).AdditiveColor() * Projectile.Opacity * 0.4f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.6f, 0, 0);
-            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor,Color.White,0.3f).AdditiveColor() * Projectile.Opacity * 0.3f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.4f, 0, 0);
+            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor, Color.White, 0.3f).AdditiveColor() * Projectile.Opacity * 0.5f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.8f, 0, 0);
+            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor, Color.White, 0.3f).AdditiveColor() * Projectile.Opacity * 0.4f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.6f, 0, 0);
+            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor, Color.White, 0.3f).AdditiveColor() * Projectile.Opacity * 0.3f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.4f, 0, 0);
 
             return true;
-        }
-    }
-
-    public class GaleGetaMist : ModProjectile
-    {
-        public override string Texture => AssetDirectory.Extras + "bulletGa000";
-        public ref float MaxTimeleft => ref Projectile.ai[0];
-        public override void SetDefaults()
-        {
-            Projectile.width = Projectile.height = 40;
-            Projectile.ignoreWater = true;
-            
-        }
-        public override void OnSpawn(IEntitySource source)
-        {
-            Projectile.timeLeft = (int)MaxTimeleft;
-        }
-        public override bool? CanDamage() => false;
-        public override bool OnTileCollide(Vector2 oldVelocity)
-        {
-            Projectile.velocity *= 0.9f;
-            return false;
-        }
-        public override void AI()
-        {
-            var factor = Projectile.TimeleftFactor();
-            Projectile.velocity *= 0.95f;
-        }
-        public override bool PreDraw(ref Color lightColor)
-        {
-            var tex = TextureAssets.Projectile[Projectile.type].Value;
-            float factor = Projectile.TimeleftFactor();
-            Color baseColor = Color.Lerp(Color.Black, new Color(67, 86, 112),  factor);
-            baseColor *= lightColor.A / 255f * 0.5f;
-            Main.spriteBatch.Draw(tex, 
-                Projectile.Center - Main.screenPosition, null,
-                baseColor.AdditiveColor() * Projectile.Opacity, Projectile.rotation,
-                tex.Size() / 2, 
-                Projectile.scale, 0, 0);
-            return false;
         }
     }
 }

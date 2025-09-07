@@ -15,6 +15,8 @@ namespace AyaMod.Core.ModPlayers
     public partial class AyaPlayer : ModPlayer
     {
         public int itemTimeLastFrame;
+        public StatModifier WingTimeModifier = StatModifier.Default;
+        public StatModifier AccSpeedModifier = StatModifier.Default;
 
 
         public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
@@ -36,13 +38,23 @@ namespace AyaMod.Core.ModPlayers
         }
         public override void ResetEffects()
         {
-
+            AccSpeedModifier = StatModifier.Default;
+            WingTimeModifier = StatModifier.Default;
             HasDash = false;
             AyaDash = DashType.None;
 
             ResetAyaEffects();
 
             ResetDashDir();
+        }
+
+        public override void PostUpdateRunSpeeds()
+        {
+            
+            if(!Player.pulley && Player.grappling[0] == -1 && !Player.tongued)
+            {
+                Player.accRunSpeed = AccSpeedModifier.ApplyTo(Player.accRunSpeed);
+            }
         }
 
         public override void PreUpdateMovement()
@@ -63,7 +75,7 @@ namespace AyaMod.Core.ModPlayers
 
         public override void PostUpdateEquips()
         {
-
+            Player.wingTimeMax = (int)WingTimeModifier.ApplyTo(Player.wingTimeMax);
 
         }
 
@@ -79,6 +91,11 @@ namespace AyaMod.Core.ModPlayers
         public override void PostUpdate()
         {
             itemTimeLastFrame = Player.itemTime;
+        }
+
+        public override void UpdateDead()
+        {
+            WingTimeModifier = StatModifier.Default;
         }
     }
 }
