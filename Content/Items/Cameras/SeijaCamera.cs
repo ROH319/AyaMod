@@ -32,29 +32,11 @@ namespace AyaMod.Content.Items.Cameras
 
         public override bool PreDrawTooltip(ReadOnlyCollection<TooltipLine> lines, ref int x, ref int y)
         {
-            //GraphicsDevice graphicsDevice = Main.instance.GraphicsDevice;
-            //Effect shader = AssetDirectory.RevertTooltip;
             float totalY = 0;
             foreach (var line in lines)
             {
                 totalY += FontAssets.MouseText.Value.MeasureString(line.Text).Y;
             }
-            //shader.Parameters["mirrorY"].SetValue(Main.MouseScreen.Y + 20 + totalY * 0.5f);
-
-            //graphicsDevice.SetRenderTarget(Main.screenTargetSwap);
-            //graphicsDevice.Clear(Color.Transparent);
-            //Main.spriteBatch.Draw(Main.screenTarget, Vector2.Zero, Color.White);
-
-
-            //graphicsDevice.SetRenderTarget(RenderHelper.render);
-            //graphicsDevice.Clear(Color.Transparent);
-            //Main.spriteBatch.End();
-
-            //Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap,
-            //    Main.spriteBatch.GraphicsDevice.DepthStencilState, RasterizerState.CullNone, shader, Main.UIScaleMatrix);
-            //shader.Parameters["uScreenResolution"].SetValue(new Vector2(Main.screenWidth, Main.screenHeight));
-
-            //var yAxis = FontAssets.MouseText.Value.MeasureString(lines[0].Text).Y * 0.5f + Main.mouseY + 20;
             if (!Item.favorited)
             {
                 var yAxis = (totalY * 0.5f + Main.mouseY + 26) * Main.UIScale;
@@ -88,19 +70,6 @@ namespace AyaMod.Content.Items.Cameras
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
                     Main.spriteBatch.GraphicsDevice.DepthStencilState, RasterizerState.CullNone, null, Main.UIScaleMatrix);
             }
-            //GraphicsDevice graphicsDevice = Main.instance.GraphicsDevice;
-
-            //graphicsDevice.SetRenderTarget(Main.screenTarget);
-            //graphicsDevice.Clear(Color.Transparent);
-
-            //Main.spriteBatch.End();
-            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.spriteBatch.GraphicsDevice.SamplerStates[0],
-            //                Main.spriteBatch.GraphicsDevice.DepthStencilState, Main.spriteBatch.GraphicsDevice.RasterizerState, null, Main.UIScaleMatrix);
-            ////Main.spriteBatch.Draw(Main.screenTargetSwap, Vector2.Zero, Color.White);
-            //Main.spriteBatch.Draw(RenderHelper.render, Vector2.Zero, Color.White);
-            //Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, Main.MouseScreen, null, Color.White, 0, TextureAssets.MagicPixel.Value.Size() / 2, new Vector2(100f, 0.1f), 0, 0);
         }
     }
-
-
 }

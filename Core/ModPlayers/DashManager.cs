@@ -31,11 +31,13 @@ namespace AyaMod.Core.ModPlayers
         public int DashTimer;
         public int DashDir = -1;
 
+        public bool IsUltraDashing;
+        public float UltraDashDir;
 
         /// <summary>
         /// 是否能够冲刺，判断条件为：钩爪勾到了，玩家不被拖拽，玩家不在坐骑上
         /// </summary>
-        public bool CanDashSpecialCondition => Player.grappling[0] == -1 && !Player.tongued && !Player.mount.Active;
+        public bool CanDashSpecialCondition => Player.grappling[0] == -1 && !Player.tongued && !Player.mount.Active && !IsUltraDashing;
         
         public void BanVanallaDash()
         {
@@ -59,28 +61,6 @@ namespace AyaMod.Core.ModPlayers
             if(player.HasEffect<GaleGeta2>())
             {
                 GaleGeta2.AddDash(player);
-            }
-        }
-
-        public static void HandleDashes(Player player)
-        {
-            if (player.whoAmI != Main.myPlayer)
-                return;
-            AyaPlayer modPlayer = player.Aya();
-
-            if (modPlayer.AyaDash == DashType.None)
-                return;
-
-            if (player.dashDelay == 0 && modPlayer.DashDelay == 0 && !player.mount.Active)
-            {
-                //player.DashHandle(out int dir, out bool dashing);
-                var dashing = true;
-                var dir = modPlayer.DashDir == 2 ? 1 : -1;
-
-                //Main.NewText($"{modPlayer.DashDir} {player.controlRight} {player.releaseRight} {dir} {dashing}");
-                if (dashing && modPlayer.DashDir != -1)
-                {
-                }
             }
         }
 

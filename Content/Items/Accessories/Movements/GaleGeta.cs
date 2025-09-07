@@ -100,6 +100,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 float factor = Utils.Remap(modPlayer.DashDelay, 0, 20, 0.9f, 0.96f);
                 player.velocity.X *= factor;
             }
+            player.dashDelay = -1;
             player.velocity.Y = 0.000001f;
             player.doorHelper.AllowOpeningDoorsByVelocityAloneForATime(12 * 3);
 

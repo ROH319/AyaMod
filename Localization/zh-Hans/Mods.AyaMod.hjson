@@ -14,3 +14,8 @@ BuilderToggles: {
 			'''
 	}
 }
+
+Keybinds: {
+	// UltraMove.DisplayName: Ultra Move
+	// SpecialMove.DisplayName: Special Move
+}

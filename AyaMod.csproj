@@ -8,6 +8,7 @@
 		
 	</PropertyGroup>
 	<ItemGroup>
+	  <Folder Include="Content\Projectiles\" />
 	  <Folder Include="Localization\zh-Hans\" />
 	  <Folder Include="Effects\" />
 	</ItemGroup>
