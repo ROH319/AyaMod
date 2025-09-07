@@ -430,3 +430,18 @@ GaleGeta2: {
 	DisplayName: Gale Geta2
 	Tooltip: ""
 }
+
+TenguWings: {
+	DisplayName: Tengu Wings
+	Tooltip: ""
+}
+
+TenguWings1: {
+	DisplayName: Tengu Wings1
+	Tooltip: ""
+}
+
+TenguWings2: {
+	DisplayName: Tengu Wings2
+	Tooltip: ""
+}

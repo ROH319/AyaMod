@@ -137,7 +137,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                     if (player.whoAmI == Main.myPlayer)
                         player.ApplyDamageToNPC(npc, (int)damage, knockBack, direction, crit, ReporterDamage.Instance, false);
 
-                    player.GiveImmuneTimeForCollisionAttack(6);
+                    player.GiveImmuneTimeForCollisionAttack(12);
                 }
 
             }

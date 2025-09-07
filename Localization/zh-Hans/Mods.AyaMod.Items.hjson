@@ -455,3 +455,18 @@ GaleGeta2: {
 	DisplayName: 风神御渡
 	Tooltip: ""
 }
+
+TenguWings: {
+	DisplayName: 鸦天狗之翼
+	Tooltip: ""
+}
+
+TenguWings1: {
+	DisplayName: 大天狗之翼
+	Tooltip: ""
+}
+
+TenguWings2: {
+	DisplayName: 天魔之翼
+	Tooltip: ""
+}

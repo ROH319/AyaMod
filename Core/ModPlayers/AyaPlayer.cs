@@ -15,6 +15,8 @@ namespace AyaMod.Core.ModPlayers
     public partial class AyaPlayer : ModPlayer
     {
         public int itemTimeLastFrame;
+        public int freeFlyFrame = 0;
+        public int FreeFlyFrame = 0;
         public StatModifier WingTimeModifier = StatModifier.Default;
         public StatModifier AccSpeedModifier = StatModifier.Default;
 
@@ -38,6 +40,7 @@ namespace AyaMod.Core.ModPlayers
         }
         public override void ResetEffects()
         {
+            FreeFlyFrame = 0;
             AccSpeedModifier = StatModifier.Default;
             WingTimeModifier = StatModifier.Default;
             HasDash = false;
@@ -59,18 +62,15 @@ namespace AyaMod.Core.ModPlayers
 
         public override void PreUpdateMovement()
         {
-            //Main.NewText($"{Player.controlRight} {Player.releaseRight}");
-            //if (Player.dashType != 0) HasDash = true;
-            //if (Player.dashDelay > 0 && DashDelay > 0)
-            //    Player.dashDelay = Math.Max(Player.dashDelay, DashDelay);
-            //AddDashes(Player);
-            //HandleDashes(Player);
-
-            //if (DashDelay > 0)
-            //    DashDelay--;
-
-            //if(DashTimer > 0)
-            //    DashTimer--;
+            if (Player.grappling[0] == -1 && !Player.tongued
+                && !Player.CCed && !Player.mount.Active)
+            {
+                var tile = Main.tile[(int)(Player.position.X / 16f), (int)((Player.position.Y + Player.height + 4) / 16f)];
+                if(Player.velocity.Y > 0 && Player.wingTime <= 0 && Player.HasEffect<TenguWings1>() && !tile.HasTile)
+                {
+                    Player.position -= Player.velocity * 0.5f;
+                }
+            }
         }
 
         public override void PostUpdateEquips()
@@ -84,6 +84,12 @@ namespace AyaMod.Core.ModPlayers
             AddDashes(Player);
             UpdateDash();
 
+            if(Player.wingTime == Player.wingTimeMax - 1)
+            {
+                freeFlyFrame = FreeFlyFrame;
+            }
+
+            //Main.NewText($"{Player.velocity.Y} {Player.wingTime} {Player.wingTimeMax} {Main.time}");
             //Main.NewText($"{Player.dashDelay}");
             //Console.WriteLine($"{Player.dashDelay} {DashDelay}");
         }
