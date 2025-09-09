@@ -63,6 +63,10 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.ignoreWater = true;
         }
         public override bool? CanDamage() => false;
+        public override void OnSpawn(IEntitySource source)
+        {
+            Projectile.Opacity = 0f;
+        }
         public override void AI()
         {
             Projectile.timeLeft++;
@@ -74,7 +78,7 @@ namespace AyaMod.Content.Items.Cameras
             if (camera.TypeAlive(ProjectileType<AliceCameraProj>()))
             {
                 if (Projectile.Opacity < 1f)
-                    Projectile.Opacity += 0.02f;
+                    Projectile.Opacity += 0.015f;
 
                 var player = (camera.ModProjectile as BaseCameraProj).player;
                 if(player.AliveCheck(Projectile.Center,2000))
@@ -110,7 +114,7 @@ namespace AyaMod.Content.Items.Cameras
         {
             Texture2D texture = TextureAssets.Extra[98].Value;
             Vector2 origin = texture.Size() / 2;
-            Color color = new Color(242, 104, 20).AdditiveColor();
+            Color color = new Color(242, 104, 20).AdditiveColor() * Projectile.Opacity;
 
             float ringRadius = 42;
 

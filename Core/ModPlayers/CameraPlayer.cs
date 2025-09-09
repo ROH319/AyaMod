@@ -22,7 +22,9 @@ namespace AyaMod.Core.ModPlayers
         public ILens CurrentLens;
         public static ILens DefaultLens;
 
-        public StatModifier SizeBonus;
+        public StatModifier SizeBonus = StatModifier.Default;
+
+        public float SingleTargetMultiplier = 0f;
 
         public float FlashTimer;
 
@@ -48,7 +50,9 @@ namespace AyaMod.Core.ModPlayers
         {
             CurrentLens = null;
 
-            SizeBonus = new StatModifier();
+            SizeBonus = StatModifier.Default;
+
+            SingleTargetMultiplier = 0f;
         }
 
         public override void PreUpdate()

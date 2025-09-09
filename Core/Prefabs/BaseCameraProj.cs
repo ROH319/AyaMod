@@ -30,6 +30,8 @@ namespace AyaMod.Core.Prefabs
 
         public bool DealDamageThisFrame;
 
+        public int HighestHealthTarget;
+
         public Vector2 ComputedVelocity;
 
         // 额外伤害点（0~1之间，基于进度百分比）
@@ -84,6 +86,9 @@ namespace AyaMod.Core.Prefabs
         }
         public sealed override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
+            if (HighestHealthTarget >= 0 && target.whoAmI == HighestHealthTarget)
+                modifiers.FinalDamage *= (1 + player.Camera().SingleTargetMultiplier);
+
             ModifyHitNPCAlt(target, ref modifiers);
 
             //因为匿名方法不能传ref参数，直接简单遍历了
@@ -127,6 +132,21 @@ namespace AyaMod.Core.Prefabs
             DealDamageThisFrame = CheckCanDamage() && CheckInSight();
             //Main.NewText($"{player.itemTime} {player.itemAnimation}");
             return base.PreAI();
+        }
+        
+        public NPC FindHighestHealthTarget()
+        {
+            NPC target = null;
+            float maxHP = 0;
+            foreach(var npc in Main.ActiveNPCs)
+            {
+                if (!npc.CanBeChasedBy() || npc.life <= maxHP) continue;
+                if (Projectile.Colliding(Projectile.getRect(), npc.getRect()))
+                {
+                    target = npc;
+                }
+            }
+            return target;
         }
 
         public override void PostAI()
@@ -217,7 +237,12 @@ namespace AyaMod.Core.Prefabs
 
             CheckHoverNPC();
             CheckHoverProjectile();
-            
+
+            if (DealDamageThisFrame)
+            {
+                var target = FindHighestHealthTarget();
+                if (target != null) HighestHealthTarget = target.whoAmI;
+            }
             if (player.itemTime != 0)
             {
                 bool canaltuse = mplr.CameraAltCooldown <= 0;

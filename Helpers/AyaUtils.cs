@@ -31,6 +31,17 @@ namespace AyaMod.Helpers
 
         #endregion
 
+        public static Vector2 GetPentagramPos(Vector2 center, float radius, float factor, float extraRot = -MathHelper.PiOver2, bool reversed = false)
+        {
+            float n = (int)(factor / 0.2f);
+            float innerFactor = factor % 0.2f;
+            Vector2 offset = Vector2.Zero;
+            Vector2 startPos = (n * MathHelper.ToRadians(144) + extraRot).ToRotationVector2() * radius;
+            Vector2 endPos = ((n + 1) * MathHelper.ToRadians(144) + extraRot).ToRotationVector2() * radius;
+            offset = Vector2.Lerp(startPos, endPos, innerFactor / 0.2f);
+            return center + offset;
+        }
+
         public static Vector2[] GetCameraRect(Vector2 center, float rot, float size)
         {
             List<Vector2> pos = new();

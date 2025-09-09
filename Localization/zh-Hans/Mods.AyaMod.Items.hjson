@@ -150,7 +150,7 @@ FalseReporterEmblem: {
 		'''
 }
 
-LensOfCthulhu: {
+CthulhuLens: {
 	DisplayName: 克苏鲁晶状体
 	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}"
 }
@@ -188,7 +188,7 @@ CrimsonPupil: {
 	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize}
-		对拍摄框内血量最多的敌人造成16%额外伤害
+		对拍摄框内血量最多的敌人造成{1}%额外伤害
 		'''
 }
 
@@ -469,4 +469,44 @@ TenguWings1: {
 TenguWings2: {
 	DisplayName: 天魔之翼
 	Tooltip: ""
+}
+
+CorruptPupil2: {
+	DisplayName: Corrupt Pupil2
+	Tooltip: ""
+}
+
+CrimsonPupil2: {
+	DisplayName: Crimson Pupil2
+	Tooltip: ""
+}
+
+LunaticPupil: {
+	DisplayName: 狂月之瞳
+	Tooltip: ""
+}
+
+ManicPupil: {
+	DisplayName: 狂躁之瞳
+	Tooltip: ""
+}
+
+RetinazerLens: {
+	DisplayName: 高能光子聚焦镜
+	Tooltip: ""
+}
+
+SpazmatismLens: {
+	DisplayName: 灼热离子成型镜
+	Tooltip: ""
+}
+
+TranquilPupil: {
+	DisplayName: 静谧之瞳
+	Tooltip: ""
+}
+
+MiracleCamera: {
+	// DisplayName: Miracle Camera
+	// Tooltip: ""
 }

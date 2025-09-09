@@ -342,7 +342,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 60;
         }
-
+        public override bool? CanDamage() => false;
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
@@ -369,7 +369,6 @@ namespace AyaMod.Content.Items.Accessories.Movements
             {
                 Projectile.Opacity -= 0.05f;
             }
-            //Main.NewText($"{vel} {Main.time}");
         }
 
         public override bool PreDraw(ref Color lightColor)

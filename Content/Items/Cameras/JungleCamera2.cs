@@ -29,7 +29,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.shootSpeed = 8;
             Item.knockBack = 9f;
 
-            Item.SetShopValues(ItemRarityColor.Orange3, Item.sellPrice(0, 0, 60, 0));
+            Item.SetShopValues(ItemRarityColor.Lime7, Item.sellPrice(0, 0, 60, 0));
             SetCameraStats(0.08f, 164, 1.5f,0.6f);
             SetCaptureStats(100, 5);
         }

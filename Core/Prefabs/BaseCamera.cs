@@ -84,6 +84,10 @@ namespace AyaMod.Core.Prefabs
 
                 }
             }
+            if(player.itemTime == 1)
+            {
+                player.Aya().NotUsingCameraTimer = 0;
+            }
             //Main.NewText($"{player.itemTime}");
         }
 

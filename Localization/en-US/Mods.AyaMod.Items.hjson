@@ -141,8 +141,8 @@ FalseReporterEmblem: {
 	Tooltip: ""
 }
 
-LensOfCthulhu: {
-	DisplayName: Lens Of Cthulhu
+CthulhuLens: {
+	DisplayName: Cthulhu Lens
 	Tooltip: ""
 }
 
@@ -443,5 +443,45 @@ TenguWings1: {
 
 TenguWings2: {
 	DisplayName: Tengu Wings2
+	Tooltip: ""
+}
+
+CorruptPupil2: {
+	DisplayName: Corrupt Pupil2
+	Tooltip: ""
+}
+
+CrimsonPupil2: {
+	DisplayName: Crimson Pupil2
+	Tooltip: ""
+}
+
+LunaticPupil: {
+	DisplayName: Lunatic Pupil
+	Tooltip: ""
+}
+
+ManicPupil: {
+	DisplayName: Manic Pupil
+	Tooltip: ""
+}
+
+RetinazerLens: {
+	DisplayName: Retinazer Lens
+	Tooltip: ""
+}
+
+SpazmatismLens: {
+	DisplayName: Spazmatism Lens
+	Tooltip: ""
+}
+
+TranquilPupil: {
+	DisplayName: Tranquil Pupil
+	Tooltip: ""
+}
+
+MiracleCamera: {
+	DisplayName: Miracle Camera
 	Tooltip: ""
 }

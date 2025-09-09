@@ -86,7 +86,12 @@ namespace AyaMod.Core.Systems
                 {
                     var camera = projectile.ModProjectile as BaseCameraProj;
                     camera.films.Clear();
+                    camera.HighestHealthTarget = -1;
                 }
+            }
+            foreach(var player in Main.ActivePlayers)
+            {
+                player.Aya().itemTimeLastFrame = player.itemTime;
             }
         }
     }

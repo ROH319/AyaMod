@@ -18,8 +18,13 @@ namespace AyaMod.Core.ModPlayers
         public int itemTimeLastFrame;
         public int freeFlyFrame = 0;
         public int FreeFlyFrame = 0;
+        public float AttackSpeed;
         public StatModifier WingTimeModifier = StatModifier.Default;
         public StatModifier AccSpeedModifier = StatModifier.Default;
+
+        public int NotUsingCameraTimer = 0;
+
+        public int ManicStack = 0;
 
 
         public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
@@ -39,6 +44,35 @@ namespace AyaMod.Core.ModPlayers
                 modifiers.FinalDamage *= 1f + (float)FalsePHDJ.HurtIncrease / 100f;
             }
         }
+
+        public override bool CanUseItem(Item item)
+        {
+            if (IsUltraDashing) return false;
+            return base.CanUseItem(item);
+        }
+        public override float UseSpeedMultiplier(Item item)
+        {
+            int useTime = item.useTime;
+            int useAnimate = item.useAnimation;
+
+            if (useTime <= 0 || useAnimate <= 0 || item.damage <= 0)
+                return base.UseSpeedMultiplier(item);
+
+            if (Player.HasEffect<ManicPupil>())
+            {
+                ManicPupil.CalManicAttackSpeed(Player, item);
+            }
+
+            return AttackSpeed;
+        }
+        public override void ModifyWeaponDamage(Item item, ref StatModifier damage)
+        {
+            if (Player.HasEffect<TranquilPupil>())
+            {
+                TranquilPupil.ModifySteathDamage(Player, item, ref damage);
+            }
+        }
+
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
             if (AyaKeybindLoader.UltraMove.Current && Player.HeldCamera())
@@ -87,6 +121,7 @@ namespace AyaMod.Core.ModPlayers
         public override void ResetEffects()
         {
             FreeFlyFrame = 0;
+            AttackSpeed = 1f;
             AccSpeedModifier = StatModifier.Default;
             WingTimeModifier = StatModifier.Default;
             HasDash = false;
@@ -153,7 +188,8 @@ namespace AyaMod.Core.ModPlayers
             {
                 freeFlyFrame = FreeFlyFrame;
             }
-            
+
+            NotUsingCameraTimer++;
             //Main.NewText($"{Player.velocity.Y} {Player.wingTime} {Player.wingTimeMax} {Main.time}");
             //Main.NewText($"{Player.dashDelay}");
             //Console.WriteLine($"{Player.dashDelay} {DashDelay}");
@@ -161,7 +197,6 @@ namespace AyaMod.Core.ModPlayers
 
         public override void PostUpdate()
         {
-            itemTimeLastFrame = Player.itemTime;
             if (!IsUltraDashing) UltraDashDir = Utils.AngleLerp(UltraDashDir,-MathHelper.PiOver2,0.2f);
 
             //Main.NewText($"{Main.time} {Player.bodyRotation} {UltraDashDir} {Player.direction}");
