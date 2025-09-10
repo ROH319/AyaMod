@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 using static Terraria.GameContent.Animations.IL_Actions.Sprites;
 
 namespace AyaMod.Content.Particles
@@ -17,9 +18,9 @@ namespace AyaMod.Content.Particles
         public override string Texture => AssetDirectory.Extras + "Ball";
         public int totaltime = 0;
 
-        public static LightParticle Spawn(Vector2 center, Vector2 velocity, Color color, int totaltime)
+        public static LightParticle Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color, int totaltime)
         {
-            LightParticle light = NewParticle<LightParticle>(center, velocity, color);
+            LightParticle light = NewParticle<LightParticle>(source, center, velocity, color);
             light.totaltime = totaltime;
             return light;
         }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 
 namespace AyaMod.Content.Particles
@@ -17,9 +18,9 @@ namespace AyaMod.Content.Particles
         public float ScaleX;
         public float ScaleY;
         public int totalTime;
-        public static CameraFlash Spawn(Vector2 center, Color color, float rot, float scaleX, float scaleY, int flashTime)
+        public static CameraFlash Spawn(IEntitySource source, Vector2 center, Color color, float rot, float scaleX, float scaleY, int flashTime)
         {
-            CameraFlash flash = NewParticle<CameraFlash>(center, Vector2.Zero, color, scaleX, rot);
+            CameraFlash flash = NewParticle<CameraFlash>(source, center, Vector2.Zero, color, scaleX, rot);
             flash.ScaleX = scaleX;
             flash.ScaleY = scaleY;
             flash.totalTime = flashTime;

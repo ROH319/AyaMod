@@ -20,7 +20,8 @@ namespace AyaMod.Content.Items.Lens
 
         public virtual void SpawnFlash(Vector2 center, Color color, float size, float rot, int flashTime)
         {
-            CameraFlash.Spawn(center, color, rot, size / 16f, size * 1.4f / 16f, flashTime);
+            //TODO：填写正确的生成源
+            CameraFlash.Spawn(null, center, color, rot, size / 16f, size * 1.4f / 16f, flashTime);
         }
     }
 }

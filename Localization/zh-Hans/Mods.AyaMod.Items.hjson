@@ -473,12 +473,21 @@ TenguWings2: {
 
 CorruptPupil2: {
 	DisplayName: Corrupt Pupil2
-	Tooltip: ""
+	Tooltip: 
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
+		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize}
+		'''
 }
 
 CrimsonPupil2: {
 	DisplayName: Crimson Pupil2
-	Tooltip: ""
+	Tooltip: 
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
+		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize}
+		对拍摄框内血量最多的敌人造成{2}%额外伤害
+		'''
 }
 
 LunaticPupil: {
@@ -493,12 +502,20 @@ ManicPupil: {
 
 RetinazerLens: {
 	DisplayName: 高能光子聚焦镜
-	Tooltip: ""
+	Tooltip: 
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
+		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize}
+		'''
 }
 
 SpazmatismLens: {
 	DisplayName: 灼热离子成型镜
-	Tooltip: ""
+	Tooltip: 
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
+		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize}
+		'''
 }
 
 TranquilPupil: {
@@ -507,6 +524,6 @@ TranquilPupil: {
 }
 
 MiracleCamera: {
-	// DisplayName: Miracle Camera
-	// Tooltip: ""
+	DisplayName: Miracle Camera
+	Tooltip: ""
 }

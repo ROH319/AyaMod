@@ -264,7 +264,7 @@ namespace AyaMod.Content.Items.Cameras
             if (Main.rand.NextBool((int)consequent))
             {
                 Vector2 pos = Projectile.Center + AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(0, 18);
-                StarParticle.Spawn(pos, Projectile.velocity * 0.6f * Projectile.MaxUpdates, Color.White.AdditiveColor(), Projectile.scale, 0.3f, 1.3f, 0.8f, 1f, Projectile.rotation, Projectile.Opacity);
+                StarParticle.Spawn(Projectile.GetSource_FromAI(), pos, Projectile.velocity * 0.6f * Projectile.MaxUpdates, Color.White.AdditiveColor(), Projectile.scale, 0.3f, 1.3f, 0.8f, 1f, Projectile.rotation, Projectile.Opacity);
                 //int num464 = Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 185);
                 //Main.dust[num464].noGravity = true;
                 ////Main.dust[num464].noLight = true;

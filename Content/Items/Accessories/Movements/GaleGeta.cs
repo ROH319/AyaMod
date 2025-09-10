@@ -166,7 +166,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 Vector2 dustVel = toPos.RotatedBy(MathHelper.PiOver2 * MathF.Sign(Projectile.velocity.X))
                      * Main.rand.NextFloat(2, 4) * 1.5f + toPos * 2.5f;
 
-                StarParticle.Spawn(dustPos,dustVel, Color.White.AdditiveColor(), Projectile.scale, 0.1f, 0.35f, 0.7f, 1f, dustVel.ToRotation(), Projectile.Opacity);
+                StarParticle.Spawn(Projectile.GetSource_FromAI(), dustPos,dustVel, Color.White.AdditiveColor(), Projectile.scale, 0.1f, 0.35f, 0.7f, 1f, dustVel.ToRotation(), Projectile.Opacity);
 
             }
             Projectile.rotation += 0.1f;

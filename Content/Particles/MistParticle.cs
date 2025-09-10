@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 
 namespace AyaMod.Content.Particles
 {
@@ -18,9 +19,9 @@ namespace AyaMod.Content.Particles
         public int BloomIntensity;
         public float BloomOffset;
 
-        public static MistParticle Spawn(Vector2 center, Vector2 velocity, Color color, float scale, float rot, float alpha, int bloomInten, float bloomOffset)
+        public static MistParticle Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color, float scale, float rot, float alpha, int bloomInten, float bloomOffset)
         {
-            MistParticle mist = NewParticle<MistParticle>(center, velocity, color, scale, rot, alpha);
+            MistParticle mist = NewParticle<MistParticle>(source, center, velocity, color, scale, rot, alpha);
             mist.BloomIntensity = bloomInten;
             mist.BloomOffset = bloomOffset;
             return mist;

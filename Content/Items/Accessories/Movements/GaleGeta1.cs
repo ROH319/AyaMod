@@ -207,7 +207,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 Vector2 dustVel = toPos.RotatedBy(MathHelper.PiOver2 * MathF.Sign(Projectile.velocity.X))
                      * Main.rand.NextFloat(2, 4) * 1.5f + toPos * 2.5f;
 
-                StarParticle.Spawn(dustPos, dustVel, Color.White.AdditiveColor(), Projectile.scale, 0.1f, 0.35f, 0.7f, 1f, dustVel.ToRotation(), Projectile.Opacity);
+                StarParticle.Spawn(Projectile.GetSource_FromAI(), dustPos, dustVel, Color.White.AdditiveColor(), Projectile.scale, 0.1f, 0.35f, 0.7f, 1f, dustVel.ToRotation(), Projectile.Opacity);
 
             }
             Projectile.rotation += 0.1f;
@@ -361,7 +361,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                     Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(8, 12);
                     Vector2 vel = -projVel.RotatedByRandom(0.2f);
 
-                    var particle = StarParticle.Spawn(pos, projVel.RotatedByRandom(0.1f) * Main.rand.NextFloat(10,40), 
+                    var particle = StarParticle.Spawn(Projectile.GetSource_FromAI(), pos, projVel.RotatedByRandom(0.1f) * Main.rand.NextFloat(10,40), 
                         new Color(255,150,150).AdditiveColor(), 1f, 0.1f, 0.3f, 0.8f, 1f, vel.ToRotation(), 1f);
                 }
             }

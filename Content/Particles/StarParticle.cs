@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 
 namespace AyaMod.Content.Particles
 {
@@ -18,9 +19,9 @@ namespace AyaMod.Content.Particles
         public float scaleY = 1f;
         public float Fadeout = 1f;
         public float VelMult = 1f;
-        public static StarParticle Spawn(Vector2 center, Vector2 velocity, Color color, float scale, float scaleX, float scaleY, float fadeout, float velMult, float rot, float alpha)
+        public static StarParticle Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color, float scale, float scaleX, float scaleY, float fadeout, float velMult, float rot, float alpha)
         {
-            StarParticle star = NewParticle<StarParticle>(center, velocity, color, scale, rot, alpha);
+            StarParticle star = NewParticle<StarParticle>(source, center, velocity, color, scale, rot, alpha);
             star.scaleX = scaleX;
             star.scaleY = scaleY;
             star.Fadeout = fadeout;

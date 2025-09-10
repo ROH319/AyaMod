@@ -120,7 +120,7 @@ namespace AyaMod.Content.Items.Cameras
 
                 Color color = Color.Lerp(HellSpirit.SpiritBlue, HellSpirit.SpiritPurple, HoverFactor);
                 Vector2 offset = AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(2, 12);
-                var ball = SoulsParticle.Spawn(Projectile.Center + offset, Vector2.UnitY * -2.7f + Projectile.velocity * 0.8f, color.AdditiveColor());
+                var ball = SoulsParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center + offset, Vector2.UnitY * -2.7f + Projectile.velocity * 0.8f, color.AdditiveColor());
                 ball.SetAlphaFadeout(new Core.FloatModifier().SetAdditive(-0.015f));
                 ball.SetScaleFadeout(new Core.FloatModifier().SetAdditive(-0.025f));
                 ball.Scale = Projectile.scale;
@@ -157,7 +157,7 @@ namespace AyaMod.Content.Items.Cameras
                 Color color = Color.Lerp(SpiritBlue, SpiritPurple, HoverFactor);
 
                 Vector2 vel = rot.ToRotationVector2() * Main.rand.NextFloat(0.5f,2f);
-                var soul = SoulsParticle.Spawn(Projectile.Center, vel, color);
+                var soul = SoulsParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, vel, color);
                 soul.SetAlphaFadeout(new Core.FloatModifier().SetAdditive(-0.05f));
                 soul.SetScaleFadeout(new Core.FloatModifier().SetAdditive(-0.05f));
             }
@@ -242,14 +242,14 @@ namespace AyaMod.Content.Items.Cameras
                     Vector2 vec = offset.ToRotation().ToRotationVector2() * offset.Length() * 0.125f;
                     if (Projectile.ai[0] > 0)
                     {
-                        var ball = SoulsParticle.Spawn(Projectile.Center + offset, Projectile.velocity * 0f,
+                        var ball = SoulsParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center + offset, Projectile.velocity * 0f,
                             color.AdditiveColor() * Projectile.Opacity * 0.6f, 0.5f, 0.7f);
                         ball.SetAlphaFadeout(new Core.FloatModifier().SetAdditive(-0.05f));
                         ball.SetScaleFadeout(new Core.FloatModifier().SetAdditive(-0.06f));
                     }
                     else
                     {
-                        var ball = SoulsParticle.Spawn(Projectile.Center + offset, Projectile.velocity * 0f,
+                        var ball = SoulsParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center + offset, Projectile.velocity * 0f,
                             color.AdditiveColor() * Projectile.Opacity * 0.6f, 0.4f, 0.7f);
                         ball.SetAlphaFadeout(new Core.FloatModifier().SetAdditive(-0.045f));
                         ball.SetScaleFadeout(new Core.FloatModifier().SetAdditive(-0.03f));

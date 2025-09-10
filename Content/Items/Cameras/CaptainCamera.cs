@@ -126,7 +126,7 @@ namespace AyaMod.Content.Items.Cameras
         {
             for(int i = 0;i<3;i++)
             {
-                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 253, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f,Scale:1f);
+                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.BubbleBurst_White, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f,Scale:1f);
                 d.velocity = d.velocity.RotatedByRandom(0.3f);
                 d.noGravity = true;
             }

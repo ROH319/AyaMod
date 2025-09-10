@@ -126,7 +126,7 @@ namespace AyaMod.Content.Items.Cameras
             num = 0f;
             if (Main.rand.Next(2) == 0)
             {
-                Dust dust2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 40, 0f, 0f, 0, default(Color), 1.2f);
+                Dust dust2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.JunglePlants, 0f, 0f, 0, default(Color), 1.2f);
                 dust2.noGravity = true;
                 dust2.velocity = Projectile.velocity * 0.5f;
             }
@@ -136,7 +136,7 @@ namespace AyaMod.Content.Items.Cameras
                 Projectile.localAI[1] = 1f;
                 for (int i = 0; i < 10; i++)
                 {
-                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 40, 0f, 0f, 0, default(Color), 0.7f).velocity = Projectile.velocity.SafeNormalize(Vector2.UnitY).RotatedBy(Main.rand.NextFloat() * ((float)Math.PI * 2f) * 0.25f) * (Main.rand.NextFloat() * 3f);
+                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.JunglePlants, 0f, 0f, 0, default(Color), 0.7f).velocity = Projectile.velocity.SafeNormalize(Vector2.UnitY).RotatedBy(Main.rand.NextFloat() * ((float)Math.PI * 2f) * 0.25f) * (Main.rand.NextFloat() * 3f);
                 }
             }
 

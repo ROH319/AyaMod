@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Terraria.DataStructures;
 
 namespace AyaMod.Core.Systems.ParticleSystem
 {
@@ -34,6 +35,8 @@ namespace AyaMod.Core.Systems.ParticleSystem
 
         public Color color;
 
+        public IEntitySource Source;
+
         protected sealed override void Register()
         {
             ModTypeLookup<Particle>.Register(this);
@@ -55,7 +58,7 @@ namespace AyaMod.Core.Systems.ParticleSystem
 
 
 
-        public static T NewParticle<T>(Vector2 center, Vector2 velocity, Color color = default, float scale = 1f, float rotation = 0f, float alpha = 1f) where T : Particle
+        public static T NewParticle<T>(IEntitySource source, Vector2 center, Vector2 velocity, Color color = default, float scale = 1f, float rotation = 0f, float alpha = 1f) where T : Particle
         {
             if (Main.netMode == NetmodeID.Server)
                 return null;
@@ -71,6 +74,7 @@ namespace AyaMod.Core.Systems.ParticleSystem
             p.timer = 0;
             p.AngularSpeed = 0f;
             p.OnSpawn();
+            p.Source = source;
             ParticleManager.Particles.Add(p);
 
             return p;

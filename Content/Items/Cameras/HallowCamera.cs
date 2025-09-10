@@ -63,7 +63,7 @@ namespace AyaMod.Content.Items.Cameras
                 Vector2 pos = Projectile.Center + vec * Main.rand.NextFloat(24, 48);
                 Vector2 vel = vec * Main.rand.NextFloat(2f,3f) + Main.rand.NextVector2Unit() * Main.rand.NextFloat(1f,2f);
                 Color color = new Color(250, 232, 136) * Main.rand.NextFloat(0.5f,1f);
-                var light = LightParticle.Spawn(pos, vel * 0.8f, color, 30);
+                var light = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel * 0.8f, color, 30);
                 light.Scale = 1.5f;
             }
         }
@@ -173,7 +173,7 @@ namespace AyaMod.Content.Items.Cameras
                     Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(0, 32);
                     Color color = new Color(250, 232, 136);
                     float alphaFactor = Utils.Remap(factor, 0, 0.6f, 0f, 1f);
-                    var light = LightParticle.Spawn(pos, vel * Main.rand.NextFloat(0.15f,0.35f), color * alphaFactor, 15);
+                    var light = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel * Main.rand.NextFloat(0.15f,0.35f), color * alphaFactor, 15);
                     light.Scale = 1.5f;
                 }
             }

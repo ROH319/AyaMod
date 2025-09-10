@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 
 namespace AyaMod.Content.Particles
@@ -20,9 +21,9 @@ namespace AyaMod.Content.Particles
         public FloatModifier ScaleFadeout;
         public FloatModifier VelocityFadeout;
 
-        public static SoulsParticle Spawn(Vector2 center, Vector2 velocity, Color color, float scale = 1f, float alpha = 1f)
+        public static SoulsParticle Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color, float scale = 1f, float alpha = 1f)
         {
-            SoulsParticle ball = NewParticle<SoulsParticle>(center, velocity, color, scale, 0f, alpha);
+            SoulsParticle ball = NewParticle<SoulsParticle>(source, center, velocity, color, scale, 0f, alpha);
             return ball;
         }
 
