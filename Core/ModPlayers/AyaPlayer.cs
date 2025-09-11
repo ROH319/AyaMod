@@ -1,6 +1,7 @@
 ﻿using AyaMod.Content.Buffs.Films;
 using AyaMod.Content.Items.Accessories;
 using AyaMod.Content.Items.Accessories.Movements;
+using AyaMod.Content.Items.Films.DyeFilms;
 using AyaMod.Core.Loaders;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,6 +28,8 @@ namespace AyaMod.Core.ModPlayers
 
         public int DamageReduceFlat = 0;
         public int ManicStack = 0;
+        public float WispDmg = 0;
+        public float InfernalWispDmg = 0;
 
 
         public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
@@ -127,6 +130,15 @@ namespace AyaMod.Core.ModPlayers
             }
         }
 
+        public override void PreUpdate()
+        {
+            bool devEffect = Player.DevEffect();
+            WispDmg += (int)(devEffect ? WispFilm.WispDmgRegenDev : WispFilm.WispDmgRegen);
+            WispDmg = MathHelper.Clamp(WispDmg, 0, devEffect ? WispFilm.WispDmgMaxDev : WispFilm.WispDmgMax);
+
+            InfernalWispDmg += InfernalWispDmg;
+            InfernalWispDmg = MathHelper.Clamp(InfernalWispDmg, 0, InfernalWispFilm.WispDmgMax);
+        }
         public override void ResetEffects()
         {
             FreeFlyFrame = 0;

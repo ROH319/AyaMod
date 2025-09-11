@@ -19,7 +19,7 @@ namespace AyaMod.Content.Buffs.Films
         }
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.Aya().BlueAcid = true;
+            npc.Aya().RedAcid = true;
         }
     }
 }

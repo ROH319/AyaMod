@@ -42,3 +42,13 @@ RedAcidBuff: {
 	// DisplayName: Red Acid Buff
 	// Description: Mods.AyaMod.Buffs.RedAcidBuff.Description
 }
+
+ReflectiveBuff: {
+	// DisplayName: Reflective Buff
+	// Description: Mods.AyaMod.Buffs.ReflectiveBuff.Description
+}
+
+ReflectiveCopperBuff: {
+	// DisplayName: Reflective Copper Buff
+	// Description: Mods.AyaMod.Buffs.ReflectiveCopperBuff.Description
+}

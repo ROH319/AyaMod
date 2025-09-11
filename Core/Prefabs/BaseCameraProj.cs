@@ -126,6 +126,8 @@ namespace AyaMod.Core.Prefabs
 
             var film = player.ChooseFilms(player.HeldItem, CameraStats.FilmSlot);
             film.ForEach(film => films.Add((BaseFilm)film.ModItem));
+
+            UpdateFilm(film => film.PreAI(this));
             //Item film = player.ChooseAmmo(player.HeldItem);
             //if (film != null)
             //    films.Add((BaseFilm)film.ModItem);

@@ -7,5 +7,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
 
+        public static float WispDmgRegen = 125 / 60;
+        public static int WispDmgMax = 500;
     }
 }

@@ -20,6 +20,8 @@ namespace AyaMod.Content.Buffs.Films
         }
         public override void Update(NPC npc, ref int buffIndex)
         {
+            npc.buffTime[buffIndex]++;
+
             npc.Aya().Scared = true;
         }
     }

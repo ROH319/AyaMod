@@ -17,7 +17,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
 
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.AddBuff(ModContent.BuffType<ScaredBuff>(), 1500 * 60);
+            target.AddBuff(ModContent.BuffType<ScaredBuff>(), 60);
         }
     }
 }

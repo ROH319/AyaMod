@@ -124,14 +124,14 @@ namespace AyaMod.Helpers
             var sItem = weapon;
             List<Item> list = new List<Item>();
 
-            for(int i = 54; i < 58 && list.Count >= count; i++)
+            for(int i = 54; i < 58 && list.Count <= count; i++)
             {
                 if (player.inventory[i].stack > 0 && ItemLoader.CanChooseAmmo(sItem, player.inventory[i],player))
                 {
                     list.Add(player.inventory[i]);
                 }
             }
-            for(int i = 0; i < 54 && list.Count >= count; i++)
+            for(int i = 0; i < 54 && list.Count <= count; i++)
             {
                 if (player.inventory[i].stack > 0 && ItemLoader.CanChooseAmmo(sItem, player.inventory[i], player))
                 {

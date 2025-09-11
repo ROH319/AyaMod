@@ -24,14 +24,14 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                     if (!npc.CanBeChasedBy(projectile, true)) continue;
                     if (npc.Distance(target.Center) < RedAcidRange)
                     {
-                        npc.AddBuff(ModContent.BuffType<BlueAcidBuff>(), RedAcidDotTimeDev);
+                        npc.AddBuff(ModContent.BuffType<RedAcidBuff>(), RedAcidDotTimeDev);
 
                     }
                 }
             }
             else
             {
-                target.AddBuff(ModContent.BuffType<BlueAcidBuff>(), RedAcidDotTime);
+                target.AddBuff(ModContent.BuffType<RedAcidBuff>(), RedAcidDotTime);
             }
         }
 

@@ -41,5 +41,6 @@ namespace AyaMod.Core.Prefabs
         public virtual void PreClearProjectile(BaseCameraProj projectile) { }
         public virtual void OnClearProjectile(BaseCameraProj projectile) { }
         public virtual void PostClearProjectile(BaseCameraProj projectile, int capturecount) { }
+        public virtual void PreAI(BaseCameraProj projectile) { }
     }
 }

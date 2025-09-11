@@ -1,12 +1,14 @@
 ﻿using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.GameContent;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
@@ -39,12 +41,20 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             Projectile.ignoreWater = true;
             Projectile.penetrate = -1;
             Projectile.SetImmune(20);
-            Projectile.timeLeft = 3 * 5 * 7;
+            Projectile.timeLeft = 3 * 1 * 7;
         }
 
         public override void AI()
         {
-            Projectile.FrameLooping(3 * 5, 7);
+            Projectile.FrameLooping(3 * 1, 7);
+
+            bool num205 = WorldGen.SolidTile(Framing.GetTileSafely((int)Projectile.position.X / 16, (int)Projectile.position.Y / 16));
+            Dust dust22 = Main.dust[Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 229)];
+            dust22.position = Projectile.Center;
+            dust22.velocity = Vector2.Zero;
+            dust22.noGravity = true;
+            if (num205)
+                dust22.noLight = true;
 
         }
         public override void OnKill(int timeLeft)
@@ -55,6 +65,14 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero,
                     Type, Projectile.damage, Projectile.knockBack, Projectile.owner, Projectile.ai[0]);
             }
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Rectangle rec = new Rectangle(0, 98 * Projectile.frame, 98, 98);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, rec, Color.White * Projectile.Opacity, Projectile.rotation, new Vector2(49, 49), Projectile.scale, 0, 0);
+
+            return false;
         }
     }
 }
