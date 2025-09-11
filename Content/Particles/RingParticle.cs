@@ -1,4 +1,5 @@
 ﻿using AyaMod.Common.Easer;
+using AyaMod.Core;
 using AyaMod.Core.Systems.ParticleSystem;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -14,6 +15,7 @@ namespace AyaMod.Content.Particles
 {
     public class RingParticle : Particle
     {
+        public override string Texture => AssetDirectory.EmptyTexturePass;
 
         public float TotalTime;
         public float StartRadius;

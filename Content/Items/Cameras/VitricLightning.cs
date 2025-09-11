@@ -38,7 +38,7 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.04f, 98, 2f);
             SetCaptureStats(100, 5);
         }
-
+        public static int VitricDotDmg = 10;
     }
 
     public class VitricLightningProj : BaseCameraProj

@@ -141,7 +141,7 @@ namespace AyaMod.Core.Prefabs
             foreach(var npc in Main.ActiveNPCs)
             {
                 if (!npc.CanBeChasedBy() || npc.life <= maxHP) continue;
-                if (Projectile.Colliding(Projectile.getRect(), npc.getRect()))
+                if (Projectile.Colliding(Projectile.GetHitbox(), npc.getRect()))
                 {
                     target = npc;
                 }
@@ -245,9 +245,9 @@ namespace AyaMod.Core.Prefabs
             }
             if (player.itemTime != 0)
             {
-                bool canaltuse = mplr.CameraAltCooldown <= 0;
-                if (player.altFunctionUse == 2 && canaltuse)
+                if (player.altFunctionUse == 2)
                 {
+                    Projectile.Center = mplr.MouseWorld;
                     ProjectileRemoval();
                     player.itemTime = 0;
                     mplr.CameraAltCooldown = CameraStats.CaptureCooldown;
@@ -285,6 +285,8 @@ namespace AyaMod.Core.Prefabs
             var rects = lens.GetRectanglesAgainstEntity(Projectile.Center, Size, Projectile.rotation);
             int captureCount = 0;
             PreClear();
+            UpdateFilm(film => film.PreClearProjectile(this));
+
             foreach (var projectile in Main.ActiveProjectiles)
             {
                 if (!CanClear(projectile)) continue;
@@ -303,10 +305,12 @@ namespace AyaMod.Core.Prefabs
                 if (!colliding) continue;
 
                 OnClearProjectile(projectile);
+                UpdateFilm(film => film.OnClearProjectile(this));
                 projectile.Kill();
                 captureCount++;
             }
-            OnFinishedClear(captureCount);
+            PostClear(captureCount);
+            UpdateFilm(film => film.PostClearProjectile(this, captureCount));
         }
 
         public virtual void PreClear() { }
@@ -317,7 +321,7 @@ namespace AyaMod.Core.Prefabs
 
         public virtual void OnClearProjectile(Projectile projectile) { }
 
-        public virtual void OnFinishedClear(int captureCount) { }
+        public virtual void PostClear(int captureCount) { }
 
         public void CheckHoverNPC()
         {
@@ -363,9 +367,9 @@ namespace AyaMod.Core.Prefabs
             if (canhit)
                 OnSnapInSight();
 
-            UpdateFilm((film => film.OnSnap()));
+            UpdateFilm((film => film.OnSnap(this)));
             if (canhit)
-                UpdateFilm((film => film.OnSnapInSight()));
+                UpdateFilm((film => film.OnSnapInSight(this)));
 
             CheckSnapProjectile(rects);
 
@@ -397,6 +401,10 @@ namespace AyaMod.Core.Prefabs
         /// </summary>
         public virtual void OnSnap() { }
 
+        /// <summary>
+        /// 拍摄弹幕时触发
+        /// </summary>
+        /// <param name="projectile"></param>
         public virtual void OnSnapProjectile(Projectile projectile) { }
 
         public virtual void PostSnap() { }

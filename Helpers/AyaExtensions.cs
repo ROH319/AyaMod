@@ -45,7 +45,17 @@ namespace AyaMod.Helpers
             projectile.height = (int)(projectile.height * scale);
             projectile.Center = projectile.position;
         }
-
+        public static void FrameLooping(this Projectile projectile, int framerate, int frametotal)
+        {
+            projectile.frameCounter++;
+            if (projectile.frameCounter > framerate)
+            {
+                projectile.frame++;
+                if (projectile.frame > frametotal - 1)
+                    projectile.frame = 0;
+                projectile.frameCounter = 0;
+            }
+        }
         public static void SetHitbox(this Projectile projectile, int x, int y = -1)
         {
             if (y == -1) y = x;
@@ -309,6 +319,8 @@ namespace AyaMod.Helpers
         public static CameraPlayer Camera(this Player player) => player.GetModPlayer<CameraPlayer>();
         public static CameraGlobalNPC Camera(this NPC npc) => npc.GetGlobalNPC<CameraGlobalNPC>();
         public static CameraGlobalProjectile Camera(this Projectile projectile) => projectile.GetGlobalProjectile<CameraGlobalProjectile>();
+
+        public static bool DevEffect(this Player player) => player.Camera().Developing;
 
         public static bool HasEffect(this Player player, string effectName) => player.Aya().HasEffect(effectName);
         public static bool HasEffect<T>(this Player player) where T : class

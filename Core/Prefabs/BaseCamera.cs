@@ -58,7 +58,7 @@ namespace AyaMod.Core.Prefabs
             return false;
         }
 
-        public override bool AltFunctionUse(Player player) => true;
+        public override bool AltFunctionUse(Player player) => player.Camera().CameraAltCooldown <= 0;
 
         public override void HoldItem(Player player)
         {

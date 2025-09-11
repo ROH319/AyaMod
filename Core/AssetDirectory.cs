@@ -18,6 +18,8 @@ namespace AyaMod.Core
 
         public const string Buffs = Textures + "Buffs/";
 
+        public const string Buffs_Films = Buffs + "Films/";
+
         public const string Items = Textures + "Items/";
 
         public const string Accessories = Items + "Accessories/";
@@ -33,6 +35,8 @@ namespace AyaMod.Core
         public const string Particles = Textures + "Particles/";
 
         public const string Projectiles = Textures + "Projectiles/";
+
+        public const string Projectiles_Films = Projectiles + "Films/";
 
         public const string UI = Textures + "UI/";
         

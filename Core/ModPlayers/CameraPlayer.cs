@@ -32,6 +32,8 @@ namespace AyaMod.Core.ModPlayers
 
         public int CameraAltCooldown;
 
+        public bool Developing;
+
         public override void Load()
         {
             DefaultLens = new DefaultLens();
@@ -53,6 +55,8 @@ namespace AyaMod.Core.ModPlayers
             SizeBonus = StatModifier.Default;
 
             SingleTargetMultiplier = 0f;
+
+            Developing = false;
         }
 
         public override void PreUpdate()

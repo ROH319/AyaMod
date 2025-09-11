@@ -36,7 +36,10 @@ namespace AyaMod.Core.Prefabs
 
         public virtual void ModifyHitNPCFilm(BaseCameraProj projectile, NPC target, ref NPC.HitModifiers modifiers) { }
         public virtual void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone) { }
-        public virtual void OnSnap() { }
-        public virtual void OnSnapInSight() { }
+        public virtual void OnSnap(BaseCameraProj projectile) { }
+        public virtual void OnSnapInSight(BaseCameraProj projectile) { }
+        public virtual void PreClearProjectile(BaseCameraProj projectile) { }
+        public virtual void OnClearProjectile(BaseCameraProj projectile) { }
+        public virtual void PostClearProjectile(BaseCameraProj projectile, int capturecount) { }
     }
 }

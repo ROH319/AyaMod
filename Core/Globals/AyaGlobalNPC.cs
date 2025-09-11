@@ -1,4 +1,5 @@
 ﻿using AyaMod.Content.Items.Cameras;
+using AyaMod.Content.Items.Films.DyeFilms;
 using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace AyaMod.Core.Globals
         public bool ShadowSuckBuff;
 
         public bool Acid;
+        public bool BlueAcid;
+        public bool RedAcid;
         public bool Confused;
         public bool Scared;
 
@@ -80,6 +83,7 @@ namespace AyaMod.Core.Globals
         }
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
+            bool devEffect = Main.player.Any(player => player.AliveCheck(npc.Center, 2000) && player.DevEffect());
             if (ElectrifiedBuff)
             {
                 if (Main.rand.NextBool(5))
@@ -88,16 +92,28 @@ namespace AyaMod.Core.Globals
                     d.noGravity = true;
                 }
 
-                npc.lifeRegen -= 10;
+                npc.lifeRegen -= VitricLightning.VitricDotDmg;
                 if (damage < 5)
                     damage = 5;
             }
 
             if (Acid)
             {
-                npc.lifeRegen -= 20;
+                npc.lifeRegen -= devEffect ? AcidFilm.AcidDotDmgDev : AcidFilm.AcidDotDmg;
                 if (damage < 2)
                     damage = 2;
+            }
+            if (BlueAcid)
+            {
+                npc.lifeRegen -= BlueAcidFilm.BlueAcidDotDmg;
+                if (damage < 4)
+                    damage = 4;
+            }
+            if (RedAcid)
+            {
+                npc.lifeRegen -= devEffect ? RedAcidFilm.RedAcidDotDmgDev : RedAcidFilm.RedAcidDotDmg;
+                if (damage < 6)
+                    damage = 6;
             }
             if (Confused)
             {
@@ -107,14 +123,14 @@ namespace AyaMod.Core.Globals
                 if (legilimencyEffect)
                 {
                     //15dps
-                    npc.lifeRegen -= 30;
+                    npc.lifeRegen -= Legilimency.ConfusedDotDmg;
                 }
                 if (damage < 5)
                     damage = 5;
             }
             if (ShadowSuckBuff)
             {
-                npc.lifeRegen -= 60;
+                npc.lifeRegen -= ShadowCamera.ShadowSuckDotDmg;
                 if (damage < 4) 
                     damage = 4;
             }

@@ -1,4 +1,5 @@
-﻿using AyaMod.Content.Items.Accessories;
+﻿using AyaMod.Content.Buffs.Films;
+using AyaMod.Content.Items.Accessories;
 using AyaMod.Content.Items.Accessories.Movements;
 using AyaMod.Core.Loaders;
 using AyaMod.Helpers;
@@ -24,6 +25,7 @@ namespace AyaMod.Core.ModPlayers
 
         public int NotUsingCameraTimer = 0;
 
+        public int DamageReduceFlat = 0;
         public int ManicStack = 0;
 
 
@@ -42,6 +44,13 @@ namespace AyaMod.Core.ModPlayers
             if (Player.HasEffect<FalsePHDJ>())
             {
                 modifiers.FinalDamage *= 1f + (float)FalsePHDJ.HurtIncrease / 100f;
+            }
+            if (DamageReduceFlat > 0)
+            {
+                modifiers.FinalDamage.Flat -= (float)DamageReduceFlat;
+                DamageReduceFlat = 0;
+
+                Player.ClearBuff(BuffType<ReflectiveBuff>());
             }
         }
 
@@ -126,6 +135,8 @@ namespace AyaMod.Core.ModPlayers
             WingTimeModifier = StatModifier.Default;
             HasDash = false;
             AyaDash = DashType.None;
+
+            DamageReduceFlat = 0;
 
             ResetAyaEffects();
 

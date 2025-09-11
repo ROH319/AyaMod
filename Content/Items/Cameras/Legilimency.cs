@@ -42,6 +42,8 @@ namespace AyaMod.Content.Items.Cameras
                 .AddTile(TileID.Anvils)
                 .Register();
         }
+
+        public static int ConfusedDotDmg = 30;
     }
 
     public class LegilimencyProj : BaseCameraProj

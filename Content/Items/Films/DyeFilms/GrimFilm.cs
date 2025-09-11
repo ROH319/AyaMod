@@ -1,4 +1,4 @@
-﻿using AyaMod.Content.Buffs;
+﻿using AyaMod.Content.Buffs.Films;
 using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using System;

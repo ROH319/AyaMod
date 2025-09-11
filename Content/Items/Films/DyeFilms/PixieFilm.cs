@@ -1,5 +1,6 @@
 ﻿using AyaMod.Core;
 using AyaMod.Core.Prefabs;
+using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
 
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(CritDamageBonus);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(CritDmgBonus);
         public override void ModifyHitNPCFilm(BaseCameraProj projectile, NPC target, ref NPC.HitModifiers modifiers)
         {
-            modifiers.CritDamage += CritDamageBonus / 100f;
+            bool deveffect = Main.player[projectile.Projectile.owner].DevEffect();
+            modifiers.CritDamage += (deveffect ? CritDmgBonusDev : CritDmgBonus) / 100f;
         }
-        public static float CritDamageBonus = 20;
+        public static float CritDmgBonus = 20;
+        public static float CritDmgBonusDev = 30;
     }
 }

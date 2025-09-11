@@ -485,3 +485,8 @@ MiracleCamera: {
 	DisplayName: Miracle Camera
 	Tooltip: ""
 }
+
+YukaCamera: {
+	DisplayName: Yuka Camera
+	Tooltip: ""
+}

@@ -473,7 +473,7 @@ TenguWings2: {
 
 CorruptPupil2: {
 	DisplayName: Corrupt Pupil2
-	Tooltip: 
+	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
 		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize}
@@ -482,7 +482,7 @@ CorruptPupil2: {
 
 CrimsonPupil2: {
 	DisplayName: Crimson Pupil2
-	Tooltip: 
+	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
 		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize}
@@ -502,7 +502,7 @@ ManicPupil: {
 
 RetinazerLens: {
 	DisplayName: 高能光子聚焦镜
-	Tooltip: 
+	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
 		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize}
@@ -511,7 +511,7 @@ RetinazerLens: {
 
 SpazmatismLens: {
 	DisplayName: 灼热离子成型镜
-	Tooltip: 
+	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
 		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize}
@@ -526,4 +526,9 @@ TranquilPupil: {
 MiracleCamera: {
 	DisplayName: Miracle Camera
 	Tooltip: ""
+}
+
+YukaCamera: {
+	// DisplayName: Yuka Camera
+	// Tooltip: ""
 }

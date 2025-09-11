@@ -8,19 +8,18 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace AyaMod.Content.Buffs
+namespace AyaMod.Content.Buffs.Films
 {
-    public class ScaredBuff : ModBuff
+    public class AcidBuff : ModBuff
     {
-        public override string Texture => AssetDirectory.Buffs + Name;
-
+        public override string Texture => AssetDirectory.Buffs_Films + Name;
         public override void SetStaticDefaults()
         {
             Main.debuff[Type] = true;
         }
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.Aya().Scared = true;
+            npc.Aya().Acid = true;
         }
     }
 }

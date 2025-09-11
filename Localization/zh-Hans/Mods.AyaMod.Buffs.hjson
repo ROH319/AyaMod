@@ -27,3 +27,18 @@ GaleGetaCDBuff: {
 	// DisplayName: Gale Geta C D Buff
 	// Description: Mods.AyaMod.Buffs.GaleGetaCDBuff.Description
 }
+
+BlueAcidBuff: {
+	// DisplayName: Blue Acid Buff
+	// Description: Mods.AyaMod.Buffs.BlueAcidBuff.Description
+}
+
+DevelopingBuff: {
+	// DisplayName: Developing Buff
+	// Description: Mods.AyaMod.Buffs.DevelopingBuff.Description
+}
+
+RedAcidBuff: {
+	// DisplayName: Red Acid Buff
+	// Description: Mods.AyaMod.Buffs.RedAcidBuff.Description
+}

@@ -36,6 +36,8 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.04f, 120, 1.8f,0.5f);
             SetCaptureStats(100, 5);
         }
+
+        public static int ShadowSuckDotDmg = 60;
     }
 
     public class ShadowCameraProj : BaseCameraProj
