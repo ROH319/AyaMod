@@ -532,3 +532,8 @@ YukaCamera: {
 	// DisplayName: Yuka Camera
 	// Tooltip: ""
 }
+
+EmpressCamera: {
+	// DisplayName: Empress Camera
+	// Tooltip: ""
+}

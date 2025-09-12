@@ -97,6 +97,6 @@ namespace AyaMod.Helpers
 
 
         public static Color AdditiveColor(this Color color) => color with { A = 0 };
-
+        public static Color WithAlpha(this Color color, byte alpha) => color with { A = alpha };
     }
 }

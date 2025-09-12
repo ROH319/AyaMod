@@ -206,7 +206,7 @@ namespace AyaMod.Content.Items.Cameras
             return false;
         }
 
-        public static void DrawStar(Projectile projectile, Texture2D texture, Vector2 center, Color color, float alpha, float scalex, float scaley, float scaleMult)
+        public static void DrawStar(Projectile projectile, Texture2D texture, Vector2 center, Color color, float alpha, float scalex, float scaley, float scaleMult, float extraRot = MathHelper.PiOver2)
         {
             color = color.AdditiveColor() * alpha * projectile.Opacity;
             Vector2 scale = new Vector2(scalex, scaley) * scaleMult * projectile.scale;
@@ -214,7 +214,7 @@ namespace AyaMod.Content.Items.Cameras
             {
                 float rot = MathHelper.TwoPi * (float)i / 5 + projectile.rotation;
                 Vector2 pos = center + rot.ToRotationVector2() * 7 - Main.screenPosition;
-                Main.spriteBatch.Draw(texture, pos, null, color, rot + MathHelper.PiOver2, texture.Size() / 2, scale, 0, 0);
+                Main.spriteBatch.Draw(texture, pos, null, color, rot + extraRot, texture.Size() / 2, scale, 0, 0);
 
             }
         }
