@@ -524,16 +524,16 @@ TranquilPupil: {
 }
 
 MiracleCamera: {
-	DisplayName: Miracle Camera
+	DisplayName: 奇迹愿景
 	Tooltip: ""
 }
 
 YukaCamera: {
-	// DisplayName: Yuka Camera
-	// Tooltip: ""
+	DisplayName: 繁花盛景
+	Tooltip: ""
 }
 
 EmpressCamera: {
-	// DisplayName: Empress Camera
-	// Tooltip: ""
+	DisplayName: 光风霁月
+	Tooltip: ""
 }

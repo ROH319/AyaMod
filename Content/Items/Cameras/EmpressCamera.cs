@@ -285,21 +285,19 @@ namespace AyaMod.Content.Items.Cameras
 
             Color color = (Main.hslToRgb((Projectile.ai[1] + 0.5f) % 1f, 1f, 0.7f) * Projectile.Opacity).AdditiveColor() * timeleftFactor * 0.8f;
 
-            float scaleX = 0.8f;
-            float scaleY = 1.2f;
-            float scaleM = 0.3f;
+            Vector2 scale = new Vector2(0.8f, 1.2f) * 0.3f;
 
             for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
                 float factor = 1f - (float)i / Projectile.oldPos.Length;
 
-                DrawStar(Projectile, texture, Projectile.oldPos[i] + Projectile.Size / 2, color, factor * 0.4f, 0, scaleX, scaleY, scaleM);
+                DrawStar(Projectile, texture, Projectile.oldPos[i] + Projectile.Size / 2, color, factor * 0.4f, scale);
 
             }
-            DrawStar(Projectile, texture, Projectile.Center, color, 0.8f, 0, scaleX, scaleY, scaleM);
+            DrawStar(Projectile, texture, Projectile.Center, color, 0.8f, scale);
 
 
-            DrawStar(Projectile, texture, Projectile.Center, color, 0.8f, 0, scaleX, scaleY, scaleM);
+            DrawStar(Projectile, texture, Projectile.Center, color, 0.8f, scale);
 
             Color ballColor = (Main.hslToRgb((Projectile.ai[1] + 0.5f) % 1f, 1f, 0.8f) * Projectile.Opacity).AdditiveColor() * timeleftFactor * 1.2f;
             Vector2 pos = Projectile.Center - Main.screenPosition;
@@ -310,15 +308,15 @@ namespace AyaMod.Content.Items.Cameras
             }
             return false;
         }
-        public static void DrawStar(Projectile projectile, Texture2D texture, Vector2 center, Color color, float alpha, float extraRot, float scalex, float scaley, float scaleMult)
+        public static void DrawStar(Projectile projectile, Texture2D texture, Vector2 center, Color color, float alpha, Vector2 scale, float dist = 18, float extraRot = 0)
         {
             color = color.AdditiveColor() * alpha * projectile.Opacity;
-            Vector2 scale = new Vector2(scalex, scaley) * scaleMult * projectile.scale;
+            Vector2 drawScale = scale * projectile.scale;
             for (int i = 0; i < 5; i++)
             {
                 float rot = MathHelper.TwoPi * (float)i / 5 + projectile.rotation + extraRot;
-                Vector2 pos = center + rot.ToRotationVector2() * 18 - Main.screenPosition;
-                Main.spriteBatch.Draw(texture, pos, null, color, rot, texture.Size() / 2, scale, 0, 0);
+                Vector2 pos = center + rot.ToRotationVector2() * dist - Main.screenPosition;
+                Main.spriteBatch.Draw(texture, pos, null, color, rot, texture.Size() / 2, drawScale, 0, 0);
 
             }
         }

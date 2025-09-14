@@ -30,28 +30,39 @@ namespace AyaMod.Content.PlayerDrawLayers
         {
             Player player = drawInfo.drawPlayer;
 
-            Texture2D cone = Request<Texture2D>(AssetDirectory.Extras + "UltraDashCone", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Texture2D cone = Request<Texture2D>(AssetDirectory.Extras + "bulletBa004", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             //Rectangle rectangle = cone.Bounds;
 
             Color color = new Color(255, 150, 150, 0);
             float opacity = Main.mouseTextColor / 255f;
-            opacity *= opacity;
+            //opacity *= opacity*1.2f;
             float extraRot = 0f;
+            Vector2 scale = new Vector2(1.4f, 1.1f);
             //if (player.velocity.X > 0) extraRot = -MathHelper.PiOver2;
+            float rot = player.bodyRotation - MathHelper.PiOver2;
+            Vector2 dir = rot.ToRotationVector2();
             SpriteEffects se = drawInfo.playerEffect;
-            if(player.Aya().UltraDashDir.ToRotationVector2().X == 0)se = SpriteEffects.None;
+            if (player.Aya().UltraDashDir.ToRotationVector2().X == 0) se = SpriteEffects.None;
             DrawData data = new DrawData(
                 cone,
-                player.Center - Main.screenPosition,
+                player.Center - Main.screenPosition - dir * 12,
                 null,
                 color * opacity,
-                player.bodyRotation - MathHelper.PiOver2,
+                rot,
                 cone.Size()/2,
-                0.75f,
+                scale,
+                SpriteEffects.None,
+                0
+                );
+            DrawData data2 = new DrawData(cone,
+                player.Center - Main.screenPosition + rot.ToRotationVector2() * 15,null,color * opacity, rot,
+                cone.Size() / 2,
+                /*new Vector2(1.2f,1.2f)*/scale *0.65f,
                 SpriteEffects.None,
                 0
                 );
             drawInfo.DrawDataCache.Add(data);
+            drawInfo.DrawDataCache.Add(data2);
         }
     }
 }

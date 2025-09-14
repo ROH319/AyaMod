@@ -53,6 +53,8 @@ namespace AyaMod.Core
 
         public static Effect RevertTooltip;
         public static Effect Trail;
+        public static Effect Trail2;
+        public static Effect SimpleGradient;
 
         public static void LoadAsset()
         {
@@ -60,6 +62,8 @@ namespace AyaMod.Core
 
             RevertTooltip = Request<Effect>(Effects + "RevertTooltip", AssetRequestMode.ImmediateLoad).Value;
             Trail = Request<Effect>(Effects + "Trail", AssetRequestMode.ImmediateLoad).Value;
+            Trail2 = Request<Effect>(Effects + "Trail2", AssetRequestMode.ImmediateLoad).Value;
+            SimpleGradient = Request<Effect>(Effects + "SimpleGradient", AssetRequestMode.ImmediateLoad).Value;
         }
 
         public static void UnloadAsset()
@@ -67,6 +71,8 @@ namespace AyaMod.Core
             StarTexture = null;
             RevertTooltip = null;
             Trail = null;
+            Trail2 = null;
+            SimpleGradient = null;
         }
 
         public static string VanillaTexturePath(string path) => $"Terraria/Images/{path}";

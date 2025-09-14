@@ -14,7 +14,7 @@ namespace AyaMod.Core.Prefabs
         public override string Texture => AssetDirectory.Films + Name;
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 99;
+            Item.ResearchUnlockCount = 999;
         }
         public override void SetDefaults()
         {
@@ -32,7 +32,14 @@ namespace AyaMod.Core.Prefabs
             }
             return base.CanBeChosenAsAmmo(weapon, player);
         }
+        public virtual float EffectChance => 100;
 
+        public virtual float GetTotalChance() => EffectChance;
+
+        public virtual bool CheckEffect()
+        {
+            return Main.rand.Next(100) < GetTotalChance();
+        }
 
         public virtual void ModifyHitNPCFilm(BaseCameraProj projectile, NPC target, ref NPC.HitModifiers modifiers) { }
         public virtual void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone) { }

@@ -5,6 +5,7 @@ using AyaMod.Core.Attributes;
 using AyaMod.Core.Globals;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
+using AyaMod.Core.Systems.Trails;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
@@ -330,6 +331,8 @@ namespace AyaMod.Content.Items.Accessories.Movements
         public override string Texture => AssetDirectory.EmptyTexturePass;
         public ref float IsDashing => ref Projectile.ai[0];
 
+        public static MultedTrail strip = new MultedTrail();
+
         public override void SetStaticDefaults()
         {
             Projectile.SetTrail(4, 40);
@@ -370,7 +373,17 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 Projectile.Opacity -= 0.05f;
             }
         }
-
+        public Color ColorFunction(float progress)
+        {
+            Color drawColor = new Color(255, 90, 90);
+            return Color.Lerp(drawColor, Color.Black, progress).AdditiveColor() * Projectile.Opacity;
+        }
+        public float WidthFunction(float progress) => 35f;
+        public float AlphaFunction(float progress)
+        {
+            float fadeinFactor = Utils.Remap(progress, 0f, 0.05f, 0f, 1f);
+            return EaseManager.Evaluate(Ease.InOutSine, 1f - progress, 1f) * Projectile.Opacity * 2f * fadeinFactor;
+        }
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D shape = TextureAssets.Extra[197].Value;
@@ -383,48 +396,52 @@ namespace AyaMod.Content.Items.Accessories.Movements
             int total = (int)(Projectile.oldPos.Length * mult - mult);
             Vector2 lastTrailPos = Vector2.Zero;
 
-            for (int i = 0; i < total - 1; i++)
-            {
-                if (Projectile.oldPos[(int)(i / mult)] == Vector2.Zero || Projectile.oldPos[(int)(i / mult) + 1] == Vector2.Zero) continue;
-                float factor = 1f - (float)i / total;//factor 1为轨迹头部， 0为轨迹尾部
-                float lerpFactor = Utils.Remap(i % mult, 0, mult - 1, 1 / mult, 1f);
-                Vector2 trailPos = Vector2.Lerp(Projectile.oldPos[(int)(i / mult)], Projectile.oldPos[(int)(i / mult) + 1], lerpFactor);
-                trailPos += Projectile.Size / 2;
+            strip.PrepareStrip(Projectile.oldPos, mult, ColorFunction, WidthFunction,
+                Projectile.Size / 2 - Main.screenPosition, AlphaFunction);
+            Main.graphics.GraphicsDevice.Textures[0] = shape;
+            strip.DrawTrail();
+            #region 原写法
+            //for (int i = 0; i < total - 1; i++)
+            //{
+            //    if (Projectile.oldPos[(int)(i / mult)] == Vector2.Zero || Projectile.oldPos[(int)(i / mult) + 1] == Vector2.Zero) continue;
+            //    float factor = 1f - (float)i / total;//factor 1为轨迹头部， 0为轨迹尾部
+            //    float lerpFactor = Utils.Remap(i % mult, 0, mult - 1, 1 / mult, 1f);
+            //    Vector2 trailPos = Vector2.Lerp(Projectile.oldPos[(int)(i / mult)], Projectile.oldPos[(int)(i / mult) + 1], lerpFactor);
+            //    trailPos += Projectile.Size / 2;
 
-                Color color = Color.Lerp(Color.Black, drawcolor, factor) * Projectile.Opacity;
-                var alpha = EaseManager.Evaluate(Ease.InOutSine, factor, 1f) * Projectile.Opacity * 0.9f;
-                float fadeinFactor = Utils.Remap(factor, 0.95f, 1, 1, 0f);
-                alpha *= fadeinFactor;
-                var normalDir = lastTrailPos - trailPos;
-                normalDir = normalDir.RotatedBy(MathHelper.PiOver2);
-                normalDir = normalDir.SafeNormalize(Vector2.Zero);
+            //    Color color = Color.Lerp(Color.Black, drawcolor, factor) * Projectile.Opacity;
+            //    var alpha = EaseManager.Evaluate(Ease.InOutSine, factor, 1f) * Projectile.Opacity * 0.9f;
+            //    float fadeinFactor = Utils.Remap(factor, 0.95f, 1, 1, 0f);
+            //    alpha *= fadeinFactor;
+            //    var normalDir = lastTrailPos - trailPos;
+            //    normalDir = normalDir.RotatedBy(MathHelper.PiOver2);
+            //    normalDir = normalDir.SafeNormalize(Vector2.Zero);
 
+            //    lastTrailPos = trailPos;
 
-                lastTrailPos = trailPos;
+            //    if (i == 0) continue;
 
-                if (i == 0) continue;
+            //    Vector2 top = trailPos - Main.screenPosition + normalDir * width * 0.5f;
+            //    Vector2 bottom = trailPos - Main.screenPosition - normalDir * width * 0.5f;
 
+            //    bars.Add(new CustomVertexInfo(top, color * alpha, new Vector3(factor, 1, alpha)));
+            //    bars.Add(new CustomVertexInfo(bottom, color * alpha, new Vector3(factor, 0, alpha)));
 
-                Vector2 top = trailPos - Main.screenPosition + normalDir * width * 0.5f;
-                Vector2 bottom = trailPos - Main.screenPosition - normalDir * width * 0.5f;
-
-                bars.Add(new CustomVertexInfo(top, color * alpha, new Vector3(factor, 1, alpha)));
-                bars.Add(new CustomVertexInfo(bottom, color * alpha, new Vector3(factor, 0, alpha)));
-
-            }
+            //}
 
             //for (int i = 0; i < 2; i++)
-            {
-                if (bars.Count > 2)
-                {
-                    Main.spriteBatch.End();
-                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, default, Main.GameViewMatrix.ZoomMatrix);
-                    Main.graphics.GraphicsDevice.Textures[0] = shape;
-                    Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
-                    Main.spriteBatch.End();
-                    Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-                }
-            }
+            //{
+            //    if (bars.Count > 2)
+            //    {
+            //        Main.spriteBatch.End();
+            //        Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, default, Main.GameViewMatrix.ZoomMatrix);
+            //        Main.graphics.GraphicsDevice.Textures[0] = shape;
+            //        Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
+            //        Main.spriteBatch.End();
+            //        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            //    }
+            //}
+            #endregion
             var vel = Projectile.position - Projectile.oldPosition;
             var ballColor = new Color(255, 90, 90).AdditiveColor();
             Texture2D ball4 = ModContent.Request<Texture2D>(AssetDirectory.Extras + "Ball4", AssetRequestMode.ImmediateLoad).Value;

@@ -18,7 +18,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
 
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if(Main.rand.Next(100) <= EffectChance)
+            if(CheckEffect())
             {
                 bool devEffect = Main.player[projectile.Projectile.owner].DevEffect();
                 Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), target.Center, Vector2.Zero,
@@ -26,7 +26,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             }
         }
 
-        public static int EffectChance = 20;
+        public override float EffectChance => 20;
     }
 
     public class HadesExplosion : ModProjectile
@@ -59,7 +59,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         }
         public override void OnKill(int timeLeft)
         {
-            if (Projectile.ai[0] > 0 && Main.rand.Next(100) <= HadesFilm.EffectChance)
+            if (Projectile.ai[0] > 0 && Main.rand.Next(100) <= ModContent.GetInstance<HadesFilm>().EffectChance)
             {
                 Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.Next(0, 100);
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero,

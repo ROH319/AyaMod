@@ -15,6 +15,7 @@ using Terraria.GameContent;
 using AyaMod.Core.Globals;
 using Terraria.Audio;
 using AyaMod.Core;
+using AyaMod.Content.Particles;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -91,6 +92,8 @@ namespace AyaMod.Content.Items.Cameras
                     Volume = 1f
                 }, Projectile.Center);
             }
+
+
         }
 
         public override bool? CanHitNPC(NPC target)

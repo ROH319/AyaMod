@@ -10,7 +10,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override void OnSnapInSight(BaseCameraProj projectile)
         {
-            if(Main.rand.Next(100) <= EffectChance)
+            if(CheckEffect())
             {
                 bool deveffect = Main.player[projectile.Projectile.owner].DevEffect();
                 Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(),projectile.Projectile.Center,Vector2.Zero,
@@ -18,7 +18,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             }
             
         }
-        public static int EffectChance = 20;
+        public override float EffectChance => 20;
         public static int SlowFactor = 20;
         public static int SlowFactorDev = 30;
     }
