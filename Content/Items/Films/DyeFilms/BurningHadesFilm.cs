@@ -8,6 +8,7 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -45,23 +46,33 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         {
             Projectile.oldPos = new Vector2[1];
             Projectile.rotation = Main.rand.NextFloat(MathHelper.TwoPi);
+            //SoundEngine.PlaySound(SoundID.Item20 with
+            //{
+            //    Volume = 1.5f,
+            // //Pitch = 0.7f
+            //}, Projectile.Center);
+            SoundEngine.PlaySound(SoundID.Item74, Projectile.Center);
+        }
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        {
+            return Helper.CheckRingCollision(targetHitbox, Projectile.Center, Radius - 40, Radius + 40); ;
         }
         public override void AI()
         {
             float factor = Projectile.TimeleftFactor();
-            float maxradius = 150;
+            float maxradius = 100;
             //Radius = EaseManager.Evaluate(Ease.OutCirc, 1 - factor, 1f) * maxradius;
             float threshold = 0.6f;
             if (factor > threshold)
                 Radius = Utils.Remap(factor, threshold, 1f, maxradius, 30);
             else
-                Radius = Utils.Remap(factor, 0f, threshold, maxradius + 80, maxradius);
+                Radius = Utils.Remap(factor, 0f, threshold, maxradius * 1.5f, maxradius);
             int total = (int)Radius;
             if (Projectile.oldPos.Length < total)
                 Array.Resize(ref Projectile.oldPos, total);
             for(int i = 0; i < total; i++)
             {
-                Vector2 pos = Projectile.Center + ((MathHelper.TwoPi + MathHelper.PiOver4 / 8) / total * i).ToRotationVector2() * Radius;
+                Vector2 pos = Projectile.Center + ((MathHelper.TwoPi + MathHelper.PiOver4 / 8) / total * i + Projectile.rotation).ToRotationVector2() * Radius;
                 Projectile.oldPos[i] = pos;
             }
 
@@ -78,7 +89,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                     d.scale = scalefactor;
                 }
             }
-            float alphaFadein = Utils.Remap(factor, 0.8f, 1f, 1f, 0f);
+            float alphaFadein = Utils.Remap(factor, 0.8f, 1f, 1f, 0.5f);
             float alphaFadeout = Utils.Remap(factor, 0f, threshold, 0f, 1f);
             Projectile.Opacity = 1 * alphaFadeout * alphaFadein;
         }
@@ -170,6 +181,15 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            }
+
+            Texture2D ball1 = Request<Texture2D>(AssetDirectory.Extras + "Ball", AssetRequestMode.ImmediateLoad).Value;
+
+            int ballcount = 36;
+            for(int i = 0; i < ballcount; i++)
+            {
+                Vector2 pos = Projectile.Center + (MathHelper.TwoPi / ballcount * i).ToRotationVector2() * Radius - Main.screenPosition;
+                Main.spriteBatch.Draw(ball1,pos, null, new Color(254, 255, 149).AdditiveColor() * 0.07f * Projectile.Opacity, Projectile.rotation, ball1.Size() / 2,2f, 0, 0);
             }
 
             return false;

@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
@@ -131,11 +132,20 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void AI()
         {
+            if (Projectile.localAI[0] == 0)
+            {
+                Helper.PlayPitched("se_lazer01", 0.07f, position: Projectile.Center);
+                //SoundEngine.PlaySound(SoundID.Item33 with
+                //{
+                //    Volume = 0.3f,
+                //    MaxInstances = 50
+                //}, Projectile.Center);
+            }
             Projectile.localAI[0]++;
 
             float factor = Projectile.TimeleftFactor();
             Rot -= 0.02f * factor;
-            Projectile.velocity = (Rot + MathHelper.Pi).ToRotationVector2() * 0.5f;
+            Projectile.velocity = (Rot + MathHelper.Pi).ToRotationVector2() * 2f;
 
             int spawnNextTime = 8;
 

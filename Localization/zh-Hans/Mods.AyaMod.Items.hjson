@@ -537,3 +537,8 @@ EmpressCamera: {
 	DisplayName: 光风霁月
 	Tooltip: ""
 }
+
+IceQueenCamera: {
+	// DisplayName: Ice Queen Camera
+	// Tooltip: ""
+}

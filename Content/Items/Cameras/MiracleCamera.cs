@@ -119,13 +119,23 @@ namespace AyaMod.Content.Items.Cameras
 
             if(!player.controlUseItem)
             {
+                if(StarStack * 0.2f + StarFactor >= 0.9999999999f)
+                {
+                    for(int i = 0; i < 5; i++)
+                    {
+                        Vector2 starcenter = Projectile.Center + (OrbitRotation + MathHelper.TwoPi / 5 * i).ToRotationVector2() * StarOrbitRadius;
+                        RingParticle.Spawn(Projectile.GetSource_FromAI(), starcenter, new Color(72, 206, 132).AdditiveColor() * 0.8f, 30, 280, 0.8f, 0f,
+                            0.2f, 0.6f, 60, 120, Ease.InOutSine, Ease.InOutSine);
+
+                    }
+                }
                 foreach(var projectile in Main.ActiveProjectiles)
                 {
                     if (projectile.type != ProjectileType<MiracleStar>() || projectile.localAI[0] > 0 || projectile.ai[1] != Projectile.whoAmI) continue;
                     projectile.localAI[0] = 1;
-                    Vector2 starpos = Projectile.Center + (OrbitRotation + projectile.ai[0] * MathHelper.TwoPi / 5).ToRotationVector2() * StarOrbitRadius;
+                    Vector2 starcenter = Projectile.Center + (OrbitRotation + projectile.ai[0] * MathHelper.TwoPi / 5).ToRotationVector2() * StarOrbitRadius;
 
-                    projectile.velocity = starpos.DirectionToSafe(projectile.Center).RotatedBy(MathF.Cos(projectile.ai[2] / 5f) / MathHelper.Pi + 1f).RotatedBy(MathHelper.Pi) * 3f;
+                    projectile.velocity = starcenter.DirectionToSafe(projectile.Center).RotatedBy(MathF.Cos(projectile.ai[2] / 5f) / MathHelper.Pi + 1f).RotatedBy(MathHelper.Pi) * 3f;
                 }
                 StarStack = 0;
                 StarFactor = 0;
@@ -244,9 +254,10 @@ namespace AyaMod.Content.Items.Cameras
                     }
                     else
                     {
+                        
                         if (Projectile.Opacity < 0.8f) Projectile.Opacity += 0.01f;
                         
-                        Projectile.velocity += Projectile.velocity.Length(0.15f);
+                        Projectile.velocity += Projectile.velocity.Length(0.2f);
                     }
                 }
             }

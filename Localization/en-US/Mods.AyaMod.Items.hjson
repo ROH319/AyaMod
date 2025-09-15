@@ -495,3 +495,8 @@ EmpressCamera: {
 	DisplayName: Empress Camera
 	Tooltip: ""
 }
+
+IceQueenCamera: {
+	DisplayName: Ice Queen Camera
+	Tooltip: ""
+}
