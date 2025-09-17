@@ -27,7 +27,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 20;
+            Item.damage = 16;
 
             Item.useTime = Item.useAnimation = 40;
             Item.useStyle = ItemUseStyleID.Rapier;
@@ -50,7 +50,10 @@ namespace AyaMod.Content.Items.Cameras
         public override void OnSnapInSight()
         {
             if (!Projectile.MyClient()) return;
-            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ScaleWave>(), (int)(Projectile.damage * 0.7f), 0, Projectile.owner);
+
+            float dmgmult = 0.7f;
+            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ScaleWave>(),
+                (int)(Projectile.damage * dmgmult), 0, Projectile.owner);
         }
     }
 

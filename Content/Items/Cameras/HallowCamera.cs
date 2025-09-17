@@ -20,9 +20,9 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 72;
+            Item.damage = 50;
 
-            Item.useTime = Item.useAnimation = 40;
+            Item.useTime = Item.useAnimation = 45;
             Item.useStyle = ItemUseStyleID.Rapier;
             Item.shoot = ModContent.ProjectileType<HallowCameraProj>();
             Item.shootSpeed = 8;
@@ -32,6 +32,10 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.05f, 150, 1.6f, 0.5f);
             SetCaptureStats(100, 5);
         }
+
+        public static int radiusa = 320;
+        public static int radiusb = 120;
+        public static float rotSpeed = 0.06f;
     }
 
     public class HallowCameraProj : BaseCameraProj
@@ -47,8 +51,9 @@ namespace AyaMod.Content.Items.Cameras
             if(++EffectCounter >= 1)
             {
                 float direction = Main.rand.NextBool() ? 1 : -1;
+                float dmgmult = 0.25f;
                 var proj = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<HallowPoint>(),
-                    Projectile.damage, Projectile.knockBack, Projectile.owner, Projectile.whoAmI, direction);
+                    (int)(Projectile.damage * dmgmult), Projectile.knockBack, Projectile.owner, Projectile.whoAmI, direction);
                 proj.rotation = Projectile.ai[0];
                 Projectile.ai[0] += (MathHelper.PiOver4 + Main.rand.NextFloat(-0.2f,0.2f)) * -direction;
 
@@ -72,7 +77,8 @@ namespace AyaMod.Content.Items.Cameras
     public class HallowPoint : ModProjectile
     {
         public override string Texture => AssetDirectory.EmptyTexturePass;
-
+        public ref float Owner => ref Projectile.ai[0];
+        public ref float Direction => ref Projectile.ai[1];
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 1;
@@ -88,16 +94,15 @@ namespace AyaMod.Content.Items.Cameras
             {
                 float offset = MathHelper.TwoPi / 8f * i;
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ProjectileType<HallowLightBall>(),
-                    Projectile.damage, Projectile.knockBack, Projectile.owner,Projectile.whoAmI, offset, Projectile.ai[1]);
+                    Projectile.damage, Projectile.knockBack, Projectile.owner,Projectile.whoAmI, Direction, offset);
             }
-            //Projectile.rotation = Main.rand.NextFloat(0, MathHelper.TwoPi);
         }
 
         public override void AI()
         {
-            if (Main.projectile[(int)Projectile.ai[0]].TypeAlive(ProjectileType<HallowCameraProj>()))
+            if (Main.projectile[(int)Owner].TypeAlive(ProjectileType<HallowCameraProj>()))
             {
-                var owner = Main.projectile[(int)Projectile.ai[0]];
+                var owner = Main.projectile[(int)Owner];
                 Projectile.Center = Vector2.Lerp(Projectile.Center, owner.Center, 0.35f);
             }
             else
@@ -105,7 +110,7 @@ namespace AyaMod.Content.Items.Cameras
                 Projectile.Kill();
             }
 
-            Projectile.rotation += 0.02f * Projectile.ai[1];
+            Projectile.rotation += 0.02f * Direction;
         }
     }
 
@@ -113,8 +118,11 @@ namespace AyaMod.Content.Items.Cameras
     {
         public override string Texture => AssetDirectory.Extras + "Ball4";
 
+        public static Color DrawColor = new Color(250, 232, 136);
+
         public ref float Owner => ref Projectile.ai[0];
-        public ref float Offset => ref Projectile.ai[1];
+        public ref float Direction => ref Projectile.ai[1];
+        public ref float Offset => ref Projectile.ai[2];
 
         public override void SetDefaults()
         {
@@ -123,17 +131,20 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.usesIDStaticNPCImmunity = true;
-            Projectile.idStaticNPCHitCooldown = 6;
+            Projectile.SetImmune(20);
+            Projectile.ArmorPenetration = 20;
+            //Projectile.usesIDStaticNPCImmunity = true;
+            //Projectile.idStaticNPCHitCooldown = 6;
             Projectile.timeLeft = 130;
         }
+        public override bool? CanDamage() => Projectile.timeLeft < 120;
         public override void OnSpawn(IEntitySource source)
         {
             base.OnSpawn(source);
         }
         public override void AI()
         {
-            var alpha = getAlpha();
+            var alpha = getAlpha(Projectile);
             Lighting.AddLight((int)(Projectile.Center.X / 16f), (int)(Projectile.Center.Y / 16f),250 / 255f * alpha,232 / 255f *alpha,136 / 255f *alpha);
 
 
@@ -142,10 +153,11 @@ namespace AyaMod.Content.Items.Cameras
             {
                 var owner = Main.projectile[(int)Owner];
 
-                float radiusa = 128f;
-                float radiusb = 48f;
-                float targetX = MathF.Cos(Offset + Main.GameUpdateCount * 0.06f * Projectile.ai[2]) * radiusa * 2.5f;
-                float targetY = MathF.Sin(Offset + Main.GameUpdateCount * 0.06f * Projectile.ai[2]) * radiusb * 2.5f;
+                float radiusa = HallowCamera.radiusa;
+                float radiusb = HallowCamera.radiusb;
+                float rotspeed = HallowCamera.rotSpeed;
+                float targetX = MathF.Cos(Offset + Main.GameUpdateCount * rotspeed * Direction) * radiusa;
+                float targetY = MathF.Sin(Offset + Main.GameUpdateCount * rotspeed * Direction) * radiusb;
                 Vector2 targetPos = owner.Center + new Vector2(targetX, targetY).RotatedBy(owner.rotation);
                 Projectile.Center = Vector2.Lerp(Projectile.Center, targetPos, 0.1f);
 
@@ -171,16 +183,15 @@ namespace AyaMod.Content.Items.Cameras
 
 
                     Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(0, 32);
-                    Color color = new Color(250, 232, 136);
                     float alphaFactor = Utils.Remap(factor, 0, 0.6f, 0f, 1f);
-                    var light = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel * Main.rand.NextFloat(0.15f,0.35f), color * alphaFactor, 15);
+                    var light = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel * Main.rand.NextFloat(0.15f,0.35f), DrawColor * alphaFactor, 15);
                     light.Scale = 1.5f;
                 }
             }
         }
-        public float getAlpha()
+        public static float getAlpha(Projectile projectile)
         {
-            float factor = Projectile.TimeleftFactor();
+            float factor = projectile.TimeleftFactor();
             float fadeinFactor = Utils.Remap(factor, 0.8f, 1f, 1f, 0f);
             var fac = MathHelper.Lerp(0, 1, EaseManager.Evaluate(Ease.InCubic, factor, 1));
             float fadeoutFactor = Utils.Remap(fac, 0f, 0.2f, 0f, 1f);
@@ -189,11 +200,11 @@ namespace AyaMod.Content.Items.Cameras
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Color baseColor = new Color(250, 232, 136);
+            Color baseColor = DrawColor;
 
-            var alpha = getAlpha();
+            var alpha = getAlpha(Projectile);
 
-            float targetY = MathF.Sin(Offset + Main.GameUpdateCount * 0.06f * Projectile.ai[2]);
+            float targetY = MathF.Sin(Offset + Main.GameUpdateCount * HallowCamera.rotSpeed * Direction);
             float vecYFactor = Utils.Remap(targetY, 1f, 0f, 0.1f, 1f);
 
             Color drawColor = (baseColor * alpha * vecYFactor).AdditiveColor();

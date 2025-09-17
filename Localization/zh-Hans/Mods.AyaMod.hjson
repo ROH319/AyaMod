@@ -2,16 +2,11 @@ DamageClasses.ReporterDamage.DisplayName: 记者伤害
 
 BuilderToggles: {
 	CameraToggle: {
-		OnText:
-			'''
-			自动拍摄：开
-			相机伤害降低至{0}倍
-			'''
-		OffText:
-			'''
-			自动拍摄：关
-			相机伤害提高至{0}倍
-			'''
+		OnText: 自动拍摄：开
+		OnDmgText: 相机伤害降低至{0}倍
+		OffText: 自动拍摄：关
+		OffDmgText: 相机伤害提高至{0}倍
+		DisabledText: 伤害惩罚与奖励已禁用
 	}
 }
 

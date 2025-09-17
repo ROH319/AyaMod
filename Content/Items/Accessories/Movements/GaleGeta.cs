@@ -140,12 +140,17 @@ namespace AyaMod.Content.Items.Accessories.Movements
             //}
             if (!player.controlRight && !player.controlLeft)
             {
-                float factor = Utils.Remap(player.Aya().DashDelay, 0, 20, 0.9f, 0.96f);
+                float factor = Utils.Remap(player.Aya().DashDelay, 0, 10, 0.9f, 0.96f);
                 Projectile.velocity *= factor;
                 Projectile.Opacity -= 0.03f;
             }
+            else
+            {
+                float factor = Utils.Remap(player.Aya().DashDelay, 0, 20, 0.985f, 0.995f);
+                Projectile.velocity *= factor;
+            }
             if (Projectile.timeLeft < GaleGeta.GaleGetaDashDelay * 2f * 5f / 8f)
-                Projectile.Opacity -= Projectile.Opacity > 0.5f ? 0.07f : 0.03f;
+                Projectile.Opacity -= Projectile.Opacity > 0.5f ? 0.08f : 0.04f;
             if (Projectile.Opacity < 0.05f) Projectile.Kill();
             for(int i = 0; i < 2; i++)
             {
@@ -169,7 +174,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 StarParticle.Spawn(Projectile.GetSource_FromAI(), dustPos,dustVel, Color.White.AdditiveColor(), Projectile.scale, 0.1f, 0.35f, 0.7f, 1f, dustVel.ToRotation(), Projectile.Opacity);
 
             }
-            Projectile.rotation += 0.1f;
+            Projectile.rotation += 0.65f;
 
 
         }

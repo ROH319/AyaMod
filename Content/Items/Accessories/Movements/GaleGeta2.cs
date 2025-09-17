@@ -225,7 +225,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 StarParticle.Spawn(Projectile.GetSource_FromAI(), dustPos, dustVel, Color.White.AdditiveColor(), Projectile.scale, 0.1f, 0.35f, 0.7f, 1f, dustVel.ToRotation(), Projectile.Opacity);
 
             }
-            Projectile.rotation += 0.1f;
+            Projectile.rotation += 0.7f;
 
 
         }

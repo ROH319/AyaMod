@@ -28,7 +28,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 115;
+            Item.damage = 200;
 
             Item.useTime = Item.useAnimation = 50;
             Item.useStyle = ItemUseStyleID.Rapier;
@@ -44,8 +44,8 @@ namespace AyaMod.Content.Items.Cameras
 
     public class EmpressCameraProj : BaseCameraProj
     {
-        public override Color outerFrameColor => Main.DiscoColor/*Main.hslToRgb((float)(Main.timeForVisualEffects * 0.003f) % 1f, 1f,0.5f)*/;
-        public override Color innerFrameColor => Main.hslToRgb((float)(Main.timeForVisualEffects * 0.003f) % 1f, 1f, 0.5f);
+        public override Color outerFrameColor => Main.DiscoColor;
+        public override Color innerFrameColor => Main.hslToRgb((float)(Main.timeForVisualEffects * 0.003f) % 1f, 1f, 0.6f);
         public override Color focusCenterColor => base.focusCenterColor;
         public override Color flashColor => new Color(243, 209, 255).AdditiveColor() * 0.5f;
         public override void OnSnapInSight()
@@ -60,10 +60,10 @@ namespace AyaMod.Content.Items.Cameras
             EffectCounter++;
 
             float speed = 8;
-            int starDmg = (int)(Projectile.damage * 0.5f);
+            int starDmg = (int)(Projectile.damage * 0.16f);
             int starCount = 5;
             int hasLightBall = 1;
-            if (EffectCounter >= 5) 
+            if (EffectCounter >= 7) 
             {
                 starCount *= 2;
                 hasLightBall = 0;
@@ -79,21 +79,18 @@ namespace AyaMod.Content.Items.Cameras
             }
 
 
-            if (EffectCounter >= 5)
+            if (EffectCounter >= 7)
             {
-                int laserDmg = (int)(Projectile.damage * 0.5f);
+                int laserDmg = (int)(Projectile.damage * 0.25f);
                 int maxcount = 12;
                 for (int i = 0; i < 5; i++)
                 {
                     float color = start + 0.2f * i;
                     float rot = Projectile.rotation + MathHelper.TwoPi / 5 * i + extraRot;
                     Vector2 pos = Projectile.Center + rot.ToRotationVector2() * 90;
-                    //var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<EmpressLance>(), Projectile.damage, Projectile.knockBack, Projectile.owner, rot + MathHelper.Pi - MathHelper.PiOver4 / 2, color, maxcount);
-                    //p.Opacity = 0.5f;
 
                     var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<EmpressLaser>(), laserDmg, Projectile.knockBack, Projectile.owner,
-                        rot + MathHelper.Pi /*- MathHelper.PiOver4 / 4*/, color, 12);
-                    //p.Opacity = 0.5f;
+                        rot + MathHelper.Pi, color, 12);
                 }
                 EffectCounter = 0;
             }
@@ -108,6 +105,7 @@ namespace AyaMod.Content.Items.Cameras
         public ref float Rot => ref Projectile.ai[0];
         public ref float Hue => ref Projectile.ai[1];
         public ref float Count => ref Projectile.ai[2];
+        public ref float Timer => ref Projectile.localAI[0];
 
         public override void SetDefaults()
         {
@@ -132,16 +130,11 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void AI()
         {
-            if (Projectile.localAI[0] == 0)
+            if (Timer == 0)
             {
                 Helper.PlayPitched("se_lazer01", 0.07f, position: Projectile.Center);
-                //SoundEngine.PlaySound(SoundID.Item33 with
-                //{
-                //    Volume = 0.3f,
-                //    MaxInstances = 50
-                //}, Projectile.Center);
             }
-            Projectile.localAI[0]++;
+            Timer++;
 
             float factor = Projectile.TimeleftFactor();
             Rot -= 0.02f * factor;
@@ -151,7 +144,7 @@ namespace AyaMod.Content.Items.Cameras
 
             float distNext = 60;
             float rotAdd = MathHelper.PiOver4 / 6;
-            if (Projectile.localAI[0] == spawnNextTime && Count > 0)
+            if (Timer == spawnNextTime && Count > 0)
             {
                 Vector2 pos = Projectile.Center + (Rot + MathHelper.Pi - rotAdd).ToRotationVector2() * distNext;
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, Projectile.type,
@@ -179,8 +172,8 @@ namespace AyaMod.Content.Items.Cameras
             float timeFadeout = Utils.Remap(timefactor, 0.5f, 1f, 1f, 0f);
             float width = 15 * timeFadein * timeFadeout;
 
-            int length = 2400;
-            int count = length / 24;
+            int length = 2200;
+            int count = length / 22;
             for(int i = 0; i < count; i++)
             {
                 float factor = (float)i / count;//factor 0为轨迹头部， 1为轨迹尾部
@@ -203,12 +196,8 @@ namespace AyaMod.Content.Items.Cameras
             {
                 if (bars.Count > 2)
                 {
-                    //Main.spriteBatch.End();
-                    //Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, default, Main.GameViewMatrix.ZoomMatrix);
                     Main.graphics.GraphicsDevice.Textures[0] = texture;
                     Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
-                    //Main.spriteBatch.End();
-                    //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
                 }
             }
             {
@@ -231,11 +220,6 @@ namespace AyaMod.Content.Items.Cameras
 
                 Main.spriteBatch.Draw(texture, Projectile.Center + Rot.ToRotationVector2() * 0.5f * length - Main.screenPosition, null, Color.White.AdditiveColor(), Rot + MathHelper.PiOver2, new Vector2(0, 128), new Vector2(width / 256f * 0.2f, length / 256f) * Projectile.scale, 0, 0);
                 Main.spriteBatch.Draw(texture, Projectile.Center + Rot.ToRotationVector2() * 0.5f * length - Main.screenPosition, null, Color.White.AdditiveColor(), Rot + MathHelper.PiOver2, new Vector2(0, 128), new Vector2(width / 256f * 0.1f, length / 256f) * Projectile.scale, 0, 0);
-                //Texture2D star = TextureAssets.Extra[98].Value;
-                //Vector2 starpos = Projectile.Center + Rot.ToRotationVector2() * length * Utils.Remap(timefactor * 5,1,3f,1f,0);
-                //Vector2 scale = Projectile.scale * new Vector2(0.5f, 1f);
-                //Main.spriteBatch.Draw(star, starpos - Main.screenPosition, null, ballColor * timeFadein * timeFadeout * 0.5f, Rot + MathHelper.PiOver2, star.Size() / 2, scale, 0, 0);
-                //Main.spriteBatch.Draw(star, starpos - Main.screenPosition, null, ballColor * timeFadein * timeFadeout * 0.5f, Rot + MathHelper.PiOver2, star.Size() / 2, scale, 0, 0);
             }
             return false;
         }
@@ -244,6 +228,8 @@ namespace AyaMod.Content.Items.Cameras
     public class EmpressStar : ModProjectile
     {
         public override string Texture => AssetDirectory.Extras + "bulletBa005";
+        public ref float HasLightBall => ref Projectile.ai[0];
+        public ref float Hue => ref Projectile.ai[1];
 
         public override void SetStaticDefaults()
         {
@@ -251,11 +237,13 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 54;
+            Projectile.width = Projectile.height = 64;
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.SetImmune(-1);
+            Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.idStaticNPCHitCooldown = 10;
+            //Projectile.SetImmune(-1);
             Projectile.timeLeft = 60;
             Projectile.penetrate = -1;
         }
@@ -269,11 +257,12 @@ namespace AyaMod.Content.Items.Cameras
         {
             float factor = Projectile.TimeleftFactor();
 
-            if(Projectile.ai[0] > 0 && (Projectile.timeLeft + Projectile.whoAmI) % 16 == 0)
+            if(HasLightBall > 0 && (Projectile.timeLeft + Projectile.whoAmI) % 16 == 0)
             {
                 Vector2 vel = Projectile.velocity.RotateRandom(0.1f) * 0.1f;
+                int damage = (int)(Projectile.damage * 0.5f);
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel,
-                    ProjectileType<EmpressLight>(), Projectile.damage, Projectile.knockBack, Projectile.owner, 0, Projectile.ai[1]);
+                    ProjectileType<EmpressLight>(), damage, Projectile.knockBack, Projectile.owner, 0, Hue);
             }
 
             Projectile.rotation += 0.04f;
@@ -293,7 +282,7 @@ namespace AyaMod.Content.Items.Cameras
             float timeleftFactor = Projectile.TimeleftFactor();
 
 
-            Color color = (Main.hslToRgb((Projectile.ai[1] + 0.5f) % 1f, 1f, 0.7f) * Projectile.Opacity).AdditiveColor() * timeleftFactor * 0.8f;
+            Color color = (Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.7f) * Projectile.Opacity).AdditiveColor() * timeleftFactor * 0.8f;
 
             Vector2 scale = new Vector2(0.8f, 1.2f) * 0.3f;
 
@@ -309,7 +298,7 @@ namespace AyaMod.Content.Items.Cameras
 
             DrawStar(Projectile, texture, Projectile.Center, color, 0.8f, scale);
 
-            Color ballColor = (Main.hslToRgb((Projectile.ai[1] + 0.5f) % 1f, 1f, 0.8f) * Projectile.Opacity).AdditiveColor() * timeleftFactor * 1.2f;
+            Color ballColor = (Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.8f) * Projectile.Opacity).AdditiveColor() * timeleftFactor * 1.2f;
             Vector2 pos = Projectile.Center - Main.screenPosition;
             for (int j = 0; j < 5; j++)
             {
@@ -335,9 +324,11 @@ namespace AyaMod.Content.Items.Cameras
     public class EmpressLight : ModProjectile
     {
         public override string Texture => AssetDirectory.Extras + "Ball";
+        public ref float Hue => ref Projectile.ai[1];
+
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 32;
+            Projectile.width = Projectile.height = 48;
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -356,17 +347,14 @@ namespace AyaMod.Content.Items.Cameras
         {
             float factor = Projectile.TimeleftFactor();
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Color color = (Main.hslToRgb((Projectile.ai[1] + 0.5f) % 1f, 1f, 0.8f) * Projectile.Opacity).AdditiveColor() * factor;
+            Color color = (Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.8f) * Projectile.Opacity).AdditiveColor() * factor;
             for (int i = 1; i < 6; i++)
             {
-                float f = Utils.Remap(i, 1, 6f, 1.5f, 0f);
-                float ff = 1 / 5f * i;
-                Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, color * ff * 0.4f, Projectile.rotation, texture.Size() / 2, Projectile.scale * (f) * 0.9f, 0, 0);
+                float scalefac = Utils.Remap(i, 1, 6f, 1.5f, 0f);
+                float colorfac = 1 / 5f * i;
+                Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, color * colorfac * 0.4f, Projectile.rotation, texture.Size() / 2, Projectile.scale * (scalefac) * 0.9f, 0, 0);
 
             }
-            //RenderHelper.DrawBloom(12, 6f, texture, Projectile.Center - Main.screenPosition, null, color * 0.08f, Projectile.rotation, texture.Size() / 2, Projectile.scale * 0.7f, 0);
-            //Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, color * 0.5f, Projectile.rotation, texture.Size() / 2, Projectile.scale * 0.5f, 0, 0);
-            //Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, color * 0.75f, Projectile.rotation, texture.Size() / 2, Projectile.scale * 0.3f, 0, 0);
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation, texture.Size() / 2, Projectile.scale * 0.1f, 0, 0);
             return false;
         }

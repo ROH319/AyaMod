@@ -24,7 +24,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 140;
+            Item.damage = 340;
 
             Item.useTime = Item.useAnimation = 70;
             Item.useStyle = ItemUseStyleID.Rapier;
@@ -48,7 +48,8 @@ namespace AyaMod.Content.Items.Cameras
         public override void OnSnapInSight()
         {
             if (!Projectile.MyClient()) return;
-            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ProjectileType<DukeWave>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+            int damage = (int)(Projectile.damage * 0.2f);
+            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ProjectileType<DukeWave>(), damage, Projectile.knockBack, Projectile.owner);
         }
 
         public override void PostAI()
@@ -56,7 +57,8 @@ namespace AyaMod.Content.Items.Cameras
             if(!player.ItemTimeIsZero && player.itemTime % 5 == 0)
             {
                 var vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(4, 6);
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ProjectileType<FantasticBubble1>(), Projectile.damage, Projectile.knockBack * 2f, Projectile.owner);
+                int damage = (int)(Projectile.damage * 0.17f);
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ProjectileType<FantasticBubble1>(), damage, Projectile.knockBack * 2f, Projectile.owner);
             }
         }
     }
@@ -78,10 +80,11 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override bool? CanDamage()
         {
-            return Projectile.Opacity > 0.7f;
+            return Projectile.Opacity > 0.8f;
         }
         public override void AI()
         {
+            //弹幕生成的前几帧不追踪
             if (Projectile.Opacity > 0.8f)
             {
                 var chasing = Projectile.Chase(350, 8, 0.01f);
@@ -90,21 +93,12 @@ namespace AyaMod.Content.Items.Cameras
                 if (Projectile.velocity.Length() < 0.1f) Projectile.timeLeft -= 1;
 
             }
-            Projectile.Opacity += 0.07f;
+            Projectile.Opacity += 0.06f;
             if(Projectile.Opacity > 1f)Projectile.Opacity = 1f;
         }
 
         public override void OnKill(int timeLeft)
         {
-            //int dustcount = 24;
-            //for (int i = 0; i < dustcount; i++)
-            //{
-            //    Vector2 dir = Main.rand.NextVector2Unit();
-            //    float speed = Main.rand.NextFloat(4, 6);
-            //    Vector2 pos = Projectile.Center + dir * Main.rand.NextFloat(20, 30);
-            //    Dust d = Dust.NewDustPerfect(pos, DustID.Water, dir * speed, Scale: 1.7f);
-            //    d.noGravity = true;
-            //}
             SoundEngine.PlaySound(SoundID.Item54, Projectile.Center);
 
             for (int num261 = 0; num261 < 20; num261++)
@@ -149,11 +143,13 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void AI()
         {
+            // 弹幕生成的前几帧不追踪
             if (Projectile.timeLeft <= 165)
             {
                 var chasing = Projectile.Chase(800, 22 + MathF.Sin(Projectile.whoAmI * 0.5f) * 5f, 0.05f);
                 if (!chasing)
                 {
+                    // 不追踪时向上飘走
                     Projectile.velocity.X *= 0.97f;
                     Projectile.velocity.Y = MathHelper.Lerp(Projectile.velocity.Y, -(2.4f + MathF.Sin(Projectile.whoAmI * 0.5f) * 0.6f), 0.05f);
                 }
@@ -167,15 +163,6 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void OnKill(int timeLeft)
         {
-            //int dustcount = 24;
-            //for (int i = 0; i < dustcount; i++)
-            //{
-            //    Vector2 dir = Main.rand.NextVector2Unit();
-            //    float speed = Main.rand.NextFloat(4, 6);
-            //    Vector2 pos = Projectile.Center + dir * Main.rand.NextFloat(20, 30);
-            //    Dust d = Dust.NewDustPerfect(pos, DustID.Water, dir * speed, Scale: 1.7f);
-            //    d.noGravity = true;
-            //}
             SoundEngine.PlaySound(SoundID.Item54, Projectile.Center);
 
             for (int num261 = 0; num261 < 25; num261++)
@@ -328,8 +315,8 @@ namespace AyaMod.Content.Items.Cameras
                     Color color = baseColor * alphaFactor * 0.09f * Projectile.Opacity;
                     if (i == 0) color *= 2f;
                     Main.spriteBatch.Draw(texture, pos - Main.screenPosition, null, color, Projectile.rotation, texture.Size() / 2, Projectile.scale * 0.6f, 0, 0);
-
                 }
+
                 {
                     Color bloomcolor = Color.White.AdditiveColor() * 0.12f * Projectile.Opacity;
                     Vector2 pos = Projectile.Center + rotFactor.ToRotationVector2() * MathHelper.Lerp(Projectile.oldRot[0], Projectile.oldRot[1], 0f) - Main.screenPosition;

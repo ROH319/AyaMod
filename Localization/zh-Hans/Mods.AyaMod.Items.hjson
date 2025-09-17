@@ -542,3 +542,8 @@ IceQueenCamera: {
 	// DisplayName: Ice Queen Camera
 	// Tooltip: ""
 }
+
+NoDmgModifier: {
+	DisplayName: 禁用连拍乘区
+	Tooltip: 放在背包中可以禁用连拍和单点的伤害惩罚和奖励
+}

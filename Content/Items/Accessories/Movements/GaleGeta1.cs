@@ -218,7 +218,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D mainColor = Request<Texture2D>(AssetDirectory.Extras + "White-Map", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D mainColor = Request<Texture2D>(AssetDirectory.Extras + "DarkBlue-Map", AssetRequestMode.ImmediateLoad).Value;
             Texture2D shape = TextureAssets.Extra[197].Value;
             Texture2D sampler = TextureAssets.Extra[189].Value;
             Texture2D star = TextureAssets.Extra[98].Value;
@@ -251,7 +251,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 Vector2 trailPos = oldpos + dir * radius;
 
                 var color = Color.Lerp(Color.Black, Color.White, factor) * Projectile.Opacity;
-                var alpha = EaseManager.Evaluate(Ease.InOutSine, factor, 1f) * 0.7f * Projectile.Opacity;
+                var alpha = EaseManager.Evaluate(Ease.InOutSine, factor, 1f) * 0.5f * Projectile.Opacity;
                 float fadeinFactor = Utils.Remap(factor, 0.93f, 1, 1, 0);
                 alpha *= fadeinFactor;
                 if (dir.X > 0 && Projectile.velocity.X > 0) alpha *= Utils.Remap(dir.X, 0, 0.5f, 1f, 0f);
@@ -268,8 +268,8 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 Vector2 top = trailPos + normalDir * width * 0.5f;
                 Vector2 bottom = trailPos - normalDir * width * 0.5f;
 
-                bars.Add(new CustomVertexInfo(top, color * alpha, new Vector3(factor, 1, alpha)));
-                bars.Add(new CustomVertexInfo(bottom, color * alpha, new Vector3(factor, 0, alpha)));
+                bars.Add(new CustomVertexInfo(top, color, new Vector3(factor, 1, alpha)));
+                bars.Add(new CustomVertexInfo(bottom, color, new Vector3(factor, 0, alpha)));
 
             }
 

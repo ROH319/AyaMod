@@ -1,5 +1,6 @@
 ﻿using AyaMod.Content.Items.Films;
 using AyaMod.Content.Items.Lens;
+using AyaMod.Content.Items.Testing;
 using AyaMod.Content.Prefixes.CameraPrefixes;
 using AyaMod.Core.BuilderToggles;
 using AyaMod.Core.Configs;
@@ -103,6 +104,8 @@ namespace AyaMod.Core.Prefabs
 
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
         {
+            if (player.HasEffect<NoDmgModifier>()) return;
+
             if (CameraToggle.AutoSnapEnabled)
             {
                 damage *= CameraPlayer.CameraAutoSnapDamageModifier;

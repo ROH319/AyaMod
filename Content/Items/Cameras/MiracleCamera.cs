@@ -27,7 +27,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 100;
+            Item.damage = 85;
 
             Item.useTime = Item.useAnimation = 40;
             Item.useStyle = ItemUseStyleID.Rapier;
@@ -108,11 +108,12 @@ namespace AyaMod.Content.Items.Cameras
                 if (player.controlUseItem && player.itemTime % 4 == 0 && StarStack * 0.2f + StarFactor < 1f)
                 {
                     float trueFactor = StarStack * 0.2f + StarFactor;
+                    float stardmg = 0.2f;
                     for (int i = 0; i < 5; i++)
                     {
                         Vector2 starpos = Projectile.Center + (OrbitRotation + i * MathHelper.TwoPi / 5).ToRotationVector2() * StarOrbitRadius;
                         Vector2 pos = starpos/*AyaUtils.GetPentagramPos(starpos, StarRadius, trueFactor)*/;
-                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<MiracleStar>(), Projectile.damage, 0f, Projectile.owner, i, Projectile.whoAmI, trueFactor);
+                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<MiracleStar>(), (int)(Projectile.damage * stardmg), 0f, Projectile.owner, i, Projectile.whoAmI, trueFactor);
                     }
                 }
             }
@@ -166,7 +167,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.SetImmune(-1);
-            Projectile.timeLeft = 6 * 60;
+            Projectile.timeLeft = 5 * 60;
             Projectile.penetrate = 1;
             Projectile.scale = 0.75f;
         }
@@ -243,12 +244,12 @@ namespace AyaMod.Content.Items.Cameras
 
                     if (Projectile.localAI[0] <= 0)
                     {
-                        if (Projectile.timeLeft < 5 * 60) Projectile.timeLeft++;
+                        if (Projectile.timeLeft < 4 * 60) Projectile.timeLeft++;
                         Vector2 starpos = camera.Center + (miracleCamera.OrbitRotation + Projectile.ai[0] * MathHelper.TwoPi / 5).ToRotationVector2() * miracleCamera.StarOrbitRadius;
                         float trueFactor = Projectile.ai[2] + 0.2f * Projectile.ai[0];
                         trueFactor = trueFactor % 1f;
                         Vector2 pos = AyaUtils.GetPentagramPos(starpos, miracleCamera.StarRadius * (1 + MathF.Cos(Main.GameUpdateCount * 0.04f + Projectile.ai[0] * 1.2f) * 0.1f), trueFactor, MathHelper.TwoPi / 10f + miracleCamera.OrbitRotation);
-                        float chaseFactor = Utils.Remap(Projectile.timeLeft, 5 * 60, 6 * 60, 0.9f, 0.2f);
+                        float chaseFactor = Utils.Remap(Projectile.timeLeft, 4 * 60, 5 * 60, 0.9f, 0.2f);
                         //if (Projectile.timeLeft > 5 * 60 + 1) chaseFactor = 0.2f;
                         Projectile.Center = Vector2.Lerp(Projectile.Center, pos, chaseFactor);
                     }
@@ -412,7 +413,8 @@ namespace AyaMod.Content.Items.Cameras
                         RingParticle.Spawn(Projectile.GetSource_FromAI(), nextPos, new Color(72,206,132).AdditiveColor(), 10, radius, 0.8f, 0f,
                             0.15f, 0.5f, 30, 120, Ease.OutCirc, Ease.OutCubic);
 
-                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), nextPos, Projectile.velocity.Length(7), ProjectileType<MiracleStarHoming>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+                        float stardmg = 0.2f;
+                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), nextPos, Projectile.velocity.Length(7), ProjectileType<MiracleStarHoming>(), (int)(Projectile.damage * stardmg), Projectile.knockBack, Projectile.owner);
 
                     }
                 }
@@ -500,21 +502,7 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void OnKill(int timeLeft)
         {
-            int dusttype = (Projectile.localAI[2]) switch
-            {
-                0 * 36 => DustID.TheDestroyer,
-                1 * 36 => DustID.GemTopaz,
-                2 * 36 => DustID.DryadsWard,
-                3 * 36 => DustID.CursedTorch,
-                4 * 36 => DustID.PureSpray,
-                5 * 36 => DustID.HallowSpray,
-                6 * 36 => DustID.MushroomSpray,
-                7 * 36 => DustID.GiantCursedSkullBolt,
-                8 * 36 => DustID.VenomStaff,
-                9 * 36 => DustID.CrystalPulse,
-                10 * 36 => DustID.TheDestroyer,
-                _ => DustID.GemTopaz
-            };
+            int dusttype = Helper.GetHuedDustType((int)Projectile.localAI[2]);
 
             int dustamount = 60;
             float startRot = Projectile.rotation + MathHelper.TwoPi / 10 + AyaUtils.RandAngle;

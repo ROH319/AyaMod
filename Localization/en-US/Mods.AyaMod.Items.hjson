@@ -500,3 +500,8 @@ IceQueenCamera: {
 	DisplayName: Ice Queen Camera
 	Tooltip: ""
 }
+
+NoDmgModifier: {
+	DisplayName: No Dmg Modifier
+	Tooltip: ""
+}

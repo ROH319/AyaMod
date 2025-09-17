@@ -22,7 +22,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 45;
+            Item.damage = 40;
 
             Item.useTime = Item.useAnimation = 36;
             Item.useStyle = ItemUseStyleID.Rapier;
@@ -76,7 +76,7 @@ namespace AyaMod.Content.Items.Cameras
             cnpc.LegilimencyTimer++;
             if (cnpc.LegilimencyTimer > 20 && !npc.HasBuff<ConfusedBuff>() && !npc.buffImmune[ModContent.BuffType<ConfusedBuff>()])
             {
-                npc.AddBuff(ModContent.BuffType<ConfusedBuff>(), 6 * 60);
+                npc.AddBuff(ModContent.BuffType<ConfusedBuff>(), 4 * 60);
                 cnpc.LegilimencyTimer = 0;
 
                 int dustamount = 24;

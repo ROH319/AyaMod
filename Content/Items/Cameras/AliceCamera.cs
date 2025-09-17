@@ -1,17 +1,19 @@
-﻿using AyaMod.Core.Prefabs;
+﻿using AyaMod.Common.Easer;
+using AyaMod.Core;
+using AyaMod.Core.Prefabs;
+using AyaMod.Helpers;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Terraria.Enums;
-using Terraria.ID;
 using Terraria;
-using AyaMod.Helpers;
 using Terraria.DataStructures;
-using Microsoft.Xna.Framework.Graphics;
+using Terraria.Enums;
 using Terraria.GameContent;
-using AyaMod.Core;
+using Terraria.ID;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -47,7 +49,8 @@ namespace AyaMod.Content.Items.Cameras
         {
             for(int i = 0; i < 5; i++)
             {
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ProjectileType<MarisaCircle>(), Projectile.damage, Projectile.knockBack, Projectile.owner, i, Projectile.whoAmI);
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ProjectileType<MarisaCircle>(), 
+                    Projectile.damage, Projectile.knockBack, Projectile.owner, i, Projectile.whoAmI);
             }
         }
     }
@@ -55,6 +58,11 @@ namespace AyaMod.Content.Items.Cameras
     {
         public override string Texture => AssetDirectory.EmptyTexturePass;
 
+        public ref float Offset => ref Projectile.ai[0];
+        public ref float Owner => ref Projectile.ai[1];
+        public ref float ShootTimer => ref Projectile.ai[2];
+        public ref float OrbitRot => ref Projectile.localAI[0];
+        public ref float ItemTimer => ref Projectile.localAI[1];
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 1;
@@ -72,9 +80,10 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.timeLeft++;
 
             float radiusFactor = MathF.Sin(Main.GameUpdateCount * 0.005f);
-            float radius =radiusFactor * 350f;
+            float clickingFactor = EaseManager.Evaluate(Ease.InOutSine, ItemTimer, 30)/*ItemTimer / 30f*/;
+            float radius = 175f + radiusFactor * 25f + clickingFactor * 150f;
             
-            Projectile camera = Main.projectile[(int)Projectile.ai[1]];
+            Projectile camera = Main.projectile[(int)Owner];
             if (camera.TypeAlive(ProjectileType<AliceCameraProj>()))
             {
                 if (Projectile.Opacity < 1f)
@@ -85,20 +94,24 @@ namespace AyaMod.Content.Items.Cameras
                 {
                     if (player.itemTime != 0)
                     {
-                        Projectile.localAI[1]++;
+                        ShootTimer++;
                     }
-                    if (Projectile.localAI[1] > 14)
+                    if (ShootTimer > 14)
                     {
                         Vector2 target = camera.Center + camera.DirectionToSafe(Projectile.Center).RotatedBy(MathHelper.PiOver4 * 1.5f) * 120f;
-                        Vector2 vel = Projectile.Center.DirectionToSafe(target) * 20f;
-                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ProjectileType<MarisaStar>(), (int)(Projectile.damage * 0.2f), Projectile.knockBack, Projectile.owner);
+                        Vector2 vel = Projectile.Center.DirectionToSafe(target) * 22f;
+                        int damage = (int)(Projectile.damage * 0.2f);
+                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ProjectileType<MarisaStar>(), damage, Projectile.knockBack, Projectile.owner);
 
-                        Projectile.localAI[1] = 0;
+                        ShootTimer = 0;
                     }
 
+                    if (player.controlUseItem) ItemTimer++;
+                    else ItemTimer--;
+                    ItemTimer = MathHelper.Clamp(ItemTimer, 0, 30);
                 }
 
-                Vector2 targetpos = camera.Center + (MathHelper.TwoPi / 5 * Projectile.ai[0] + Projectile.localAI[2]).ToRotationVector2() * radius;
+                Vector2 targetpos = camera.Center + (MathHelper.TwoPi / 5 * Offset + OrbitRot).ToRotationVector2() * radius;
                 Projectile.Center = Vector2.Lerp(Projectile.Center, targetpos, 0.9f);
 
             }
@@ -106,33 +119,41 @@ namespace AyaMod.Content.Items.Cameras
             {
                 Projectile.Kill();
             }
-            float rotFactor = -MathF.Abs(MathF.Sin(Main.GameUpdateCount * 0.005f));
-            Projectile.localAI[2] += 0.044f + rotFactor * 0.036f;
-            Projectile.rotation += 0.02f;
+            float floatFactor = -MathF.Abs(MathF.Sin(Main.GameUpdateCount * 0.005f));
+            float controlFactor = ItemTimer / 30f;
+            OrbitRot += 0.015f/* + floatFactor * 0.025f*/ + controlFactor * 0.005f;
+            Projectile.rotation += 0.02f + controlFactor * 0.01f;
+            //Projectile.rotation = MathHelper.WrapAngle(Projectile.rotation);
         }
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Extra[98].Value;
             Vector2 origin = texture.Size() / 2;
-            Color color = new Color(242, 104, 20).AdditiveColor() * Projectile.Opacity;
+            float clickingFactor = EaseManager.Evaluate(Ease.InOutSine, ItemTimer, 30);
 
-            float ringRadius = 42;
+            Color colora = new Color(242, 104, 30);
+            Color colorb = new Color(242, 145, 55);
+            Color baseColor = Color.Lerp(colora, colorb,clickingFactor);
+
+            Color color = baseColor.AdditiveColor() * Projectile.Opacity;
+            float ringRadius = 38 + clickingFactor * 16;
 
             RenderHelper.DrawRing(72, Projectile.Center, ringRadius, color, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.6f);
-            RenderHelper.DrawRing(72, Projectile.Center, ringRadius * 0.8f, color, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.6f);
+            RenderHelper.DrawRing(72, Projectile.Center, ringRadius * (0.8f - clickingFactor * 0.15f), color, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.6f);
 
             Vector2 offset = Projectile.Center - Main.screenPosition;
             Vector2 scale1 = new Vector2(8 / 64f, 24 / 64f);
             for (int j = 0; j < 2; j++)
             {
-                float radius = ringRadius * 0.9f + j * ringRadius * 0.4f;
+                float radius = ringRadius * 0.9f + j * ringRadius * 0.4f - ringRadius * 0.3f * clickingFactor;
+                float extraRot = Projectile.rotation/* * (1 + clickingFactor * 1.5f)*/;
                 for (int i = 0; i < 5; i++)
                 {
-                    float dir1 = MathHelper.TwoPi / 5 * i + Projectile.rotation;
-                    float dir2 = MathHelper.TwoPi / 5 * (i + 1) + Projectile.rotation;
+                    float dir1 = MathHelper.TwoPi / 5 * i + extraRot;
+                    float dir2 = MathHelper.TwoPi / 5 * (i + 1) + extraRot;
                     Vector2 vec1 = dir1.ToRotationVector2() * radius;
                     Vector2 vec2 = dir2.ToRotationVector2() * radius;
-                    Vector2 middle = Vector2.Lerp(vec1, vec2,0.5f) * 0.5f;
+                    Vector2 middle = Vector2.Lerp(vec1, vec2,0.5f) * (0.5f + clickingFactor * 0.25f);
 
                     var dist = (int)(vec1.Distance(middle) / 4f);
                     var tomiddle = vec1.AngleTo(middle);
@@ -153,11 +174,12 @@ namespace AyaMod.Content.Items.Cameras
             for(int i = 0; i < 5; i++)
             {
                 float dir1 = MathHelper.TwoPi / 5 * i + -Projectile.rotation * 0.7f;
-                Vector2 vec1 = dir1.ToRotationVector2() * ringRadius;
+                float radius = ringRadius * (1 + clickingFactor * 0.1f);
+                Vector2 vec1 = dir1.ToRotationVector2() * radius;
                 Vector2 tonext = (dir1 + MathHelper.ToRadians(126)).ToRotationVector2();
 
-                var dist = (int)(2 * ringRadius * 1.15f * MathF.Sin(MathHelper.ToRadians(36)) / 4f);
-                for(int j = 1;j < dist - 2;j++)
+                var dist = (int)(radius * (0.575f) * MathF.Sin(MathHelper.ToRadians(36)));
+                for(int j = 1;j < dist - 3;j++)
                 {
                     float factor = j / (float)dist;
                     Vector2 pos = vec1 + tonext * factor * dist * 4f;
@@ -165,6 +187,23 @@ namespace AyaMod.Content.Items.Cameras
                 }
 
             }
+
+            Texture2D ball = Request<Texture2D>(AssetDirectory.Extras + "Ball", AssetRequestMode.ImmediateLoad).Value;
+
+            float scale = Projectile.scale * 0.8f;
+            float alphaFactor = MathF.Abs(MathF.Sin(Main.GameUpdateCount * 0.005f));
+            if (clickingFactor > 0)
+            {
+                scale *= 1.1f;
+            }
+            RenderHelper.DrawBloom(36, ringRadius, ball, Projectile.Center - Main.screenPosition, null,
+                Color.White.AdditiveColor() * Projectile.Opacity * 0.06f * alphaFactor, Projectile.rotation, ball.Size() / 2, scale);
+            //{
+            //    Color ballColor = Color.White.AdditiveColor() * Projectile.Opacity;
+            //    float scale = Projectile.scale * 1f;
+            //    Main.spriteBatch.Draw(ball, Projectile.Center - Main.screenPosition, null, ballColor * 0.5f,
+            //        Projectile.rotation, ball.Size() / 2, scale, 0, 0);
+            //}
             return false;
         }
     }
@@ -172,6 +211,9 @@ namespace AyaMod.Content.Items.Cameras
     public class MarisaStar : ModProjectile
     {
         public override string Texture => AssetDirectory.Extras + "RoundTriangle2";
+        public ref float StartVelSpeed => ref Projectile.localAI[0];
+        public ref float StartVelRot => ref Projectile.localAI[1];
+        public ref float Hue => ref Projectile.localAI[2];
         public override void SetStaticDefaults()
         {
             Projectile.SetTrail(2, 5);
@@ -189,11 +231,11 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.localAI[2] = Main.rand.Next(11) * 36;
+            Hue = Main.rand.Next(11) * 36;
             //Projectile.localAI[2] = 10 * 36;
             Projectile.Opacity = 0f;
-            Projectile.localAI[1] = Projectile.velocity.ToRotation();
-            Projectile.localAI[0] = Projectile.velocity.Length();
+            StartVelRot = Projectile.velocity.ToRotation();
+            StartVelSpeed = Projectile.velocity.Length();
         }
 
         public override void AI()
@@ -206,9 +248,9 @@ namespace AyaMod.Content.Items.Cameras
             }
             else
             {
-                float min = -1.3f * Projectile.localAI[0];
-                float length = Utils.Remap(factor, 0.8f, 1f, min, Projectile.localAI[0]);
-                Projectile.velocity = Projectile.localAI[1].ToRotationVector2() * length;
+                float min = -1.3f * StartVelSpeed;
+                float length = Utils.Remap(factor, 0.8f, 1f, min, StartVelSpeed);
+                Projectile.velocity = StartVelRot.ToRotationVector2() * length;
                 //Projectile.velocity -= Projectile.localAI[1].ToRotationVector2() * (0.2f - Projectile.velocity.Length() * 0.05f);
             }
             Projectile.Opacity += 0.03f;
@@ -218,21 +260,7 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnKill(int timeLeft)
         {
-            int dusttype = (Projectile.localAI[2]) switch
-            {
-                0 * 36 => DustID.TheDestroyer,
-                1 * 36 => DustID.GemTopaz,
-                2 * 36 => DustID.DryadsWard,
-                3 * 36 => DustID.CursedTorch,
-                4 * 36 => DustID.PureSpray,
-                5 * 36 => DustID.HallowSpray,
-                6 * 36 => DustID.MushroomSpray,
-                7 * 36 => DustID.GiantCursedSkullBolt,
-                8 * 36 => DustID.VenomStaff,
-                9 * 36 => DustID.CrystalPulse,
-                10 * 36 => DustID.TheDestroyer,
-                _ => DustID.GemTopaz
-            };
+            int dusttype = Helper.GetHuedDustType((int)Hue);
 
             int dustamount = 60;
             float startRot = Projectile.rotation + MathHelper.TwoPi / 10 + AyaUtils.RandAngle;
@@ -254,7 +282,7 @@ namespace AyaMod.Content.Items.Cameras
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
 
-            Color color = AyaUtils.HSL2RGB(Projectile.localAI[2], 1f, 0.5f);
+            Color color = AyaUtils.HSL2RGB(Hue, 1f, 0.5f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, RenderHelper.MaxAdditive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);

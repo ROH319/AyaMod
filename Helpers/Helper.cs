@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace AyaMod.Helpers
@@ -54,6 +55,26 @@ namespace AyaMod.Helpers
                 MaxInstances = 40
             };
             return SoundEngine.PlaySound(style, position);
+        }
+
+        public static int GetHuedDustType(int hue)
+        {
+            int dustType = hue switch
+            {
+                0 * 36 => DustID.TheDestroyer,
+                1 * 36 => DustID.GemTopaz,
+                2 * 36 => DustID.DryadsWard,
+                3 * 36 => DustID.CursedTorch,
+                4 * 36 => DustID.PureSpray,
+                5 * 36 => DustID.HallowSpray,
+                6 * 36 => DustID.MushroomSpray,
+                7 * 36 => DustID.GiantCursedSkullBolt,
+                8 * 36 => DustID.VenomStaff,
+                9 * 36 => DustID.CrystalPulse,
+                10 * 36 => DustID.TheDestroyer,
+                _ => DustID.GemTopaz
+            };
+            return dustType;
         }
 
         public static void DashHandle(this Player player, out int dir, out bool dashing)

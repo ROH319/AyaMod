@@ -26,7 +26,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 70;
+            Item.damage = 40;
 
             Item.useTime = Item.useAnimation = 45;
             Item.useStyle = ItemUseStyleID.Rapier;
@@ -69,6 +69,7 @@ namespace AyaMod.Content.Items.Cameras
 
                 float speed = 10f;
                 float rotdir = Main.rand.NextBool() ? -1 : 1;
+                int damage = (int)(Projectile.damage * 1.3f);
                 for (int i = 0; i < 8; i++)
                 {
                     var waveCreater = i == 0 ? 1 : 0;
@@ -78,7 +79,8 @@ namespace AyaMod.Content.Items.Cameras
                     Vector2 vel = dir * speed;
 
                     float rotspeed = MathHelper.TwoPi / 90f;
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ModContent.ProjectileType<CaptainAnchor>(), (int)(Projectile.damage * 1.3f), Projectile.knockBack * 2f, Projectile.owner, rotspeed, rotdir, waveCreater);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ModContent.ProjectileType<CaptainAnchor>(), damage, 
+                        Projectile.knockBack * 2f, Projectile.owner, rotspeed, rotdir, waveCreater);
                 }
                 EffectCounter = 0;
             }

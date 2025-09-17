@@ -25,7 +25,7 @@ namespace AyaMod.Content.Items.Cameras
         {
             Item.width = 52;
             Item.height = 48;
-            Item.damage = 31;
+            Item.damage = 22;
 
             Item.useTime = Item.useAnimation = 45;
             Item.useStyle = ItemUseStyleID.HoldUp;
@@ -66,12 +66,13 @@ namespace AyaMod.Content.Items.Cameras
             Vector2 dir = rot.ToRotationVector2();
             Vector2 ndir = dir.RotatedBy(MathHelper.PiOver2);
             int rotdir = Main.rand.NextBool() ? 1 : -1;
+            float dmgmult = 0.33f;
             for(int i = -1; i < 2; i++)
             {
                 Vector2 pos = Projectile.Center + ndir * i * 40 - dir * 100;
                 float scale = 1.4f;
                 if (i != 0) scale *= 0.5f;
-                var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, dir * 7, ModContent.ProjectileType<LightRipperSlash>(), Projectile.damage / 3, Projectile.knockBack, Projectile.owner, scale, rotdir * 0.02f);
+                var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, dir * 7, ModContent.ProjectileType<LightRipperSlash>(), (int)(Projectile.damage * dmgmult), Projectile.knockBack, Projectile.owner, scale, rotdir * 0.02f);
                 p.timeLeft = 20;
             }
         }

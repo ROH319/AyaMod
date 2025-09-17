@@ -79,8 +79,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.penetrate = -1;
-            Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 15;
+            Projectile.SetImmune(15);
             Projectile.timeLeft = 30;
             
         }

@@ -3,7 +3,10 @@ DamageClasses.ReporterDamage.DisplayName: Reporter Damage
 BuilderToggles: {
 	CameraToggle: {
 		OnText: AutoSnap : On
+		OnDmgText: Camara damage decrease to {0}x
 		OffText: AutoSnap : Off
+		OffDmgText: Camera damage increase to {0}x
+		DisabledText: Disabled
 	}
 }
 

@@ -22,7 +22,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 30;
+            Item.damage = 24;
 
             Item.useTime = Item.useAnimation = 40;
             Item.crit = 4;
@@ -60,6 +60,7 @@ namespace AyaMod.Content.Items.Cameras
 
             int spread = 6;
             float startRot = AyaUtils.RandAngle;
+            float dmgmult = 0.3f;
             for (int i = 0; i < spread; i++)
             {
                 float factor = (float)i / spread;
@@ -67,7 +68,8 @@ namespace AyaMod.Content.Items.Cameras
                 float rotdir = 1;
                 if (i % 2 == 0) rotdir *= -1;
                 int type = ModContent.ProjectileType<JungleCameraLeaf>();
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + dir * 40, dir, type, (int)(Projectile.damage * 0.25f), Projectile.knockBack / 4, Projectile.owner, 0.15f * rotdir);
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + dir * 40, dir, type, 
+                    (int)(Projectile.damage * dmgmult), Projectile.knockBack / 4, Projectile.owner, 0.15f * rotdir);
             }
         }
     }
@@ -86,7 +88,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.penetrate = -1;
+            Projectile.penetrate = 3;
             Projectile.usesIDStaticNPCImmunity = true;
             Projectile.idStaticNPCHitCooldown = 12;
             Projectile.scale = 1f + (float)Main.rand.Next(30) * 0.01f;

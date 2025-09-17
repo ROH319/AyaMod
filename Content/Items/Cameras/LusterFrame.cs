@@ -68,20 +68,22 @@ namespace AyaMod.Content.Items.Cameras
             if (!Projectile.MyClient()) return;
 
             int amount = 6;
-            float rot = AyaUtils.RandAngle;
-            Vector2 dir = rot.ToRotationVector2();
+            Vector2 dir = Main.rand.NextVector2Unit();
             float rotdir = Main.rand.NextBool() ? -1 : 1;
+
+            float dmgmult = 0.2f;
             for(int i = 0; i < amount; i++)
             {
                 //Vector2 vel = dir.RotatedBy(MathHelper.TwoPi / amount * i) * 3;
                 float velrot = Main.rand.NextFloat(-MathHelper.PiOver4 / 2, MathHelper.PiOver4 / 2);
                 Vector2 vel = new Vector2(0, -Main.rand.NextFloat(6, 10)).RotatedBy(velrot);
-                int offset = Main.rand.Next(2, 5)* i;
                 Vector2 pos = Projectile.Center + dir.RotatedBy(MathHelper.TwoPi / amount * i) * Main.rand.NextFloat(20,40);
                 float rotSpeed = 0.03f;
                 rotSpeed = 0f;
                 int gemtype = Main.rand.Next(5);
-                var gem = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<LusterFrameGem>(), Projectile.damage / 5, Projectile.knockBack, Projectile.owner, offset, rotSpeed, gemtype);
+                int offset = Main.rand.Next(2, 5) * i;
+                var gem = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<LusterFrameGem>(),
+                    (int)(Projectile.damage * dmgmult), Projectile.knockBack, Projectile.owner, offset, rotSpeed, gemtype);
             }
         }
 
@@ -101,6 +103,12 @@ namespace AyaMod.Content.Items.Cameras
     {
         public override string Texture => AssetDirectory.VanillaItemPath(ItemID.Sapphire);
 
+        public ref float SparkleOffset => ref Projectile.ai[0];
+        public ref float RotSpeed => ref Projectile.ai[1];
+        public ref float GemType => ref Projectile.ai[2];
+        public ref float Timer => ref Projectile.localAI[0];
+        public ref float SparkleScale => ref Projectile.localAI[1];
+        public ref float SparkleRot => ref Projectile.localAI[2];
 
         public Color gemcolor => Projectile.ai[2] switch
         {
@@ -138,28 +146,33 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 10;
+            Projectile.width = Projectile.height = 16;
             Projectile.friendly = true;
             Projectile.ignoreWater = true;
+            Projectile.timeLeft = 3 * 60;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 20;
-            Projectile.ArmorPenetration = 30;
+            Projectile.ArmorPenetration = 20;
             Projectile.Scale(1.5f);
             Projectile.localAI[2] = 0f;
         }
-
+        public override bool? CanDamage() => Timer > 15;
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             SpawnDust();
             base.OnHitNPC(target, hit, damageDone);
         }
-
+        
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             SpawnDust();
             return base.OnTileCollide(oldVelocity);
         }
-
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+        {
+            width = 10; height = 10;
+            return base.TileCollideStyle(ref width, ref height, ref fallThrough, ref hitboxCenterFrac);
+        }
         public void SpawnDust()
         {
             int dustamount = 8;
@@ -173,30 +186,30 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void AI()
         {
-            Projectile.localAI[0]++;
+            Timer++;
 
-            if (Projectile.localAI[0] < 15 + Projectile.ai[0])
+            if (Timer < 15 + SparkleOffset)
             {
-                float factor = Projectile.localAI[0] / (15 + Projectile.ai[0]);
-                Projectile.velocity = Projectile.velocity.RotatedBy(Projectile.ai[1]);
+                float factor = Timer / (15 + SparkleOffset);
+                Projectile.velocity = Projectile.velocity.RotatedBy(RotSpeed);
                 Projectile.UseGravity(1f, 0.2f, 30);
-                Projectile.localAI[1] = Utils.Remap(factor, 0, 1f, 0f, 1.3f);
+                SparkleScale = Utils.Remap(factor, 0, 1f, 0f, 1.3f);
             }
             else
             {
-                
-                Projectile.localAI[1] -= 0.04f;
+
+                SparkleScale -= 0.04f;
 
                 Projectile.UseGravity(0.97f, 0.6f, 30);
             }
             Projectile.rotation = Projectile.velocity.ToRotation();
-            int dir = Projectile.whoAmI %2 == 0 ? 1 : -1;
-            Projectile.localAI[2] += 0.01f * dir;
+            int dir = Projectile.whoAmI % 2 == 0 ? 1 : -1;
+            SparkleRot += 0.01f * dir;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            int type = (int)(177 + Projectile.ai[2]);
+            int type = (int)(177 + GemType);
             Texture2D texture = TextureAssets.Item[type].Value;
 
             Texture2D star = TextureAssets.Extra[98].Value;
@@ -234,9 +247,9 @@ namespace AyaMod.Content.Items.Cameras
             {
                 Vector2 offset = (MathHelper.Pi + MathHelper.PiOver4).ToRotationVector2() * 8;
                 Color sparklecolor = sparkleColor.AdditiveColor() * 0.7f;
-                float sparkleRot = -Projectile.localAI[2];
-                Main.spriteBatch.Draw(star, Projectile.Center + offset - Main.screenPosition, null, sparklecolor, sparkleRot, star.Size() / 2, new Vector2(0.5f, 1.2f) * Projectile.localAI[1], 0, 0);
-                Main.spriteBatch.Draw(star, Projectile.Center + offset - Main.screenPosition, null, sparklecolor, sparkleRot + MathHelper.PiOver2, star.Size() / 2, new Vector2(0.5f,1.2f) * Projectile.localAI[1] * 0.7f, 0, 0);
+                float sparkleRot = -SparkleRot;
+                Main.spriteBatch.Draw(star, Projectile.Center + offset - Main.screenPosition, null, sparklecolor, sparkleRot, star.Size() / 2, new Vector2(0.5f, 1.2f) * SparkleScale, 0, 0);
+                Main.spriteBatch.Draw(star, Projectile.Center + offset - Main.screenPosition, null, sparklecolor, sparkleRot + MathHelper.PiOver2, star.Size() / 2, new Vector2(0.5f,1.2f) * SparkleScale * 0.7f, 0, 0);
             }
 
             return false;
