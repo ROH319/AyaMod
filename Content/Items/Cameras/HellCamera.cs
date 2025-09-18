@@ -60,12 +60,13 @@ namespace AyaMod.Content.Items.Cameras
 
             int count = 1;
             if (Main.rand.NextBool()) count++;
-            for(int i = 0;i<count;i++)
+            int damage = (int)(Projectile.damage * 0.4f);
+            for (int i = 0;i<count;i++)
             {
 
                 Vector2 pos = Projectile.Center + AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(20, 80);
                 Vector2 vel = AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(4, 7);
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<HellSpirit>(), (int)(Projectile.damage * 0.4f), Projectile.knockBack / 4, Projectile.owner);
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<HellSpirit>(), damage, Projectile.knockBack / 4, Projectile.owner);
 
             }
             base.OnSnapInSight();
@@ -135,7 +136,8 @@ namespace AyaMod.Content.Items.Cameras
                 angle = Projectile.AngleToSafe(npc.Center);
             }
 
-            for(int i = 0; i < 3; i++)
+            int damage = (int)(Projectile.damage * 0.8f);
+            for (int i = 0; i < 3; i++)
             {
                 int homing = -1;
                 switch (i)
@@ -147,7 +149,7 @@ namespace AyaMod.Content.Items.Cameras
                 }
                 Vector2 dir = (MathHelper.TwoPi / 3 * i + angle).ToRotationVector2();
                 Vector2 vel = dir * 4f;
-                Projectile.NewProjectileDirect(Projectile.GetSource_Death(), Projectile.Center, vel, ModContent.ProjectileType<HellSpiritShot>(), (int)(Projectile.damage * 0.8f), 0, Projectile.owner, homing);
+                Projectile.NewProjectileDirect(Projectile.GetSource_Death(), Projectile.Center, vel, ModContent.ProjectileType<HellSpiritShot>(), damage, 0, Projectile.owner, homing);
             }
 
             int dustamount = 12;

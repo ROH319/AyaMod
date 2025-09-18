@@ -505,3 +505,19 @@ NoDmgModifier: {
 	DisplayName: No Dmg Modifier
 	Tooltip: ""
 }
+
+LilyWhiteHat: {
+	LilyBonus: Mods.AyaMod.Items.LilyWhiteHat.LilyBonus
+	DisplayName: Lily White Hat
+	Tooltip: ""
+}
+
+LilyWhiteBoots: {
+	DisplayName: Lily White Boots
+	Tooltip: ""
+}
+
+LilyWhiteDress: {
+	DisplayName: Lily White Dress
+	Tooltip: ""
+}

@@ -24,6 +24,8 @@ namespace AyaMod.Core
 
         public const string Accessories = Items + "Accessories/";
 
+        public const string Armors = Items + "Armors/";
+
         public const string Cameras = Items + "Cameras/";
 
         public const string Lens = Items + "Lens/";

@@ -181,10 +181,11 @@ namespace AyaMod.Content.Items.Cameras
             {
 
                 int count = Main.rand.Next(1, 3);
+                int damage = (int)(Projectile.damage * 0.3f);
                 for (int i = 0; i < count; i++)
                 {
                     Vector2 vel = AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(3, 5) * 1f;
-                    var feather = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ModContent.ProjectileType<ShadowFeather>(), (int)(Projectile.damage * 0.3f), 0, Projectile.owner, ai2: Projectile.whoAmI);
+                    var feather = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ModContent.ProjectileType<ShadowFeather>(), damage, 0, Projectile.owner, ai2: Projectile.whoAmI);
                     feather.rotation = vel.ToRotation();
                 }
             }
@@ -221,7 +222,9 @@ namespace AyaMod.Content.Items.Cameras
     public class ShadowFeather : ModProjectile
     {
         public override string Texture => AssetDirectory.Projectiles + Name;
-
+        public ref float TempExtraUpdate => ref Projectile.ai[1];
+        public ref float Owner => ref Projectile.ai[2];
+        public ref float SpeedToTarget => ref Projectile.localAI[2];
         public override void SetStaticDefaults()
         {
             //Projectile.SetTrail(2, 30);
@@ -252,14 +255,14 @@ namespace AyaMod.Content.Items.Cameras
 
         public override bool? CanDamage()
         {
-            if (Projectile.TimeleftFactor() > 0.75f && Projectile.ai[2] < 0) return false;
+            if (Projectile.TimeleftFactor() > 0.75f && Owner < 0) return false;
             return base.CanDamage();
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             Projectile.velocity = oldVelocity;
-            Projectile.localAI[2] = 2;
+            SpeedToTarget = 2;
             return false;
         }
 
@@ -271,38 +274,31 @@ namespace AyaMod.Content.Items.Cameras
         public override void AI()
         {
             float factor = Projectile.TimeleftFactor();
-            if (((factor > 0.7f || Projectile.ai[1] < 1) && Projectile.localAI[2] < 1) && Projectile.ai[2] < 0)
+            if (((factor > 0.7f || TempExtraUpdate < 1) && SpeedToTarget < 1) && Owner < 0)
             {
-                //Projectile.rotation += 0.03f;
                 Projectile.velocity *= 0.97f;
-                //NPC npc = Projectile.FindCloestNPC(500);
-                //if (npc!= null)
-                //{
-                //    Projectile.Chase(npc, 20, 0.06f);
-                //    if (MathF.Abs(Projectile.AngleToSafe(npc.Center)) < 0.2f) Projectile.timeLeft = 3 * 60 - 1;
-                //}
             }
-            if ((factor <= 0.75f || (Projectile.ai[2] > 0 && factor <= 0.9f)) && Projectile.localAI[2] < 2)
+            if ((factor <= 0.75f || (Owner > 0 && factor <= 0.9f)) && SpeedToTarget < 2)
             {
                 NPC npc = Projectile.FindCloestNPC(500);
                 if (npc != null)
                 {
-                    Projectile.ai[1] = 20;
-                    Projectile.localAI[2] = Projectile.Distance(npc.Center) / 2f * 3f / 30f;
-                    Projectile.velocity = Projectile.DirectionToSafe(npc.Center) * Projectile.localAI[2];
+                    TempExtraUpdate = 20;
+                    SpeedToTarget = Projectile.Distance(npc.Center) / 2f * 3f / 30f;
+                    Projectile.velocity = Projectile.DirectionToSafe(npc.Center) * SpeedToTarget;
                     Projectile.rotation = Projectile.velocity.ToRotation();
                 }
             }
-            if (Projectile.ai[2] >= 0 && Projectile.localAI[2] < 1)
+            if (Owner >= 0 && SpeedToTarget < 1)
             {
                 Projectile.velocity *= 0.96f;
             }
 
-            if (Projectile.ai[1] > 0)
+            if (TempExtraUpdate > 0)
             {
-                while (Projectile.ai[1] > 0)
+                while (TempExtraUpdate > 0)
                 {
-                    Projectile.ai[1]--;
+                    TempExtraUpdate--;
                     Projectile.Damage();
                     Projectile.position += Projectile.velocity;
                     UpdateTrail();
@@ -310,25 +306,25 @@ namespace AyaMod.Content.Items.Cameras
             }
             
 
-            if ((Projectile.localAI[2] > 0 && Projectile.ai[1] < 1) || Projectile.velocity.Length() < 1f)
+            if ((SpeedToTarget > 0 && TempExtraUpdate < 1) || Projectile.velocity.Length() < 1f)
             {
                 Projectile.velocity *= 0.99f;
-                if (Projectile.ai[2] < 0) Projectile.velocity *= 0.98f;
+                if (Owner < 0) Projectile.velocity *= 0.98f;
                 Projectile.Opacity -= 0.02f;
                 if (Projectile.Opacity <= 0.04f)
                     Projectile.Kill();
             }
 
-            if (Projectile.ai[2] >= 0)
+            if (Owner >= 0)
             {
-                Projectile zone = Main.projectile[(int)Projectile.ai[2]];
+                Projectile zone = Main.projectile[(int)Owner];
                 if (zone != null && AyaUtils.ProjectileExists(zone.whoAmI,ModContent.ProjectileType<ShadowZone>()))
                 {
 
                     float maxRange = 90 * 1.2f * zone.scale;
                     if (Projectile.Distance(zone.Center) > maxRange)
                     {
-                        Projectile.localAI[2] = 2f;
+                        SpeedToTarget = 2f;
                     }
                 }
             }
@@ -362,7 +358,7 @@ namespace AyaMod.Content.Items.Cameras
                 float rot = i == 0 ? Projectile.rotation : /*(Projectile.oldPos[i - 1] - Projectile.oldPos[i]).ToRotation()*/Projectile.oldRot[i];
                 Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
                 Color color = lightColor.AdditiveColor() * factor * 0.5f * Projectile.Opacity;
-                if (Projectile.localAI[2] < 2) color *= 0.2f;
+                if (SpeedToTarget < 2) color *= 0.2f;
                 Main.spriteBatch.Draw(texture, drawPos, null, color, rot, origin, baseScale * Projectile.scale * factor, 0, 0);
 
 

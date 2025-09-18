@@ -95,7 +95,8 @@ namespace AyaMod.Content.Items.Cameras
                     {
                         Vector2 starpos = Projectile.Center + (OrbitRotation + i * MathHelper.TwoPi / 5).ToRotationVector2() * StarOrbitRadius;
                         Vector2 pos = starpos/*AyaUtils.GetPentagramPos(starpos, StarRadius, trueFactor)*/;
-                        var rail = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<MiracleRail>(), Projectile.damage, 0f, Projectile.owner, i, Projectile.whoAmI, MaxItemTime);
+                        var rail = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<MiracleRail>(), Projectile.damage, 0f, Projectile.owner, 
+                            i, Projectile.whoAmI, MaxItemTime);
                         rail.localAI[0] = StarStack;
                     }
                 }
@@ -108,12 +109,13 @@ namespace AyaMod.Content.Items.Cameras
                 if (player.controlUseItem && player.itemTime % 4 == 0 && StarStack * 0.2f + StarFactor < 1f)
                 {
                     float trueFactor = StarStack * 0.2f + StarFactor;
-                    float stardmg = 0.2f;
+                    int stardmg = (int)(Projectile.damage * 0.2f);
                     for (int i = 0; i < 5; i++)
                     {
                         Vector2 starpos = Projectile.Center + (OrbitRotation + i * MathHelper.TwoPi / 5).ToRotationVector2() * StarOrbitRadius;
                         Vector2 pos = starpos/*AyaUtils.GetPentagramPos(starpos, StarRadius, trueFactor)*/;
-                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<MiracleStar>(), (int)(Projectile.damage * stardmg), 0f, Projectile.owner, i, Projectile.whoAmI, trueFactor);
+                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<MiracleStar>(), stardmg, 0f, Projectile.owner,
+                            i, Projectile.whoAmI, trueFactor);
                     }
                 }
             }
@@ -156,6 +158,14 @@ namespace AyaMod.Content.Items.Cameras
     public class MiracleStar : ModProjectile
     {
         public override string Texture => AssetDirectory.Extras + "RoundTriangle2";
+        public ref float Offset => ref Projectile.ai[0];
+        public ref float Owner => ref Projectile.ai[1];
+        public ref float TrueFactor => ref Projectile.ai[2];
+        /// <summary>
+        /// 大于1时为释放状态
+        /// </summary>
+        public ref float Released => ref Projectile.localAI[0];
+        public ref float Hue => ref Projectile.localAI[2];
         public override void SetStaticDefaults()
         {
             Projectile.SetTrail(2, 5);
@@ -173,7 +183,7 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override bool? CanDamage()
         {
-            return Projectile.localAI[0] > 0;
+            return Released > 0;
         }
         public override void OnSpawn(IEntitySource source)
         {
@@ -198,7 +208,7 @@ namespace AyaMod.Content.Items.Cameras
             //float colortype = Main.rand.NextFromList(0, 1, 3, 6);
             
 
-            float value = (Projectile.ai[2] % 0.2f);
+            float value = (TrueFactor % 0.2f);
             float min = 0.4f;
             float factor = 1;
             if(value < 0.1f)
@@ -224,13 +234,13 @@ namespace AyaMod.Content.Items.Cameras
             //    <= 1f => 3,
             //    _ => 5
             //};
-            Projectile.localAI[2] = Utils.Remap(value, 0, 0.2f, 108, 180);
+            Hue = Utils.Remap(value, 0, 0.2f, 108, 180);
             //Projectile.localAI[2] = colortype * 36;
         }
         public override void AI()
         {
 
-            Projectile camera = Main.projectile[(int)Projectile.ai[1]];
+            Projectile camera = Main.projectile[(int)Owner];
 
             if (camera.TypeAlive(ProjectileType<MiracleCameraProj>()))
             {
@@ -242,13 +252,14 @@ namespace AyaMod.Content.Items.Cameras
                 if (player.AliveCheck(Projectile.Center, 3000))
                 {
 
-                    if (Projectile.localAI[0] <= 0)
+                    if (Released <= 0)
                     {
                         if (Projectile.timeLeft < 4 * 60) Projectile.timeLeft++;
-                        Vector2 starpos = camera.Center + (miracleCamera.OrbitRotation + Projectile.ai[0] * MathHelper.TwoPi / 5).ToRotationVector2() * miracleCamera.StarOrbitRadius;
-                        float trueFactor = Projectile.ai[2] + 0.2f * Projectile.ai[0];
+                        Vector2 starpos = camera.Center + (miracleCamera.OrbitRotation + Offset * MathHelper.TwoPi / 5).ToRotationVector2() * miracleCamera.StarOrbitRadius;
+                        float trueFactor = TrueFactor + 0.2f * Offset;
                         trueFactor = trueFactor % 1f;
-                        Vector2 pos = AyaUtils.GetPentagramPos(starpos, miracleCamera.StarRadius * (1 + MathF.Cos(Main.GameUpdateCount * 0.04f + Projectile.ai[0] * 1.2f) * 0.1f), trueFactor, MathHelper.TwoPi / 10f + miracleCamera.OrbitRotation);
+                        Vector2 pos = AyaUtils.GetPentagramPos(starpos, miracleCamera.StarRadius * (1 + MathF.Cos(Main.GameUpdateCount * 0.04f + Offset * 1.2f) * 0.1f), 
+                            trueFactor, MathHelper.TwoPi / 10f + miracleCamera.OrbitRotation);
                         float chaseFactor = Utils.Remap(Projectile.timeLeft, 4 * 60, 5 * 60, 0.9f, 0.2f);
                         //if (Projectile.timeLeft > 5 * 60 + 1) chaseFactor = 0.2f;
                         Projectile.Center = Vector2.Lerp(Projectile.Center, pos, chaseFactor);
@@ -262,28 +273,16 @@ namespace AyaMod.Content.Items.Cameras
                     }
                 }
             }
-            else if (Projectile.localAI[0] <= 0) Projectile.Kill();
+            else if (Released <= 0) Projectile.Kill();
 
             Projectile.rotation += 0.03f;
         }
         public override void OnKill(int timeLeft)
         {
-            int dusttype = (Projectile.localAI[2]) switch
+            int dusttype = Hue switch
             {
                 < 144 => DustID.CursedTorch,
                 _ => DustID.HallowSpray
-                //0 * 36 => DustID.TheDestroyer,
-                //1 * 36 => DustID.GemTopaz,
-                //2 * 36 => DustID.DryadsWard,
-                //3 * 36 => DustID.CursedTorch,
-                //4 * 36 => DustID.PureSpray,
-                //5 * 36 => DustID.HallowSpray,
-                //6 * 36 => DustID.MushroomSpray,
-                //7 * 36 => DustID.GiantCursedSkullBolt,
-                //8 * 36 => DustID.VenomStaff,
-                //9 * 36 => DustID.CrystalPulse,
-                //10 * 36 => DustID.TheDestroyer,
-                //_ => DustID.GemTopaz
             };
 
             int dustamount = 60;
@@ -309,7 +308,7 @@ namespace AyaMod.Content.Items.Cameras
             
             //float alphaFactor = Utils.Remap(MathF.Sin((float)(Projectile.ai[2] * 0.1f)), -1f, 1f, 0.2f, 1f);
             float alpha = Projectile.Opacity /** alphaFactor*/;
-            Color color = AyaUtils.HSL2RGB(Projectile.localAI[2], 1f, 0.5f);
+            Color color = AyaUtils.HSL2RGB(Hue, 1f, 0.5f);
             float scaleX = 0.7f;
             float scaleY = 0.9f;
             float scaleMult = 0.3f;
@@ -338,7 +337,11 @@ namespace AyaMod.Content.Items.Cameras
     public class MiracleRail : ModProjectile
     {
         public override string Texture => AssetDirectory.Textures + "StarTexture";
-
+        public ref float Offset => ref Projectile.ai[0];
+        public ref float Owner => ref Projectile.ai[1];
+        public ref float MaxItemTime => ref Projectile.ai[2];
+        public ref float CurrentStack => ref Projectile.localAI[0];
+        public ref float Released => ref Projectile.localAI[1];
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 32;
@@ -352,30 +355,30 @@ namespace AyaMod.Content.Items.Cameras
         public override bool ShouldUpdatePosition() => false;
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.timeLeft = (int)(Projectile.ai[2] * 2f);
+            Projectile.timeLeft = (int)(MaxItemTime * 2f);
         }
 
         public override void AI()
         {
-            Projectile camera = Main.projectile[(int)Projectile.ai[1]];
+            Projectile camera = Main.projectile[(int)Owner];
             if (camera.TypeAlive(ProjectileType<MiracleCameraProj>()))
             {
                 
-                if (Projectile.timeLeft < Projectile.ai[2] - 1) Projectile.timeLeft++;
-                if (Projectile.localAI[1] <= 0)
+                if (Projectile.timeLeft < MaxItemTime - 1) Projectile.timeLeft++;
+                if (Released <= 0)
                 {
 
                     var miracleCamera = camera.ModProjectile as MiracleCameraProj;
                     var player = (camera.ModProjectile as BaseCameraProj).player;
 
-                    if (!player.controlUseItem) Projectile.localAI[1] = 1;
+                    if (!player.controlUseItem) Released = 1;
                     float factor = Projectile.TimeleftFactor();
-                    Vector2 starpos = camera.Center + (miracleCamera.OrbitRotation + Projectile.ai[0] * MathHelper.TwoPi / 5).ToRotationVector2() * miracleCamera.StarOrbitRadius;
-                    float trueFactor = Projectile.localAI[0] * 0.2f + 0.2f * Projectile.ai[0];
+                    Vector2 starpos = camera.Center + (miracleCamera.OrbitRotation + Offset * MathHelper.TwoPi / 5).ToRotationVector2() * miracleCamera.StarOrbitRadius;
+                    float trueFactor = CurrentStack * 0.2f + 0.2f * Offset;
                     trueFactor = trueFactor % 1f;
                     float tlFactor = Utils.Remap(Projectile.timeLeft, Projectile.MaxTimeleft() - 30, Projectile.MaxTimeleft(), 1f, 0f);
 
-                    Vector2 pos = AyaUtils.GetPentagramPos(starpos, miracleCamera.StarRadius * tlFactor* (1 + MathF.Cos(Main.GameUpdateCount * 0.04f + Projectile.ai[0] * 1.2f) * 0.1f), 
+                    Vector2 pos = AyaUtils.GetPentagramPos(starpos, miracleCamera.StarRadius * tlFactor * (1 + MathF.Cos(Main.GameUpdateCount * 0.04f + Offset * 1.2f) * 0.1f),
                         trueFactor, MathHelper.TwoPi / 10f + miracleCamera.OrbitRotation);
                     
                     Projectile.Center = Vector2.Lerp(Projectile.Center, pos, 0.9f);
@@ -391,12 +394,12 @@ namespace AyaMod.Content.Items.Cameras
                         }
                     }
                     //(Main.GameUpdateCount /* + 30 * Projectile.ai[0]*/) % (150 ) == (int)(30 + 30 * Projectile.localAI[0])
-                    if(Projectile.timeLeft == Projectile.ai[2] || (miracleCamera.StarStack > 4 && player.itemTime == 1 && (miracleCamera.StarStack - 1) % 5 == Projectile.localAI[0]))
+                    if(Projectile.timeLeft == MaxItemTime || (miracleCamera.StarStack > 4 && player.itemTime == 1 && (miracleCamera.StarStack - 1) % 5 == Projectile.localAI[0]))
                     {
                         float volume = 0.6f;
                         float radius = 90;
                         int playtime = 1;
-                        if (miracleCamera.StarStack == 4 && Projectile.localAI[0] == 4)
+                        if (miracleCamera.StarStack == 4 && CurrentStack == 4)
                         {
                             //volume *= 1.5f;
                             playtime+= 2;
@@ -413,8 +416,8 @@ namespace AyaMod.Content.Items.Cameras
                         RingParticle.Spawn(Projectile.GetSource_FromAI(), nextPos, new Color(72,206,132).AdditiveColor(), 10, radius, 0.8f, 0f,
                             0.15f, 0.5f, 30, 120, Ease.OutCirc, Ease.OutCubic);
 
-                        float stardmg = 0.2f;
-                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), nextPos, Projectile.velocity.Length(7), ProjectileType<MiracleStarHoming>(), (int)(Projectile.damage * stardmg), Projectile.knockBack, Projectile.owner);
+                        int stardmg = (int)(Projectile.damage * 0.2f);
+                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), nextPos, Projectile.velocity.Length(7), ProjectileType<MiracleStarHoming>(), stardmg, Projectile.knockBack, Projectile.owner);
 
                     }
                 }
@@ -448,7 +451,7 @@ namespace AyaMod.Content.Items.Cameras
                 Vector2 offset = ndir * 2;
                 Color drawColor = Color.Lerp(new Color(28, 255, 144), new Color(25, 255, 251), totalFactor);
                 float alphafactor = MathHelper.Lerp(1f, 0f, totalFactor);
-                Color color = drawColor.AdditiveColor() * 0.2f * totalFactor * alphafactor;
+                Color color = drawColor.AdditiveColor() * 0.075f * totalFactor * alphafactor;
 
                 for(int j = -1; j < 2; j += 2)
                 {
@@ -462,9 +465,10 @@ namespace AyaMod.Content.Items.Cameras
                 if(i == drawcount - 1)
                 {
                     Vector2 pos = Projectile.Center - Main.screenPosition + dir * totalFactor * length;
+                    Color ballColor = Color.LightGreen.AdditiveColor();
                     for(int j = 0; j < 5; j++)
                     {
-                        Main.spriteBatch.Draw(ball1, pos, null, Color.LightGreen.AdditiveColor(), Main.GameUpdateCount * 0.1f, ball1.Size() / 2, Projectile.scale * (0.3f + j * 0.1f), 0, 0);
+                        Main.spriteBatch.Draw(ball1, pos, null, ballColor * 0.6f, Main.GameUpdateCount * 0.1f, ball1.Size() / 2, Projectile.scale * (0.3f + j * 0.1f), 0, 0);
 
                     }
                 }
@@ -475,6 +479,7 @@ namespace AyaMod.Content.Items.Cameras
     public class MiracleStarHoming : ModProjectile
     {
         public override string Texture => AssetDirectory.Extras + "RoundTriangle2";
+        public ref float Hue => ref Projectile.localAI[2];
         public override void SetStaticDefaults()
         {
             Projectile.SetTrail(2, 5);
@@ -492,7 +497,7 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.localAI[2] = Main.rand.NextFromList(0, 1, 3, 6) * 36;
+            Hue = Main.rand.NextFromList(0, 1, 3, 6) * 36;
         }
 
         public override void AI()
@@ -502,7 +507,7 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void OnKill(int timeLeft)
         {
-            int dusttype = Helper.GetHuedDustType((int)Projectile.localAI[2]);
+            int dusttype = Helper.GetHuedDustType((int)Hue);
 
             int dustamount = 60;
             float startRot = Projectile.rotation + MathHelper.TwoPi / 10 + AyaUtils.RandAngle;
@@ -523,8 +528,9 @@ namespace AyaMod.Content.Items.Cameras
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Texture2D ball1 = Request<Texture2D>(AssetDirectory.Extras + "Ball", AssetRequestMode.ImmediateLoad).Value;
 
-            Color color = AyaUtils.HSL2RGB(Projectile.localAI[2], 1f, 0.5f);
+            Color color = AyaUtils.HSL2RGB(Hue, 1f, 0.5f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, RenderHelper.MaxAdditive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
@@ -543,6 +549,13 @@ namespace AyaMod.Content.Items.Cameras
 
             MeteorStar.DrawStar(Projectile, texture, Projectile.Center, Color.White, 0.8f, 0.6f, 0.8f, 0.23f);
 
+            Vector2 pos = Projectile.Center - Main.screenPosition;
+            Color ballColor = AyaUtils.HSL2RGB(Hue, 1f, 0.8f).AdditiveColor();
+            for (int j = 0; j < 5; j++)
+            {
+                Main.spriteBatch.Draw(ball1, pos, null, ballColor * 1f, Main.GameUpdateCount * 0.1f, ball1.Size() / 2, Projectile.scale * (0.3f + j * 0.1f), 0, 0);
+
+            }
 
             return false;
         }

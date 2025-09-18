@@ -547,3 +547,23 @@ NoDmgModifier: {
 	DisplayName: 禁用连拍乘区
 	Tooltip: 放在背包中可以禁用连拍和单点的伤害惩罚和奖励
 }
+
+LilyWhiteHat: {
+	LilyBonus:
+		'''
+		在身边飘落樱花
+		樱花会向着玩家的移动方向飘走
+		'''
+	DisplayName: Lily White Hat
+	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}"
+}
+
+LilyWhiteBoots: {
+	DisplayName: Lily White Boots
+	Tooltip: 增加5%移动速度
+}
+
+LilyWhiteDress: {
+	DisplayName: Lily White Dress
+	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance}"
+}

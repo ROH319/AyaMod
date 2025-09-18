@@ -26,7 +26,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.shootSpeed = 8;
             Item.knockBack = 8f;
             Item.SetShopValues(ItemRarityColor.Orange3, Item.sellPrice(0, 1, 0, 0));
-            SetCameraStats(0.04f, 98, 2f,filmSlot:2);
+            SetCameraStats(0.04f, 98, 2f, filmSlot: 2);
             SetCaptureStats(100, 5);
         }
     }

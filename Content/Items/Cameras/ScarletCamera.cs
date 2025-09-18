@@ -56,7 +56,8 @@ namespace AyaMod.Content.Items.Cameras
             if (++EffectCounter >= 6)
             {
                 Vector2 vec = Projectile.Center - player.Center;
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), player.Center, Vector2.Zero, ProjectileType<KillerDoll>(), (int)(Projectile.damage * 0.2f), Projectile.knockBack / 2f, Projectile.owner);
+                int damage = (int)(Projectile.damage * 0.2f);
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), player.Center, Vector2.Zero, ProjectileType<KillerDoll>(), damage, Projectile.knockBack / 2f, Projectile.owner);
                 EffectCounter = 0;
             }
         }
@@ -141,7 +142,7 @@ namespace AyaMod.Content.Items.Cameras
                     Vector2 dir = rot.ToRotationVector2();
 
                     Vector2 pos = Projectile.Center + dir * radius;
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<FlyingKnife>(), Projectile.damage, Projectile.knockBack / 2f, Projectile.owner,0,Projectile.whoAmI);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<FlyingKnife>(), Projectile.damage, Projectile.knockBack / 2f, Projectile.owner,Projectile.whoAmI);
                 }
             }
 
@@ -152,6 +153,10 @@ namespace AyaMod.Content.Items.Cameras
     public class FlyingKnife : ModProjectile
     {
         public override string Texture => AssetDirectory.Projectiles + "Knife";
+        public ref float Owner => ref Projectile.ai[0];
+        public ref float Timer => ref Projectile.ai[1];
+        public ref float OwnerDir => ref Projectile.localAI[0];
+        public ref float OwnerDist => ref Projectile.localAI[1];
         public override void SetStaticDefaults()
         {
             Projectile.SetTrail(2, 12);
@@ -182,15 +187,15 @@ namespace AyaMod.Content.Items.Cameras
         {
             Projectile.rotation = AyaUtils.RandAngle;
             Projectile.scale = 0.7f;
-            var proj = Main.projectile[(int)Projectile.ai[1]];
+            var proj = Main.projectile[(int)Owner];
             Vector2 offset = Projectile.Center - proj.Center;
-            Projectile.localAI[0] = offset.ToRotation();
-            Projectile.localAI[1] = offset.Length();
+            OwnerDir = offset.ToRotation();
+            OwnerDist = offset.Length();
         }
         public override void AI()
         {
-            Projectile.ai[0]++;
-            if (Projectile.ai[0] > 45)
+            Timer++;
+            if (Timer > 45)
             {
                 var owner = Main.player[Projectile.owner];
                 if (owner.AliveCheck(Projectile.Center, 4000))
@@ -199,16 +204,16 @@ namespace AyaMod.Content.Items.Cameras
                     Vector2 tomouse = Projectile.Center.DirectionToSafe(mousepos);
                     Projectile.velocity = tomouse * 15f;
                     Projectile.rotation = Projectile.velocity.ToRotation();
-                    Projectile.ai[0] = int.MinValue;
+                    Timer = int.MinValue;
                 }
                 
             }
-            else if (Projectile.ai[0] >= 0)
+            else if (Timer >= 0)
             {
-                var proj = Main.projectile[(int)Projectile.ai[1]];
+                var proj = Main.projectile[(int)Owner];
                 if (proj.type == ProjectileType<KillerDoll>())
                 {
-                    Vector2 offset = Projectile.localAI[0].ToRotationVector2() * Projectile.localAI[1];
+                    Vector2 offset = OwnerDir.ToRotationVector2() * OwnerDist;
                     Projectile.Center = proj.Center + offset;
                     Projectile.rotation += 0.25f;
                 }
@@ -226,11 +231,11 @@ namespace AyaMod.Content.Items.Cameras
             Vector2 origin = texture.Size() / 2;
             Texture2D star = TextureAssets.Extra[98].Value;
 
-            float timeleftFactor = MathHelper.Clamp(Projectile.ai[0] / 45f, 0f, 1f);
-            if (Projectile.ai[0] < 0) timeleftFactor = 1f;
+            float timeleftFactor = MathHelper.Clamp(Timer / 45f, 0f, 1f);
+            if (Timer < 0) timeleftFactor = 1f;
             float alpha = Projectile.Opacity * timeleftFactor;
             Color color = Color.White.AdditiveColor() * alpha * 0.7f;
-            Color trailBaseColor = new Color(192,192,192).AdditiveColor() * alpha * 0.7f;
+            Color trailBaseColor = new Color(192, 192, 192).AdditiveColor() * alpha * 0.7f;
             for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
                 if (Projectile.oldPos[i] == Vector2.Zero) continue;

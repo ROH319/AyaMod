@@ -87,7 +87,7 @@ namespace AyaMod.Core.ModPlayers
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            if (AyaKeybindLoader.UltraMove.Current && Player.HeldCamera())
+            if (AyaKeybindLoader.UltraMove.Current && Player.HeldCamera() && Player.HasEffect<GaleGeta1>())
             {
                 Vector2 targetDir = Vector2.Zero;
                 if (triggersSet.Left)

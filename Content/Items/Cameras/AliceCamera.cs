@@ -123,6 +123,7 @@ namespace AyaMod.Content.Items.Cameras
             float controlFactor = ItemTimer / 30f;
             OrbitRot += 0.015f/* + floatFactor * 0.025f*/ + controlFactor * 0.005f;
             Projectile.rotation += 0.02f + controlFactor * 0.01f;
+            //if (Projectile.rotation > MathHelper.Pi * 2) Projectile.rotation -= MathHelper.Pi;
             //Projectile.rotation = MathHelper.WrapAngle(Projectile.rotation);
         }
         public override bool PreDraw(ref Color lightColor)
@@ -146,7 +147,9 @@ namespace AyaMod.Content.Items.Cameras
             for (int j = 0; j < 2; j++)
             {
                 float radius = ringRadius * 0.9f + j * ringRadius * 0.4f - ringRadius * 0.3f * clickingFactor;
-                float extraRot = Projectile.rotation/* * (1 + clickingFactor * 1.5f)*/;
+                float rotmodifier = 1f;
+                //rotmodifier -= j * clickingFactor * 0.3f;
+                float extraRot = Projectile.rotation * rotmodifier;
                 for (int i = 0; i < 5; i++)
                 {
                     float dir1 = MathHelper.TwoPi / 5 * i + extraRot;
@@ -173,7 +176,8 @@ namespace AyaMod.Content.Items.Cameras
 
             for(int i = 0; i < 5; i++)
             {
-                float dir1 = MathHelper.TwoPi / 5 * i + -Projectile.rotation * 0.7f;
+                float rotmodifier = 0.7f;
+                float dir1 = MathHelper.TwoPi / 5 * i + -Projectile.rotation * rotmodifier;
                 float radius = ringRadius * (1 + clickingFactor * 0.1f);
                 Vector2 vec1 = dir1.ToRotationVector2() * radius;
                 Vector2 tonext = (dir1 + MathHelper.ToRadians(126)).ToRotationVector2();

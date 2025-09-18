@@ -1,21 +1,14 @@
-﻿using AyaMod.Core.Prefabs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.Enums;
-using Terraria.ID;
-using Terraria;
-using AyaMod.Helpers;
-using Terraria.DataStructures;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
-using Terraria.Audio;
-using AyaMod.Core.Configs;
-using AyaMod.Core.ModPlayers;
-using AyaMod.Common.Easer;
+﻿using AyaMod.Common.Easer;
 using AyaMod.Core;
+using AyaMod.Core.ModPlayers;
+using AyaMod.Core.Prefabs;
+using AyaMod.Helpers;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.Enums;
+using Terraria.GameContent;
+using Terraria.ID;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -47,9 +40,13 @@ namespace AyaMod.Content.Items.Cameras
         public override Color focusCenterColor => base.focusCenterColor;
         public override Color flashColor => new Color(235, 220, 225).AdditiveColor() * 0.5f;
 
+        public ref float ChargeTimer => ref Projectile.ai[0];
+        public ref float PreChargeTimer => ref Projectile.ai[1];
         public override void OnHitNPCAlt(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(),target.Center,Projectile.DirectionToSafe(target.Center).RotatedByRandom(MathHelper.Pi) * 24,ProjectileType<YoumuSpirit>(),Projectile.damage,Projectile.knockBack,Projectile.owner,target.whoAmI);
+            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(),target.Center,Projectile.DirectionToSafe(target.Center).RotatedByRandom(MathHelper.Pi) * 24,ProjectileType<YoumuSpirit>(),
+                Projectile.damage,Projectile.knockBack,Projectile.owner,target.whoAmI);
+
             base.OnHitNPCAlt(target, hit, damageDone);
         }
         public override void OnSnapInSight()
@@ -64,22 +61,22 @@ namespace AyaMod.Content.Items.Cameras
             float range = 480;
             if(Projectile.Distance(mouseworld) > range/* && Projectile.ai[0] < 1*/)
             {
-                if (Projectile.ai[1] < 1)
-                    Projectile.ai[0]++;
+                if (PreChargeTimer < 1)
+                    ChargeTimer++;
             }
             else
             {
-                Projectile.ai[0]--; Projectile.ai[0] = MathHelper.Clamp(Projectile.ai[0], 0f, 20f);
+                ChargeTimer--; ChargeTimer = MathHelper.Clamp(ChargeTimer, 0f, 20f);
             }
-            if (Projectile.ai[1] > 0) Projectile.ai[1] = MathHelper.Clamp(--Projectile.ai[1], 0, 100);
-            if (Projectile.ai[0] > 0)
+            if (PreChargeTimer > 0) PreChargeTimer = MathHelper.Clamp(--PreChargeTimer, 0, 100);
+            if (ChargeTimer > 0)
             {
-                float factor = MathHelper.Clamp((Projectile.ai[0]) / 20f, 0f, 1f);
+                float factor = MathHelper.Clamp((ChargeTimer) / 20f, 0f, 1f);
                 Projectile.Center = Vector2.Lerp(Projectile.Center,Projectile.oldPosition + Projectile.Size/2, factor);
                 
-                Projectile.ai[0]++;
+                ChargeTimer++;
             }
-            if (Projectile.ai[0] >= 20)
+            if (ChargeTimer >= 20)
             {
                 Helper.PlayPitched("BladeSlash", 1f, position: player.Center);
 
@@ -123,8 +120,8 @@ namespace AyaMod.Content.Items.Cameras
                     slash.rotation = dir;
                 }
 
-                Projectile.ai[0] = 0;
-                Projectile.ai[1] = 20;
+                ChargeTimer = 0;
+                PreChargeTimer = 20;
             }
             //Main.NewText($"{Projectile.ai[0]}");
         }
@@ -133,6 +130,8 @@ namespace AyaMod.Content.Items.Cameras
     public class YoumuSpirit : ModProjectile
     {
         public override string Texture => AssetDirectory.EmptyTexturePass;
+        public ref float Target => ref Projectile.ai[0];
+        public ref float RotDir => ref Projectile.localAI[2];
         public override void SetStaticDefaults()
         {
             Projectile.SetTrail(2, 26);
@@ -152,12 +151,12 @@ namespace AyaMod.Content.Items.Cameras
         public override bool? CanDamage() => false;
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.localAI[2] = Main.rand.NextBool() ? 1 : -1;
+            RotDir = Main.rand.NextBool() ? 1 : -1;
         }
 
         public override void AI()
         {
-            NPC target = Main.npc[(int)Projectile.ai[0]];
+            NPC target = Main.npc[(int)Target];
             if (target != null && target.CanBeChasedBy())
             {
                 Vector2 totarget = Projectile.DirectionToSafe(target.Center) * 20f;
@@ -167,10 +166,13 @@ namespace AyaMod.Content.Items.Cameras
                 {
                     Helper.PlayPitched("BladeSlash", 0.5f, position: Projectile.Center);
 
-                    var sakura = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + totarget * 4, totarget * 0.3f, ProjectileType<SakuraBlossom>(), (int)(Projectile.damage * 0.5f), Projectile.knockBack, Projectile.owner, 0,1f);
+                    int sakuradamage = (int)(Projectile.damage * 0.5f);
+                    var sakura = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + totarget * 4, totarget * 0.3f, ProjectileType<SakuraBlossom>(), sakuradamage, 
+                        Projectile.knockBack, Projectile.owner, 0,1f);
 
                     float length = 400;
-                    var slash = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, totarget, ProjectileType<YoumuSlash>(), Projectile.damage, Projectile.knockBack, Projectile.owner, length);
+                    int slashdamage = Projectile.damage;
+                    var slash = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, totarget, ProjectileType<YoumuSlash>(), slashdamage, Projectile.knockBack, Projectile.owner, length);
                     slash.rotation = totarget.ToRotation();
                     Projectile.Kill();
                 }
@@ -180,7 +182,7 @@ namespace AyaMod.Content.Items.Cameras
                 Projectile.Opacity -= 0.02f;
                 if (Projectile.Opacity < 0.02f) Projectile.Kill();
             }
-            Projectile.velocity = Projectile.velocity.RotatedBy(0.02f * Projectile.localAI[2]);
+            Projectile.velocity = Projectile.velocity.RotatedBy(0.02f * RotDir);
             Projectile.rotation = Projectile.velocity.ToRotation();
         }
 

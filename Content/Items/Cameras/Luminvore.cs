@@ -57,10 +57,10 @@ namespace AyaMod.Content.Items.Cameras
 
             if (++EffectCounter >= 5)
             {
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LuminvoreVeil>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner);
+                int damage = (int)(Projectile.damage * 0.5f);
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LuminvoreVeil>(), damage, 0, Projectile.owner);
                 EffectCounter = 0;
             }
-            base.OnSnap();
         }
     }
 
@@ -74,14 +74,12 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.penetrate = -1;
-            Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 15;
+            Projectile.SetImmune(15);
             Projectile.timeLeft = 60 * 4;
         }
         public override void OnSpawn(IEntitySource source)
         {
             Projectile.rotation = AyaUtils.RandAngle;
-            base.OnSpawn(source);
         }
         public override void AI()
         {
@@ -103,12 +101,11 @@ namespace AyaMod.Content.Items.Cameras
                 var d = Dust.NewDustPerfect(pos, DustID.PurpleTorch, vel, (int)alphafactor,Scale:1.2f);
                 d.noGravity = true;
             }
-            base.AI();
         }
 
         public override void OnKill(int timeLeft)
         {
-            base.OnKill(timeLeft);
+            
         }
 
         public override bool PreDraw(ref Color lightColor)

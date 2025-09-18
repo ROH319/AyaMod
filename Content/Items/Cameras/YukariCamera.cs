@@ -86,7 +86,10 @@ namespace AyaMod.Content.Items.Cameras
     public class YinYangBall : ModProjectile
     {
         public override string Texture => AssetDirectory.Projectiles + Name;
-
+        public ref float Owner => ref Projectile.ai[0];
+        public ref float TargetNext => ref Projectile.localAI[0];
+        public ref float TargetPrev => ref Projectile.localAI[1];
+        public ref float CollisionLeft => ref Projectile.localAI[2];
         public override void SetStaticDefaults()
         {
             Projectile.SetTrail(2, 18);
@@ -104,20 +107,20 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            var prev = Projectile.localAI[2];
+            var prev = CollisionLeft;
 
-            Projectile.localAI[1] = target.whoAmI;
-            Projectile.localAI[2]--;
+            TargetPrev = target.whoAmI;
+            CollisionLeft--;
 
             var othertarget = Projectile.FindCloestNPCIgnoreIndex(800, false, !Projectile.tileCollide, (int)Projectile.localAI[1]);
             if (othertarget == null)
             {
-                Projectile.localAI[1] = -1;
-                Projectile.localAI[2] = 0;
+                TargetPrev = -1;
+                CollisionLeft = 0;
             }
-            else Projectile.localAI[0] = othertarget.whoAmI;
+            else TargetNext = othertarget.whoAmI;
 
-            if (Projectile.localAI[2] == 0 && Projectile.velocity.Length() > 10)
+            if (CollisionLeft == 0 && Projectile.velocity.Length() > 10)
             {
                 Projectile.velocity = Projectile.velocity.Length(10);
             }
@@ -125,7 +128,7 @@ namespace AyaMod.Content.Items.Cameras
             float knockBackFactor = target.knockBackResist;
             if (target.life <= 0) knockBackFactor = 1;
             Vector2 totarget = Projectile.Center.DirectionToSafe(target.Center);
-            if (Projectile.localAI[2] == 0 && prev > 0) totarget = totarget.RotatedBy(MathHelper.PiOver4 * (Main.rand.NextBool()?1:-1));
+            if (CollisionLeft == 0 && prev > 0) totarget = totarget.RotatedBy(MathHelper.PiOver4 * (Main.rand.NextBool() ? 1 : -1));
             Vector2 vec = (-Projectile.velocity).Reflect(totarget.RotatedBy(MathHelper.PiOver2));
             Projectile.velocity = Vector2.Lerp(vec, Projectile.velocity, knockBackFactor);
             //Projectile.velocity *= -1;
@@ -153,7 +156,7 @@ namespace AyaMod.Content.Items.Cameras
                 Projectile.velocity *= .8f;
             }
 
-            Projectile.localAI[1] = -1;
+            TargetPrev = -1;
             
             return false;
         }
@@ -176,20 +179,20 @@ namespace AyaMod.Content.Items.Cameras
         public override void OnSpawn(IEntitySource source)
         {
             Projectile.Opacity = 0f;
-            Projectile.localAI[1] = -1;
+            TargetPrev = -1;
         }
 
         public override void AI()
         {
             Projectile.timeLeft++;
 
-            Projectile camera = Main.projectile[(int)Projectile.ai[0]];
+            Projectile camera = Main.projectile[(int)Owner];
             if (camera.TypeAlive(ProjectileType<YukariCameraProj>()))
             {
                 if (Projectile.Opacity < 1f)
                     Projectile.Opacity += 0.01f;
 
-                if (Projectile.localAI[2] < 1)
+                if (CollisionLeft < 1)
                 {
                     Vector2 targetVel = Projectile.DirectionToSafe(camera.Center) * 20f;
                     Projectile.velocity = Vector2.Lerp(Projectile.velocity, targetVel, 0.01f);
@@ -198,19 +201,19 @@ namespace AyaMod.Content.Items.Cameras
                 {
                     //if (Projectile.velocity.Length() < 4f) Projectile.localAI[2] = 0;
                     float range = 800;
-                    NPC target = Projectile.localAI[0] < 0 ? null : Main.npc[(int)Projectile.localAI[0]];
-                    if (target == null || !target.CanBeChasedBy() || Projectile.localAI[0] == Projectile.localAI[1])
+                    NPC target = TargetNext < 0 ? null : Main.npc[(int)TargetNext];
+                    if (target == null || !target.CanBeChasedBy() || TargetNext == TargetPrev)
                     {
-                        target = Projectile.FindCloestNPCIgnoreIndex(range, false, !Projectile.tileCollide, (int)Projectile.localAI[1]);
+                        target = Projectile.FindCloestNPCIgnoreIndex(range, false, !Projectile.tileCollide, (int)TargetPrev);
                         if (target != null)
                         {
-                            Projectile.localAI[0] = target.whoAmI;
+                            TargetNext = target.whoAmI;
                         }
                     }
 
                     if (target != null)
                     {
-                        float speed = Utils.Remap(Projectile.localAI[2] / 6f,0f,1f, 14f, 28f);
+                        float speed = Utils.Remap(CollisionLeft / 6f,0f,1f, 14f, 28f);
                         float speedFactor = Utils.Remap(Projectile.Distance(target.Center), 500, 1000, 1.3f, 2.8f);
                         
                         Projectile.velocity = Projectile.DirectionToSafe(target.Center) * speed;
@@ -219,8 +222,8 @@ namespace AyaMod.Content.Items.Cameras
                     }
                     else
                     {
-                        Projectile.localAI[1] = -1;
-                        Projectile.localAI[2] = 0;
+                        TargetPrev = -1;
+                        CollisionLeft = 0;
                         if (Projectile.velocity.Length() > 12) Projectile.velocity = Projectile.velocity.Length(12);
                     }
                 }
@@ -242,7 +245,7 @@ namespace AyaMod.Content.Items.Cameras
             Vector2 origin = texture.Size() / 2;
             float alpha = Projectile.Opacity;
 
-            float chaseFactor = MathHelper.Clamp(Projectile.localAI[2] / 12f, 0f, 1f);
+            float chaseFactor = MathHelper.Clamp(CollisionLeft / 12f, 0f, 1f);
             Color whiteColor = Color.White * alpha * 0.7f;
             Color color = Color.Lerp(Color.Red,Color.BlueViolet,chaseFactor);
             Color trailBaseWhiteColor = Color.White.AdditiveColor() * alpha * 0.4f;
@@ -255,7 +258,7 @@ namespace AyaMod.Content.Items.Cameras
                 Vector2 drawpos = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
                 Color trailWhiteColor = trailBaseWhiteColor * factor * 0.9f;
                 Color trailColor = trailBaseColor * factor * 0.9f;
-                if (Projectile.localAI[2] < 1)
+                if (CollisionLeft < 1)
                 {
                     trailWhiteColor *= 0.4f;
                     trailColor *= 0.4f;

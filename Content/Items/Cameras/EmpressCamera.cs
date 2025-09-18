@@ -90,7 +90,7 @@ namespace AyaMod.Content.Items.Cameras
                     Vector2 pos = Projectile.Center + rot.ToRotationVector2() * 90;
 
                     var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<EmpressLaser>(), laserDmg, Projectile.knockBack, Projectile.owner,
-                        rot + MathHelper.Pi, color, 12);
+                        rot + MathHelper.Pi, color, maxcount);
                 }
                 EffectCounter = 0;
             }

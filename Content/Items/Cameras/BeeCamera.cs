@@ -56,6 +56,7 @@ namespace AyaMod.Content.Items.Cameras
                 Vector2 pos = Projectile.Center + dir * Main.rand.NextFloat(40, 80);
                 var bee = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, dir * 2, type, damage, Projectile.knockBack / 4, player.whoAmI);
                 bee.DamageType = ReporterDamage.Instance;
+                bee.SetImmune(10);
             }
         }
     }

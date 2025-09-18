@@ -76,7 +76,9 @@ namespace AyaMod.Content.Items.Cameras
             }
             {
                 Vector2 vel = new Vector2(0, -7);
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + vel * 10, vel, ModContent.ProjectileType<MeteorStar>(), (int)(Projectile.damage * 0.22f), Projectile.knockBack / 4, Projectile.owner, -1, Projectile.whoAmI);
+                int damage = (int)(Projectile.damage * 0.22f);
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + vel * 10, vel, ModContent.ProjectileType<MeteorStar>(), damage, 
+                    Projectile.knockBack / 4, Projectile.owner, -1, Projectile.whoAmI);
             }
             base.OnSnap();
         }
@@ -123,7 +125,7 @@ namespace AyaMod.Content.Items.Cameras
                 if (npc != null && npc.CanBeChasedBy())
                 {
                     float length = Projectile.velocity.Length();
-                    Projectile.velocity = Vector2.Lerp(Projectile.velocity,Projectile.DirectionToSafe(npc.Center) * length,0.1f);
+                    //Projectile.velocity = Vector2.Lerp(Projectile.velocity,Projectile.DirectionToSafe(npc.Center) * length,0.1f);
                 }
                 Projectile.rotation += 0.01f;
 
@@ -151,10 +153,12 @@ namespace AyaMod.Content.Items.Cameras
                 if (npc == null) return;
                 int count = 1;
                 if (Main.rand.NextBool(3)) count++;
+                int damage = Projectile.damage * 3;
                 for (int i = 0; i < count; i++)
                 {
                     Vector2 pos = npc.Center + new Vector2(Main.rand.NextFloat(-200, 200), -1000);
-                    var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, pos.DirectionToSafe(npc.Center) * 20, Projectile.type, Projectile.damage * 3, Projectile.knockBack, Projectile.owner, npc.whoAmI);
+                    var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, pos.DirectionToSafe(npc.Center) * 20, Projectile.type, damage, 
+                        Projectile.knockBack, Projectile.owner, npc.whoAmI);
                     p.extraUpdates = 1;
                     p.Scale(1.5f, false);
                 }
