@@ -64,10 +64,10 @@ namespace AyaMod.Content.Items.Cameras
             }
 
             if (!Projectile.MyClient()) return;
-            if (++EffectCounter >= 4)
+            //if (++EffectCounter >= 4)
             {
 
-                float speed = 10f;
+                float speed = 6f;
                 float rotdir = Main.rand.NextBool() ? -1 : 1;
                 int damage = (int)(Projectile.damage * 1.3f);
                 for (int i = 0; i < 8; i++)
@@ -78,11 +78,11 @@ namespace AyaMod.Content.Items.Cameras
                     Vector2 dir = rot.ToRotationVector2();
                     Vector2 vel = dir * speed;
 
-                    float rotspeed = MathHelper.TwoPi / 90f;
+                    float rotspeed = MathHelper.TwoPi / 84f;
                     Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ModContent.ProjectileType<CaptainAnchor>(), damage, 
                         Projectile.knockBack * 2f, Projectile.owner, rotspeed, rotdir, waveCreater);
                 }
-                EffectCounter = 0;
+                //EffectCounter = 0;
             }
 
 
@@ -109,7 +109,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.penetrate = -1;
-            Projectile.timeLeft = 90;
+            Projectile.timeLeft = 120;
             Projectile.usesIDStaticNPCImmunity = true;
             Projectile.idStaticNPCHitCooldown = 10;
             Projectile.scale = 1.5f;
@@ -126,6 +126,7 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void AI()
         {
+            float factor = Projectile.TimeleftFactor();
             for(int i = 0;i<3;i++)
             {
                 Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.BubbleBurst_White, Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f,Scale:1f);
@@ -133,8 +134,10 @@ namespace AyaMod.Content.Items.Cameras
                 d.noGravity = true;
             }
 
-            Projectile.velocity = Projectile.velocity.RotatedBy(rotSpeed * rotDir);
-
+            float rotFactor = Utils.Remap(factor, 0, 1f, 1f, 0.4f);
+            Projectile.velocity = Projectile.velocity.RotatedBy(rotSpeed * rotFactor * rotDir);
+            float acc = 0.08f;
+            Projectile.velocity += Projectile.velocity.Length(acc);
             Projectile.rotation = Projectile.velocity.ToRotation();
         }
 

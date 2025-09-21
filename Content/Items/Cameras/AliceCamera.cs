@@ -201,7 +201,7 @@ namespace AyaMod.Content.Items.Cameras
                 scale *= 1.1f;
             }
             RenderHelper.DrawBloom(36, ringRadius, ball, Projectile.Center - Main.screenPosition, null,
-                Color.White.AdditiveColor() * Projectile.Opacity * 0.06f * alphaFactor, Projectile.rotation, ball.Size() / 2, scale);
+                new Color(246,255,51).AdditiveColor() * Projectile.Opacity * 0.06f * alphaFactor, Projectile.rotation, ball.Size() / 2, scale);
             //{
             //    Color ballColor = Color.White.AdditiveColor() * Projectile.Opacity;
             //    float scale = Projectile.scale * 1f;

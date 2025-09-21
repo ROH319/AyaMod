@@ -567,3 +567,8 @@ LilyWhiteDress: {
 	DisplayName: Lily White Dress
 	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance}"
 }
+
+MiracleCameraEX: {
+	// DisplayName: Miracle Camera E X
+	// Tooltip: ""
+}

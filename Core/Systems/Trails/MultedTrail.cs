@@ -12,7 +12,7 @@ namespace AyaMod.Core.Systems.Trails
     public class MultedTrail
     {
         public List<CustomVertexInfo> vertices = new();
-        public void PrepareStrip(Vector2[] positions, float mult, StripColorFunction colorFunction, StripWidthFunction widthFunction, Vector2 offsetForAllPositions = default, StripAlphaFunction alphaFunction = null)
+        public void PrepareStrip(Vector2[] positions, float mult, StripColorFunction colorFunction, StripWidthFunction widthFunction, Vector2 offsetForAllPositions = default, StripAlphaFunction alphaFunction = null, float loopingVel = 1f)
         {
             vertices.Clear();
             int total = (int)(positions.Length * mult - mult);
@@ -34,10 +34,10 @@ namespace AyaMod.Core.Systems.Trails
 
                 int indexOnVertexArray = i * 2;
                 float progress = i / (float)total;
-                AddVertex(colorFunction, widthFunction, trailPos, rot, indexOnVertexArray, progress, alphaFunction);
+                AddVertex(colorFunction, widthFunction, trailPos, rot, indexOnVertexArray, progress, alphaFunction, loopingVel);
             }
         }
-        public void AddVertex(StripColorFunction colorFunc, StripWidthFunction widthFunc, Vector2 pos, float rot, int indexOnVertexArray, float progress, StripAlphaFunction alphaFunc = null)
+        public void AddVertex(StripColorFunction colorFunc, StripWidthFunction widthFunc, Vector2 pos, float rot, int indexOnVertexArray, float progress, StripAlphaFunction alphaFunc = null, float loopingVel = 1f)
         {
             //while (indexOnVertexArray + 1 >= vertices.Count)
             //{
@@ -48,8 +48,8 @@ namespace AyaMod.Core.Systems.Trails
             float width = widthFunc(progress);
             float alpha = alphaFunc == null ? 1f : alphaFunc(progress);
             Vector2 normal = (rot - MathHelper.PiOver2).ToRotationVector2() * width;
-            vertices.Add(new CustomVertexInfo(pos + normal, color * alpha, new Vector3(progress, 1f, alpha)));
-            vertices.Add(new CustomVertexInfo(pos - normal, color * alpha, new Vector3(progress, 0f, alpha)));
+            vertices.Add(new CustomVertexInfo(pos + normal, color * alpha, new Vector3(progress * loopingVel, 1f, alpha)));
+            vertices.Add(new CustomVertexInfo(pos - normal, color * alpha, new Vector3(progress * loopingVel, 0f, alpha)));
             //vertices[indexOnVertexArray].Position = pos + normal;
             //vertices[indexOnVertexArray + 1].Position = pos - normal;
             //vertices[indexOnVertexArray].TexCoord = new Vector3(progress, 1f, alpha);

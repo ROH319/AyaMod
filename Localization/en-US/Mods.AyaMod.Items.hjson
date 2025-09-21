@@ -521,3 +521,8 @@ LilyWhiteDress: {
 	DisplayName: Lily White Dress
 	Tooltip: ""
 }
+
+MiracleCameraEX: {
+	DisplayName: Miracle Camera E X
+	Tooltip: ""
+}
