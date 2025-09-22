@@ -14,6 +14,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class RedAcidFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
+        public override int DyeID => 3560;
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             bool devEffect = Main.player[projectile.Projectile.owner].DevEffect();

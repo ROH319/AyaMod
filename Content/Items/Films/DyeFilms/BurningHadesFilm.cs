@@ -18,7 +18,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class BurningHadesFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-
+        public override int DyeID => 3597;
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (!CheckEffect()) return;

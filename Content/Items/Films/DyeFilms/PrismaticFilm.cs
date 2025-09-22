@@ -6,5 +6,6 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class PrismaticFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
+        public override int DyeID => 4778;
     }
 }

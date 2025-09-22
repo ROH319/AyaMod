@@ -8,6 +8,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class GelFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
+        public override int DyeID => 3561;
         public override void OnSnapInSight(BaseCameraProj projectile)
         {
             if(CheckEffect())

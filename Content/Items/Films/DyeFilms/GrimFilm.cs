@@ -14,7 +14,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class GrimFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-
+        public override int DyeID => 3598;
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.AddBuff(ModContent.BuffType<ScaredBuff>(), 60);

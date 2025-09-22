@@ -5,5 +5,6 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class GlowingMushroomFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
+        public override int DyeID => 3041;
     }
 }

@@ -7,7 +7,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class WispFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-
+        public override int DyeID => 2878;
         public override void OnSnapInSight(BaseCameraProj projectile)
         {
             if(projectile.player.Aya().WispDmg > projectile.Projectile.damage)

@@ -15,6 +15,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class AcidFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
+        public override int DyeID => 3040;
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             target.AddBuff(ModContent.BuffType<AcidBuff>(), Main.player[projectile.Projectile.owner].DevEffect() ? AcidDotTimeDev : AcidDotTime);

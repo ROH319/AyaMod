@@ -14,7 +14,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class PixieFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-
+        public override int DyeID => 2879;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(CritDmgBonus);
         public override void ModifyHitNPCFilm(BaseCameraProj projectile, NPC target, ref NPC.HitModifiers modifiers)
         {
