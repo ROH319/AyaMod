@@ -64,7 +64,7 @@ namespace AyaMod.Content.Items.Cameras
             }
 
             if (!Projectile.MyClient()) return;
-            //if (++EffectCounter >= 4)
+            if (++EffectCounter >= 4)
             {
 
                 float speed = 6f;
@@ -82,7 +82,7 @@ namespace AyaMod.Content.Items.Cameras
                     Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ModContent.ProjectileType<CaptainAnchor>(), damage, 
                         Projectile.knockBack * 2f, Projectile.owner, rotspeed, rotdir, waveCreater);
                 }
-                //EffectCounter = 0;
+                EffectCounter = 0;
             }
 
 

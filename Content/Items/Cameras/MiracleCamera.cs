@@ -114,8 +114,12 @@ namespace AyaMod.Content.Items.Cameras
                     //var dist = projectile.Distance(starcenter);
                     //projectile.velocity = starcenter.DirectionToSafe(projectile.Center).RotatedBy(MathHelper.PiOver2) * dist / 40f;
 
-                    projectile.timeLeft = 4 * 60 - 15 + Main.rand.Next(30);
-                    projectile.velocity = starcenter.DirectionToSafe(projectile.Center).RotatedBy(MathF.Cos((projectile.ai[2] % 0.2f) / 0.2f) / MathHelper.Pi + 1f).RotatedBy(MathHelper.PiOver2) * 3f;
+                    //projectile.timeLeft = 4 * 60 - 15 + Main.rand.Next(30);
+                    //projectile.velocity = starcenter.DirectionToSafe(projectile.Center).RotatedBy(MathF.Cos((projectile.ai[2] % 0.2f) / 0.2f) / MathHelper.Pi + 1f).RotatedBy(MathHelper.PiOver2) * 3f;
+
+                    projectile.timeLeft = 4 * 60;
+                    float speed = (MathF.Cos((projectile.ai[2] % 0.2f) / 0.2f)) * 5;
+                    projectile.velocity = starcenter.DirectionToSafe(projectile.Center).RotatedBy(MathF.Cos((projectile.ai[2] % 0.2f) / 0.2f) / MathHelper.Pi + 1f).RotatedBy(MathHelper.Pi / 2.5) * speed;
                 }
                 StarStack = 0;
                 StarFactor = 0;
@@ -205,30 +209,38 @@ namespace AyaMod.Content.Items.Cameras
 
             if(Released > 0)
             {
-
+                #region 1
                 //float factor = (float)Projectile.timeLeft / (4f * 60f);
                 //if (Projectile.Opacity < 0.8f) Projectile.Opacity += 0.01f;
                 //var acc = 0.18f - 0.32f * (1-factor);
                 //var rot = 0.04f * factor + 0.02f;
                 //Projectile.velocity += Projectile.velocity.Length(acc);
                 //Projectile.velocity = Projectile.velocity.RotatedBy(rot);
+                #endregion
 
-                if (Main.GameUpdateCount % 3 == 0) Projectile.timeLeft++;
+                #region 2
+                //if (Main.GameUpdateCount % 3 == 0) Projectile.timeLeft++;
 
-                float acc = 0.1f;
-                float rot = -0.05f;
-                if (Projectile.timeLeft < 178)
-                {
+                //float acc = 0.1f;
+                //float rot = -0.05f;
+                //if (Projectile.timeLeft < 178)
+                //{
 
-                    acc -= 0.15f;
-                    if (Projectile.timeLeft < 120) { acc += 0.08f; rot += 0.005f; }
-                    rot += 0.005f;
-                }
+                //    acc -= 0.15f;
+                //    if (Projectile.timeLeft < 120) { acc += 0.08f; rot += 0.005f; }
+                //    rot += 0.005f;
+                //}
+                //if (Projectile.Opacity < 0.8f) Projectile.Opacity += 0.01f;
+                ////if (Projectile.timeLeft > 120)
+                //Projectile.velocity += Projectile.velocity.Length(acc);
+                //Projectile.velocity = Projectile.velocity.RotatedBy(rot);
+                //if (Projectile.timeLeft < 20) Projectile.Kill();
+                #endregion
                 if (Projectile.Opacity < 0.8f) Projectile.Opacity += 0.01f;
-                //if (Projectile.timeLeft > 120)
+                float acc = 0.05f;
+                float rot = 0.01f;
                 Projectile.velocity += Projectile.velocity.Length(acc);
                 Projectile.velocity = Projectile.velocity.RotatedBy(rot);
-                if (Projectile.timeLeft < 20) Projectile.Kill();
             }
             Projectile.rotation += 0.03f;
 
