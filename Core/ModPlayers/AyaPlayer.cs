@@ -53,8 +53,33 @@ namespace AyaMod.Core.ModPlayers
                 modifiers.FinalDamage.Flat -= (float)DamageReduceFlat;
                 DamageReduceFlat = 0;
 
-                Player.ClearBuff(BuffType<ReflectiveBuff>());
             }
+        }
+
+        public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
+        {
+            OnHitByBoth(ref hurtInfo);
+        }
+
+        public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
+        {
+            OnHitByBoth(ref hurtInfo);
+        }
+
+        public void OnHitByBoth(ref Player.HurtInfo hurtInfo)
+        {
+
+            if (Player.HasBuff<ReflectiveObsidianBuff>())
+            {
+                ReflectiveObsidianFilm.SpawnObsidianShard(Player,ref hurtInfo);
+            }
+
+            Player.ClearBuff(BuffType<ReflectiveBuff>());
+            Player.ClearBuff(BuffType<ReflectiveCopperBuff>());
+            Player.ClearBuff(BuffType<ReflectiveSilverBuff>());
+            Player.ClearBuff(BuffType<ReflectiveGoldBuff>());
+            Player.ClearBuff(BuffType<ReflectiveMetalBuff>());
+            Player.ClearBuff(BuffType<ReflectiveObsidianBuff>());
         }
 
         public override bool CanUseItem(Item item)
@@ -132,12 +157,7 @@ namespace AyaMod.Core.ModPlayers
 
         public override void PreUpdate()
         {
-            bool devEffect = Player.DevEffect();
-            WispDmg += (int)(devEffect ? WispFilm.WispDmgRegenDev : WispFilm.WispDmgRegen);
-            WispDmg = MathHelper.Clamp(WispDmg, 0, devEffect ? WispFilm.WispDmgMaxDev : WispFilm.WispDmgMax);
 
-            InfernalWispDmg += InfernalWispDmg;
-            InfernalWispDmg = MathHelper.Clamp(InfernalWispDmg, 0, InfernalWispFilm.WispDmgMax);
         }
         public override void ResetEffects()
         {
@@ -154,7 +174,15 @@ namespace AyaMod.Core.ModPlayers
 
             ResetDashDir();
         }
+        public override void PostUpdateBuffs()
+        {
+            bool devEffect = Player.DevEffect();
+            WispDmg += (int)(devEffect ? WispFilm.WispDmgRegenDev : WispFilm.WispDmgRegen);
+            WispDmg = MathHelper.Clamp(WispDmg, 0, devEffect ? WispFilm.WispDmgMaxDev : WispFilm.WispDmgMax);
 
+            InfernalWispDmg += InfernalWispDmg;
+            InfernalWispDmg = MathHelper.Clamp(InfernalWispDmg, 0, InfernalWispFilm.WispDmgMax);
+        }
         public override void PostUpdateRunSpeeds()
         {
             

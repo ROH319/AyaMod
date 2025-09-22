@@ -291,7 +291,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
 
     public class GaleGetaMist : ModProjectile
     {
-        public override string Texture => AssetDirectory.Extras + "bulletGa000";
+        public override string Texture => AssetDirectory.Extras + "Cloud";
         public ref float MaxTimeleft => ref Projectile.ai[0];
         public override void SetDefaults()
         {

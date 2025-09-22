@@ -12,7 +12,7 @@ namespace AyaMod.Content.Particles
 {
     public class FogParticle : Particle
     {
-        public override string Texture => AssetDirectory.Extras + "bulletGa000";
+        public override string Texture => AssetDirectory.Extras + "Cloud";
 
         public float fadeout = 0.97f;
         public float velMult = 1f;

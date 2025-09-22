@@ -8,7 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.ID;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
@@ -46,6 +48,11 @@ namespace AyaMod.Content.Items.Films.DyeFilms
 
         public override void AI()
         {
+            if(Projectile.soundDelay == 0)
+            {
+                SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
+                Projectile.soundDelay = -1;
+            }
             Projectile.FrameLooping(3 * 1, 7);
 
             bool num205 = WorldGen.SolidTile(Framing.GetTileSafely((int)Projectile.position.X / 16, (int)Projectile.position.Y / 16));

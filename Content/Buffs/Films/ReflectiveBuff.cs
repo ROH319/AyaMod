@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.ID;
 
 namespace AyaMod.Content.Buffs.Films
 {
@@ -16,10 +17,11 @@ namespace AyaMod.Content.Buffs.Films
         public override void SetStaticDefaults()
         {
             Main.buffNoTimeDisplay[Type] = false;
+            BuffID.Sets.TimeLeftDoesNotDecrease[Type] = true;
+
         }
         public override void Update(Player player, ref int buffIndex)
-        {
-            player.buffTime[buffIndex]++;
+        { 
             player.Aya().DamageReduceFlat += player.DevEffect() ? ReflectiveFilm.DmgReduceFlatDev : ReflectiveFilm.DmgReduceFlat;
         }
     }

@@ -26,6 +26,7 @@ namespace AyaMod.Core.Globals
         public bool RedAcid;
         public bool Confused;
         public bool Scared;
+        public bool FlourshingPoison;
 
         public override void ResetEffects(NPC npc)
         {
@@ -36,9 +37,11 @@ namespace AyaMod.Core.Globals
             ShadowSuckBuff = false;
 
             Acid = false;
+            BlueAcid = false;
+            RedAcid = false;
             Confused = false;
             Scared = false;
-
+            FlourshingPoison = false;
         }
         public override bool PreAI(NPC npc)
         {
@@ -80,6 +83,11 @@ namespace AyaMod.Core.Globals
                 var speedModifier = SpeedModifier.ApplyTo(1f);
                 npc.position += npc.velocity * (speedModifier - 1f);
             }
+
+            if (FlourshingPoison)
+            {
+                ChlorophyteFilm.SpawnSpore(npc);
+            }
         }
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
@@ -114,6 +122,11 @@ namespace AyaMod.Core.Globals
                 npc.lifeRegen -= devEffect ? RedAcidFilm.RedAcidDotDmgDev : RedAcidFilm.RedAcidDotDmg;
                 if (damage < 6)
                     damage = 6;
+            }
+            if (FlourshingPoison)
+            {
+                npc.lifeRegen -= ChlorophyteFilm.FlourshingDotDmg;
+                if(damage < 8) damage = 8;
             }
             if (Confused)
             {

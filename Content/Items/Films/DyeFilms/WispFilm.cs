@@ -1,6 +1,8 @@
 ﻿using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
+using Terraria;
+using Terraria.ID;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
@@ -12,8 +14,13 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         {
             if(projectile.player.Aya().WispDmg > projectile.Projectile.damage)
             {
+                int damage = projectile.Projectile.damage;
+                Vector2 vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(2, 4);
+                Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, vel, ProjectileID.SpectreWrath, damage, projectile.Projectile.knockBack, projectile.Projectile.owner, -1);
 
                 projectile.player.Aya().WispDmg -= projectile.Projectile.damage;
+
+                
             }
         }
 

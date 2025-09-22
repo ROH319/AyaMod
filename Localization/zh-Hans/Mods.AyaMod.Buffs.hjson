@@ -52,3 +52,28 @@ ReflectiveCopperBuff: {
 	// DisplayName: Reflective Copper Buff
 	// Description: Mods.AyaMod.Buffs.ReflectiveCopperBuff.Description
 }
+
+FlourishingPoisonBuff: {
+	// DisplayName: Flourishing Poison Buff
+	// Description: Mods.AyaMod.Buffs.FlourishingPoisonBuff.Description
+}
+
+ReflectiveGoldBuff: {
+	// DisplayName: Reflective Gold Buff
+	// Description: Mods.AyaMod.Buffs.ReflectiveGoldBuff.Description
+}
+
+ReflectiveMetalBuff: {
+	// DisplayName: Reflective Metal Buff
+	// Description: Mods.AyaMod.Buffs.ReflectiveMetalBuff.Description
+}
+
+ReflectiveObsidianBuff: {
+	// DisplayName: Reflective Obsidian Buff
+	// Description: Mods.AyaMod.Buffs.ReflectiveObsidianBuff.Description
+}
+
+ReflectiveSilverBuff: {
+	// DisplayName: Reflective Silver Buff
+	// Description: Mods.AyaMod.Buffs.ReflectiveSilverBuff.Description
+}

@@ -155,6 +155,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.timeLeft = 5 * 60;
             Projectile.penetrate = 1;
             Projectile.scale = 0.8f;
+            Projectile.ArmorPenetration = 40;
         }
 
         public override bool? CanDamage()
@@ -237,7 +238,7 @@ namespace AyaMod.Content.Items.Cameras
                 //if (Projectile.timeLeft < 20) Projectile.Kill();
                 #endregion
                 if (Projectile.Opacity < 0.8f) Projectile.Opacity += 0.01f;
-                float acc = 0.05f;
+                float acc = 0.08f;
                 float rot = 0.01f;
                 Projectile.velocity += Projectile.velocity.Length(acc);
                 Projectile.velocity = Projectile.velocity.RotatedBy(rot);
@@ -452,7 +453,7 @@ namespace AyaMod.Content.Items.Cameras
         public static MultedTrail strip = new MultedTrail();
         public override void SetStaticDefaults()
         {
-            Projectile.SetTrail(4, 30);
+            Projectile.SetTrail(4, 15);
         }
         public override void SetDefaults()
         {
@@ -463,8 +464,9 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.SetImmune(-1);
             Projectile.timeLeft = 10 * 60;
             Projectile.penetrate = 1;
-            Projectile.extraUpdates = 1;
-            Projectile.scale = 1.5f;
+            Projectile.extraUpdates = 0;
+            Projectile.scale = 1.3f;
+            Projectile.ArmorPenetration = 40;
         }
         public override void OnSpawn(IEntitySource source)
         {
@@ -472,7 +474,8 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void AI()
         {
-            Projectile.Chase(1000, 25, 0.012f);
+            if (!Projectile.Chase(1000, 25, 0.045f))
+                Projectile.velocity += Projectile.velocity.Length(0.1f);
             Projectile.rotation += 0.02f;
         }
 
@@ -502,7 +505,7 @@ namespace AyaMod.Content.Items.Cameras
             float div = 0.2f;
             if (progress < div)
                 return Color.Lerp(Color.White, drawColor, Utils.Remap(progress, 0, div, 0f, 1f)).AdditiveColor() * Projectile.Opacity* extraAlpha;
-            float factor = EaseManager.Evaluate(Ease.OutQuart, Utils.Remap(progress, div, 1f, 0f, 1f), 1f);
+            float factor = EaseManager.Evaluate(Ease.OutSine, Utils.Remap(progress, div, 1f, 0f, 1f), 1f);
             return Color.Lerp(drawColor, Color.Black, factor).AdditiveColor() * Projectile.Opacity* extraAlpha;
         }
         public float WidthFunction(float progress)
@@ -513,8 +516,8 @@ namespace AyaMod.Content.Items.Cameras
         }
         public float AlphaFunction(float progress)
         {
-            float fadeinFactor = Utils.Remap(progress, 0, 0.05f, 0,1);
-            return EaseManager.Evaluate(Ease.InOutSine, 1f - progress, 1f) * Projectile.Opacity * fadeinFactor;
+            float fadeinFactor = Utils.Remap(progress, 0, 0.05f, 0.3f,1);
+            return EaseManager.Evaluate(Ease.OutSine, 1f - progress, 1f) * Projectile.Opacity * fadeinFactor * 0.9f;
         }
         public override bool PreDraw(ref Color lightColor)
         {

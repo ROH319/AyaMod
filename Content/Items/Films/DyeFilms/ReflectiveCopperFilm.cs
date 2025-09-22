@@ -12,7 +12,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         {
             if (capturecount > 0)
             {
-                projectile.player.AddBuff(BuffType<ReflectiveCopperBuff>(), 60);
+                projectile.player.AddBuff(BuffType<ReflectiveCopperBuff>(), 2);
             }
         }
 

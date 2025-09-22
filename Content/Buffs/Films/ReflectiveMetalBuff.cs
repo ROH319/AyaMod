@@ -11,7 +11,7 @@ using Terraria.ID;
 
 namespace AyaMod.Content.Buffs.Films
 {
-    public class ReflectiveCopperBuff : ModBuff
+    public class ReflectiveMetalBuff : ModBuff
     {
         public override string Texture => AssetDirectory.Buffs_Films + Name;
         public override void SetStaticDefaults()
@@ -21,13 +21,12 @@ namespace AyaMod.Content.Buffs.Films
         }
         public override void Update(Player player, ref int buffIndex)
         {
-
-            player.statDefense += player.DevEffect() ? ReflectiveCopperFilm.DefenceBonusDev : ReflectiveCopperFilm.DefenceBonus;
-            if (player.DevEffect())
-            {
-                player.endurance += ReflectiveCopperFilm.EnduranceBonus / 100f;
-            }
-            
+            bool dev = player.DevEffect();
+            player.statDefense += dev ? ReflectiveMetalFilm.DefenseBonusDev : ReflectiveMetalFilm.DefenseBonus;
+            float dr = dev ? ReflectiveMetalFilm.DRBonusDev : ReflectiveMetalFilm.DRBonus;
+            player.endurance += dr / 100f;
+            float thorn = dev ? ReflectiveMetalFilm.thornBonusDev : ReflectiveMetalFilm.thornBonus;
+            player.thorns += thorn;
         }
     }
 }
