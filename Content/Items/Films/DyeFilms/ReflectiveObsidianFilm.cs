@@ -45,7 +45,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         public override string Texture => AssetDirectory.Projectiles + Name;
         public override void SetStaticDefaults()
         {
-            Projectile.SetTrail(4, 15);
+            Projectile.SetTrail(2, 15);
         }
         public override void SetDefaults()
         {

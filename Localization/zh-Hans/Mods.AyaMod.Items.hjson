@@ -572,3 +572,8 @@ MiracleCameraEX: {
 	// DisplayName: Miracle Camera E X
 	// Tooltip: ""
 }
+
+PhantasmalCamera: {
+	// DisplayName: Phantasmal Camera
+	// Tooltip: ""
+}

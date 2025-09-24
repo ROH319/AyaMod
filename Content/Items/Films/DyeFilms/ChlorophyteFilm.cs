@@ -33,7 +33,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                     Vector2 vel = npc.velocity.RotateRandom(0.2f) * 0.8f;
                     if (npc.velocity.Length() < 3f)
                     {
-                        vel += Main.rand.NextVector2Unit() * Main.rand.NextFloat(3, 5);
+                        vel += Main.rand.NextVector2Unit() * Main.rand.NextFloat(3, 5) * 0.8f;
                     }
                     int type = ModContent.ProjectileType<SporeCloud>();
 
@@ -68,7 +68,8 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             //Projectile.FrameLooping(6, 5);
 
             Projectile.rotation += 0.005f;
-            Projectile.velocity *= 0.95f;
+            if (Projectile.Opacity > 0.5f) Projectile.velocity *= 0.96f;
+            else Projectile.velocity *= 0.98f;
             Projectile.Opacity -= 0.008f;
             if (Projectile.Opacity < 0.088f) Projectile.Kill();
 

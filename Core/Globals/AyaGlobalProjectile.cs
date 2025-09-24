@@ -25,8 +25,11 @@ namespace AyaMod.Core.Globals
         public override void PostAI(Projectile projectile)
         {
 
-            var speedModifier = SpeedModifier.ApplyTo(1f);
-            projectile.position += projectile.velocity * (speedModifier - 1f);
+            if (projectile.hostile)
+            {
+                var speedModifier = SpeedModifier.ApplyTo(1f);
+                projectile.position += projectile.velocity * (speedModifier - 1f);
+            }
         }
 
         public override bool InstancePerEntity => true;

@@ -30,7 +30,7 @@ namespace AyaMod.Core.Prefabs
 
         public bool DealDamageThisFrame;
 
-        public int HighestHealthTarget;
+        public int HighestHealthTarget = -1;
 
         public Vector2 ComputedVelocity;
 
@@ -244,6 +244,7 @@ namespace AyaMod.Core.Prefabs
             {
                 var target = FindHighestHealthTarget();
                 if (target != null) HighestHealthTarget = target.whoAmI;
+                else HighestHealthTarget = -1;
             }
             if (player.itemTime != 0)
             {

@@ -50,7 +50,7 @@ namespace AyaMod.Content.Items.Cameras
             for(int i = 0; i < 5; i++)
             {
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ProjectileType<MarisaCircle>(), 
-                    Projectile.damage, Projectile.knockBack, Projectile.owner, i, Projectile.whoAmI);
+                    Projectile.damage, Projectile.knockBack, Projectile.owner, Projectile.whoAmI, i);
             }
         }
     }
@@ -58,8 +58,8 @@ namespace AyaMod.Content.Items.Cameras
     {
         public override string Texture => AssetDirectory.EmptyTexturePass;
 
-        public ref float Offset => ref Projectile.ai[0];
-        public ref float Owner => ref Projectile.ai[1];
+        public ref float Owner => ref Projectile.ai[0];
+        public ref float Offset => ref Projectile.ai[1];
         public ref float ShootTimer => ref Projectile.ai[2];
         public ref float OrbitRot => ref Projectile.localAI[0];
         public ref float ItemTimer => ref Projectile.localAI[1];

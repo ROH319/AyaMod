@@ -453,7 +453,7 @@ namespace AyaMod.Content.Items.Cameras
         public static MultedTrail strip = new MultedTrail();
         public override void SetStaticDefaults()
         {
-            Projectile.SetTrail(4, 15);
+            Projectile.SetTrail(2, 25);
         }
         public override void SetDefaults()
         {
@@ -464,7 +464,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.SetImmune(-1);
             Projectile.timeLeft = 10 * 60;
             Projectile.penetrate = 1;
-            Projectile.extraUpdates = 0;
+            Projectile.extraUpdates = 1;
             Projectile.scale = 1.3f;
             Projectile.ArmorPenetration = 40;
         }
@@ -474,8 +474,8 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void AI()
         {
-            if (!Projectile.Chase(1000, 25, 0.045f))
-                Projectile.velocity += Projectile.velocity.Length(0.1f);
+            if (!Projectile.Chase(1000, 25, 0.02f))
+                Projectile.velocity += Projectile.velocity.Length(0.06f);
             Projectile.rotation += 0.02f;
         }
 

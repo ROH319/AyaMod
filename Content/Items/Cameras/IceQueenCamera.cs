@@ -134,12 +134,12 @@ namespace AyaMod.Content.Items.Cameras
             else
                 Radius = Utils.Remap(factor, 0f, threshold, maxradius * 2f, maxradius);
 
-            int total = (int)Radius;
+            int total = (int)Radius * 2;
             if (Projectile.oldPos.Length < total)
                 Array.Resize(ref Projectile.oldPos, total);
             for (int i = 0; i < total; i++)
             {
-                Vector2 pos = Projectile.Center + ((MathHelper.TwoPi + MathHelper.PiOver4 / 12) / total * i + Projectile.rotation).ToRotationVector2() * Radius;
+                Vector2 pos = Projectile.Center + ((MathHelper.TwoPi + MathHelper.PiOver4 / 24) / total * i + Projectile.rotation).ToRotationVector2() * Radius;
                 Projectile.oldPos[i] = pos;
             }
             if (factor > 0.2f)

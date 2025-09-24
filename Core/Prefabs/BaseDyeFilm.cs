@@ -18,19 +18,23 @@ namespace AyaMod.Core.Prefabs
 
         public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            if (DyeID != 0)
-            {
-                //var shader = GameShaders.Armor.GetShaderFromItemId(DyeID);
-                //var data = new DrawData(TextureAssets.Item[Type].Value, position + Main.screenPosition, frame, drawColor, 0, origin, scale, 0);
-                //shader.Apply(Item,data);
-                //shader.Shader.CurrentTechnique.Passes[0].Apply();
-            }
-            return base.PreDrawInInventory(spriteBatch, position, frame, drawColor, itemColor, origin, scale);
+            if (DyeID == 0) return true;
+
+            var shader = GameShaders.Armor.GetShaderFromItemId(DyeID);
+            var data = new DrawData(TextureAssets.Item[Type].Value, position + Main.screenPosition, frame, itemColor, 0, origin, scale, 0);
+            //shader.Apply(Item, data);
+            //shader.Shader.CurrentTechnique.Passes[0].Apply();
+            //spriteBatch.End();
+            //spriteBatch.Begin(SpriteSortMode.Deferred, spriteBatch.GraphicsDevice.BlendState, spriteBatch.GraphicsDevice.SamplerStates[0], spriteBatch.GraphicsDevice.DepthStencilState, spriteBatch.GraphicsDevice.RasterizerState, shader.Shader, Main.UIScaleMatrix);
+            return true;
         }
 
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            base.PostDrawInInventory(spriteBatch, position, frame, drawColor, itemColor, origin, scale);
+            if (DyeID == 0) return;
+
+            //spriteBatch.End();
+            //spriteBatch.Begin(SpriteSortMode.Deferred, spriteBatch.GraphicsDevice.BlendState, spriteBatch.GraphicsDevice.SamplerStates[0], spriteBatch.GraphicsDevice.DepthStencilState, spriteBatch.GraphicsDevice.RasterizerState, null, Main.UIScaleMatrix);
         }
     }
 }

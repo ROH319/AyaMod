@@ -99,7 +99,7 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void SetStaticDefaults()
         {
-            Projectile.SetTrail(4, 14);
+            Projectile.SetTrail(2, 14);
         }
 
         public override void SetDefaults()

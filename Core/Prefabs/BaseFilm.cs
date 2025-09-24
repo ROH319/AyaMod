@@ -34,7 +34,7 @@ namespace AyaMod.Core.Prefabs
         }
         public virtual float EffectChance => 100;
 
-        public virtual float GetTotalChance() => EffectChance;
+        public virtual float GetTotalChance() => EffectChance;//TODO：让这个能被加成
 
         public virtual bool CheckEffect()
         {
