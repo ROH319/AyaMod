@@ -52,6 +52,8 @@ namespace AyaMod.Core.Prefabs
 
         public virtual float floatingsize => size * FloatingFactor();
 
+        public bool CanSpawnFlash = true;
+
         public virtual Color outerFrameColor => Color.Red;
         public virtual Color innerFrameColor => Color.White;
         public virtual Color focusCenterColor => Color.White;
@@ -376,7 +378,7 @@ namespace AyaMod.Core.Prefabs
 
             CheckSnapProjectile(rects);
 
-            if (ClientConfig.Instance.SnapFlash)
+            if (ClientConfig.Instance.SnapFlash && CanSpawnFlash)
             {
                 SpawnFlash();
             }

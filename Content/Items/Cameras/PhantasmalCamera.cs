@@ -1,9 +1,14 @@
-﻿using AyaMod.Content.Particles;
+﻿using AyaMod.Common.Easer;
+using AyaMod.Content.Particles;
 using AyaMod.Core;
 using AyaMod.Core.Configs;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
+using AyaMod.Core.Systems.Trails;
 using AyaMod.Helpers;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +17,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent;
 using Terraria.ID;
 
 namespace AyaMod.Content.Items.Cameras
@@ -51,6 +57,10 @@ namespace AyaMod.Content.Items.Cameras
         {
             Projectile.SetTrail(2, 60);
         }
+        public override void SetOtherDefault()
+        {
+            //CanSpawnFlash = false;
+        }
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -64,12 +74,13 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void MoveMent(CameraPlayer mplr)
         {
-            float slowedchase = CameraStats.ChaseFactor;
-            //if (mplr.Player.itemTime != 0) slowedchase *= CameraStats.SlowFactor;
-            Vector2 previous = Projectile.Center;
-            Projectile.Center = Vector2.Lerp(Projectile.Center, mplr.MouseWorld, slowedchase);
-            ComputedVelocity = Projectile.Center - previous;
-            Projectile.rotation = Utils.AngleTowards(Projectile.rotation, Projectile.AngleToSafe(mplr.MouseWorld), 0.1f);
+            base.MoveMent(mplr);
+            //float slowedchase = CameraStats.ChaseFactor;
+            ////if (mplr.Player.itemTime != 0) slowedchase *= CameraStats.SlowFactor;
+            //Vector2 previous = Projectile.Center;
+            //Projectile.Center = Vector2.Lerp(Projectile.Center, mplr.MouseWorld, slowedchase);
+            //ComputedVelocity = Projectile.Center - previous;
+            //Projectile.rotation = Utils.AngleTowards(Projectile.rotation, Projectile.AngleToSafe(mplr.MouseWorld), 0.1f);
         }
         public override void OnSnapInSight()
         {
@@ -78,6 +89,19 @@ namespace AyaMod.Content.Items.Cameras
                 if (projectile.type != ProjectileType<PhantasmalFrame>() || projectile.ai[2] >= 0) continue;
 
                 projectile.ai[2] = 5 + projectile.ai[1] * 4;
+            }
+
+            if (!Projectile.MyClient()) return;
+
+            int eyecount = 3;
+
+            int type = ProjectileType<PhantasmalEye>();
+            int damage = (int)(Projectile.damage * 0.3f);
+            for(int i = 0;i < eyecount; i++)
+            {
+                Vector2 vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(8, 12);
+
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, type, damage, Projectile.knockBack, Projectile.owner);
             }
         }
 
@@ -199,6 +223,127 @@ namespace AyaMod.Content.Items.Cameras
             Utils.DrawLine(Main.spriteBatch, Projectile.Center - ndir * sizey / 8f, Projectile.Center + ndir * sizey / 8f, centerColor, centerColor, 2f);
 
 
+            return false;
+        }
+    }
+
+    public class PhantasmalEye : ModProjectile
+    {
+        public override string Texture => AssetDirectory.Projectiles + Name;
+        public static MultedTrail strip = new MultedTrail();
+
+        public override void SetStaticDefaults()
+        {
+            Projectile.SetTrail(2, 25);
+        }
+
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 28;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.SetImmune(10);
+            Projectile.extraUpdates = 1;
+        }
+
+        public override void AI()
+        {
+            if (!Projectile.Chase(2000, 28, 0.015f))
+                Projectile.velocity += Projectile.velocity.Length(0.06f);
+            Projectile.rotation = Projectile.velocity.ToRotation();
+
+            {
+                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 323,Scale:0.8f);
+                d.noGravity = true;
+            }
+        }
+        public Color ColorFunction(float progress)
+        {
+            Color drawColor = new Color(34, 221, 151);
+            float div = 0.2f;
+            if (progress < 0.2f)
+                return Color.Lerp(Color.White, drawColor, Utils.Remap(progress, 0, div, 0f, 1f)).AdditiveColor() * Projectile.Opacity;
+            float factor = Utils.Remap(progress, div, 1f, 0f, 1f);
+            return Color.Lerp(drawColor, Color.Black, factor).AdditiveColor() * Projectile.Opacity;
+        }
+        public float WidthFunction(float progress) => 20f;
+        public float AlphaFunction(float progress)
+        {
+            float fadeinFactor = Utils.Remap(progress, 0f, 0.1f, 0f, 1f);
+            return EaseManager.Evaluate(Ease.InOutSine, 1f - progress, 1f) * Projectile.Opacity * 2f * fadeinFactor;
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+
+            Texture2D mainColor = Request<Texture2D>(AssetDirectory.Extras + "Cyan-Map", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D shape = TextureAssets.Extra[197].Value;
+            Texture2D sampler = TextureAssets.Extra[189].Value;
+
+            Effect effect = AssetDirectory.Trail;
+
+            List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
+
+            float width = 20 * Projectile.scale;
+
+            for(int i = 0;i<Projectile.oldPos.Length - 2; i++)
+            {
+                if (Projectile.oldPos[i] == Vector2.Zero || Projectile.oldPos[i+1] == Vector2.Zero) continue;
+
+                var normal = Projectile.oldPos[i + 1] - Projectile.oldPos[i];
+                normal = normal.RotatedBy(MathHelper.PiOver2).SafeNormalize(Vector2.Zero);
+
+                var factor = 1 - i / (float)Projectile.oldPos.Length;
+                Color color = Color.Lerp(Color.Black,Color.White,  factor);
+                var alpha = EaseManager.Evaluate(Ease.InSine, factor, 1f) * 1.05f * Projectile.Opacity;
+                Vector2 top = Projectile.oldPos[i] + Projectile.Size / 2 + normal * width;
+                Vector2 bottom = Projectile.oldPos[i] + Projectile.Size / 2 - normal * width;
+                bars.Add(new(top, color, new Vector3((float)Math.Sqrt(factor) * 2.5f, 1, alpha)));
+                bars.Add(new(bottom, color, new Vector3((float)Math.Sqrt(factor) * 2.5f, 0, alpha)));
+
+            }
+
+            if(bars.Count > 2)
+            {
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                RasterizerState originalState = Main.graphics.GraphicsDevice.RasterizerState;
+
+                var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
+                var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
+                // 把变换和所需信息丢给shader
+                effect.Parameters["uTransform"].SetValue(model * projection);
+                effect.Parameters["timer"].SetValue((float)Main.timeForVisualEffects * 0.025f);
+                Main.graphics.GraphicsDevice.Textures[0] = mainColor;//颜色
+                Main.graphics.GraphicsDevice.Textures[1] = shape;//形状
+                Main.graphics.GraphicsDevice.Textures[2] = sampler;//蒙版
+                Main.graphics.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
+                Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointWrap;
+                Main.graphics.GraphicsDevice.SamplerStates[2] = SamplerState.PointWrap;
+
+                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                    Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
+
+                }
+
+                Main.graphics.GraphicsDevice.RasterizerState = originalState;
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+
+            }
+
+            strip.PrepareStrip(Projectile.oldPos, 3, ColorFunction, WidthFunction,
+                Projectile.Size / 2 - Main.screenPosition, AlphaFunction);
+            Main.graphics.GraphicsDevice.Textures[0] = shape;
+            strip.DrawTrail();
+
+            RenderHelper.DrawBloom(6, 4, texture, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * 0.2f, Projectile.rotation, texture.Size() / 2, Projectile.scale * 0.9f);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation, texture.Size() / 2, Projectile.scale * 0.9f, 0);
             return false;
         }
     }
