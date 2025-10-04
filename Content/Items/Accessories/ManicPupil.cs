@@ -1,19 +1,22 @@
-﻿using AyaMod.Core.Prefabs;
+﻿using AyaMod.Core.Attributes;
+using AyaMod.Core.Prefabs;
+using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Terraria.Enums;
 using Terraria;
-using AyaMod.Core.Attributes;
-using AyaMod.Helpers;
+using Terraria.Enums;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Accessories
 {
     [PlayerEffect]
     public class ManicPupil : BaseAccessories
     {
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SpeedIncrease, MaxSpeedIncrease);
+
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();

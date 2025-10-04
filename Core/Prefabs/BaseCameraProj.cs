@@ -248,13 +248,15 @@ namespace AyaMod.Core.Prefabs
                 if (target != null) HighestHealthTarget = target.whoAmI;
                 else HighestHealthTarget = -1;
             }
+
+            //Main.NewText($"{player.itemAnimation} {player.itemTime} {player.altFunctionUse}");
             if (player.itemTime != 0)
             {
-                if (player.altFunctionUse == 2)
+                if (player.altFunctionUse == 2 && mplr.CameraAltCooldown == 0)
                 {
                     Projectile.Center = mplr.MouseWorld;
                     ProjectileRemoval();
-                    player.itemTime = 0;
+                    player.itemTime = player.itemAnimation = 0;
                     mplr.CameraAltCooldown = CameraStats.CaptureCooldown;
                 }
                 else

@@ -36,7 +36,7 @@ namespace AyaMod.Content.Items.Cameras
 
             Item.SetShopValues(ItemRarityColor.Yellow8, Item.sellPrice(0, 5, 0, 0));
             SetCameraStats(0.07f, 182, 1.5f);
-            SetCaptureStats(100, 5);
+            SetCaptureStats(1000, 60);
         }
     }
     public class IceQueenCameraProj : BaseCameraProj

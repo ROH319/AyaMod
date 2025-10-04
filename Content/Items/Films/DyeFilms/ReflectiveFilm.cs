@@ -2,12 +2,15 @@
 using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using Terraria;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
     public class ReflectiveFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DmgReduceFlat);
+
         public override int DyeID => 3190;
         public override void PostClearProjectile(BaseCameraProj projectile, int capturecount)
         {

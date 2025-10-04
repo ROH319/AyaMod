@@ -3,6 +3,7 @@ using AyaMod.Content.Particles;
 using AyaMod.Core;
 using AyaMod.Core.Attributes;
 using AyaMod.Core.Globals;
+using AyaMod.Core.Loaders;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
 using AyaMod.Core.Systems.Trails;
@@ -52,6 +53,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
             {
                 var a = player.AddEffect<GaleGeta1>();
                 player.moveSpeed += 0.05f;
+                ayaPlayer.UltraMoveEnabled = true;
                 ayaPlayer.AccSpeedModifier += 0.25f;
                 ayaPlayer.WingTimeModifier.Flat += 10;//增加10帧飞行时间
 
@@ -68,6 +70,13 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 .AddIngredient(ItemID.SoulofFright, 3)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
+        }
+
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            var index = tooltips.FindIndex(x => x.Text.Contains("<keybind>"));
+            var tooltip = tooltips[index];
+            tooltip.Text = tooltip.Text.Replace("<keybind>", AyaKeybindLoader.UltraMove.GetAssignedKeys()[0]);
         }
 
         public static void AddDash(Player player)

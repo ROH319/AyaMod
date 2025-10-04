@@ -30,7 +30,7 @@ namespace AyaMod.Content.Items.Cameras
 
             Item.SetShopValues(ItemRarityColor.Pink5, Item.sellPrice(0, 0, 78, 0));
             SetCameraStats(0.05f, 150, 1.6f, 0.5f);
-            SetCaptureStats(100, 5);
+            SetCaptureStats(1000, 60);
         }
 
         public static int radiusa = 320;

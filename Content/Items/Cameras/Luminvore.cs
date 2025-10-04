@@ -31,7 +31,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.knockBack = 8;
             Item.SetShopValues(Terraria.Enums.ItemRarityColor.Orange3, Item.sellPrice(0, 0, 72, 0));
             SetCameraStats(0.04f, 104, 2f);
-            SetCaptureStats(100, 5);
+            SetCaptureStats(1000, 60);
         }
 
         public override void AddRecipes()

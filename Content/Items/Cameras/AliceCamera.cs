@@ -34,7 +34,7 @@ namespace AyaMod.Content.Items.Cameras
 
             Item.SetShopValues(ItemRarityColor.LightPurple6, Item.sellPrice(0, 0, 18, 0));
             SetCameraStats(0.03f, 152, 1.6f, 0.5f);
-            SetCaptureStats(100, 5);
+            SetCaptureStats(1000, 60);
         }
     }
 

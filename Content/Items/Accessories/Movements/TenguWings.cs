@@ -11,6 +11,7 @@ using static Terraria.ID.ArmorIDs;
 using Terraria.DataStructures;
 using AyaMod.Helpers;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Accessories.Movements
 {
@@ -18,11 +19,19 @@ namespace AyaMod.Content.Items.Accessories.Movements
     public class TenguWings : BaseAccessories
     {
         public override string Texture => AssetDirectory.Accessories + "Movements/" + Name;
+
+        public static float FlySpeed = 7.5f;
+        public static float Acceleration = 1.2f;
+        public static float MaxAscentMultiplier = 1.5f;
+        public static int FlyTime = 150;
+
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(FlySpeed, MaxAscentMultiplier, Acceleration, FlyTime);
+
         public override void SetStaticDefaults()
         {
             //flySpeedOverride最大水平速度：7.5f->38mph
             //accelerationMultiplier水平加速：120%
-            Wing.Sets.Stats[Item.wingSlot] = new WingStats(150,7.5f,1.2f);
+            Wing.Sets.Stats[Item.wingSlot] = new WingStats(FlyTime, FlySpeed, Acceleration);
         }
         public override void SetDefaults()
         {
@@ -40,7 +49,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
             ascentWhenFalling = 0.5f;
             ascentWhenRising = 0.1f;
             maxCanAscendMultiplier = 0.5f;
-            maxAscentMultiplier = 1.5f;
+            maxAscentMultiplier = MaxAscentMultiplier;
             constantAscend = 0.1f;
         }
 

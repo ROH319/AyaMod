@@ -11,6 +11,6 @@ BuilderToggles: {
 }
 
 Keybinds: {
-	// UltraMove.DisplayName: Ultra Move
-	// SpecialMove.DisplayName: Special Move
+	UltraMove.DisplayName: 超高速移动
+	SpecialMove.DisplayName: 特殊移动
 }

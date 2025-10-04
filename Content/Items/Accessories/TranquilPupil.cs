@@ -1,19 +1,22 @@
-﻿using AyaMod.Core.Prefabs;
+﻿using AyaMod.Core.Attributes;
+using AyaMod.Core.Prefabs;
+using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Terraria.Enums;
 using Terraria;
-using AyaMod.Core.Attributes;
-using AyaMod.Helpers;
+using Terraria.Enums;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Accessories
 {
     [PlayerEffect]
     public class TranquilPupil : BaseAccessories
     {
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(MaxChargeTime, MaxDamageMult);
+
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -28,8 +31,11 @@ namespace AyaMod.Content.Items.Accessories
         public static void ModifySteathDamage(Player player, Item item, ref StatModifier damage)
         {
             var ayaPlayer = player.Aya();
-            float damageMult = Utils.Remap(ayaPlayer.NotUsingCameraTimer, 0, 150, 1f, 3f);
+            float damageMult = 1 + Utils.Remap(ayaPlayer.NotUsingCameraTimer, 0, MaxChargeTime * 60, 0f, MaxDamageMult / 100f);
             damage *= damageMult;
         }
+
+        public static float MaxChargeTime = 2.5f;
+        public static int MaxDamageMult = 200;
     }
 }

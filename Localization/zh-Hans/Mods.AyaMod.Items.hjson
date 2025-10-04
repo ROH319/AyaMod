@@ -214,7 +214,11 @@ CameraFilm: {
 
 AcidFilm: {
 	DisplayName: 酸性胶片
-	Tooltip: ""
+	Tooltip:
+		'''
+		命中施加减益
+		 -{0}hp/s
+		'''
 }
 
 BloodbathFilm: {
@@ -224,7 +228,11 @@ BloodbathFilm: {
 
 BlueAcidFilm: {
 	DisplayName: 蓝酸性胶片
-	Tooltip: ""
+	Tooltip:
+		'''
+		拍摄命中施加减益
+		 -{0}hp/s
+		'''
 }
 
 BurningHadesFilm: {
@@ -234,7 +242,12 @@ BurningHadesFilm: {
 
 ChlorophyteFilm: {
 	DisplayName: 叶绿胶片
-	Tooltip: ""
+	Tooltip:
+		'''
+		拍摄命中有几率对敌人施加繁茂毒素
+		 -{0}hp/s
+		 持续产生孢子雾
+		'''
 }
 
 FogboundFilm: {
@@ -244,7 +257,7 @@ FogboundFilm: {
 
 GelFilm: {
 	DisplayName: 凝胶胶片
-	Tooltip: ""
+	Tooltip: 拍摄有几率生成滞留粘液，对接触的敌人减速
 }
 
 GlowingMushroomFilm: {
@@ -254,12 +267,12 @@ GlowingMushroomFilm: {
 
 GrimFilm: {
 	DisplayName: 恐怖胶片
-	Tooltip: ""
+	Tooltip: 对敌人施加恐惧减益，普通小怪生命值小于15%时直接斩杀
 }
 
 HadesFilm: {
 	DisplayName: 冥王胶片
-	Tooltip: ""
+	Tooltip: 命中有几率爆炸
 }
 
 InfernalWispFilm: {
@@ -324,7 +337,7 @@ PinkGelFilm: {
 
 PixieFilm: {
 	DisplayName: 妖精胶卷
-	Tooltip: ""
+	Tooltip: 增加{0}%暴击伤害
 }
 
 PrismaticFilm: {
@@ -339,37 +352,41 @@ PurpleOozeFilm: {
 
 RedAcidFilm: {
 	DisplayName: 红酸性胶片
-	Tooltip: ""
+	Tooltip:
+		'''
+		命中施加减益
+		 -{0}hp/s
+		'''
 }
 
 ReflectiveCopperFilm: {
 	DisplayName: 反光铜胶片
-	Tooltip: ""
+	Tooltip: 成功消弹后增加{0}防御，受击消失
 }
 
 ReflectiveFilm: {
 	DisplayName: 反光胶片
-	Tooltip: ""
+	Tooltip: 成功消弹后下次受伤伤害减少{0}
 }
 
 ReflectiveGoldFilm: {
 	DisplayName: 反光金胶片
-	Tooltip: ""
+	Tooltip: 根据消除的弹幕量增加{0} ~ {1}防御、{2} ~ {3}%伤害减免，单次生效
 }
 
 ReflectiveMetalFilm: {
 	DisplayName: 反光金属胶片
-	Tooltip: ""
+	Tooltip: 消弹后提高{0}防御{1}%伤害减免，以及{2}%反伤，单次生效
 }
 
 ReflectiveObsidianFilm: {
 	DisplayName: 反光黑曜石胶片
-	Tooltip: ""
+	Tooltip: 消弹增加{0}防御{1}%伤害减免，{2}%反伤，受击释放出6块追踪尖锐黑曜石碎片（75%反伤）
 }
 
 ReflectiveSilverFilm: {
 	DisplayName: 反光银胶片
-	Tooltip: ""
+	Tooltip: 成功消弹后根据消除弹幕量增加{0} ~ {1}防御
 }
 
 ShadowFilm: {
@@ -429,7 +446,7 @@ VortexFilm: {
 
 WispFilm: {
 	DisplayName: 妖灵胶片
-	Tooltip: ""
+	Tooltip: 拍摄产生幽灵弹幕攻击敌人
 }
 
 SeijaCamera: {
@@ -442,33 +459,86 @@ GaleGeta: {
 	Tooltip:
 		'''
 		增加8%移动速度
-		提高跳跃速度，并允许自动跳跃
+		提高跳跃速度和跳跃高度，并允许自动跳跃
+		增加0.66s飞行时间
+		手持相机时：
+		 - 增加4%移速
+		 - 增加0.16s飞行时间
+		 - 双击方向键进行冲刺
 		'''
 }
 
 GaleGeta1: {
 	DisplayName: 流风迅步
-	Tooltip: ""
+	Tooltip:
+		'''
+		增加10%移动速度和50%加速度
+		提高跳跃速度和跳跃高度，并允许自动跳跃
+		增加0.66s飞行时间
+		手持相机时：
+		 - 增加5%移速和25%加速度
+		 - 增加0.16s飞行时间
+		 - 双击方向键进行冲刺，穿过撞到的敌人并造成伤害
+		 - 脱战时按住<keybind>键以及方向键可进行超高速移动
+		'''
 }
 
 GaleGeta2: {
 	DisplayName: 风神御渡
-	Tooltip: ""
+	Tooltip:
+		'''
+		增加10%移动速度和50%加速度
+		提高跳跃速度和跳跃高度，并允许自动跳跃
+		增加0.66s飞行时间
+		手持相机时：
+		 - 增加5%移速和30%加速度
+		 - 增加0.16s飞行时间
+		 - 双击方向键进行冲刺，穿过撞到的敌人并造成伤害
+		 	闪避撞到的弹幕，此效果有15s冷却（为了方便测试实际只有1s）
+		 - 脱战时按住<keybind>键以及方向键可进行超高速移动
+		'''
 }
 
 TenguWings: {
 	DisplayName: 鸦天狗之翼
-	Tooltip: ""
+	Tooltip:
+		'''
+		水平飞行速度：{0}
+		垂直加速：{1}
+		水平加速：{2}
+		飞行时间：{3}
+		手持相机时：
+		 - 飞行的前10帧不消耗飞行时间
+		'''
 }
 
 TenguWings1: {
 	DisplayName: 大天狗之翼
-	Tooltip: ""
+	Tooltip:
+		'''
+		水平飞行速度：{0}
+		垂直加速：{1}
+		水平加速：{2}
+		飞行时间：{3}
+		手持相机时：
+		 - 飞行的前15帧不消耗飞行时间
+		 - 飞行时增加25%加速度
+		 - 可以悬停、横向飞行和垂直加速飞行
+		 - 滑翔坠落速度减半
+		'''
 }
 
 TenguWings2: {
 	DisplayName: 天魔之翼
-	Tooltip: ""
+	Tooltip:
+		'''
+		水平飞行速度：{0}
+		垂直加速：{1}
+		水平加速：{2}
+		飞行时间：{3}
+		增加跳跃速度和移动速度
+		增加50%加速度
+		'''
 }
 
 CorruptPupil2: {
@@ -476,7 +546,7 @@ CorruptPupil2: {
 	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
-		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize}
+		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize@1}
 		'''
 }
 
@@ -485,19 +555,30 @@ CrimsonPupil2: {
 	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
-		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize}
+		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize@1}
 		对拍摄框内血量最多的敌人造成{2}%额外伤害
 		'''
 }
 
 LunaticPupil: {
 	DisplayName: 狂月之瞳
-	Tooltip: ""
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
+		根据饰品可见性切换效果：
+		可见：{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize@1}
+		不可见：{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize@2}
+			对拍摄框内血量最多的敌人造成{3}%额外伤害
+		'''
 }
 
 ManicPupil: {
 	DisplayName: 狂躁之瞳
-	Tooltip: ""
+	Tooltip:
+		'''
+		连续拍摄会逐渐增加拍摄速度，每次{0}%，最高{1}%
+		停止拍摄2秒后失去加成
+		'''
 }
 
 RetinazerLens: {
@@ -505,7 +586,8 @@ RetinazerLens: {
 	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
-		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize}
+		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize@1}
+		对拍摄框内血量最多的敌人造成{2}%额外伤害
 		'''
 }
 
@@ -514,13 +596,13 @@ SpazmatismLens: {
 	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
-		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize}
+		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize@1}
 		'''
 }
 
 TranquilPupil: {
 	DisplayName: 静谧之瞳
-	Tooltip: ""
+	Tooltip: 手持相机但不拍摄时，随时间增加下一次拍摄造成的伤害，至多{0}s增加{1}%
 }
 
 MiracleCamera: {
@@ -539,8 +621,8 @@ EmpressCamera: {
 }
 
 IceQueenCamera: {
-	// DisplayName: Ice Queen Camera
-	// Tooltip: ""
+	DisplayName: 北国风光
+	Tooltip: ""
 }
 
 NoDmgModifier: {
@@ -569,11 +651,16 @@ LilyWhiteDress: {
 }
 
 MiracleCameraEX: {
-	// DisplayName: Miracle Camera E X
-	// Tooltip: ""
+	DisplayName: 奇迹愿景EX
+	Tooltip: ""
 }
 
 PhantasmalCamera: {
-	// DisplayName: Phantasmal Camera
-	// Tooltip: ""
+	DisplayName: 幻影追迹者
+	Tooltip: ""
+}
+
+SoulCamera: {
+	DisplayName: 彼岸映魂灯
+	Tooltip: ""
 }

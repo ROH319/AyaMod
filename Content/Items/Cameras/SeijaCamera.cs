@@ -27,7 +27,7 @@ namespace AyaMod.Content.Items.Cameras
 
             Item.SetShopValues(ItemRarityColor.Orange3, Item.sellPrice(0, 0, 78, 0));
             SetCameraStats(0.05f, 132, 1.4f, 0.5f);
-            SetCaptureStats(100, 5);
+            SetCaptureStats(1000, 60);
         }
 
         public override bool PreDrawTooltip(ReadOnlyCollection<TooltipLine> lines, ref int x, ref int y)

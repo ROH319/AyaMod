@@ -6,12 +6,15 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
     public class ChlorophyteFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(FlourshingDotDmg / 2);
+
         public override int DyeID => 2883;
 
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)

@@ -531,3 +531,8 @@ PhantasmalCamera: {
 	DisplayName: Phantasmal Camera
 	Tooltip: ""
 }
+
+SoulCamera: {
+	DisplayName: Soul Camera
+	Tooltip: ""
+}

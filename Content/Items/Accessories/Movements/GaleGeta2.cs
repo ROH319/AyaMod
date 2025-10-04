@@ -47,6 +47,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
             {
                 player.AddEffect<GaleGeta2>();
                 player.moveSpeed += 0.05f;
+                ayaPlayer.UltraMoveEnabled = true;
                 ayaPlayer.AccSpeedModifier += 0.3f;
                 ayaPlayer.WingTimeModifier.Flat += 10;//增加10帧飞行时间
             }

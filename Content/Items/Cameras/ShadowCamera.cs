@@ -34,7 +34,7 @@ namespace AyaMod.Content.Items.Cameras
 
             Item.SetShopValues(ItemRarityColor.Orange3, Item.sellPrice(0, 4, 0, 0));
             SetCameraStats(0.04f, 120, 1.8f,0.5f);
-            SetCaptureStats(100, 5);
+            SetCaptureStats(1000, 60);
         }
 
         public static int ShadowSuckDotDmg = 60;

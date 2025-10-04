@@ -36,7 +36,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.knockBack = 12f;
             Item.SetShopValues(ItemRarityColor.Orange3, Item.sellPrice(0, 0, 60, 0));
             SetCameraStats(0.04f, 98, 2f);
-            SetCaptureStats(100, 5);
+            SetCaptureStats(1000, 60);
         }
         public static int VitricDotDmg = 10;
     }

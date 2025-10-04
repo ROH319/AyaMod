@@ -30,7 +30,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.shoot = ModContent.ProjectileType<BeeCameraProj>();
             Item.SetShopValues(ItemRarityColor.Green2, Item.sellPrice(0, 2, 0, 0));
             SetCameraStats(0.04f, 104, 2f);
-            SetCaptureStats(100, 5);
+            SetCaptureStats(1000, 60);
         }
     }
 

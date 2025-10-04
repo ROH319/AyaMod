@@ -6,12 +6,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
     public class ReflectiveObsidianFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DefenseBonus, DRBonus, thornBonus);
         public override int DyeID => 3554;
 
         public override void PostClearProjectile(BaseCameraProj projectile, int capturecount)

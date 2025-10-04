@@ -26,6 +26,8 @@ namespace AyaMod.Core.ModPlayers
 
         public int NotUsingCameraTimer = 0;
 
+        public bool UltraMoveEnabled = false;
+
         public int DamageReduceFlat = 0;
         public int ManicStack = 0;
         public float WispDmg = 0;
@@ -112,7 +114,7 @@ namespace AyaMod.Core.ModPlayers
 
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
-            if (AyaKeybindLoader.UltraMove.Current && Player.HeldCamera() && Player.HasEffect<GaleGeta1>())
+            if (AyaKeybindLoader.UltraMove.Current && UltraMoveEnabled)
             {
                 Vector2 targetDir = Vector2.Zero;
                 if (triggersSet.Left)
@@ -169,6 +171,7 @@ namespace AyaMod.Core.ModPlayers
             AyaDash = DashType.None;
 
             DamageReduceFlat = 0;
+            UltraMoveEnabled = false;
 
             ResetAyaEffects();
 
@@ -203,7 +206,7 @@ namespace AyaMod.Core.ModPlayers
                     Player.position -= Player.velocity * 0.5f;
                 }
             }
-            if(IsUltraDashing && Player.HasEffect<GaleGeta1>())
+            if(UltraMoveEnabled && IsUltraDashing)
             {
                 Player.velocity = UltraDashDir.ToRotationVector2() * 30f;
                 if (MathF.Abs(Player.velocity.Y) < 0.1f) Player.velocity.Y = 0.000001f;
@@ -214,7 +217,7 @@ namespace AyaMod.Core.ModPlayers
         {
             Player.wingTimeMax = (int)WingTimeModifier.ApplyTo(Player.wingTimeMax);
 
-            if (Player.HasEffect<GaleGeta1>())
+            if (UltraMoveEnabled)
             {
                 if (IsUltraDashing)
                 {

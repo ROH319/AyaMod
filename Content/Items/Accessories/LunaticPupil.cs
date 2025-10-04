@@ -15,7 +15,7 @@ namespace AyaMod.Content.Items.Accessories
 {
     public class LunaticPupil : BaseAccessories
     {
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SpeedIncrease);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SpeedIncrease, SizeIncrease, SizeDecrease, SingleTargetIncrease);
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();

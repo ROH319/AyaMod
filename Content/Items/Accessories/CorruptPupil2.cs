@@ -15,7 +15,7 @@ namespace AyaMod.Content.Items.Accessories
 {
     public class CorruptPupil2 : BaseAccessories
     {
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SizeIncrease);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SpeedIncrease, SizeIncrease);
 
         public override void SetDefaults()
         {
