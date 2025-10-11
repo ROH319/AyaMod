@@ -385,6 +385,13 @@ namespace AyaMod.Content.Items.Cameras
                 RingParticle.Spawn(Projectile.GetSource_FromAI(), nextPos, new Color(72, 206, 132).AdditiveColor(), 10, radius, 0.8f, 0f,
                     0.15f, 0.5f, 30, 120, Ease.OutCirc, Ease.OutCubic);
 
+                //for(int i = 0; i < 3; i++)
+                //{
+                //    Vector2 vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(0f);
+                //    Vector2 offset = Main.rand.NextVector2Unit() * Main.rand.NextFloat(10, 50);
+                //    LightSpotParticle.SpawnFlare(Projectile.GetSource_FromAI(), nextPos + offset, vel, new Color(72, 206, 132).AdditiveColor(), 0f, 30, 0.5f, 0.2f);
+                //}
+
                 int stardmg = (int)(Projectile.damage * 0.2f);
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), nextPos, Projectile.velocity.Length(9).RotatedBy(Main.rand.NextBool()? -MathHelper.PiOver4 : MathHelper.PiOver4), ProjectileType<MiracleStarHoming>(), stardmg, Projectile.knockBack, Projectile.owner);
 

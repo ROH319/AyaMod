@@ -27,6 +27,7 @@ namespace AyaMod.Core.Systems.ParticleSystem
         public float AngularSpeed;
 
         public float alpha;
+        public float alphaMultiplier = 1f;
         public bool active;
         public float timer;
 
@@ -107,6 +108,8 @@ namespace AyaMod.Core.Systems.ParticleSystem
         public virtual bool ShouldUpdateCenter() => true;
 
         public virtual bool ShouldUpdateRotation() => true;
+
+        public virtual float GetAlpha() => alpha * alphaMultiplier;
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {

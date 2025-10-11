@@ -33,6 +33,8 @@ namespace AyaMod.Content.Particles
             alpha = alphaFactor;
             Scale = Utils.Remap(factor, 0, 1f, 1.3f, 0.7f);
             timer++;
+
+            if (factor > 1f) active = false;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
