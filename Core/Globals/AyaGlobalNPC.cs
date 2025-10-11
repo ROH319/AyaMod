@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace AyaMod.Core.Globals
 {
-    public class AyaGlobalNPC : GlobalNPC
+    public partial class AyaGlobalNPC : GlobalNPC
     {
 
         public StatModifier SpeedModifier;
@@ -146,27 +146,6 @@ namespace AyaMod.Core.Globals
                 npc.lifeRegen -= ShadowCamera.ShadowSuckDotDmg;
                 if (damage < 4) 
                     damage = 4;
-            }
-        }
-
-
-        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
-        {
-            switch (npc.type)
-            {
-                case NPCID.QueenBee:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BeeCamera>(), 4));
-                    break;
-                case NPCID.Deerclops:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ColdSnap>(), 4));
-                    break;
-                case NPCID.WallofFlesh:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<YukariCamera>(), 4));
-                    break;
-                case NPCID.BloodNautilus:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ScarletCamera>(), 1));
-                    break;
-                default: break;
             }
         }
 

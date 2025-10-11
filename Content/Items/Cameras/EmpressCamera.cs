@@ -63,11 +63,11 @@ namespace AyaMod.Content.Items.Cameras
             int starDmg = (int)(Projectile.damage * 0.16f);
             int starCount = 5;
             int hasLightBall = 1;
-            if (EffectCounter >= 7) 
+            if (EffectCounter >= 4) 
             {
                 starCount *= 2;
                 hasLightBall = 0;
-                starDmg *= 2;
+                //starDmg = (int)(starDmg * 1.5f);
             }
             for (int i = 0; i < starCount; i++)
             {
@@ -79,10 +79,10 @@ namespace AyaMod.Content.Items.Cameras
             }
 
 
-            if (EffectCounter >= 7)
+            if (EffectCounter >= 4)
             {
                 int laserDmg = (int)(Projectile.damage * 0.25f);
-                int maxcount = 12;
+                int maxcount = 5;
                 for (int i = 0; i < 5; i++)
                 {
                     float color = start + 0.2f * i;
@@ -90,7 +90,7 @@ namespace AyaMod.Content.Items.Cameras
                     Vector2 pos = Projectile.Center + rot.ToRotationVector2() * 90;
 
                     var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<EmpressLaser>(), laserDmg, Projectile.knockBack, Projectile.owner,
-                        rot + MathHelper.Pi, color, maxcount);
+                        rot + MathHelper.Pi + MathHelper.PiOver4 / 4, color, maxcount);
                 }
                 EffectCounter = 0;
             }
@@ -137,7 +137,7 @@ namespace AyaMod.Content.Items.Cameras
             Timer++;
 
             float factor = Projectile.TimeleftFactor();
-            Rot -= 0.02f * factor;
+            Rot -= 0.03f * factor;
             Projectile.velocity = (Rot + MathHelper.Pi).ToRotationVector2() * 2f;
 
             int spawnNextTime = 8;
@@ -335,6 +335,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.SetImmune(8);
             Projectile.timeLeft = 48;
             Projectile.penetrate = -1;
+            Projectile.ArmorPenetration = 45;
         }
 
         public override void AI()

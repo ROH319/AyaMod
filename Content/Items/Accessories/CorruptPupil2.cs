@@ -29,7 +29,7 @@ namespace AyaMod.Content.Items.Accessories
             player.Camera().SizeBonus += (float)SizeIncrease / 100f;
         }
         public static int SpeedIncrease = 12;
-        public static int SizeIncrease = 20;
+        public static int SizeIncrease = 12;
 
         public override void AddRecipes()
         {

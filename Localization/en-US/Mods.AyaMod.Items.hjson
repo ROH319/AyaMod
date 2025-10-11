@@ -459,6 +459,8 @@ CrimsonPupil2: {
 LunaticPupil: {
 	DisplayName: Lunatic Pupil
 	Tooltip: ""
+	VisualOn: Mods.AyaMod.Items.LunaticPupil.VisualOn
+	VisualOff: Mods.AyaMod.Items.LunaticPupil.VisualOff
 }
 
 ManicPupil: {

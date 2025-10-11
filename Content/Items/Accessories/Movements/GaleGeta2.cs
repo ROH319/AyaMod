@@ -58,7 +58,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
         {
             CreateRecipe()
                 .AddIngredient(ItemType<GaleGeta1>())
-                .AddIngredient(ItemID.BeetleShell, 3)
+                .AddIngredient(ItemID.BeetleHusk, 3)
                 .AddIngredient(ItemID.BlackBelt)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();

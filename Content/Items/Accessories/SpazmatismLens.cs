@@ -30,6 +30,6 @@ namespace AyaMod.Content.Items.Accessories
         }
 
         public static int SpeedIncrease = 15;
-        public static int SizeIncrease = 30;
+        public static int SizeIncrease = 20;
     }
 }

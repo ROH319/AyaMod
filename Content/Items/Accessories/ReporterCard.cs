@@ -8,6 +8,7 @@ using Terraria.Enums;
 using Terraria;
 using Terraria.Localization;
 using AyaMod.Core;
+using Terraria.ID;
 
 namespace AyaMod.Content.Items.Accessories
 {
@@ -27,5 +28,21 @@ namespace AyaMod.Content.Items.Accessories
         }
 
         public static int DamageIncrease = 8;
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.BambooBlock, 10)
+                //TODO：枫叶
+                .AddIngredient(ItemID.ShadowScale, 5)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+            CreateRecipe()
+                .AddIngredient(ItemID.BambooBlock, 10)
+                //TODO：枫叶
+                .AddIngredient(ItemID.TissueSample, 5)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 }

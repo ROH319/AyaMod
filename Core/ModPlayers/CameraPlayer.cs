@@ -109,7 +109,7 @@ namespace AyaMod.Core.ModPlayers
 
         }
 
-        public static float CameraAutoSnapDamageModifier = 0.8f;
+        public static float CameraAutoSnapDamageModifier = 0.9f;
 
         public static float CameraManualSnapDamageModifier = 1.1f;
     }

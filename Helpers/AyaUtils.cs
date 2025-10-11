@@ -31,6 +31,45 @@ namespace AyaMod.Helpers
 
         #endregion
 
+        public static bool CheckLineCollisionTile(Vector2 start, Vector2 end, int interval = 8)
+        {
+            bool canhit = true;
+            int checkCount = (int)(start.Distance(end) / interval);
+            for (int i = 0; i <= checkCount; i++)
+            {
+                var checkpos = Vector2.Lerp(start, end, i / (float)checkCount);
+                if (PointInTile(checkpos))
+                {
+                    canhit = false;
+                    break;
+                }
+            }
+            return canhit;
+        }
+
+        public static bool PointInTile(Vector2 point)
+        {
+            var startCoords = new Point((int)(point.X / 16), (int)(point.Y / 16));
+            for(int x = -1;x<=1;x++)
+            {
+                for(int y = -1;y<=1;y++)
+                {
+                    var coords = startCoords + new Point(x, y);
+                    if (WorldGen.InWorld(coords.X, coords.Y))
+                    {
+                        var tile = Main.tile[coords.X, coords.Y];
+                        if (tile.HasTile && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType])
+                        {
+                            var rect = new Rectangle(coords.X * 16, coords.Y * 16, 16, 16);
+                            if (rect.Contains(point.ToPoint()))
+                                return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         public static Vector2 GetPentagramPos(Vector2 center, float radius, float factor, float extraRot = -MathHelper.PiOver2, bool reversed = false)
         {
             float n = (int)(factor / 0.2f);

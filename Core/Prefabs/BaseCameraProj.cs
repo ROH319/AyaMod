@@ -161,7 +161,8 @@ namespace AyaMod.Core.Prefabs
         public bool CheckInSight()
         {
             //Collision.LaserScan()
-            var colli = Collision.CanHitLine(Projectile.Center, 1, 1, player.Center, 1, 1);
+            bool colli = AyaUtils.CheckLineCollisionTile(Projectile.Center, player.Center, 8);
+            //var colli = Collision.CanHit(Projectile.Center, 1, 1, player.Center, 1, 1);
             //Main.NewText($"{colli}");
             return player.GetModPlayer<CameraPlayer>().CanSnapThroughWall() || colli;
         }
@@ -285,6 +286,9 @@ namespace AyaMod.Core.Prefabs
             Projectile.Center = Vector2.Lerp(Projectile.Center, mplr.MouseWorld, slowedchase);
             ComputedVelocity = Projectile.Center - previous;
             Projectile.rotation = mplr.Player.AngleToSafe(Projectile.Center);
+
+            //bool canhit = AyaUtils.CheckLineCollisionTile(Projectile.Center, player.Center,8);
+            //Main.NewText($"{canhit}");
         }
 
         public void ProjectileRemoval()
@@ -368,7 +372,7 @@ namespace AyaMod.Core.Prefabs
 
             OnSnap();
 
-            bool canhit = Collision.CanHitLine(Projectile.Center, 1, 1, player.position, player.Hitbox.Width, player.Hitbox.Height);
+            bool canhit = CheckInSight();
 
             //Main.NewText($"CanHitLine:{canhit}");
             if (canhit)

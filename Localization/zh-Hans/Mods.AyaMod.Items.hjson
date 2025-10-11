@@ -180,15 +180,19 @@ ReporterCard: {
 
 CorruptPupil: {
 	DisplayName: 紫幽之瞳
-	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize}"
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
+		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize@1}
+		'''
 }
 
 CrimsonPupil: {
 	DisplayName: 绯红之瞳
 	Tooltip:
 		'''
-		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize}
-		对拍摄框内血量最多的敌人造成{1}%额外伤害
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
+		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize@1}
 		'''
 }
 
@@ -556,7 +560,6 @@ CrimsonPupil2: {
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
 		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize@1}
-		对拍摄框内血量最多的敌人造成{2}%额外伤害
 		'''
 }
 
@@ -564,11 +567,20 @@ LunaticPupil: {
 	DisplayName: 狂月之瞳
 	Tooltip:
 		'''
-		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
 		根据饰品可见性切换效果：
-		可见：{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize@1}
-		不可见：{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize@2}
-			对拍摄框内血量最多的敌人造成{3}%额外伤害
+
+		'''
+	VisualOn:
+		'''
+		可见：
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
+		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseCameraSize@1}
+		'''
+	VisualOff:
+		'''
+		不可见：
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
+		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize@1}
 		'''
 }
 
@@ -587,7 +599,6 @@ RetinazerLens: {
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
 		{$Mods.AyaMod.Items.CommonItemTooltip.DecreaseCameraSize@1}
-		对拍摄框内血量最多的敌人造成{2}%额外伤害
 		'''
 }
 
