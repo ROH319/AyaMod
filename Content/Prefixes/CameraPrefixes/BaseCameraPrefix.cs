@@ -55,7 +55,7 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes
                 bool isbad = focusSpeedMult > 1;
                 string sign = isbad ? "" : "+";
                 string modify = string.Concat(sign, ((int)((1 - focusSpeedMult) * 100)).ToString());
-                yield return new TooltipLine(Mod, "CameraFocusSpeed", PrefixFocusSpeed.Format(modify))
+                yield return new TooltipLine(Mod, "PrefixFocusSpeed", PrefixFocusSpeed.Format(modify))
                 {
                     IsModifier = true,
                     IsModifierBad = isbad
@@ -67,7 +67,7 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes
                 bool isbad = sizeMult < 1;
                 string sign = isbad ? "" : "+";
                 string modify = string.Concat(sign, ((int)((sizeMult - 1) * 100)).ToString());
-                yield return new TooltipLine(Mod, "CameraSizeMult", SizeTooltip.Format(modify))
+                yield return new TooltipLine(Mod, "PrefixSizeMult", SizeTooltip.Format(modify))
                 {
                     IsModifier = true,
                     IsModifierBad = isbad
@@ -79,7 +79,7 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes
                 bool isbad = stunMult < 1;
                 string sign = isbad ? "" : "+";
                 string modify = string.Concat(sign, ((int)((stunMult - 1) * 100)).ToString());
-                yield return new TooltipLine(Mod, "CameraStunMult", StunTooltip.Format(modify))
+                yield return new TooltipLine(Mod, "PrefixStunMult", StunTooltip.Format(modify))
                 {
                     IsModifier = true,
                     IsModifierBad = isbad

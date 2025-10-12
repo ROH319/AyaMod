@@ -182,7 +182,7 @@ namespace AyaMod.Content.Items.Cameras
                 Vector2 dir = rot.ToRotationVector2();
                 float radius = length * 0.8f + MathF.Sin(factor * MathHelper.TwoPi * 5) * length / 2;
                 Vector2 pos = Projectile.Center + dir * radius;
-                Vector2 vel = (pos - Projectile.Center).Length(4);
+                Vector2 vel = (pos - Projectile.Center).Length(4) + Projectile.velocity * 0.2f;
                 Dust d = Dust.NewDustPerfect(pos, DustID.YellowStarDust, vel,Scale:1.5f);
                 d.noGravity = true;
 

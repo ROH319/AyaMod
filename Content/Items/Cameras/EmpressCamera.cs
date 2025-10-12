@@ -17,6 +17,7 @@ using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
+using static AyaMod.Core.ModPlayers.AyaPlayer;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -63,7 +64,8 @@ namespace AyaMod.Content.Items.Cameras
             int starDmg = (int)(Projectile.damage * 0.16f);
             int starCount = 5;
             int hasLightBall = 1;
-            if (EffectCounter >= 4) 
+            float rotSpeed = MathHelper.PiOver2 / 60f * (Main.rand.NextBool() ? -1 : 1);
+            if (EffectCounter >= 5) 
             {
                 starCount *= 2;
                 hasLightBall = 0;
@@ -73,13 +75,15 @@ namespace AyaMod.Content.Items.Cameras
             {
                 float color = start + 1f / starCount * i;
                 float rot = extraRot + MathHelper.TwoPi / starCount * i;
-                Vector2 vel = rot.ToRotationVector2() * speed;
+                float speedMult = 1f;
+                if (hasLightBall == 0 && i % 2 == 0) speedMult = 0.8f;
+                Vector2 vel = rot.ToRotationVector2() * speed * speedMult;
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ProjectileType<EmpressStar>(),
-                    starDmg, Projectile.knockBack, Projectile.owner, hasLightBall, color);
+                    starDmg, Projectile.knockBack, Projectile.owner, rotSpeed, color);
             }
 
 
-            if (EffectCounter >= 4)
+            if (EffectCounter >= 5)
             {
                 int laserDmg = (int)(Projectile.damage * 0.25f);
                 int maxcount = 5;
@@ -90,7 +94,7 @@ namespace AyaMod.Content.Items.Cameras
                     Vector2 pos = Projectile.Center + rot.ToRotationVector2() * 90;
 
                     var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<EmpressLaser>(), laserDmg, Projectile.knockBack, Projectile.owner,
-                        rot + MathHelper.Pi + MathHelper.PiOver4 / 4, color, maxcount);
+                        rot + MathHelper.Pi + MathHelper.PiOver4 / 2, color, maxcount);
                 }
                 EffectCounter = 0;
             }
@@ -140,7 +144,7 @@ namespace AyaMod.Content.Items.Cameras
             Rot -= 0.03f * factor;
             Projectile.velocity = (Rot + MathHelper.Pi).ToRotationVector2() * 2f;
 
-            int spawnNextTime = 8;
+            int spawnNextTime = 10;
 
             float distNext = 60;
             float rotAdd = MathHelper.PiOver4 / 6;
@@ -228,7 +232,7 @@ namespace AyaMod.Content.Items.Cameras
     public class EmpressStar : ModProjectile
     {
         public override string Texture => AssetDirectory.Extras + "bulletBa005";
-        public ref float HasLightBall => ref Projectile.ai[0];
+        public ref float RotSpeed => ref Projectile.ai[0];
         public ref float Hue => ref Projectile.ai[1];
 
         public override void SetStaticDefaults()
@@ -243,27 +247,59 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.ignoreWater = true;
             Projectile.usesIDStaticNPCImmunity = true;
             Projectile.idStaticNPCHitCooldown = 10;
-            //Projectile.SetImmune(-1);
-            Projectile.timeLeft = 60;
-            Projectile.penetrate = -1;
+            Projectile.SetImmune(-1);
+            Projectile.timeLeft = 60 * 5;
+            Projectile.penetrate = 1;
         }
-
+        public override bool? CanDamage()
+        {
+            return Projectile.TimeleftFactor() < 0.8f;
+        }
         public override void OnSpawn(IEntitySource source)
         {
             
         }
-
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            //for(int i = 0; i < 15; i++)
+            //{
+            //    Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(60);
+            //    float speedFactor = 0.3f;
+            //    var particle = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, Projectile.velocity.RotatedByRandom(0.3f) * speedFactor, Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.8f), 20);
+            //    particle.VelMult = 0.9f;
+            //}
+        }
         public override void AI()
         {
             float factor = Projectile.TimeleftFactor();
 
-            if(HasLightBall > 0 && (Projectile.timeLeft + Projectile.whoAmI) % 16 == 0)
+            int offset = (int)MathF.Sin(Projectile.whoAmI / 10);
+
+            if(Projectile.timeLeft < 60 * 4 - offset * 160)
             {
-                Vector2 vel = Projectile.velocity.RotateRandom(0.1f) * 0.1f;
-                int damage = (int)(Projectile.damage * 0.5f);
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel,
-                    ProjectileType<EmpressLight>(), damage, Projectile.knockBack, Projectile.owner, 0, Hue);
+                Projectile.Chase(2000, 28, 0.04f);
             }
+            else
+            {
+                Projectile.velocity = Projectile.velocity.RotatedBy(RotSpeed);
+
+            }
+
+            if (Main.GameUpdateCount % 1 == 0)
+            {
+                Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(40);
+                float speedFactor = 0.4f;
+                if (Projectile.timeLeft < 60 * 4 + offset) speedFactor /= 2f;
+                LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, Projectile.velocity * speedFactor, Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.8f), 30);
+            }
+
+            //if(HasLightBall > 0 && (Projectile.timeLeft + Projectile.whoAmI) % 16 == 0)
+            //{
+            //    Vector2 vel = Projectile.velocity.RotateRandom(0.1f) * 0.1f;
+            //    int damage = (int)(Projectile.damage * 0.5f);
+            //    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel,
+            //        ProjectileType<EmpressLight>(), damage, Projectile.knockBack, Projectile.owner, 0, Hue);
+            //}
 
             Projectile.rotation += 0.04f;
 
@@ -271,7 +307,25 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnKill(int timeLeft)
         {
-            
+
+            int dustamount = 60;
+            float startRot = Projectile.rotation + MathHelper.TwoPi / 10 + AyaUtils.RandAngle;
+            float length = 20;
+            for (int i = 0; i < dustamount; i++)
+            {
+                float factor = (float)i / dustamount;
+                float rot = MathHelper.TwoPi * factor + startRot;
+                Vector2 dir = rot.ToRotationVector2();
+                float radius = length * 1f + MathF.Sin(factor * MathHelper.TwoPi * 5) * length * 0.4f;
+                Vector2 pos = Projectile.Center + dir * radius;
+                Vector2 vel = (pos - Projectile.Center).Length(1.3f).RotatedByRandom(0.1f);
+
+                var particle = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel + Projectile.velocity * 0.15f, Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.8f), Main.rand.Next(15,25));
+                particle.Scale = Main.rand.NextFloat(1,1.5f);
+                particle.VelMult = 0.92f;
+                //Dust d = Dust.NewDustPerfect(pos, dusttype, vel, Scale: 1.5f);
+                //d.noGravity = true;
+            }
         }
 
         public override bool PreDraw(ref Color lightColor)

@@ -17,7 +17,7 @@ namespace AyaMod.Content.Particles
     {
         public override string Texture => AssetDirectory.Extras + "Ball";
         public int totaltime = 0;
-
+        public float VelMult = 1f;
         public static LightParticle Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color, int totaltime)
         {
             LightParticle light = NewParticle<LightParticle>(source, center, velocity, color);
@@ -27,6 +27,7 @@ namespace AyaMod.Content.Particles
 
         public override void AI()
         {
+            Velocity *= VelMult;
             timer++;
             if (timer >= totaltime) this.active = false;
         }

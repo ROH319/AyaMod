@@ -675,3 +675,8 @@ SoulCamera: {
 	DisplayName: 彼岸映魂灯
 	Tooltip: ""
 }
+
+FleshEtcher: {
+	DisplayName: 血肉蚀刻者
+	Tooltip: ""
+}

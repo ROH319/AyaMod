@@ -148,9 +148,12 @@ namespace AyaMod.Content.Items.Cameras
             {
                 var pos = Vector2.Lerp(Projectile.Center - vector * num, Projectile.Center + vector * num, Projectile.localAI[0] / 36f);
                 var vel = vector.RotatedBy((float)Math.PI * 2f * Main.rand.NextFloatDirection() * 0.02f) * 8f * Main.rand.NextFloat();
-                Dust dust = Dust.NewDustPerfect(pos, 278, vel, 0, new Color(60, 0, 150), 0.7f * num2);
-                dust.noGravity = true;
-                dust.noLight = (dust.noLightEmittence = true);
+                for (int i = 0; i < 2; i++)
+                {
+                    Dust dust = Dust.NewDustPerfect(pos, 278, vel, 0, new Color(60, 0, 150), 0.8f * num2);
+                    dust.noGravity = true;
+                    dust.noLight = (dust.noLightEmittence = true);
+                }
             }
         }
 

@@ -446,6 +446,10 @@ namespace AyaMod.Content.Items.Cameras
                         Main.spriteBatch.Draw(ball1, pos, null, ballColor * 0.8f, Main.GameUpdateCount * 0.1f, ball1.Size() / 2, Projectile.scale * (0.35f + j * 0.15f), 0, 0);
 
                     }
+                    //if (Main.timeForVisualEffects % 30 == 0)
+                    {
+                        Main.spriteBatch.Draw(ball1, pos, null, ballColor * 0.3f, Main.GameUpdateCount * 0.1f, ball1.Size() / 2, Projectile.scale * (0.5f + MathF.Abs(MathF.Sin((float)((Main.timeForVisualEffects + CurrentStack * 4) * 0.05f))) * 1.1f), 0, 0);
+                    }
                 }
             }
             return false;

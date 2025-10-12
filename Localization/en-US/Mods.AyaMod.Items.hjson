@@ -538,3 +538,8 @@ SoulCamera: {
 	DisplayName: Soul Camera
 	Tooltip: ""
 }
+
+FleshEtcher: {
+	DisplayName: Flesh Etcher
+	Tooltip: ""
+}

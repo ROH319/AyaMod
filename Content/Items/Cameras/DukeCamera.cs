@@ -57,7 +57,7 @@ namespace AyaMod.Content.Items.Cameras
             if(!player.ItemTimeIsZero && player.itemTime % 5 == 0)
             {
                 var vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(4, 6);
-                int damage = (int)(Projectile.damage * 0.17f);
+                int damage = (int)(Projectile.damage * 0.18f);
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ProjectileType<FantasticBubble1>(), damage, Projectile.knockBack * 2f, Projectile.owner);
             }
         }
@@ -260,7 +260,8 @@ namespace AyaMod.Content.Items.Cameras
                 if ((bool)!Colliding(Projectile.Hitbox, projectile.GetHitbox())) continue;
 
                 Vector2 push = Projectile.DirectionToSafe(projectile.Center) * vel;
-                Projectile newbubble = Projectile.NewProjectileDirect(projectile.GetSource_FromAI(),projectile.Center,projectile.velocity + push,ModContent.ProjectileType<FantasticBubble2>(),projectile.damage,projectile.knockBack,projectile.owner);
+                int damage = (int)(projectile.damage * 1.1f);
+                Projectile newbubble = Projectile.NewProjectileDirect(projectile.GetSource_FromAI(),projectile.Center,projectile.velocity + push,ModContent.ProjectileType<FantasticBubble2>(),damage,projectile.knockBack,projectile.owner);
 
                 projectile.Kill();
 
