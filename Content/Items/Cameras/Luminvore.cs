@@ -55,9 +55,9 @@ namespace AyaMod.Content.Items.Cameras
         {
             if (!Projectile.MyClient()) return;
 
-            if (++EffectCounter >= 5)
+            if (++EffectCounter >= 3)
             {
-                int damage = (int)(Projectile.damage * 0.5f);
+                int damage = (int)(Projectile.damage * 0.4f);
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LuminvoreVeil>(), damage, 0, Projectile.owner);
                 EffectCounter = 0;
             }
@@ -69,13 +69,15 @@ namespace AyaMod.Content.Items.Cameras
         public override string Texture => AssetDirectory.Extras + "Mist";
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 160;
+            Projectile.width = Projectile.height = 150;
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.penetrate = -1;
-            Projectile.SetImmune(15);
-            Projectile.timeLeft = 60 * 4;
+            Projectile.SetImmune(20);
+            Projectile.timeLeft = 60 * 3;
+            Projectile.scale = 1.3f;
+            Projectile.ArmorPenetration = 20;
         }
         public override void OnSpawn(IEntitySource source)
         {
@@ -89,15 +91,14 @@ namespace AyaMod.Content.Items.Cameras
                 Utils.Remap(factor, 0, 0.125f, 0f, 1f)
                 * Utils.Remap(factor, 0.125f, 1f, 1f, 0f);
             Projectile.rotation += 0.02f;
-            Projectile.scale = 1.3f;
 
             int dustamount = (int)(7 * Projectile.scale);
             float alphafactor = Utils.Remap(factor, 0, 1f, 100, 255);
-            float lengthfactor = Utils.Remap(factor, 0, 1f, 1.2f, 0.5f);
+            float lengthfactor = Utils.Remap(factor, 0, 1f, 1.3f, 0.5f);
             for(int i = 0;i< dustamount; i++)
             {
                 Vector2 pos = Projectile.Center + (MathHelper.TwoPi / dustamount * i).ToRotationVector2().RotateRandom(0.5f) * Main.rand.NextFloat(30,90) * lengthfactor * Projectile.scale;
-                Vector2 vel = pos.DirectionToSafe(Projectile.Center).RotateRandom(0.3f) * Main.rand.NextFloat(1f,3f);
+                Vector2 vel = pos.DirectionToSafe(Projectile.Center).RotateRandom(0.3f) * Main.rand.NextFloat(1f,2.4f);
                 var d = Dust.NewDustPerfect(pos, DustID.PurpleTorch, vel, (int)alphafactor,Scale:1.2f);
                 d.noGravity = true;
             }
@@ -112,7 +113,7 @@ namespace AyaMod.Content.Items.Cameras
         {
 
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Color color = Color.White * 0.8f * Projectile.Opacity;
+            Color color = Color.White * 1f * Projectile.Opacity;
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, RenderHelper.ReverseSubtract, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
