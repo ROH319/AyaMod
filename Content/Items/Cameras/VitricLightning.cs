@@ -89,6 +89,11 @@ namespace AyaMod.Content.Items.Cameras
             get => (int)Projectile.ai[1];
             set => Projectile.ai[1] = value;
         }
+        public int LastTargetIndex
+        {
+            get => (int)Projectile.ai[2];
+            set => Projectile.ai[2] = value;
+        }
 
         public float[] OldOffset;
         public float[] OldOffsetRot;
@@ -119,8 +124,8 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.localAI[2] = 45;
             base.OnSpawn(source);
         }
-
-
+        public override bool? CanDamage() => Projectile.ai[2] >= 0;
+        public override bool? CanHitNPC(NPC target) => target.whoAmI == LastTargetIndex ? false : base.CanHitNPC(target);
         public override void AI()
         {
             for (int i = Projectile.oldPos.Length - 1; i > 0; --i)
@@ -164,7 +169,7 @@ namespace AyaMod.Content.Items.Cameras
             }
             else
             {
-                var npc = Projectile.FindCloestNPC(150,false,true);
+                var npc = Projectile.FindCloestNPCIgnoreIndex(300,false,true, LastTargetIndex);
                 if (npc != null) TargetIndex = npc.whoAmI;
             }
             base.AI();
@@ -179,11 +184,11 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-
+            //Main.NewText($"{Projectile.ai[2]}");
             if (Projectile.owner == Main.myPlayer)
             {
                 target.AddBuff(ModContent.BuffType<ElectrifiedBuff>(), 5 * 60);
-                target.immune[Projectile.owner] = 10;
+                //target.immune[Projectile.owner] = 10;
             }
 
             int dustamount = 7;
@@ -200,14 +205,15 @@ namespace AyaMod.Content.Items.Cameras
             }
             if (HitLeft > 0)
             {
-                var npc = Projectile.FindCloestNPC(250,false,true);
+                var npc = Projectile.FindCloestNPCIgnoreIndex(350,false,true, target.whoAmI);
+                //if (npc == target) Main.NewText("???");
                 if (npc != null)
                 {
                     Vector2 dir = Projectile.Center - target.Center;
                     Vector2 pos = target.Center - dir;
                     float rot = Utils.AngleLerp(Projectile.velocity.ToRotation(), Projectile.AngleToSafe(npc.Center), 0.4f);
                     Vector2 vel = new Vector2(Projectile.velocity.Length(), 0).RotatedBy(rot) * 1f;
-                    var p = Projectile.NewProjectileDirect(Projectile.GetSource_OnHit(target), pos, vel, Projectile.type, (int)(Projectile.damage * 0.8f), Projectile.knockBack, Projectile.owner, HitLeft - 1, npc.whoAmI);
+                    var p = Projectile.NewProjectileDirect(Projectile.GetSource_OnHit(target), pos, vel, Projectile.type, (int)(Projectile.damage * 0.8f), Projectile.knockBack, Projectile.owner, HitLeft - 1, npc.whoAmI,target.whoAmI);
                     
                 }
             }
