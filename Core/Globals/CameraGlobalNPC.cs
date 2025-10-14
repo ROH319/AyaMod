@@ -15,7 +15,6 @@ namespace AyaMod.Core.Globals
 {
     public class CameraGlobalNPC : GlobalNPC
     {
-        public int LegilimencyTimer;
         public int StunTimer;
 
 

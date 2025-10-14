@@ -1,4 +1,5 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Content.Items.Cameras;
+using AyaMod.Core;
 using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace AyaMod.Content.Buffs
         public override string Texture => AssetDirectory.Buffs + Name;
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.Aya().Confused = true;
+            npc.GetGlobalNPC<LegilimencyNPC>().Confused = true;
             if (!npc.boss)
             {
                 npc.confused = true;

@@ -66,7 +66,7 @@ namespace AyaMod.Content.Items.Cameras
         {
             if (npc.friendly || npc.lifeMax == 5) return;
 
-            var cnpc = npc.Camera();
+            var cnpc = npc.GetGlobalNPC<LegilimencyNPC>();
             if (!player.ItemTimeIsZero)
             {
                 cnpc.LegilimencyTimer--;
@@ -93,10 +93,65 @@ namespace AyaMod.Content.Items.Cameras
         {
             if (npc.friendly || npc.lifeMax == 5) return;
 
-            var cnpc = npc.Camera();
+            var cnpc = npc.GetGlobalNPC<LegilimencyNPC>();
             cnpc.LegilimencyTimer--;
             if (cnpc.LegilimencyTimer < 0) cnpc.LegilimencyTimer = 0;
         }
 
+    }
+
+    public class LegilimencyNPC : GlobalNPC
+    {
+        public override bool InstancePerEntity => true;
+        public bool Confused;
+        public int LegilimencyTimer;
+        public override void ResetEffects(NPC npc)
+        {
+            Confused = false;
+        }
+        public override bool PreAI(NPC npc)
+        {
+
+            if (Confused)
+            {
+                bool legilimencyEffect = Main.player.Any((player => player.AliveCheck(npc.Center, 3000) && player.HeldItem.type == ModContent.ItemType<Legilimency>()));
+
+                if (legilimencyEffect)
+                {
+                    //降低20%速度
+                    npc.Aya().SpeedModifier *= 0.8f;
+                }
+
+                if (Main.rand.NextBool(3))
+                {
+                    foreach (var player in Main.ActivePlayers)
+                    {
+                        if (!player.AliveCheck(npc.Center, 2000) || !(player.HeldItem.type == ModContent.ItemType<Legilimency>())) continue;
+
+
+                        Vector2 vel = npc.DirectionToSafe(player.Center) * 2f;
+                        Dust d = Dust.NewDustPerfect(npc.Center, 112, vel, 128, Scale: 1f);
+                        d.noGravity = true;
+                    }
+                }
+            }
+            return base.PreAI(npc);
+        }
+        public override void UpdateLifeRegen(NPC npc, ref int damage)
+        {
+            if (Confused)
+            {
+
+                bool legilimencyEffect = Main.player.Any((player => player.AliveCheck(npc.Center, 3000)));
+
+                if (legilimencyEffect)
+                {
+                    //15dps
+                    npc.lifeRegen -= Legilimency.ConfusedDotDmg;
+                }
+                if (damage < 5)
+                    damage = 5;
+            }
+        }
     }
 }
