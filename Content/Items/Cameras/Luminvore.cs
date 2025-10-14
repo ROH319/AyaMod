@@ -37,7 +37,7 @@ namespace AyaMod.Content.Items.Cameras
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ItemID.DemoniteBar, 12)
+                .AddIngredient(ItemID.DemoniteBar, 8)
                 .AddIngredient(ItemID.ShadowScale, 6)
                 .AddTile(TileID.Anvils)
                 .Register();

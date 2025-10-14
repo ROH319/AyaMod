@@ -23,6 +23,16 @@ namespace AyaMod.Core.Globals
                 case NPCID.EyeofCthulhu:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CthulhuLens>(), 4));
                     break;
+                case NPCID.EaterofWorldsBody or NPCID.EaterofWorldsHead or NPCID.EaterofWorldsTail:
+                    {
+                        LeadingConditionRule lastEater = new(new Conditions.LegacyHack_IsABoss());
+                        lastEater.OnSuccess(ItemDropRule.Common(ItemType<Luminvore>(), 4));
+                        npcLoot.Add(lastEater);
+                    }
+                    break;
+                case NPCID.BrainofCthulhu:
+                    npcLoot.Add(ItemDropRule.Common(ItemType<Legilimency>(), 4));
+                    break;
                 case NPCID.QueenBee:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BeeCamera>(), 4));
                     break;
@@ -53,7 +63,7 @@ namespace AyaMod.Core.Globals
                 #endregion
 
                 case NPCID.PirateGhost:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CaptainCamera>(), 10));
+                    npcLoot.Add(new CommonDrop(ItemType<CaptainCamera>(),4,1,1,10));
                     break;
                 default: break;
             }

@@ -29,6 +29,14 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.04f, 98, 2f, filmSlot: 2);
             SetCaptureStats(1000, 60);
         }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemType<ToyCamera>())
+                .AddIngredient(ItemID.HellstoneBar, 10)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
     }
 
     public class FlawlessCameraProj : BaseCameraProj

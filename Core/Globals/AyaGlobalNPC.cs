@@ -148,7 +148,14 @@ namespace AyaMod.Core.Globals
                     damage = 4;
             }
         }
-
+        public override void ModifyShop(NPCShop shop)
+        {
+            //机械师
+            if(shop.NpcType == NPCID.Mechanic)
+            {
+                shop.Add(new Item(ItemType<DigitalCamera>()) { shopCustomPrice = Item.buyPrice(gold: 10) });
+            }
+        }
         public override bool InstancePerEntity => true;
     }
 }

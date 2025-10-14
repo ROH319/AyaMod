@@ -37,7 +37,7 @@ namespace AyaMod.Content.Items.Cameras
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ItemID.CrimtaneBar, 12)
+                .AddIngredient(ItemID.CrimtaneBar, 8)
                 .AddIngredient(ItemID.TissueSample, 6)
                 .AddTile(TileID.Anvils)
                 .Register();

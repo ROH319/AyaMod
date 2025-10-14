@@ -41,6 +41,17 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.08f, 164, 1.5f, 0.6f);
             SetCaptureStats(1000, 60);
         }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<MeteorCamera>()
+                .AddIngredient(ItemID.ChlorophyteBar, 10)
+                .AddIngredient(ItemID.ShroomiteBar, 10)
+                .AddIngredient(ItemID.SilverBar, 10)
+                .AddIngredient(ItemID.FallenStar, 20)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
+        }
     }
 
     public class MiracleCameraProj : BaseCameraProj

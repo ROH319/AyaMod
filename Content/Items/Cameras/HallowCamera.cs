@@ -36,6 +36,12 @@ namespace AyaMod.Content.Items.Cameras
         public static int radiusa = 320;
         public static int radiusb = 120;
         public static float rotSpeed = 0.06f;
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.HallowedBar,10)
+        }
     }
 
     public class HallowCameraProj : BaseCameraProj

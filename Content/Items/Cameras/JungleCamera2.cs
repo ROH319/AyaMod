@@ -33,6 +33,16 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.08f, 164, 1.5f,0.6f);
             SetCaptureStats(1000, 60);
         }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<JungleCamera>()
+                .AddIngredient(ItemID.ChlorophyteBar, 12)
+                .AddIngredient(ItemID.LeafBlower)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
+        }
     }
 
     public class JungleCameraProj2 : BaseCameraProj

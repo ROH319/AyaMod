@@ -36,6 +36,21 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.03f, 152, 1.6f, 0.5f);
             SetCaptureStats(1000, 60);
         }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.AdamantiteBar, 6)
+                .AddIngredient(ItemID.SoulofSight, 5)
+                .AddIngredient(ItemID.SoulofMight, 5)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
+            CreateRecipe()
+                .AddIngredient(ItemID.TitaniumBar, 6)
+                .AddIngredient(ItemID.SoulofSight, 5)
+                .AddIngredient(ItemID.SoulofMight, 5)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
+        }
     }
 
     public class AliceCameraProj : BaseCameraProj
