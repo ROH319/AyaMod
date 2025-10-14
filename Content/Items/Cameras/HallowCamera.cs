@@ -40,7 +40,9 @@ namespace AyaMod.Content.Items.Cameras
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ItemID.HallowedBar,10)
+                .AddIngredient(ItemID.HallowedBar, 10)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
         }
     }
 

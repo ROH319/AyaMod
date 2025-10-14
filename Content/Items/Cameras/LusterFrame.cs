@@ -83,7 +83,7 @@ namespace AyaMod.Content.Items.Cameras
                 int gemtype = Main.rand.Next(5);
                 int offset = Main.rand.Next(2, 5) * i;
                 var gem = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<LusterFrameGem>(),
-                    (int)(Projectile.damage * dmgmult), Projectile.knockBack, Projectile.owner, offset, rotSpeed, gemtype);
+                    (int)(Projectile.damage * dmgmult), Projectile.knockBack / 8, Projectile.owner, offset, rotSpeed, gemtype);
             }
         }
 
@@ -160,7 +160,7 @@ namespace AyaMod.Content.Items.Cameras
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             SpawnDust();
-            base.OnHitNPC(target, hit, damageDone);
+            target.AddBuff(BuffID.Midas, 4 * 60);
         }
         
         public override bool OnTileCollide(Vector2 oldVelocity)
@@ -243,7 +243,7 @@ namespace AyaMod.Content.Items.Cameras
 
 
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White, Projectile.rotation + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale, 0, 0);
-
+            if (SparkleScale > 0f)
             {
                 Vector2 offset = (MathHelper.Pi + MathHelper.PiOver4).ToRotationVector2() * 8;
                 Color sparklecolor = sparkleColor.AdditiveColor() * 0.7f;
