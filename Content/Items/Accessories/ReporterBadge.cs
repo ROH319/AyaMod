@@ -34,7 +34,7 @@ namespace AyaMod.Content.Items.Accessories
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ModContent.ItemType<ReporterCard>())
+                .AddIngredient<ReporterCard>()
                 .AddIngredient(ItemID.SoulofMight)
                 .AddIngredient(ItemID.SoulofFright)
                 .AddIngredient(ItemID.SoulofSight)

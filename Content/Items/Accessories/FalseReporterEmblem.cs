@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Terraria.Enums;
 using Terraria.Localization;
 using Terraria;
+using Terraria.ID;
 
 namespace AyaMod.Content.Items.Accessories
 {
@@ -28,5 +29,18 @@ namespace AyaMod.Content.Items.Accessories
 
         public static int DamageIncrease = 15;
         public static int DefenceDecrease = 6;
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.ShadowScale, 8)
+                .AddTile(TileID.Anvils)
+                .Register();
+
+            CreateRecipe()
+                .AddIngredient(ItemID.TissueSample, 8)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
     }
 }

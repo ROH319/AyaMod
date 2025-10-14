@@ -33,5 +33,14 @@ namespace AyaMod.Content.Items.Accessories
         public static int SpeedIncrease = 16;
         public static int SingleTargetIncrease = 16;
         public static int SizeDecrease = 8;
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<CthulhuLens>()
+                .AddIngredient<CrimsonPupil>()
+                .AddIngredient(ItemID.Bone, 15)
+                .Register();
+        }
     }
 }

@@ -94,8 +94,8 @@ namespace AyaMod.Content.Items.Accessories
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ItemType<SpazmatismLens>())
-                .AddIngredient(ItemType<RetinazerLens>())
+                .AddIngredient<SpazmatismLens>()
+                .AddIngredient<RetinazerLens>()
                 .AddIngredient(ItemID.IceQueenTrophy)
                 .AddIngredient(ItemID.PumpkingTrophy)
                 .AddTile(TileID.MythrilAnvil)

@@ -33,8 +33,8 @@ namespace AyaMod.Content.Items.Accessories
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ModContent.ItemType<ReporterEmblem>())
-                .AddIngredient(ModContent.ItemType<ReporterBadge>())
+                .AddIngredient<ReporterEmblem>()
+                .AddIngredient<ReporterBadge>()
                 .AddIngredient(ItemID.EyeoftheGolem)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();

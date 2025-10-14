@@ -34,8 +34,8 @@ namespace AyaMod.Content.Items.Accessories
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ItemType<CthulhuLens>())
-                .AddIngredient(ItemType<CorruptPupil>())
+                .AddIngredient<CthulhuLens>()
+                .AddIngredient<CorruptPupil>()
                 .AddIngredient(ItemID.Bone, 15)
                 .Register();
         }
