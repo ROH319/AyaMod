@@ -64,7 +64,8 @@ namespace AyaMod.Content.Items.Cameras
             float startRot = Main.rand.NextFloat(-0.5f, 0.5f);
 
             int damage = (int)(Projectile.damage * 1f);
-            var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<FleshEtcherMouth>(), damage, 0, Projectile.owner);
+            Vector2 offset = Main.rand.NextVector2Unit() * Main.rand.NextFloat(40);
+            var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + offset, Vector2.Zero, ModContent.ProjectileType<FleshEtcherMouth>(), damage, 0, Projectile.owner);
             p.rotation = startRot;
 
             int dustcount = 20;
@@ -147,7 +148,7 @@ namespace AyaMod.Content.Items.Cameras
                     float speed = Main.rand.NextFloat(2, 16);
                     Vector2 vel = Projectile.rotation.ToRotationVector2().RotatedByRandom(0.3f) * (Main.rand.NextBool() ? 1 : -1) * speed;
                     float scale = Main.rand.NextFloat(0.5f, 2.5f);
-                    Dust d = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(8), 235, vel,Scale:scale);
+                    Dust d = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(8), 235, vel, Scale:scale);
                     d.noGravity = true;
                 }
             }
@@ -156,7 +157,7 @@ namespace AyaMod.Content.Items.Cameras
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-
+            Texture2D star = TextureAssets.Extra[98].Value;
             float timeFactor = Projectile.TimeleftFactor();
 
             float x = Utils.Remap(EaseManager.Evaluate(Ease.Linear, timeFactor,1f), 0, 1f, MathHelper.Pi, 0);
@@ -168,11 +169,18 @@ namespace AyaMod.Content.Items.Cameras
                 {
                     Vector2 anchor = new Vector2(j * 10, 0).RotatedBy(Projectile.rotation);
                     Vector2 direction = new Vector2(0, i).RotatedBy(Math.PI / 2 / (count + 1) * j * -i).RotatedBy(Projectile.rotation);
+                    if (j != MathF.Abs(-count / 2)) direction = direction.RotatedBy(MathF.Sin(Projectile.rotation * 53898) * 0.2f);
                     float easevalue = EaseManager.Evaluate(Ease.OutSine, MathF.Sin(x), 1f);
                     //if (x > MathHelper.PiOver2) easevalue = EaseManager.Evaluate(Ease.InOutCubic, MathF.Sin(x), 1f);
                     Vector2 offset = anchor + direction * (80 + 30 * MathF.Sin(Utils.Remap(j, -3, 3, 0, MathHelper.Pi))) * easevalue;
+                    if (j != MathF.Abs(-count / 2))
+                    {
+                        offset += (Projectile.rotation * 321).ToRotationVector2() * MathF.Sin(Projectile.rotation * 3 + j * 53225 + MathF.Sin(Projectile.rotation * i * 324)) * 20;
+                    }
                     float scaleFactor = Utils.Remap(MathF.Abs(j), 0, 3, 0.5f, 1.3f) * Utils.Remap(MathF.Sin(x),0,1f,1.2f,0.6f);
-                    Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition + offset, null, Color.White * Projectile.Opacity, direction.ToRotation() + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale  * scaleFactor, SpriteEffects.None, 0);
+                    Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition + offset, null, Color.White * Projectile.Opacity * 0.6f, direction.ToRotation() + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale  * scaleFactor * 1.1f, SpriteEffects.None, 0);
+                    Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition + offset, null, Color.White * Projectile.Opacity * 0.8f, direction.ToRotation() + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale * scaleFactor * 0.6f, SpriteEffects.None, 0);
+
                 }
             }
 
