@@ -143,16 +143,18 @@ namespace AyaMod.Content.Items.Cameras
             float rot = Projectile.rotation;
             float num = 46f * Projectile.scale;
             Vector2 vector = rot.ToRotationVector2();
-            float num2 = Projectile.localAI[0] / 10f;
+            float num2 = Projectile.localAI[0] / 15f;
+            
             if (num2 >= 0f && num2 <= 1f)
             {
-                var pos = Vector2.Lerp(Projectile.Center - vector * num, Projectile.Center + vector * num, Projectile.localAI[0] / 36f);
-                var vel = vector.RotatedBy((float)Math.PI * 2f * Main.rand.NextFloatDirection() * 0.02f) * 8f * Main.rand.NextFloat();
+                //var vel = vector.RotatedBy((float)Math.PI * 2f * Main.rand.NextFloatDirection() * 0.02f) * 8f * Main.rand.NextFloat(0.5f,1.2f);
                 for (int i = 0; i < 2; i++)
                 {
-                    Dust dust = Dust.NewDustPerfect(pos, 278, vel, 0, new Color(60, 0, 150), 0.8f * num2);
+                    var pos = Vector2.Lerp(Projectile.Center - vector * num, Projectile.Center + vector * num, Projectile.localAI[0] / 36f);
+                    var vel = Projectile.velocity.RotatedByRandom(Utils.Remap(num2,0f,1f,0.2f,0f)) * Main.rand.NextFloat();
+                    Dust dust = Dust.NewDustPerfect(pos, 278, vel, 0, new Color(120, 0, 200), 1f * num2);
                     dust.noGravity = true;
-                    dust.noLight = (dust.noLightEmittence = true);
+                    dust.noLight = (dust.noLightEmittence = false);
                 }
             }
         }
