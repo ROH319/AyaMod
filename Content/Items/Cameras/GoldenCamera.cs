@@ -23,7 +23,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 20;
+            Item.damage = 18;
 
             Item.useTime = Item.useAnimation = 40;
             Item.useStyle = ItemUseStyleID.Rapier;
@@ -64,7 +64,8 @@ namespace AyaMod.Content.Items.Cameras
         {
             if (!Projectile.MyClient()) return;
 
-            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GoldenFlash>(), (int)(Projectile.damage * 0.3f), Projectile.knockBack,Projectile.owner);
+            int damage = (int)(Projectile.damage * 0.6f);
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GoldenFlash>(), damage, Projectile.knockBack,Projectile.owner);
         }
     }
 
@@ -79,8 +80,8 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.penetrate = -1;
-            Projectile.SetImmune(15);
-            Projectile.timeLeft = 30;
+            Projectile.SetImmune(20);
+            Projectile.timeLeft = 20;
             
         }
         public override void OnSpawn(IEntitySource source)
@@ -91,9 +92,9 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void AI()
         {
-            Projectile.rotation += 0.03f;
+            Projectile.rotation += 0.05f;
             float factor = Utils.Remap(Projectile.timeLeft, 0, Projectile.localAI[0], 1, 0);
-            Projectile.scale = MathF.Sin(factor * MathHelper.Pi);
+            Projectile.scale = MathF.Sin(factor * MathHelper.Pi) * 1.2f;
         }
 
         public override bool PreDraw(ref Color lightColor)
