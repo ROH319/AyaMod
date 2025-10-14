@@ -31,7 +31,7 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.025f, 72, 2f);
             SetCaptureStats(1000, 60);
         }
-
+        public override bool NeedsAmmo(Player player) => false;
         public override void AddRecipes()
         {
             CreateRecipe()
