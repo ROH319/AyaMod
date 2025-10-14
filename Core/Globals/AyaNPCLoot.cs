@@ -19,6 +19,7 @@ namespace AyaMod.Core.Globals
         {
             switch (npc.type)
             {
+                #region Boss
                 case NPCID.EyeofCthulhu:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CthulhuLens>(), 4));
                     break;
@@ -39,6 +40,20 @@ namespace AyaMod.Core.Globals
                     break;
                 case NPCID.Retinazer:
                     npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<RetinazerLens>(), 4));
+                    break;
+                case NPCID.Plantera:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<YukaCamera>(), 4));
+                    break;
+                case NPCID.DukeFishron:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DukeCamera>(), 4));
+                    break;
+                case NPCID.HallowBoss:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<EmpressCamera>(), 4));
+                    break;
+                #endregion
+
+                case NPCID.PirateGhost:
+                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CaptainCamera>(), 10));
                     break;
                 default: break;
             }
