@@ -1,4 +1,5 @@
 ﻿using AyaMod.Core.Attributes;
+using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using System;
@@ -16,7 +17,10 @@ namespace AyaMod.Content.Items.Accessories
     public class TranquilPupil : BaseAccessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(MaxChargeTime, MaxDamageMult);
-
+        public override void Load()
+        {
+            AyaPlayer.ModifyWeaponDamageHook += ModifySteathDamage;
+        }
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -30,6 +34,7 @@ namespace AyaMod.Content.Items.Accessories
 
         public static void ModifySteathDamage(Player player, Item item, ref StatModifier damage)
         {
+            if(!player.HasEffect<TranquilPupil>()) return;
             var ayaPlayer = player.Aya();
             float damageMult = 1 + Utils.Remap(ayaPlayer.NotUsingCameraTimer, 0, MaxChargeTime * 60, 0f, MaxDamageMult / 100f);
             damage *= damageMult;

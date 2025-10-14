@@ -44,17 +44,14 @@ namespace AyaMod.Core.ModPlayers
 
         }
 
+        public static event ModPlayerEvents.ModifyHitByBothDelegate ModifyHitByBothHook;
         public void ModifyHitByBoth(ref Player.HurtModifiers modifiers)
         {
-            if (Player.HasEffect<FalsePHDJ>())
-            {
-                modifiers.FinalDamage *= 1f + (float)FalsePHDJ.HurtIncrease / 100f;
-            }
+            ModifyHitByBothHook.Invoke(Player, ref modifiers);
             if (DamageReduceFlat > 0)
             {
                 modifiers.FinalDamage.Flat -= (float)DamageReduceFlat;
                 DamageReduceFlat = 0;
-
             }
         }
 
@@ -104,12 +101,11 @@ namespace AyaMod.Core.ModPlayers
 
             return AttackSpeed;
         }
+
+        public static event ModPlayerEvents.ModifyWeaponDamageDelegate ModifyWeaponDamageHook;
         public override void ModifyWeaponDamage(Item item, ref StatModifier damage)
         {
-            if (Player.HasEffect<TranquilPupil>())
-            {
-                TranquilPupil.ModifySteathDamage(Player, item, ref damage);
-            }
+            ModifyWeaponDamageHook?.Invoke(Player, item, ref damage);
         }
 
         public override void ProcessTriggers(TriggersSet triggersSet)
@@ -259,6 +255,12 @@ namespace AyaMod.Core.ModPlayers
         public override void UpdateDead()
         {
             WingTimeModifier = StatModifier.Default;
+        }
+
+        public override void Unload()
+        {
+            ModifyHitByBothHook = null;
+            ModifyWeaponDamageHook = null;
         }
     }
 }

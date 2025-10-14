@@ -1,4 +1,5 @@
-﻿using AyaMod.Content.Items.Cameras;
+﻿using AyaMod.Content.Items.Accessories;
+using AyaMod.Content.Items.Cameras;
 using AyaMod.Content.Items.Films.DyeFilms;
 using AyaMod.Helpers;
 using System;
@@ -112,10 +113,19 @@ namespace AyaMod.Core.Globals
         }
         public override void ModifyShop(NPCShop shop)
         {
-            //机械师
-            if(shop.NpcType == NPCID.Mechanic)
+
+            switch (shop.NpcType)
             {
-                shop.Add(new Item(ItemType<DigitalCamera>()) { shopCustomPrice = Item.buyPrice(gold: 10) });
+                case NPCID.ArmsDealer:
+                    shop.Add(new Item(ItemType<TriggerShutter>()) { shopCustomPrice = Item.buyPrice(gold: 1) });
+                    break;
+                //机械师
+                case NPCID.Mechanic:
+                    shop.Add(new Item(ItemType<DigitalCamera>()) { shopCustomPrice = Item.buyPrice(gold: 10) });
+                    shop.Add(new Item(ItemType<IntelligentGyroscope>()) { shopCustomPrice = Item.buyPrice(gold: 3) });
+                    break;
+                default:
+                    break;
             }
         }
         public override bool InstancePerEntity => true;

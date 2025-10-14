@@ -14,3 +14,7 @@ Keybinds: {
 	UltraMove.DisplayName: Ultra Move
 	SpecialMove.DisplayName: Special Move
 }
+
+DropConditions: {
+	PostSkeletron£ºNeeds killed Skeletron
+}

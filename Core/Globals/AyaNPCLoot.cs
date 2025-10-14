@@ -1,4 +1,5 @@
-﻿using AyaMod.Content.Items.Accessories;
+﻿using AyaMod.Common.ItemDropRules;
+using AyaMod.Content.Items.Accessories;
 using AyaMod.Content.Items.Cameras;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,9 @@ namespace AyaMod.Core.Globals
                     break;
                 #endregion
 
+                case NPCID.Ghost:
+                    npcLoot.Add(ItemDropRule.ByCondition(new DownedSkeletron(), ItemType<SpiritHeart>(), 6));
+                    break;
                 case NPCID.PirateGhost:
                     npcLoot.Add(new CommonDrop(ItemType<CaptainCamera>(),4,1,1,10));
                     break;

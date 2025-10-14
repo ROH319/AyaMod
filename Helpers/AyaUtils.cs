@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace AyaMod.Helpers
@@ -30,6 +31,11 @@ namespace AyaMod.Helpers
 
 
         #endregion
+
+        public static string GetText(string key, params object[] args)
+        {
+            return Language.Exists(key) ? Language.GetTextValue(key, args) : key;
+        }
 
         public static bool CheckLineCollisionTile(Vector2 start, Vector2 end, int interval = 8)
         {

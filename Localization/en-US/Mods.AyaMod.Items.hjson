@@ -4,6 +4,7 @@ CommonItemTooltip: {
 	PercentIncreasedFocusSpeed: "{0}% increased focus speed"
 	IncreaseCameraSize: Increase camera size by {0}%
 	DecreaseCameraSize: Decrease camera size by {0}%
+	IncreaseChaseSpeed: Increase camera chase speed by {0}%
 }
 
 GoldenCamera: {
@@ -541,5 +542,30 @@ SoulCamera: {
 
 FleshEtcher: {
 	DisplayName: Flesh Etcher
+	Tooltip: ""
+}
+
+IntelligentGyroscope: {
+	DisplayName: Intelligent Gyroscope
+	Tooltip: ""
+}
+
+SeigaPupil: {
+	DisplayName: Seiga Pupil
+	Tooltip: ""
+}
+
+SpiritHeart: {
+	DisplayName: Spirit Heart
+	Tooltip: ""
+}
+
+TriggerShutter: {
+	DisplayName: Trigger Shutter
+	Tooltip: ""
+}
+
+WraithChaser: {
+	DisplayName: Wraith Chaser
 	Tooltip: ""
 }

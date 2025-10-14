@@ -54,6 +54,8 @@ namespace AyaMod.Core.Prefabs
 
         public bool CanSpawnFlash = true;
 
+        public bool CanHit = false;
+
         public virtual Color outerFrameColor => Color.Red;
         public virtual Color innerFrameColor => Color.White;
         public virtual Color focusCenterColor => Color.White;
@@ -133,7 +135,6 @@ namespace AyaMod.Core.Prefabs
             //Item film = player.ChooseAmmo(player.HeldItem);
             //if (film != null)
             //    films.Add((BaseFilm)film.ModItem);
-            DealDamageThisFrame = CheckCanDamage() && CheckInSight();
             //Main.NewText($"{player.itemTime} {player.itemAnimation}");
             return base.PreAI();
         }
@@ -160,11 +161,10 @@ namespace AyaMod.Core.Prefabs
 
         public bool CheckInSight()
         {
-            //Collision.LaserScan()
             bool colli = AyaUtils.CheckLineCollisionTile(Projectile.Center, player.Center, 8);
             //var colli = Collision.CanHit(Projectile.Center, 1, 1, player.Center, 1, 1);
             //Main.NewText($"{colli}");
-            return player.GetModPlayer<CameraPlayer>().CanSnapThroughWall() || colli;
+            return player.GetModPlayer<CameraPlayer>().CanSnapThroughWall(this) || colli;
         }
 
         public bool CheckCanDamage()
@@ -243,6 +243,9 @@ namespace AyaMod.Core.Prefabs
             CheckHoverNPC();
             CheckHoverProjectile();
 
+
+            DealDamageThisFrame = CheckCanDamage() && CanHit;
+
             if (DealDamageThisFrame)
             {
                 var target = FindHighestHealthTarget();
@@ -280,14 +283,14 @@ namespace AyaMod.Core.Prefabs
 
         public virtual void MoveMent(CameraPlayer mplr)
         {
-            float slowedchase = CameraStats.ChaseFactor;
+            float slowedchase = mplr.ChaseSpeedModifier.ApplyTo(CameraStats.ChaseFactor);
             //if (mplr.Player.itemTime != 0) slowedchase *= CameraStats.SlowFactor;
             Vector2 previous = Projectile.Center;
             Projectile.Center = Vector2.Lerp(Projectile.Center, mplr.MouseWorld, slowedchase);
             ComputedVelocity = Projectile.Center - previous;
             Projectile.rotation = mplr.Player.AngleToSafe(Projectile.Center);
 
-            //bool canhit = AyaUtils.CheckLineCollisionTile(Projectile.Center, player.Center,8);
+            CanHit = CheckInSight();
             //Main.NewText($"{canhit}");
         }
 
@@ -446,9 +449,12 @@ namespace AyaMod.Core.Prefabs
         {
             //Utils.DrawLine(Main.spriteBatch, Projectile.Center, player.Center, Color.Red, Color.Red, 1);
             if (lens != null)
+            {
+                float alphaModifier = 1f;
+                if (!CanHit) alphaModifier *= 0.2f;
                 lens.DrawCamera(Main.spriteBatch, player, Projectile.Center,
-                    Projectile.rotation, floatingsize, FocusFactor, CameraStats.MaxFocusScale, outerFrameColor, innerFrameColor, focusCenterColor);
-
+                    Projectile.rotation, floatingsize, FocusFactor, CameraStats.MaxFocusScale, outerFrameColor * alphaModifier, innerFrameColor * alphaModifier, focusCenterColor * alphaModifier);
+            }
             return true;
         }
     }

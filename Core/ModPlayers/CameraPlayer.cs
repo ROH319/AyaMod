@@ -2,6 +2,7 @@
 using AyaMod.Content.Items.Lens;
 using AyaMod.Core.BuilderToggles;
 using AyaMod.Core.Configs;
+using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
@@ -31,9 +32,22 @@ namespace AyaMod.Core.ModPlayers
 
         public float FlashTimerMax = 15;
 
+        public int HoldCameraCounter = 0;
+        public int HoldNonCameraCounter = 0;
+
         public int CameraAltCooldown;
 
+        /// <summary>
+        /// 是否有显影液效果
+        /// </summary>
         public bool Developing;
+
+        /// <summary>
+        /// 是否可以穿墙拍摄
+        /// </summary>
+        public bool SpiritSnap;
+
+        public bool FreeSnap;
 
         public override void Load()
         {
@@ -42,6 +56,9 @@ namespace AyaMod.Core.ModPlayers
         public override void Unload()
         {
             DefaultLens = null;
+
+            CheckSnapThrouthWallEvent = null;
+            PostUpdateHook = null;
         }
 
         public override void OnEnterWorld()
@@ -59,6 +76,8 @@ namespace AyaMod.Core.ModPlayers
             SingleTargetMultiplier = 0f;
 
             Developing = false;
+
+            SpiritSnap = false;
         }
 
         public override void PreUpdate()
@@ -67,6 +86,7 @@ namespace AyaMod.Core.ModPlayers
                 MouseWorld = Main.MouseWorld;
         }
 
+        public static event ModPlayerEvents.PostUpdateDelegate PostUpdateHook;
         public override void PostUpdate()
         {
             if (Main.myPlayer == Player.whoAmI)
@@ -75,6 +95,19 @@ namespace AyaMod.Core.ModPlayers
             FlashTimer = Math.Clamp(FlashTimer, 0, FlashTimerMax);
 
             if (CameraAltCooldown > 0) CameraAltCooldown--;
+
+            if (Player.HeldCamera())
+            {
+                HoldCameraCounter++;
+                HoldNonCameraCounter = 0;
+            }
+            else
+            {
+                HoldNonCameraCounter++;
+                HoldCameraCounter = 0;
+            }
+
+            PostUpdateHook.Invoke(Player);
         }
 
         public override void PostUpdateMiscEffects()
@@ -97,7 +130,22 @@ namespace AyaMod.Core.ModPlayers
                 return CurrentLens;
         }
 
-        public bool CanSnapThroughWall() => false;
+        public delegate bool CheckSnapThrouthWallDelegate(Player player, BaseCameraProj proj);
+        public static event CheckSnapThrouthWallDelegate CheckSnapThrouthWallEvent;
+        public bool CanSnapThroughWall(BaseCameraProj projectile)
+        {
+            bool result = false;
+
+            if (SpiritSnap) result = true;
+
+            if (CheckSnapThrouthWallEvent is null) return result;
+
+            foreach(CheckSnapThrouthWallDelegate del in CheckSnapThrouthWallEvent.GetInvocationList())
+            {
+                result |= del.Invoke(Player, projectile);
+            }
+            return result;
+        }
 
         public override void CatchFish(FishingAttempt attempt, ref int itemDrop, ref int npcSpawn, ref AdvancedPopupRequest sonar, ref Vector2 sonarPosition)
         {

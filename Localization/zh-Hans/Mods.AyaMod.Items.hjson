@@ -4,6 +4,7 @@ CommonItemTooltip: {
 	PercentIncreasedFocusSpeed: 增加{0}%聚焦速度
 	IncreaseCameraSize: 增加{0}%镜头大小
 	DecreaseCameraSize: 减少{0}%镜头大小
+	IncreaseChaseSpeed: 增加{0}%拍摄框跟随速度
 }
 
 GoldenCamera: {
@@ -679,4 +680,38 @@ SoulCamera: {
 FleshEtcher: {
 	DisplayName: 血肉蚀刻者
 	Tooltip: ""
+}
+
+IntelligentGyroscope: {
+	DisplayName: 智能陀螺仪
+	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseChaseSpeed}"
+}
+
+SeigaPupil: {
+	DisplayName: 邪仙之瞳
+	Tooltip:
+		'''
+		拍摄框在距离35格内允许穿过墙壁拍摄
+		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseChaseSpeed}
+		'''
+}
+
+SpiritHeart: {
+	DisplayName: 幽灵之心
+	Tooltip: 站立不动时，拍摄框在距离20格内允许穿过墙壁拍摄
+}
+
+TriggerShutter: {
+	DisplayName: 扳机快门
+	Tooltip: 手持其他物品1.5s后，切换到相机可不经蓄力立刻拍照一次
+}
+
+WraithChaser: {
+	DisplayName: 幻灵寻迹器
+	Tooltip:
+		'''
+		允许穿墙拍摄
+		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseChaseSpeed}
+		手持其他物品1.5s后，切换到相机可不经蓄力立刻拍照一次
+		'''
 }
