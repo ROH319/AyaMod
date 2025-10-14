@@ -1,4 +1,4 @@
-﻿ClientConfig: {
+ClientConfig: {
 	DisplayName: 客户端配置
 	Headers.CameraRelated: 相机相关
 
@@ -14,6 +14,11 @@
 
 	SnapFlashAlpha: {
 		Label: 闪光特效透明度
+		Tooltip: ""
+	}
+
+	ManualSnapVolume: {
+		Label: 手动聚焦完成提示音量
 		Tooltip: ""
 	}
 }

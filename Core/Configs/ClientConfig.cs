@@ -17,6 +17,9 @@ namespace AyaMod.Core.Configs
         [DefaultValue(0.6f)]
         public float SnapVolume;
 
+        [DefaultValue(0.8f)]
+        public float ManualSnapVolume;
+
         [DefaultValue(true)]
         public bool SnapFlash;
 

@@ -1,4 +1,4 @@
-﻿ClientConfig: {
+ClientConfig: {
 	DisplayName: Client Config
 	Headers.CameraRelated: Camera Related Header
 
@@ -14,6 +14,11 @@
 
 	SnapFlashAlpha: {
 		Label: Snap Flash Alpha
+		Tooltip: ""
+	}
+
+	ManualSnapVolume: {
+		Label: Manual Snap Volume
 		Tooltip: ""
 	}
 }

@@ -81,7 +81,7 @@ namespace AyaMod.Core.Prefabs
                         player.itemTime = 3;
                 if(player.Aya().itemTimeLastFrame == 4 && player.itemTime == 3)
                 {
-                    Helper.PlayPitched("FocusReady", 0.8f, 0.3f, position: player.Center);
+                    Helper.PlayPitched("FocusReady", ClientConfig.Instance.ManualSnapVolume, 0.3f, position: player.Center);
 
                 }
             }
