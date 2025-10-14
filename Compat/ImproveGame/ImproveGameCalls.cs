@@ -52,7 +52,7 @@ namespace AyaMod.Compat.ImproveGame
 
         public static float ReporterSize()
         {
-            var size = Main.LocalPlayer.Camera().SizeBonus;
+            var size = Main.LocalPlayer.Camera().SizeModifier;
             return (size.Additive * size.Multiplicative - 1) * 100f;
         }
         /// <summary>

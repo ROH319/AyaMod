@@ -26,7 +26,7 @@ namespace AyaMod.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.GetAttackSpeed<ReporterDamage>() += (float)SpeedIncrease / 100f;
-            player.Camera().SizeBonus -= (float)SizeDecrease / 100f;
+            player.Camera().SizeModifier -= (float)SizeDecrease / 100f;
             //player.Camera().SingleTargetMultiplier += (float)SingleTargetIncrease / 100f;
         }
 

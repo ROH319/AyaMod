@@ -22,7 +22,8 @@ namespace AyaMod.Core.ModPlayers
         public ILens CurrentLens;
         public static ILens DefaultLens;
 
-        public StatModifier SizeBonus = StatModifier.Default;
+        public StatModifier ChaseSpeedModifier = StatModifier.Default;
+        public StatModifier SizeModifier = StatModifier.Default;
 
         public float SingleTargetMultiplier = 0f;
 
@@ -52,7 +53,8 @@ namespace AyaMod.Core.ModPlayers
         {
             CurrentLens = null;
 
-            SizeBonus = StatModifier.Default;
+            ChaseSpeedModifier = StatModifier.Default;
+            SizeModifier = StatModifier.Default;
 
             SingleTargetMultiplier = 0f;
 

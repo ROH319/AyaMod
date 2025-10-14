@@ -227,7 +227,7 @@ namespace AyaMod.Core.Prefabs
             if (camera == null) return;
 
             CameraStats = camera.CameraStats;
-            size = player.Camera().SizeBonus.ApplyTo(camera.CameraStats.Size) * camera.Item.GetGlobalItem<CameraGlobalItem>().SizeMult;
+            size = player.Camera().SizeModifier.ApplyTo(camera.CameraStats.Size) * camera.Item.GetGlobalItem<CameraGlobalItem>().SizeMult;
             lens = player.GetModPlayer<CameraPlayer>().GetLens();
         }
 

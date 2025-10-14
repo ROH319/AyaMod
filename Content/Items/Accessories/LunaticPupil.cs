@@ -36,13 +36,13 @@ namespace AyaMod.Content.Items.Accessories
             int speed = hideVisual ? SpeedIncrease : SpeedIncreaseVisual;
             if (hideVisual)
             {
-                player.Camera().SizeBonus -= (float)SizeDecrease / 100f;
+                player.Camera().SizeModifier -= (float)SizeDecrease / 100f;
                 Visual = -1;
                 //player.Camera().SingleTargetMultiplier += (float)SingleTargetIncrease / 100f;
             }
             else
             {
-                player.Camera().SizeBonus += (float)SizeIncrease / 100f;
+                player.Camera().SizeModifier += (float)SizeIncrease / 100f;
                 Visual = 1;
             }
             player.GetAttackSpeed<ReporterDamage>() += (float)speed / 100f;
