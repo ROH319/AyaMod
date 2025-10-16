@@ -87,6 +87,7 @@ namespace AyaMod.Content.Items.Cameras
     {
         public override string Texture => AssetDirectory.Projectiles + Name;
         public ref float Owner => ref Projectile.ai[0];
+        public ref float MissingOwner => ref Projectile.ai[1];
         public ref float TargetNext => ref Projectile.localAI[0];
         public ref float TargetPrev => ref Projectile.localAI[1];
         public ref float CollisionLeft => ref Projectile.localAI[2];
@@ -112,7 +113,7 @@ namespace AyaMod.Content.Items.Cameras
             TargetPrev = target.whoAmI;
             CollisionLeft--;
 
-            var othertarget = Projectile.FindCloestNPCIgnoreIndex(800, false, !Projectile.tileCollide, (int)Projectile.localAI[1]);
+            var othertarget = Projectile.FindCloestNPCIgnoreIndex(800, false, !Projectile.tileCollide, (int)TargetPrev);
             if (othertarget == null)
             {
                 TargetPrev = -1;
@@ -125,17 +126,22 @@ namespace AyaMod.Content.Items.Cameras
                 Projectile.velocity = Projectile.velocity.Length(10);
             }
 
-            float knockBackFactor = target.knockBackResist;
-            if (target.life <= 0) knockBackFactor = 1;
-            Vector2 totarget = Projectile.Center.DirectionToSafe(target.Center);
-            if (CollisionLeft == 0 && prev > 0) totarget = totarget.RotatedBy(MathHelper.PiOver4 * (Main.rand.NextBool() ? 1 : -1));
-            Vector2 vec = (-Projectile.velocity).Reflect(totarget.RotatedBy(MathHelper.PiOver2));
-            Projectile.velocity = Vector2.Lerp(vec, Projectile.velocity, knockBackFactor);
+            //if (CollisionLeft > 0)
+            {
+                float knockBackFactor = target.knockBackResist;
+                if (target.life <= 0) knockBackFactor = 1;
+                Vector2 totarget = Projectile.Center.DirectionToSafe(target.Center);
+                if (CollisionLeft == 0 && prev > 0) totarget = totarget.RotatedBy(MathHelper.PiOver4 * (Main.rand.NextBool() ? 1 : -1));
+                Vector2 vec = (-Projectile.velocity).Reflect(totarget.RotatedBy(MathHelper.PiOver2));
+                Projectile.velocity = Vector2.Lerp(vec, Projectile.velocity, knockBackFactor);
+
+
+                if (Projectile.velocity.Length() < 4f) Projectile.velocity = Projectile.velocity.Length(4);
+                if (Projectile.velocity.Length() > 5f) CreateWaveDust(Projectile.Center + totarget * 22f, totarget.ToRotation());
+            }
             //Projectile.velocity *= -1;
             //Projectile.velocity = Projectile.velocity.RotatedBy(dir * MathHelper.PiOver2);
-            if (Projectile.velocity.Length() < 4f) Projectile.velocity = Projectile.velocity.Length(4);
 
-            if (Projectile.velocity.Length() > 5f) CreateWaveDust(Projectile.Center + totarget * 22f, totarget.ToRotation());
 
             if(prev > 0)
             {
@@ -152,7 +158,7 @@ namespace AyaMod.Content.Items.Cameras
             if (angle >= MathHelper.PiOver4)
             {
 
-                if (oldVelocity.Length() > 1f) CreateWaveDust(Projectile.Center + dir.ToRotationVector2() * 22f, dir);
+                if (oldVelocity.Length() > 2f) CreateWaveDust(Projectile.Center + dir.ToRotationVector2() * 22f, dir);
                 Projectile.velocity *= .8f;
             }
 
@@ -187,7 +193,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.timeLeft++;
 
             Projectile camera = Main.projectile[(int)Owner];
-            if (camera.TypeAlive(ProjectileType<YukariCameraProj>()))
+            if (camera.TypeAlive(ProjectileType<YukariCameraProj>()) && MissingOwner >= 0)
             {
                 if (Projectile.Opacity < 1f)
                     Projectile.Opacity += 0.01f;
@@ -230,6 +236,7 @@ namespace AyaMod.Content.Items.Cameras
             }
             else
             {
+                MissingOwner = -1;
                 Projectile.Opacity -= 0.05f;
                 if (Projectile.Opacity < 0.1f) Projectile.Kill();
 
@@ -287,13 +294,13 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 12;
+            Projectile.width = Projectile.height = 36;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
             Projectile.usesIDStaticNPCImmunity = true;
             Projectile.idStaticNPCHitCooldown = 10;
             Projectile.timeLeft = 40;
-            Projectile.scale = 0.5f;
+            Projectile.scale = 0.7f;
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
