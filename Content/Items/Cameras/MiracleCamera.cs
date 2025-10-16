@@ -89,7 +89,7 @@ namespace AyaMod.Content.Items.Cameras
                 if(player.controlUseItem && player.itemTime % 3 == 0 && StarStack * 0.2f + StarFactor < 1f)
                 {
                     float trueFactor = StarStack * 0.2f + StarFactor;
-                    int stardmg = (int)(Projectile.damage * 0.2f);
+                    int stardmg = (int)(Projectile.damage * 0.3f);
 
                     Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ProjectileType<MiracleStar>(), stardmg, 0f, Projectile.owner,
                             0, Projectile.whoAmI, trueFactor);
@@ -113,7 +113,7 @@ namespace AyaMod.Content.Items.Cameras
                         RingParticle.Spawn(projectile.GetSource_FromAI(), projectile.Center, new Color(72, 206, 132).AdditiveColor(), 10, 120, 0.8f, 0f,
                     0.15f, 0.5f, 60, 120, Ease.OutCirc, Ease.OutCubic);
 
-                        int stardmg = (int)(projectile.damage * 0.2f);
+                        int stardmg = (int)(projectile.damage * 0.3f);
                         Projectile.NewProjectileDirect(projectile.GetSource_FromAI(), projectile.Center, Projectile.DirectionToSafe(projectile.Center).Length(4f + Main.rand.Next(8)).RotatedBy(Main.rand.NextBool() ? -MathHelper.PiOver4 : MathHelper.PiOver4), ProjectileType<MiracleStarHoming>(), stardmg, projectile.knockBack, projectile.owner);
                         projectile.Kill();
                     }
@@ -164,7 +164,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.ignoreWater = true;
             Projectile.SetImmune(-1);
             Projectile.timeLeft = 5 * 60;
-            Projectile.penetrate = 1;
+            Projectile.penetrate = -1;
             Projectile.scale = 0.8f;
             Projectile.ArmorPenetration = 40;
         }
@@ -498,6 +498,15 @@ namespace AyaMod.Content.Items.Cameras
         {
             if (!Projectile.Chase(1000, 25, 0.02f))
                 Projectile.velocity += Projectile.velocity.Length(0.06f);
+
+            if(Main.GameUpdateCount % 1 == 0)
+            {
+                Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(20);
+                float speedFactor = 0.4f;
+                var l = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, Projectile.velocity * speedFactor, Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.8f), 15);
+                l.VelMult = 0.94f;
+                l.Scale = Main.rand.NextFloat(0.8f, 1.2f);
+            }
             Projectile.rotation += 0.02f;
         }
 
@@ -515,14 +524,14 @@ namespace AyaMod.Content.Items.Cameras
                 Vector2 dir = rot.ToRotationVector2();
                 float radius = length * 0.8f + MathF.Sin(factor * MathHelper.TwoPi * 5) * length / 1.5f;
                 Vector2 pos = Projectile.Center + dir * radius;
-                Vector2 vel = (pos - Projectile.Center).Length(3);
+                Vector2 vel = (pos - Projectile.Center).Length(3) + Projectile.velocity * 0.3f;
                 Dust d = Dust.NewDustPerfect(pos, dusttype, vel, Scale: 1.5f);
                 d.noGravity = true;
             }
         }
         public Color ColorFunction(float progress)
         {
-            Color drawColor = AyaUtils.HSL2RGB(Hue, 1f, 0.6f);
+            Color drawColor = AyaUtils.HSL2RGB(Hue, 1f, 0.7f);
             float extraAlpha = 1f;
             float div = 0.2f;
             if (progress < div)
@@ -573,10 +582,13 @@ namespace AyaMod.Content.Items.Cameras
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, RenderHelper.MaxAdditive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone,null,Main.GameViewMatrix.TransformationMatrix);
             
-            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, color, 0.8f, 0.6f, 0.8f, 0.3f);
+            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, color, 0.8f, 0.6f, 0.8f, 0.5f);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone,null, Main.GameViewMatrix.TransformationMatrix);
 
+            Color color2 = AyaUtils.HSL2RGB(Hue, 1f, 0.7f);
+
+            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, color2, 0.8f, 0.6f, 0.8f, 0.25f);
 
 
             Vector2 pos = Projectile.Center - Main.screenPosition;
