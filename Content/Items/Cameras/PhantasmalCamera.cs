@@ -51,7 +51,7 @@ namespace AyaMod.Content.Items.Cameras
         public override Color focusCenterColor => base.focusCenterColor;
         public override Color flashColor => new Color(200, 244, 234).AdditiveColor() * 0.5f;
 
-        public static int TrailInterval => 10;
+        public static int TrailInterval => 3;
 
         public override void SetStaticDefaults()
         {
@@ -178,8 +178,9 @@ namespace AyaMod.Content.Items.Cameras
                 Projectile.rotation = camera.oldRot[trailIndex];
 
                 var mcamera = camera.ModProjectile as PhantasmalCameraProj;
-                float sizeFactor = Utils.Remap(Offset, 0, 5, 0.9f, 0.4f);
+                float sizeFactor = Utils.Remap(Offset, 0, 5, 0.9f, 0.7f);
                 Size = mcamera.Size * sizeFactor;
+                Projectile.Opacity = Utils.Remap(mcamera.ComputedVelocity.Length(), 3f, 20f, 0f, 1f);
                 if(FocusTimeleft > -1)
                 {
                     FocusTimeleft--;

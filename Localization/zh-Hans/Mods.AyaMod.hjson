@@ -15,6 +15,4 @@ Keybinds: {
 	SpecialMove.DisplayName: 特殊移动
 }
 
-DropConditions: {
-	PostSkeletron：需要击败骷髅王
-}
+DropConditions.PostSkeletron: 需要击败骷髅王

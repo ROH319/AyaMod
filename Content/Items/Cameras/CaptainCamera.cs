@@ -38,10 +38,6 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.05f, 132, 1.4f,0.5f);
             SetCaptureStats(1000, 60);
         }
-
-        public override void AddRecipes()
-        {
-        }
     }
 
     public class CaptainCameraProj : BaseCameraProj
