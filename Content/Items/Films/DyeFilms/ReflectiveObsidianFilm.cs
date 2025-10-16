@@ -1,5 +1,6 @@
 ﻿using AyaMod.Content.Buffs.Films;
 using AyaMod.Core;
+using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,6 +16,20 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DefenseBonus, DRBonus, thornBonus);
         public override int DyeID => 3554;
+
+        public override void Load()
+        {
+            AyaPlayer.OnHitByBothHook += ObsidianOnHit;
+        }
+
+        public static void ObsidianOnHit(Player player, ref Player.HurtInfo hurtInfo)
+        {
+            if (player.HasBuff(BuffType<ReflectiveObsidianBuff>()))
+            {
+                ReflectiveObsidianFilm.SpawnObsidianShard(player, ref hurtInfo);
+            }
+            player.ClearBuff(BuffType<ReflectiveObsidianBuff>());
+        }
 
         public override void PostClearProjectile(BaseCameraProj projectile, int capturecount)
         {

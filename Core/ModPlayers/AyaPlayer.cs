@@ -65,20 +65,10 @@ namespace AyaMod.Core.ModPlayers
             OnHitByBoth(ref hurtInfo);
         }
 
+        public static event ModPlayerEvents.OnHitByBothDelegate OnHitByBothHook;
         public void OnHitByBoth(ref Player.HurtInfo hurtInfo)
         {
-
-            if (Player.HasBuff<ReflectiveObsidianBuff>())
-            {
-                ReflectiveObsidianFilm.SpawnObsidianShard(Player,ref hurtInfo);
-            }
-
-            Player.ClearBuff(BuffType<ReflectiveBuff>());
-            Player.ClearBuff(BuffType<ReflectiveCopperBuff>());
-            Player.ClearBuff(BuffType<ReflectiveSilverBuff>());
-            Player.ClearBuff(BuffType<ReflectiveGoldBuff>());
-            Player.ClearBuff(BuffType<ReflectiveMetalBuff>());
-            Player.ClearBuff(BuffType<ReflectiveObsidianBuff>());
+            OnHitByBothHook?.Invoke(Player, ref hurtInfo);
         }
 
         public override bool CanUseItem(Item item)

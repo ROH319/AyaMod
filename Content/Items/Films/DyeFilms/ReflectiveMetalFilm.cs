@@ -1,6 +1,8 @@
 ﻿using AyaMod.Content.Buffs.Films;
 using AyaMod.Core;
+using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
+using Terraria;
 using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
@@ -11,6 +13,14 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DefenseBonus, DRBonus, thornBonus);
         public override int DyeID => 3555;
 
+        public override void Load()
+        {
+            AyaPlayer.OnHitByBothHook += OnHit;
+        }
+        public static void OnHit(Player player, ref Player.HurtInfo hurtInfo)
+        {
+            player.ClearBuff(BuffType<ReflectiveMetalBuff>());
+        }
         public override void PostClearProjectile(BaseCameraProj projectile, int capturecount)
         {
             projectile.player.AddBuff(BuffType<ReflectiveMetalBuff>(),2);
