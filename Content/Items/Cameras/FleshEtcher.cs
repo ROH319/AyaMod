@@ -169,7 +169,7 @@ namespace AyaMod.Content.Items.Cameras
                 {
                     Vector2 anchor = new Vector2(j * 10, 0).RotatedBy(Projectile.rotation);
                     Vector2 direction = new Vector2(0, i).RotatedBy(Math.PI / 2 / (count + 1) * j * -i).RotatedBy(Projectile.rotation);
-                    if (j != MathF.Abs(-count / 2)) direction = direction.RotatedBy(MathF.Sin(Projectile.rotation * 53898) * 0.2f);
+                    if (j != MathF.Abs(-count / 2)) direction = direction.RotatedBy(MathF.Sin(Projectile.rotation * 53898 + j * 439) * 0.2f);
                     float easevalue = EaseManager.Evaluate(Ease.OutSine, MathF.Sin(x), 1f);
                     //if (x > MathHelper.PiOver2) easevalue = EaseManager.Evaluate(Ease.InOutCubic, MathF.Sin(x), 1f);
                     Vector2 offset = anchor + direction * (80 + 30 * MathF.Sin(Utils.Remap(j, -3, 3, 0, MathHelper.Pi))) * easevalue;

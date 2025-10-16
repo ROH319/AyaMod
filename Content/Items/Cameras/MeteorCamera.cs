@@ -103,7 +103,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.timeLeft = 120;
             Projectile.extraUpdates = 2;
         }
-
+        public override bool? CanHitNPC(NPC target) => Projectile.ai[0] < 0 ? false : base.CanHitNPC(target);
         public override void OnSpawn(IEntitySource source)
         {
             base.OnSpawn(source);
@@ -147,9 +147,27 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnKill(int timeLeft)
         {
+
+            int dustamount = 60;
+            float startRot = Projectile.rotation + MathHelper.TwoPi / 10;
+            float length = 30;
+            for (int i = 0; i < dustamount; i++)
+            {
+                float factor = (float)i / dustamount;
+                float rot = MathHelper.TwoPi * factor + startRot;
+                Vector2 dir = rot.ToRotationVector2();
+                float radius = length * 0.8f + MathF.Sin(factor * MathHelper.TwoPi * 5) * length / 2;
+                Vector2 pos = Projectile.Center + dir * radius;
+                Vector2 vel = (pos - Projectile.Center).Length(4) + Projectile.velocity * 0.25f;
+                Dust d = Dust.NewDustPerfect(pos, DustID.YellowStarDust, vel, Scale: 1.5f);
+                d.noGravity = true;
+            }
+
             if (Projectile.ai[0] < 0)
             {
-                NPC npc = Main.projectile[(int)Projectile.ai[1]].FindCloestNPC(2000, true, true);
+                var camera = Main.projectile[(int)Projectile.ai[1]];
+                if (camera.ModProjectile is not BaseCameraProj cam) return;
+                NPC npc = camera.FindCloestNPC(2000, true, true);
                 if (npc == null) return;
                 int count = 1;
                 if (Main.rand.NextBool(3)) count++;
@@ -157,7 +175,7 @@ namespace AyaMod.Content.Items.Cameras
                 for (int i = 0; i < count; i++)
                 {
                     Vector2 pos = npc.Center + new Vector2(Main.rand.NextFloat(-200, 200), -1000);
-                    var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, pos.DirectionToSafe(npc.Center) * 20, Projectile.type, damage, 
+                    var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, pos.DirectionToSafe(npc.Center) * 20, Projectile.type, damage,
                         Projectile.knockBack, Projectile.owner, npc.whoAmI);
                     p.extraUpdates = 1;
                     p.Scale(1.5f, false);
@@ -172,21 +190,6 @@ namespace AyaMod.Content.Items.Cameras
             }
 
 
-            int dustamount = 60;
-            float startRot = Projectile.rotation + MathHelper.TwoPi / 10;
-            float length = 30;
-            for (int i = 0; i < dustamount; i++)
-            {
-                float factor = (float)i / dustamount;
-                float rot = MathHelper.TwoPi * factor + startRot;
-                Vector2 dir = rot.ToRotationVector2();
-                float radius = length * 0.8f + MathF.Sin(factor * MathHelper.TwoPi * 5) * length / 2;
-                Vector2 pos = Projectile.Center + dir * radius;
-                Vector2 vel = (pos - Projectile.Center).Length(4) + Projectile.velocity * 0.2f;
-                Dust d = Dust.NewDustPerfect(pos, DustID.YellowStarDust, vel,Scale:1.5f);
-                d.noGravity = true;
-
-            }
             base.OnKill(timeLeft);
         }
 

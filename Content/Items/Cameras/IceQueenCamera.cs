@@ -63,9 +63,9 @@ namespace AyaMod.Content.Items.Cameras
                 int dustcount = 8;
                 for (int i = 0; i < dustcount; i++)
                 {
-                    float range = Main.rand.Next(50, 100) * 2;
+                    float range = Main.rand.Next(75, 100) * 2;
                     var pos = Projectile.Center + Main.rand.NextVector2Unit() * range;
-                    var vel = pos.DirectionToSafe(Projectile.Center) * 5;
+                    var vel = pos.DirectionToSafe(Projectile.Center).RotatedBy(MathHelper.PiOver4/2) * range / 12;
                     FogParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, new Color(106, 152, 216).AdditiveColor() * 0.1f, fadeout: 0.96f, velMult: 0.94f);
                 }
             }
@@ -94,10 +94,10 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.rotation = Main.rand.NextFloat(MathHelper.TwoPi);
 
             float starscale = Projectile.ai[2] / 300;
-            float starspeed = Main.rand.NextFloat(4, 7) * Projectile.ai[2] / 75f;
             for (int i = 0; i < 64; i++)
             {
-                Vector2 pos = Projectile.Center;
+                Vector2 pos = Projectile.Center/* + Main.rand.NextVector2Unit() * Main.rand.NextFloat(20)*/;
+                float starspeed = Main.rand.NextFloat(2, 7) * Projectile.ai[2] / 75f;
                 Vector2 vel = Main.rand.NextVector2Unit() * starspeed;
                 StarParticle.Spawn(source, pos, vel, Color.LightSkyBlue.AdditiveColor(),
                     starscale, 0.4f, 1.2f, 0.85f, 0.93f, vel.ToRotation(), 1f);
@@ -128,11 +128,11 @@ namespace AyaMod.Content.Items.Cameras
             float factor = Projectile.TimeleftFactor();
             float maxradius = 150;
             if (Projectile.ai[2] != 0) maxradius = Projectile.ai[2];
-            float threshold = 0.7f;
+            float threshold = 0.75f;
             if (factor > threshold)
                 Radius = Utils.Remap(factor, threshold, 1f, maxradius, 30);
             else
-                Radius = Utils.Remap(factor, 0f, threshold, maxradius * 2f, maxradius);
+                Radius = Utils.Remap(factor, 0f, threshold, maxradius * 1.7f, maxradius);
 
             int total = (int)Radius * 2;
             if (Projectile.oldPos.Length < total)
