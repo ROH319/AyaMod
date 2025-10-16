@@ -126,6 +126,8 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
+            Projectile.SetImmune(15);
+            Projectile.penetrate = -1;
             Projectile.timeLeft = GaleGeta.GaleGetaDashDelay * 2;
         }
 

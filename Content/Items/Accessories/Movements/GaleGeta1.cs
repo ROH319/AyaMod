@@ -112,9 +112,10 @@ namespace AyaMod.Content.Items.Accessories.Movements
             ayaPlayer.DashDelay = GaleGetaDashDelay;
             ayaPlayer.DashTimer = 10;
 
+            int type = ProjectileType<GaleGetaDash1>();
             int damage = GaleGetaDamage;
             damage = (int)(player.GetTotalDamage<ReporterDamage>().ApplyTo(damage));
-            Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, player.velocity, ModContent.ProjectileType<GaleGetaDash1>(), damage, 0, player.whoAmI);
+            Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, player.velocity, type, damage, 0, player.whoAmI);
 
         }
 
@@ -149,7 +150,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
 
                     if (player.whoAmI == Main.myPlayer)
                         player.ApplyDamageToNPC(npc, (int)damage, knockBack, direction, crit, ReporterDamage.Instance, false);
-
+                    npc.immune[player.whoAmI] = 12;
                     player.GiveImmuneTimeForCollisionAttack(12);
                 }
 
@@ -177,7 +178,9 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
+            Projectile.SetImmune(15);
             Projectile.timeLeft = GaleGeta1.GaleGetaDashDelay * 2;
+            Projectile.penetrate = -1;
         }
 
         public override void AI()

@@ -136,7 +136,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
 
                     if (player.whoAmI == Main.myPlayer)
                         player.ApplyDamageToNPC(npc, (int)damage, knockBack, direction, crit, ReporterDamage.Instance, false);
-
+                    npc.immune[player.whoAmI] = 12;
                     player.GiveImmuneTimeForCollisionAttack(12);
                     
                 }
@@ -183,6 +183,8 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
+            Projectile.SetImmune(15);
+            Projectile.penetrate = -1;
             Projectile.timeLeft = GaleGeta2.GaleGetaDashDelay * 2;
         }
 
