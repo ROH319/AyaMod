@@ -84,6 +84,11 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void AI()
         {
+            if(Projectile.soundDelay == 0)
+            {
+                Projectile.soundDelay = 1;
+                SoundEngine.PlaySound(SoundID.Item85 with { MaxInstances = 5}, Projectile.Center);
+            }
             //弹幕生成的前几帧不追踪
             if (Projectile.Opacity > 0.8f)
             {
