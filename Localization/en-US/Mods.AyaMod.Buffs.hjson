@@ -77,3 +77,18 @@ ReflectiveSilverBuff: {
 	DisplayName: Reflective Silver Buff
 	Description: Mods.AyaMod.Buffs.ReflectiveSilverBuff.Description
 }
+
+DarkRevealedBuff: {
+	DisplayName: Dark Revealed Buff
+	Description: Mods.AyaMod.Buffs.DarkRevealedBuff.Description
+}
+
+StealthBuff: {
+	DisplayName: Stealth Buff
+	Description: Mods.AyaMod.Buffs.StealthBuff.Description
+}
+
+StealthNoHitBuff: {
+	DisplayName: Stealth No Hit Buff
+	Description: Mods.AyaMod.Buffs.StealthNoHitBuff.Description
+}

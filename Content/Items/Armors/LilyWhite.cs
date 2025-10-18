@@ -31,7 +31,7 @@ namespace AyaMod.Content.Items.Armors
         {
             Item.width = 19;
             Item.height = 12;
-            Item.SetShopValues(ItemRarityColor.Green2, Item.sellPrice(gold: 1));
+            Item.SetShopValues(ItemRarityColor.Blue1, Item.sellPrice(gold: 1));
             Item.defense = 4;
         }
         public override void UpdateEquip(Player player)
@@ -85,7 +85,7 @@ namespace AyaMod.Content.Items.Armors
         {
             Item.width = 19;
             Item.height = 12;
-            Item.SetShopValues(ItemRarityColor.Green2, Item.sellPrice(gold: 1));
+            Item.SetShopValues(ItemRarityColor.Blue1, Item.sellPrice(gold: 1));
             Item.defense = 5;
         }
         public override void UpdateEquip(Player player)
@@ -103,7 +103,7 @@ namespace AyaMod.Content.Items.Armors
         {
             Item.width = 19;
             Item.height = 12;
-            Item.SetShopValues(ItemRarityColor.Green2, Item.sellPrice(gold: 1));
+            Item.SetShopValues(ItemRarityColor.Blue1, Item.sellPrice(gold: 1));
             Item.defense = 4;
         }
         public override void UpdateEquip(Player player)

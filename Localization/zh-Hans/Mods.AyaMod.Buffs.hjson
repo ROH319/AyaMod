@@ -1,4 +1,4 @@
-AcidBuff: {
+﻿AcidBuff: {
 	// DisplayName: Acid Buff
 	// Description: Mods.AyaMod.Buffs.AcidBuff.Description
 }
@@ -76,4 +76,19 @@ ReflectiveObsidianBuff: {
 ReflectiveSilverBuff: {
 	// DisplayName: Reflective Silver Buff
 	// Description: Mods.AyaMod.Buffs.ReflectiveSilverBuff.Description
+}
+
+DarkRevealedBuff: {
+	// DisplayName: Dark Revealed Buff
+	// Description: Mods.AyaMod.Buffs.DarkRevealedBuff.Description
+}
+
+StealthBuff: {
+	DisplayName: 潜行
+	Description: 提高{0}%移动速度和{1}%加速度，增加{2}%拍摄伤害和{3}%暴击率，受到接触伤害减少{4}%
+}
+
+StealthNoHitBuff: {
+	DisplayName: 潜行
+	Description: "{$Mods.AyaMod.Buffs.StealthBuff.Description}"
 }

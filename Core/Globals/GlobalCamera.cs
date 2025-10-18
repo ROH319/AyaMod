@@ -28,6 +28,32 @@ namespace AyaMod.Core.Globals
             return result;
         }
 
+
+        public static event CameraNPCEvents.CameraNPCDelegate HoverNPCHook;
+        public static void HoverNPC(BaseCameraProj projectile, NPC npc)
+        {
+            if (HoverNPCHook == null) return;
+            foreach (CameraNPCEvents.CameraNPCDelegate g in HoverNPCHook.GetInvocationList())
+                g.Invoke(projectile, npc);
+        }
+
+        public static event CameraNPCEvents.CameraNPCDelegate NotHoverNPCHook;
+        public static void NotHoverNPC(BaseCameraProj projectile, NPC npc)
+        {
+            if (NotHoverNPCHook == null) return;
+            foreach (CameraNPCEvents.CameraNPCDelegate g in NotHoverNPCHook.GetInvocationList())
+                g.Invoke(projectile, npc);
+        }
+
+        public delegate void PostClearDelegate(BaseCameraProj projectile, int captureCount);
+        public static event PostClearDelegate PostClearHook;
+        public static void PostClear(BaseCameraProj projectile, int captureCount)
+        {
+            if (PostClearHook == null) return;
+            foreach (PostClearDelegate g in PostClearHook.GetInvocationList())
+                g.Invoke(projectile, captureCount);
+        }
+
         public override void Unload()
         {
             PreAIHook = null;

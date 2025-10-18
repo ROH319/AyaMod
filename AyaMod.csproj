@@ -10,7 +10,9 @@
 	<ItemGroup>
 	  <Folder Include="Content\Projectiles\" />
 	  <Folder Include="Localization\zh-Hans\" />
-	  <Folder Include="Effects\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Publicize Include="Terraria" />
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Update="tModLoader.CodeAssist" Version="0.1.5" />

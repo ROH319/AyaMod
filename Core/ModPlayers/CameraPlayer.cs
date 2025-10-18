@@ -86,7 +86,7 @@ namespace AyaMod.Core.ModPlayers
                 MouseWorld = Main.MouseWorld;
         }
 
-        public static event ModPlayerEvents.PostUpdateDelegate PostUpdateHook;
+        public static event ModPlayerEvents.PlayerDelegate PostUpdateHook;
         public override void PostUpdate()
         {
             if (Main.myPlayer == Player.whoAmI)

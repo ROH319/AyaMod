@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameInput;
 
 namespace AyaMod.Core.ModPlayers
@@ -18,6 +19,7 @@ namespace AyaMod.Core.ModPlayers
     public partial class AyaPlayer : ModPlayer
     {
         public int itemTimeLastFrame;
+        public int noHitTimer;
         public int freeFlyFrame = 0;
         public int FreeFlyFrame = 0;
         public float AttackSpeed;
@@ -33,26 +35,35 @@ namespace AyaMod.Core.ModPlayers
         public float WispDmg = 0;
         public float InfernalWispDmg = 0;
 
+        public static event ModPlayerEvents.PlayerDrawEffectDelegate PlayerDrawEffectHook;
+        public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+        {
+            PlayerDrawEffectHook?.Invoke(Player, ref drawInfo, ref r, ref g, ref b, ref a, ref fullBright);
+        }
 
+        public static event ModPlayerEvents.ModifyHitByNPCDelegate ModifyHitByNPCHook;
         public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers)
         {
+            ModifyHitByNPCHook?.Invoke(Player, npc, ref modifiers);
             ModifyHitByBoth(ref modifiers);
         }
+        public static event ModPlayerEvents.ModifyHitByProjectileDelegate ModifyHitByProjectileHook;
         public override void ModifyHitByProjectile(Projectile proj, ref Player.HurtModifiers modifiers)
         {
+            ModifyHitByProjectileHook?.Invoke(Player, proj, ref modifiers);
             ModifyHitByBoth(ref modifiers);
-
         }
 
         public static event ModPlayerEvents.ModifyHitByBothDelegate ModifyHitByBothHook;
         public void ModifyHitByBoth(ref Player.HurtModifiers modifiers)
         {
-            ModifyHitByBothHook.Invoke(Player, ref modifiers);
+            ModifyHitByBothHook?.Invoke(Player, ref modifiers);
             if (DamageReduceFlat > 0)
             {
                 modifiers.FinalDamage.Flat -= (float)DamageReduceFlat;
                 DamageReduceFlat = 0;
             }
+            noHitTimer = 0;
         }
 
         public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
@@ -163,6 +174,8 @@ namespace AyaMod.Core.ModPlayers
 
             ResetDashDir();
         }
+
+        public static event ModPlayerEvents.PlayerDelegate PostUpdateBuffsHook;
         public override void PostUpdateBuffs()
         {
             bool devEffect = Player.DevEffect();
@@ -171,6 +184,8 @@ namespace AyaMod.Core.ModPlayers
 
             InfernalWispDmg += InfernalWispDmg;
             InfernalWispDmg = MathHelper.Clamp(InfernalWispDmg, 0, InfernalWispFilm.WispDmgMax);
+
+            PostUpdateBuffsHook?.Invoke(Player);
         }
         public override void PostUpdateRunSpeeds()
         {
@@ -230,6 +245,7 @@ namespace AyaMod.Core.ModPlayers
             }
 
             NotUsingCameraTimer++;
+            noHitTimer++;
             //Main.NewText($"{Player.velocity.Y} {Player.wingTime} {Player.wingTimeMax} {Main.time}");
             //Main.NewText($"{Player.dashDelay}");
             //Console.WriteLine($"{Player.dashDelay} {DashDelay}");
@@ -249,8 +265,11 @@ namespace AyaMod.Core.ModPlayers
 
         public override void Unload()
         {
+            PlayerDrawEffectHook = null;
             ModifyHitByBothHook = null;
             ModifyWeaponDamageHook = null;
+            PostUpdateBuffsHook = null;
+            OnHitByBothHook = null;
         }
     }
 }

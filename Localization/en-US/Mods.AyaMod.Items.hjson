@@ -569,3 +569,19 @@ WraithChaser: {
 	DisplayName: Wraith Chaser
 	Tooltip: ""
 }
+
+DarkRevealerMask: {
+	DarkBonus: Mods.AyaMod.Items.DarkRevealerMask.DarkBonus
+	DisplayName: Dark Revealer Mask
+	Tooltip: ""
+}
+
+DarkRevealerCloak: {
+	DisplayName: Dark Revealer Cloak
+	Tooltip: ""
+}
+
+DarkRevealerLeggings: {
+	DisplayName: Dark Revealer Leggings
+	Tooltip: ""
+}

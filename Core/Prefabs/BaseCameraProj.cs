@@ -323,8 +323,7 @@ namespace AyaMod.Core.Prefabs
                 projectile.Kill();
                 captureCount++;
             }
-            PostClear(captureCount);
-            UpdateFilm(film => film.PostClearProjectile(this, captureCount));
+            PostClearCombined(captureCount);
         }
 
         public virtual void PreClear() { }
@@ -335,6 +334,12 @@ namespace AyaMod.Core.Prefabs
 
         public virtual void OnClearProjectile(Projectile projectile) { }
 
+        public void PostClearCombined(int captureCount)
+        {
+            PostClear(captureCount);
+            UpdateFilm(film => film.PostClearProjectile(this, captureCount));
+            GlobalCamera.PostClear(this, captureCount);
+        }
         public virtual void PostClear(int captureCount) { }
 
         public void CheckHoverNPC()
@@ -343,12 +348,22 @@ namespace AyaMod.Core.Prefabs
             {
                 var hitbox = npc.Hitbox;
                 if (lens.Colliding(Projectile.Center, Size, Projectile.rotation, hitbox))
-                    HoverNPC(npc);
-                else NotHoverNPC(npc);
+                    HoverNPCCombined(npc);
+                else NotHoverNPCCombined(npc);
             }
 
         }
+        public void HoverNPCCombined(NPC npc)
+        {
+            HoverNPC(npc);
+            GlobalCamera.HoverNPC(this, npc);
+        }
         public virtual void HoverNPC(NPC npc) { }
+        public void NotHoverNPCCombined(NPC npc)
+        {
+            NotHoverNPC(npc);
+            GlobalCamera.NotHoverNPC(this, npc);
+        }
         public virtual void NotHoverNPC(NPC npc) { }
 
         public void CheckHoverProjectile()

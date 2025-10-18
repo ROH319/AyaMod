@@ -59,6 +59,7 @@ namespace AyaMod.Core
         public static Effect Trail;
         public static Effect Trail2;
         public static Effect SimpleGradient;
+        
 
         public static void LoadAsset()
         {
