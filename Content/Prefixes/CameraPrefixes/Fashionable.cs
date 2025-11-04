@@ -7,7 +7,7 @@ using Terraria;
 
 namespace AyaMod.Content.Prefixes.CameraPrefixes
 {
-    public class Fashionable() : BaseCameraPrefix(damageMult:1.1f,focusSpeedMult:0.95f,stunMult:1.05f,valueMult:1.35f)
+    public class Fashionable() : BaseCameraPrefix(damageMult:1.1f,focusSpeedMult:0.9f,critBonus: 10,sizeMult:1.1f, stunMult:1.2f,valueMult:1.75f)
     {
         public override float RollChance(Item item)
         {

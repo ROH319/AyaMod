@@ -7,7 +7,7 @@ using Terraria;
 
 namespace AyaMod.Content.Prefixes.CameraPrefixes
 {
-    public class Dazzling() : BaseCameraPrefix(damageMult:1.20f,focusSpeedMult:1.1f,critBonus:15, stunMult:2f,valueMult:1.75f)
+    public class Precise() : BaseCameraPrefix(damageMult:1.4f,sizeMult:0.8f,valueMult:1.75f)
     {
         public override float RollChance(Item item)
         {
