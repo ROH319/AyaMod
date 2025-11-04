@@ -135,4 +135,14 @@ namespace AyaMod.Content.Items.Cameras
             return false;
         }
     }
+
+    public class Lantern : ModNPC
+    {
+        public override string Texture => AssetDirectory.EmptyTexturePass;
+        public override bool? CanBeHitByProjectile(Projectile projectile)
+        {
+            return base.CanBeHitByProjectile(projectile);
+        }
+    }
+
 }

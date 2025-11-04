@@ -102,19 +102,19 @@ namespace AyaMod.Content.Items.Cameras
                 {
                     if(StarStack > 4 && projectile.type == ProjectileType<MiracleRail>() && projectile.owner == Projectile.owner)
                     {
-                        for (int i = 0; i < 1; i++)
-                        {
-                            SoundEngine.PlaySound(SoundID.Item35 with
-                            {
-                                MaxInstances = 20,
-                                Volume = 0.6f
-                            }, projectile.Center);
-                        }
-                        RingParticle.Spawn(projectile.GetSource_FromAI(), projectile.Center, new Color(72, 206, 132).AdditiveColor(), 10, 120, 0.8f, 0f,
-                    0.15f, 0.5f, 60, 120, Ease.OutCirc, Ease.OutCubic);
+                        //for (int i = 0; i < 1; i++)
+                        //{
+                        //    SoundEngine.PlaySound(SoundID.Item35 with
+                        //    {
+                        //        MaxInstances = 20,
+                        //        Volume = 0.6f
+                        //    }, projectile.Center);
+                        //}
+                    //    RingParticle.Spawn(projectile.GetSource_FromAI(), projectile.Center, new Color(72, 206, 132).AdditiveColor(), 10, 120, 0.8f, 0f,
+                    //0.15f, 0.5f, 60, 120, Ease.OutCirc, Ease.OutCubic);
 
-                        int stardmg = (int)(projectile.damage * 0.3f);
-                        Projectile.NewProjectileDirect(projectile.GetSource_FromAI(), projectile.Center, Projectile.DirectionToSafe(projectile.Center).Length(4f + Main.rand.Next(8)).RotatedBy(Main.rand.NextBool() ? -MathHelper.PiOver4 : MathHelper.PiOver4), ProjectileType<MiracleStarHoming>(), stardmg, projectile.knockBack, projectile.owner);
+                        int stardmg = (int)(projectile.damage * 1f);
+                        //Projectile.NewProjectileDirect(projectile.GetSource_FromAI(), projectile.Center, Projectile.DirectionToSafe(projectile.Center).Length(4f + Main.rand.Next(8)).RotatedBy(Main.rand.NextBool() ? -MathHelper.PiOver4 : MathHelper.PiOver4), ProjectileType<MiracleStarHoming>(), stardmg, projectile.knockBack, projectile.owner);
                         projectile.Kill();
                     }
 
@@ -403,7 +403,8 @@ namespace AyaMod.Content.Items.Cameras
                 //    LightSpotParticle.SpawnFlare(Projectile.GetSource_FromAI(), nextPos + offset, vel, new Color(72, 206, 132).AdditiveColor(), 0f, 30, 0.5f, 0.2f);
                 //}
 
-                int stardmg = (int)(Projectile.damage * 0.2f);
+                int stardmg = (int)(Projectile.damage * 0.7f);
+                if (miracleCamera.StarStack > 4) stardmg = (int)(Projectile.damage * 0.3f);
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), nextPos, Projectile.velocity.Length(9).RotatedBy(Main.rand.NextBool()? -MathHelper.PiOver4 : MathHelper.PiOver4), ProjectileType<MiracleStarHoming>(), stardmg, Projectile.knockBack, Projectile.owner);
 
             }
