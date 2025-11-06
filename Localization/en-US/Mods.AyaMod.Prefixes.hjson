@@ -21,3 +21,13 @@ Classical: {
 
 Focused.DisplayName: Focused
 Precise.DisplayName: Precise
+
+Bloodthirsty: {
+	PrefixExtraTooltip: Mods.AyaMod.Prefixes.Bloodthirsty.PrefixExtraTooltip
+	DisplayName: Bloodthirsty
+}
+
+Frugal: {
+	PrefixExtraTooltip: Mods.AyaMod.Prefixes.Frugal.PrefixExtraTooltip
+	DisplayName: Frugal
+}

@@ -16,8 +16,22 @@ PrefixFocusSpeed: "{0}%聚焦速度"
 
 Classical: {
 	DisplayName: 古典
-	PrefixExtraTooltip: "[c/FF0000:禁止自动拍摄]"
+	PrefixExtraTooltip: "[c/BE7878:禁止自动拍摄]"
 }
 
 Focused.DisplayName: Focused
 Precise.DisplayName: Precise
+
+Bloodthirsty: {
+	PrefixExtraTooltip:
+		'''
+		[c/BE7878:每次拍摄消耗{0}生命值]
+		[c/78BE78:击杀敌人时产生红心]
+		'''
+	DisplayName: 嗜血
+}
+
+Frugal: {
+	PrefixExtraTooltip: "[c/78BE78:-{0}%胶卷消耗]"
+	DisplayName: 节俭
+}

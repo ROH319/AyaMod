@@ -71,7 +71,7 @@ namespace AyaMod.Helpers
             if (projectile.velocity.Y < YMax) projectile.velocity.Y += YAdd;
         }
 
-        public static void BounceOverTile(this Projectile projectile,Vector2 oldVelocity)
+        public static void BounceOverTile(this Projectile projectile, Vector2 oldVelocity)
         {
             ref Vector2 velocity = ref projectile.velocity;
             if (velocity.X != oldVelocity.X) velocity.X = -oldVelocity.X;
@@ -124,14 +124,14 @@ namespace AyaMod.Helpers
             var sItem = weapon;
             List<Item> list = new List<Item>();
 
-            for(int i = 54; i < 58 && list.Count < count; i++)
+            for (int i = 54; i < 58 && list.Count < count; i++)
             {
-                if (player.inventory[i].stack > 0 && ItemLoader.CanChooseAmmo(sItem, player.inventory[i],player))
+                if (player.inventory[i].stack > 0 && ItemLoader.CanChooseAmmo(sItem, player.inventory[i], player))
                 {
                     list.Add(player.inventory[i]);
                 }
             }
-            for(int i = 0; i < 54 && list.Count < count; i++)
+            for (int i = 0; i < 54 && list.Count < count; i++)
             {
                 if (player.inventory[i].stack > 0 && ItemLoader.CanChooseAmmo(sItem, player.inventory[i], player))
                 {
@@ -200,7 +200,7 @@ namespace AyaMod.Helpers
             return target;
         }
 
-        public static NPC FindCloestNPCIgnoreIndex(this Projectile projectile, float range = int.MaxValue,bool ignoreImmune = false, bool ignoreTile = false, params int[] whoamis)
+        public static NPC FindCloestNPCIgnoreIndex(this Projectile projectile, float range = int.MaxValue, bool ignoreImmune = false, bool ignoreTile = false, params int[] whoamis)
         {
             NPC target = null;
             float minDist = range;
@@ -309,6 +309,18 @@ namespace AyaMod.Helpers
 
         public static bool HeldCamera(this Player player) => player.TryGetHeldModItem(out ModItem modItem) && modItem is BaseCamera;
 
+        public static bool IsCameraProj(this Projectile projectile) => projectile.ModProjectile != null && projectile.ModProjectile is BaseCameraProj;
+        public static bool TryGetCameraProj(this Projectile projectile, out BaseCameraProj camera)
+        {
+            camera = null;
+            if (projectile.IsCameraProj())
+            {
+                camera = projectile.ModProjectile as BaseCameraProj;
+                return true;
+            }
+            return false;
+        }
+
         public static bool TypeAlive(this Projectile projectile, params int[] type) => projectile.Alive() && (type.Length == 0 || type.Contains(projectile.type));
         public static bool Alive(this Player player) => player != null && player.active && !player.dead && !player.ghost;
         public static bool Alive(this Projectile projectile) => projectile != null && projectile.active;
@@ -333,6 +345,19 @@ namespace AyaMod.Helpers
         {
             var attr = typeof(T).GetCustomAttribute<PlayerEffectAttribute>();
             return player.Aya().AddEffect(attr?.OverrideEffectName ?? typeof(T).Name);
+        }
+
+        public static bool HasEffect(this Projectile projectile, string effectName) => projectile.Aya().HasEffect(effectName);
+        public static bool HasEffect<T>(this Projectile projectile) where T : class
+        {
+            var attr = typeof(T).GetCustomAttribute<PlayerEffectAttribute>();
+            return projectile.Aya().HasEffect(attr?.OverrideEffectName ?? typeof(T).Name);
+        }
+        public static bool AddEffect(this Projectile projectile, string effectName) => projectile.Aya().AddEffect(effectName);
+        public static bool AddEffect<T>(this Projectile projectile) where T : class
+        {
+            var attr = typeof(T).GetCustomAttribute<PlayerEffectAttribute>();
+            return projectile.Aya().AddEffect(attr?.OverrideEffectName ?? typeof(T).Name);
         }
     }
 }

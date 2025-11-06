@@ -2,6 +2,7 @@
 using AyaMod.Core.Globals;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 
 
@@ -29,6 +30,7 @@ namespace AyaMod.Content.Items.PrefixHammers
 
             item.SetDefaults(item.type);
             item.Prefix(hammer.PrefixTypeToForge);
+            SoundEngine.PlaySound(SoundID.Item37);
 
             return false;
         }

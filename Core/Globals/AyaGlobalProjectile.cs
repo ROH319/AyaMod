@@ -9,17 +9,22 @@ using Terraria.ModLoader;
 
 namespace AyaMod.Core.Globals
 {
-    public class AyaGlobalProjectile : GlobalProjectile
+    public partial class AyaGlobalProjectile : GlobalProjectile
     {
 
         public StatModifier SpeedModifier;
 
         public int MaxTimeleft = 0;
 
+        public delegate void ProjectileSpawnDelegate(Projectile projectile, IEntitySource source);
+        public static event ProjectileSpawnDelegate OnProjectileSpawn = (p, s) => { };
         public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
             MaxTimeleft = projectile.timeLeft;
-            base.OnSpawn(projectile, source);
+            foreach(ProjectileSpawnDelegate del in OnProjectileSpawn.GetInvocationList())
+            {
+                del.Invoke(projectile, source);
+            }
         }
 
         public override void PostAI(Projectile projectile)
@@ -29,6 +34,16 @@ namespace AyaMod.Core.Globals
             {
                 var speedModifier = SpeedModifier.ApplyTo(1f);
                 projectile.position += projectile.velocity * (speedModifier - 1f);
+            }
+        }
+
+        public delegate void ProjectileHitNPCDelegate(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone);
+        public static event ProjectileHitNPCDelegate OnProjectileHitNPC = (p, n, h, d) => { };
+        public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            foreach(ProjectileHitNPCDelegate del in OnProjectileHitNPC.GetInvocationList())
+            {
+                del.Invoke(projectile, target, hit, damageDone);
             }
         }
 

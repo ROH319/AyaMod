@@ -1,4 +1,4 @@
-﻿CommonItemTooltip: {
+CommonItemTooltip: {
 	PercentIncreaseReporterDamage: "{0}% increased reporter damage"
 	PercentIncreasedReporterCritChance: "{0}% increased reporter crit chance"
 	PercentIncreasedFocusSpeed: "{0}% increased focus speed"
@@ -595,5 +595,15 @@ ClassicalHammer: {
 
 ReforgeHammer: {
 	DisplayName: Reforge Hammer
+	Tooltip: ""
+}
+
+BloodthirstyHammer: {
+	DisplayName: Bloodthirsty Hammer
+	Tooltip: ""
+}
+
+FrugalHammer: {
+	DisplayName: Frugal Hammer
 	Tooltip: ""
 }

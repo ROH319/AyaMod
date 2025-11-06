@@ -12,6 +12,8 @@ namespace AyaMod.Core.Globals
     {
         public override bool InstancePerEntity => true;
 
+        public delegate void CameraProjDelegate(BaseCameraProj projectile);
+
         public override bool AppliesToEntity(Projectile entity, bool lateInstantiation)
         {
             if(entity.ModProjectile == null || entity.ModProjectile is not BaseCameraProj) return false;
@@ -19,7 +21,7 @@ namespace AyaMod.Core.Globals
         }
 
         public delegate bool PreAIDelegate(Player player, BaseCameraProj projectile);
-        public static event PreAIDelegate PreAIHook;
+        public static event PreAIDelegate PreAIHook = (plr, p) => true;
         public override bool PreAI(Projectile projectile)
         {
             bool result = true;
@@ -29,7 +31,7 @@ namespace AyaMod.Core.Globals
         }
 
 
-        public static event CameraNPCEvents.CameraNPCDelegate HoverNPCHook;
+        public static event CameraNPCEvents.CameraNPCDelegate HoverNPCHook = (p, n) => { };
         public static void HoverNPC(BaseCameraProj projectile, NPC npc)
         {
             if (HoverNPCHook == null) return;
@@ -37,7 +39,7 @@ namespace AyaMod.Core.Globals
                 g.Invoke(projectile, npc);
         }
 
-        public static event CameraNPCEvents.CameraNPCDelegate NotHoverNPCHook;
+        public static event CameraNPCEvents.CameraNPCDelegate NotHoverNPCHook = (p, n) => { };
         public static void NotHoverNPC(BaseCameraProj projectile, NPC npc)
         {
             if (NotHoverNPCHook == null) return;
@@ -45,8 +47,15 @@ namespace AyaMod.Core.Globals
                 g.Invoke(projectile, npc);
         }
 
+        public static event CameraProjDelegate PreClearHook = (p) => { };
+        public static void PreClear(BaseCameraProj projectile)
+        {
+            foreach(CameraProjDelegate g in PreClearHook.GetInvocationList())
+                g.Invoke(projectile);
+        }
+
         public delegate void PostClearDelegate(BaseCameraProj projectile, int captureCount);
-        public static event PostClearDelegate PostClearHook;
+        public static event PostClearDelegate PostClearHook = (p, c) => { };
         public static void PostClear(BaseCameraProj projectile, int captureCount)
         {
             if (PostClearHook == null) return;
@@ -54,9 +63,27 @@ namespace AyaMod.Core.Globals
                 g.Invoke(projectile, captureCount);
         }
 
+        public static event CameraProjDelegate SnapHook = (p) => { };
+        public static void OnSnap(BaseCameraProj projectile)
+        {
+            foreach(CameraProjDelegate g in SnapHook.GetInvocationList())
+                g.Invoke(projectile);
+        }
+
+        public static event CameraProjDelegate SnapInSightHook = (p) => { };
+        public static void OnSnapInSight(BaseCameraProj projectile)
+        {
+            foreach (CameraProjDelegate g in SnapInSightHook.GetInvocationList())
+                g.Invoke(projectile);
+        }
+
         public override void Unload()
         {
             PreAIHook = null;
+            HoverNPCHook = null;
+            NotHoverNPCHook = null;
+            PostClearHook = null;
+            SnapHook = null;
         }
     }
 }

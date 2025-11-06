@@ -749,11 +749,21 @@ DarkRevealerLeggings: {
 }
 
 ClassicalHammer: {
-	// DisplayName: Classical Hammer
-	// Tooltip: ""
+	DisplayName: 古典 锻锤
+	Tooltip: ""
 }
 
 ReforgeHammer: {
-	// DisplayName: Reforge Hammer
-	// Tooltip: ""
+	DisplayName: 锻锤
+	Tooltip: ""
+}
+
+BloodthirstyHammer: {
+	DisplayName: 嗜血 锻锤
+	Tooltip: ""
+}
+
+FrugalHammer: {
+	DisplayName: 节俭 锻锤
+	Tooltip: ""
 }

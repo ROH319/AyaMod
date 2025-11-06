@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace AyaMod.Core.Prefabs
 {
-    public class BaseCameraProj : ModProjectile
+    public partial class BaseCameraProj : ModProjectile
     {
         public override string Texture => AssetDirectory.EmptyTexturePass;
 
@@ -298,8 +298,7 @@ namespace AyaMod.Core.Prefabs
         {
             var rects = lens.GetRectanglesAgainstEntity(Projectile.Center, Size, Projectile.rotation);
             int captureCount = 0;
-            PreClear();
-            UpdateFilm(film => film.PreClearProjectile(this));
+            CombinedPreClear();
 
             foreach (var projectile in Main.ActiveProjectiles)
             {
@@ -323,7 +322,7 @@ namespace AyaMod.Core.Prefabs
                 projectile.Kill();
                 captureCount++;
             }
-            PostClearCombined(captureCount);
+            CombinedPostClear(captureCount);
         }
 
         public virtual void PreClear() { }
@@ -334,12 +333,6 @@ namespace AyaMod.Core.Prefabs
 
         public virtual void OnClearProjectile(Projectile projectile) { }
 
-        public void PostClearCombined(int captureCount)
-        {
-            PostClear(captureCount);
-            UpdateFilm(film => film.PostClearProjectile(this, captureCount));
-            GlobalCamera.PostClear(this, captureCount);
-        }
         public virtual void PostClear(int captureCount) { }
 
         public void CheckHoverNPC()
@@ -348,22 +341,12 @@ namespace AyaMod.Core.Prefabs
             {
                 var hitbox = npc.Hitbox;
                 if (lens.Colliding(Projectile.Center, Size, Projectile.rotation, hitbox))
-                    HoverNPCCombined(npc);
-                else NotHoverNPCCombined(npc);
+                    CombinedHoverNPC(npc);
+                else CombinedNotHoverNPC(npc);
             }
 
         }
-        public void HoverNPCCombined(NPC npc)
-        {
-            HoverNPC(npc);
-            GlobalCamera.HoverNPC(this, npc);
-        }
         public virtual void HoverNPC(NPC npc) { }
-        public void NotHoverNPCCombined(NPC npc)
-        {
-            NotHoverNPC(npc);
-            GlobalCamera.NotHoverNPC(this, npc);
-        }
         public virtual void NotHoverNPC(NPC npc) { }
 
         public void CheckHoverProjectile()
@@ -388,17 +371,13 @@ namespace AyaMod.Core.Prefabs
                 Utils.PlotTileLine(new Vector2(rect.Left, rect.Center.Y), new Vector2(rect.Right, rect.Center.Y), rect.Height, new Utils.TileActionAttempt(DelegateMethods.CutTiles));
             }
 
-            OnSnap();
+            CombinedOnSnap();
 
             bool canhit = CheckInSight();
 
             //Main.NewText($"CanHitLine:{canhit}");
             if (canhit)
-                OnSnapInSight();
-
-            UpdateFilm((film => film.OnSnap(this)));
-            if (canhit)
-                UpdateFilm((film => film.OnSnapInSight(this)));
+                CombinedOnSnapInSight();
 
             CheckSnapProjectile(rects);
 

@@ -51,6 +51,18 @@ namespace AyaMod.Core.Globals
             }
         }
 
+        public delegate bool AmmoConsumer(Item weapon, Item ammo, Player player);
+        public static event AmmoConsumer CanConsumeAmmoChecker = (w, a, p) => true;
+        public override bool CanConsumeAmmo(Item weapon, Item ammo, Player player)
+        {
+            foreach(AmmoConsumer checker in CanConsumeAmmoChecker.GetInvocationList())
+            {
+                if (!checker(weapon, ammo, player))
+                    return false;
+            }
+            return base.CanConsumeAmmo(weapon, ammo, player);
+        }
+
         public override int ChoosePrefix(Item item, UnifiedRandom rand)
         {
             if (item.DamageType != ReporterDamage.Instance)
@@ -92,8 +104,11 @@ namespace AyaMod.Core.Globals
                 {
                     tooltips.RemoveAt(kbindex);
                     int stuntime = Main.LocalPlayer.TryGetModPlayer<CameraPlayer>(out var camPlayer) ? (int)(camPlayer.GetStunTime(item.ModItem as BaseCamera)) : 0;
-                    float stuntimeInSeconds = MathF.Round(stuntime / 60f, 2);
-                    tooltips.Insert(kbindex, new TooltipLine(Mod, "StunTime", StunTimeTooltip.WithFormatArgs(stuntime, stuntimeInSeconds).Value));
+                    if (stuntime > 0 && stuntime < 1000)
+                    {
+                        float stuntimeInSeconds = MathF.Round(stuntime / 60f, 2);
+                        tooltips.Insert(kbindex, new TooltipLine(Mod, "StunTime", StunTimeTooltip.WithFormatArgs(stuntime, stuntimeInSeconds).Value));
+                    }
                 }
             }
         }
