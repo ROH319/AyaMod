@@ -1,4 +1,4 @@
-CommonItemTooltip: {
+﻿CommonItemTooltip: {
 	PercentIncreaseReporterDamage: "{0}% increased reporter damage"
 	PercentIncreasedReporterCritChance: "{0}% increased reporter crit chance"
 	PercentIncreasedFocusSpeed: "{0}% increased focus speed"
@@ -6,6 +6,8 @@ CommonItemTooltip: {
 	DecreaseCameraSize: Decrease camera size by {0}%
 	IncreaseChaseSpeed: Increase camera chase speed by {0}%
 }
+
+Extras.StunTimeTooltip: "{0}frame({1}s) stun time"
 
 GoldenCamera: {
 	DisplayName: Golden Camera
@@ -583,5 +585,15 @@ DarkRevealerCloak: {
 
 DarkRevealerLeggings: {
 	DisplayName: Dark Revealer Leggings
+	Tooltip: ""
+}
+
+ClassicalHammer: {
+	DisplayName: Classical Hammer
+	Tooltip: ""
+}
+
+ReforgeHammer: {
+	DisplayName: Reforge Hammer
 	Tooltip: ""
 }

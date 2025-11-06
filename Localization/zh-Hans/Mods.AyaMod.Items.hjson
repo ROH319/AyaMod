@@ -7,6 +7,8 @@ CommonItemTooltip: {
 	IncreaseChaseSpeed: 增加{0}%拍摄框跟随速度
 }
 
+Extras.StunTimeTooltip: "{0}帧（{1}s）眩晕时间"
+
 GoldenCamera: {
 	DisplayName: 闪金相机
 	Tooltip: ""
@@ -744,4 +746,14 @@ DarkRevealerLeggings: {
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
 		增加{1}%移动速度
 		'''
+}
+
+ClassicalHammer: {
+	// DisplayName: Classical Hammer
+	// Tooltip: ""
+}
+
+ReforgeHammer: {
+	// DisplayName: Reforge Hammer
+	// Tooltip: ""
 }

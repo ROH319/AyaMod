@@ -16,3 +16,4 @@ Keybinds: {
 }
 
 DropConditions.PostSkeletron: 需要击败骷髅王
+// NPCs.Lantern.DisplayName: Lantern

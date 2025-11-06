@@ -4,6 +4,7 @@ using AyaMod.Core.BuilderToggles;
 using AyaMod.Core.Configs;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
+using MonoMod.Core.Platforms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,9 @@ namespace AyaMod.Core.ModPlayers
 {
     public class CameraPlayer : ModPlayer
     {
+        public delegate bool PlayerCameraChecker(Player player, BaseCamera camera);
+        public delegate bool PlayerCameraProjChecker(Player player, BaseCameraProj proj);
+
         public Vector2 CameraPosition = Vector2.Zero;
         public Vector2 MouseWorld;
 
@@ -25,6 +29,7 @@ namespace AyaMod.Core.ModPlayers
 
         public StatModifier ChaseSpeedModifier = StatModifier.Default;
         public StatModifier SizeModifier = StatModifier.Default;
+        public StatModifier StunTimeModifier = StatModifier.Default;
 
         public float SingleTargetMultiplier = 0f;
 
@@ -72,6 +77,7 @@ namespace AyaMod.Core.ModPlayers
 
             ChaseSpeedModifier = StatModifier.Default;
             SizeModifier = StatModifier.Default;
+            StunTimeModifier = StatModifier.Default;
 
             SingleTargetMultiplier = 0f;
 
@@ -130,8 +136,7 @@ namespace AyaMod.Core.ModPlayers
                 return CurrentLens;
         }
 
-        public delegate bool CheckSnapThrouthWallDelegate(Player player, BaseCameraProj proj);
-        public static event CheckSnapThrouthWallDelegate CheckSnapThrouthWallEvent;
+        public static event PlayerCameraProjChecker CheckSnapThrouthWallEvent;
         public bool CanSnapThroughWall(BaseCameraProj projectile)
         {
             bool result = false;
@@ -140,11 +145,34 @@ namespace AyaMod.Core.ModPlayers
 
             if (CheckSnapThrouthWallEvent is null) return result;
 
-            foreach(CheckSnapThrouthWallDelegate del in CheckSnapThrouthWallEvent.GetInvocationList())
+            foreach(PlayerCameraProjChecker del in CheckSnapThrouthWallEvent.GetInvocationList())
             {
                 result |= del.Invoke(Player, projectile);
             }
             return result;
+        }
+
+        public static event PlayerCameraChecker AutoSnapCheckerEvent;
+        public bool CanAutoSnap(BaseCamera camera)
+        {
+            bool result = CameraToggle.AutoSnapEnabled;
+
+            if(AutoSnapCheckerEvent is null) return result;
+
+            foreach (PlayerCameraChecker del in AutoSnapCheckerEvent.GetInvocationList())
+            {
+                result &= del.Invoke(Player, camera);
+            }
+
+            return result;
+        }
+
+        public float GetStunTime(BaseCamera camera)
+        {
+            StatModifier modifier = StunTimeModifier;
+            var baseValue = camera.GetStunTime();
+            var value = Math.Max(0, modifier.ApplyTo(baseValue));
+            return value;
         }
 
         public override void CatchFish(FishingAttempt attempt, ref int itemDrop, ref int npcSpawn, ref AdvancedPopupRequest sonar, ref Vector2 sonarPosition)

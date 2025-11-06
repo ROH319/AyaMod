@@ -1,4 +1,4 @@
-﻿Blurred.DisplayName: Blurred
+Blurred.DisplayName: Blurred
 Dazzling.DisplayName: Dazzling
 Deceptive.DisplayName: Deceptive
 Ephemeral.DisplayName: Ephemeral
@@ -13,3 +13,11 @@ Wideangle.DisplayName: Wideangle
 SizeTooltip: "{0}% Camera Size"
 StunTooltip: "{0}% Stun Time"
 PrefixFocusSpeed: "{0}% Focus Speed"
+
+Classical: {
+	DisplayName: Classical
+	PrefixExtraTooltip: Mods.AyaMod.Prefixes.Classical.PrefixExtraTooltip
+}
+
+Focused.DisplayName: Focused
+Precise.DisplayName: Precise

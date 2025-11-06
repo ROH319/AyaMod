@@ -34,6 +34,8 @@ namespace AyaMod.Core
 
         public const string DyeFilms = Films + "DyeFilms/";
 
+        public const string PrefixHammers = Items + "PrefixHammers/";
+
         public const string Testing = Items + "Testing/";
 
         public const string Particles = Textures + "Particles/";

@@ -450,13 +450,14 @@ namespace AyaMod.Core.Prefabs
         {
             lens.SpawnFlash(Projectile.Center,flashColor * ClientConfig.Instance.SnapFlashAlpha,floatingsize,Projectile.rotation, (int)(Projectile.knockBack * 2));
         }
-
+        public virtual int GetStunTime(NPC npc, ref NPC.HitModifiers modifiers)
+        {
+            return (int)modifiers.GetKnockback(player.GetModPlayer<CameraPlayer>().GetStunTime(player.HeldItem.ModItem as BaseCamera));
+        }
         public virtual void ApplyStun(NPC npc, ref NPC.HitModifiers modifiers)
         {
-            var knockback = modifiers.GetKnockback(Projectile.knockBack * 2);
-            var kbstat = player.GetTotalKnockback(ReporterDamage.Instance);
-            var stuntime = kbstat.ApplyTo(knockback);
-            npc.GetGlobalNPC<CameraGlobalNPC>().StunTimer += (int)stuntime;
+            var stuntime = GetStunTime(npc, ref modifiers);
+            npc.GetGlobalNPC<CameraGlobalNPC>().StunTimer += stuntime;
             //Main.NewText($"{stuntime}");
         }
 

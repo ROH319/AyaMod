@@ -4,6 +4,7 @@ using AyaMod.Content.Items.Testing;
 using AyaMod.Content.Prefixes.CameraPrefixes;
 using AyaMod.Core.BuilderToggles;
 using AyaMod.Core.Configs;
+using AyaMod.Core.Globals;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Helpers;
 using System;
@@ -72,7 +73,7 @@ namespace AyaMod.Core.Prefabs
                 if (projectile.type == Item.shoot) projectile.timeLeft = 2;
             }
 
-            if (!CameraToggle.AutoSnapEnabled)
+            if (!player.GetModPlayer<CameraPlayer>().CanAutoSnap(this))
             {
                 if (!player.controlUseItem && player.itemTime > 2)
                     player.itemTime = 0;
@@ -99,14 +100,16 @@ namespace AyaMod.Core.Prefabs
         }
         public override bool? CanAutoReuseItem(Player player)
         {
-            return CameraToggle.AutoSnapEnabled;
+            return player.GetModPlayer<CameraPlayer>().CanAutoSnap(this);
         }
+
+        public virtual float GetStunTime() => Item.knockBack * 2 * Item.GetGlobalItem<CameraGlobalItem>().StunTimeMult;
 
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
         {
             if (player.HasEffect<NoDmgModifier>()) return;
 
-            if (CameraToggle.AutoSnapEnabled)
+            if (player.GetModPlayer<CameraPlayer>().CanAutoSnap(this))
             {
                 damage *= CameraPlayer.CameraAutoSnapDamageModifier;
             }

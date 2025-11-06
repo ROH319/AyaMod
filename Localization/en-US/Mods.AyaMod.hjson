@@ -16,3 +16,4 @@ Keybinds: {
 }
 
 DropConditions.PostSkeletron: Needs killed Skeletron
+NPCs.Lantern.DisplayName: Lantern

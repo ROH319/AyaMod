@@ -13,3 +13,11 @@ Wideangle.DisplayName: 广角
 SizeTooltip: "{0}%镜头大小"
 StunTooltip: "{0}%眩晕时间"
 PrefixFocusSpeed: "{0}%聚焦速度"
+
+Classical: {
+	DisplayName: 古典
+	PrefixExtraTooltip: "[c/FF0000:禁止自动拍摄]"
+}
+
+Focused.DisplayName: Focused
+Precise.DisplayName: Precise

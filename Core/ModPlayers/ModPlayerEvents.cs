@@ -12,6 +12,8 @@ namespace AyaMod.Core.ModPlayers
     {
         public delegate void PlayerDelegate(Player player);
 
+        public delegate void PlayerItemDelegate(Player player, Item item);
+
         public delegate void PlayerDrawEffectDelegate(Player player, ref PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright);
 
         public delegate void ModifyWeaponDamageDelegate(Player player, Item item, ref StatModifier modifier);
