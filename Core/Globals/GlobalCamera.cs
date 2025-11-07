@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using static AyaMod.Core.Globals.AyaGlobalProjectile;
 
 namespace AyaMod.Core.Globals
 {
@@ -30,6 +31,21 @@ namespace AyaMod.Core.Globals
             return result;
         }
 
+        public static event ProjectileModifyHitNPCDelegate ModifyHitNPCHook = (Projectile p, NPC n, ref NPC.HitModifiers m) => { };
+        public override void ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
+        {
+            foreach(ProjectileModifyHitNPCDelegate p in ModifyHitNPCHook.GetInvocationList())
+            {
+                p(projectile, target, ref modifiers);
+            }
+        }
+
+        public static event ProjectileHitNPCDelegate OnHitNPCHook = (p, n, h, d) => { };
+        public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            foreach (ProjectileHitNPCDelegate g in OnHitNPCHook.GetInvocationList())
+                g.Invoke(projectile, target, hit, damageDone);
+        }
 
         public static event CameraNPCEvents.CameraNPCDelegate HoverNPCHook = (p, n) => { };
         public static void HoverNPC(BaseCameraProj projectile, NPC npc)

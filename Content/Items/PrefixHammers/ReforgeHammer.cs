@@ -10,8 +10,6 @@ namespace AyaMod.Content.Items.PrefixHammers
 {
     public class ReforgeHammer : BasePrefixHammer
     {
-        public override int PrefixTypeToForge => -1;
-
         public override void Load()
         {
             CameraGlobalItem.OnCanRightClick += TryReforgeCamera;
@@ -28,11 +26,32 @@ namespace AyaMod.Content.Items.PrefixHammers
 
             var hammer = mouseItem.ModItem as BasePrefixHammer;
 
-            item.SetDefaults(item.type);
-            item.Prefix(hammer.PrefixTypeToForge);
-            SoundEngine.PlaySound(SoundID.Item37);
+            hammer?.OnReforge(item);
 
             return false;
+        }
+
+        public override void OnReforge(Item item)
+        {
+            int prefix = item.prefix;
+            if (prefix < PrefixID.Count && prefix != 0) return;
+
+            ModPrefix modprefix = PrefixLoader.GetPrefix(prefix);
+            ModPrefix myprefix = PrefixToForge;
+            if (myprefix != null)
+            {
+                item.SetDefaults(item.type);
+                item.Prefix(myprefix.Type);
+            }
+            else
+            {
+                PrefixToForge = modprefix;
+                item.SetDefaults(item.type);
+            }
+
+            if (prefix == 0) PrefixToForge = null;
+            else PrefixToForge = modprefix;
+            SoundEngine.PlaySound(SoundID.Item37);
         }
     }
 }

@@ -7,7 +7,7 @@ using Terraria;
 
 namespace AyaMod.Content.Prefixes.CameraPrefixes
 {
-    public class Precise() : BaseCameraPrefix(damageMult:1.4f,sizeMult:0.8f,valueMult:1.75f)
+    public class Precise() : BaseCameraPrefix(damageMult:1.4f,sizeMult:0.8f,valueMult:1.65f)
     {
         public override float RollChance(Item item)
         {

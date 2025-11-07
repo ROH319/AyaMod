@@ -35,3 +35,8 @@ Frugal: {
 	PrefixExtraTooltip: "[c/78BE78:-{0}%胶卷消耗]"
 	DisplayName: 节俭
 }
+
+MindController: {
+	DisplayName: 控脑
+	PrefixExtraTooltip: "[c/78BE78:敌人每有一个减益，增加{0}%伤害]"
+}

@@ -7,7 +7,7 @@ using Terraria;
 
 namespace AyaMod.Content.Prefixes.CameraPrefixes
 {
-    public class Ephemeral() : BaseCameraPrefix(focusSpeedMult:0.7f, sizeMult:1.05f,valueMult:1.75f)
+    public class Ephemeral() : BaseCameraPrefix(focusSpeedMult:0.7f, sizeMult:1.05f,valueMult:1.65f)
     {
         public override float RollChance(Item item)
         {

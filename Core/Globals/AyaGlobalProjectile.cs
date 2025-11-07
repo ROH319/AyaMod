@@ -11,6 +11,9 @@ namespace AyaMod.Core.Globals
 {
     public partial class AyaGlobalProjectile : GlobalProjectile
     {
+        public delegate void ProjectileModifyHitNPCDelegate(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers);
+        public delegate void ProjectileHitNPCDelegate(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone);
+
 
         public StatModifier SpeedModifier;
 
@@ -37,7 +40,6 @@ namespace AyaMod.Core.Globals
             }
         }
 
-        public delegate void ProjectileHitNPCDelegate(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone);
         public static event ProjectileHitNPCDelegate OnProjectileHitNPC = (p, n, h, d) => { };
         public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {

@@ -31,3 +31,8 @@ Frugal: {
 	PrefixExtraTooltip: Mods.AyaMod.Prefixes.Frugal.PrefixExtraTooltip
 	DisplayName: Frugal
 }
+
+MindController: {
+	DisplayName: Mind Controller
+	PrefixExtraTooltip: ""
+}
