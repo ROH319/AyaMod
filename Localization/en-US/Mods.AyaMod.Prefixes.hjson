@@ -36,3 +36,18 @@ MindController: {
 	DisplayName: Mind Controller
 	PrefixExtraTooltip: ""
 }
+
+Devouring: {
+	DisplayName: Devouring
+	PrefixExtraTooltip: ""
+}
+
+Abundant: {
+	DisplayName: Abundant
+	PrefixExtraTooltip: ""
+}
+
+Necromantic: {
+	DisplayName: Necromantic
+	PrefixExtraTooltip: ""
+}

@@ -1,6 +1,7 @@
 ﻿using AyaMod.Content.Items.Accessories;
 using AyaMod.Content.Items.Cameras;
 using AyaMod.Content.Items.Films.DyeFilms;
+using AyaMod.Content.Items.PrefixHammers;
 using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
@@ -116,6 +117,10 @@ namespace AyaMod.Core.Globals
 
             switch (shop.NpcType)
             {
+                case NPCID.Merchant:
+                    shop.Add(new Item(ItemType<FrugalHammer>()) { shopCustomPrice = Item.buyPrice(gold: 5) });
+                    break;
+                //军火商
                 case NPCID.ArmsDealer:
                     shop.Add(new Item(ItemType<TriggerShutter>()) { shopCustomPrice = Item.buyPrice(gold: 1) });
                     break;

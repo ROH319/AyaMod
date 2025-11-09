@@ -26,6 +26,6 @@ namespace AyaMod.Core.ModPlayers
 
         public delegate void OnHitByBothDelegate(Player player, ref Player.HurtInfo hurtInfo);
 
-
+        public delegate void NaturalLifeRegenDelegate(ModPlayer modPlayer, ref float regen);
     }
 }

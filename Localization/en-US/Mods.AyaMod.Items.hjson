@@ -607,3 +607,23 @@ FrugalHammer: {
 	DisplayName: Frugal Hammer
 	Tooltip: ""
 }
+
+DevouringHammer: {
+	DisplayName: Devouring Hammer
+	Tooltip: ""
+}
+
+MindControllerHammer: {
+	DisplayName: Mind Controller Hammer
+	Tooltip: ""
+}
+
+AbundantHammer: {
+	DisplayName: Abundant Hammer
+	Tooltip: ""
+}
+
+NecromanticHammer: {
+	DisplayName: Necromantic Hammer
+	Tooltip: ""
+}

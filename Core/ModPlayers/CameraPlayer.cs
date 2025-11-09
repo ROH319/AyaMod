@@ -169,6 +169,7 @@ namespace AyaMod.Core.ModPlayers
 
         public float GetStunTime(BaseCamera camera)
         {
+            if (camera == null) return 0;
             StatModifier modifier = StunTimeModifier;
             var baseValue = camera.GetStunTime();
             var value = Math.Max(0, modifier.ApplyTo(baseValue));

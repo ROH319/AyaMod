@@ -19,10 +19,13 @@ namespace AyaMod.Core.Globals
 
         public int MaxTimeleft = 0;
 
+        public IEntitySource SpawnSource;
+
         public delegate void ProjectileSpawnDelegate(Projectile projectile, IEntitySource source);
         public static event ProjectileSpawnDelegate OnProjectileSpawn = (p, s) => { };
         public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
+            SpawnSource = source;
             MaxTimeleft = projectile.timeLeft;
             foreach(ProjectileSpawnDelegate del in OnProjectileSpawn.GetInvocationList())
             {

@@ -16,6 +16,16 @@ namespace AyaMod.Core.Systems
 {
     public class CameraSystem : ModSystem
     {
+        public static event Action OnPostSetupContent;
+        public override void PostSetupContent()
+        {
+            if (OnPostSetupContent == null) return;
+            foreach(Action a in OnPostSetupContent.GetInvocationList())
+            {
+                a();
+            }
+        }
+
         public override void PostWorldGen()
         {
 

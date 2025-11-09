@@ -4,6 +4,7 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.ModLoader.IO;
 
 
 namespace AyaMod.Content.Items.PrefixHammers
@@ -52,6 +53,20 @@ namespace AyaMod.Content.Items.PrefixHammers
             if (prefix == 0) PrefixToForge = null;
             else PrefixToForge = modprefix;
             SoundEngine.PlaySound(SoundID.Item37);
+        }
+
+        public override void SaveData(TagCompound tag)
+        {
+            tag.Add("PrefixToForge", PrefixToForge?.Type ?? -1);
+        }
+        public override void LoadData(TagCompound tag)
+        {
+            if (tag.ContainsKey("PrefixToForge"))
+            {
+                int prefixType = tag.GetAsInt("PrefixToForge");
+                if (prefixType > 0)
+                    PrefixToForge = PrefixLoader.GetPrefix(prefixType);
+            }
         }
     }
 }

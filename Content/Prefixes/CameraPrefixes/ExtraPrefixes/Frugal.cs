@@ -5,7 +5,7 @@ using Terraria.Localization;
 
 namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 {
-    public class Frugal() : ExtraCameraPrefix(damageMult: 1.08f, focusSpeedMult: 0.92f, critBonus: 8, sizeMult: 1.1f, valueMult: 1.5f)
+    public class Frugal() : ExtraCameraPrefix(damageMult: 1.05f, focusSpeedMult: 0.95f, critBonus: 5, sizeMult: 1.1f, valueMult: 1.5f)
     {
         public override LocalizedText PrefixExtraTooltip => base.PrefixExtraTooltip.WithFormatArgs(AmmoSaveRate);
         public override void Load()

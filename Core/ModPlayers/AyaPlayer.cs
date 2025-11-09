@@ -251,6 +251,14 @@ namespace AyaMod.Core.ModPlayers
             //Console.WriteLine($"{Player.dashDelay} {DashDelay}");
         }
 
+
+        public static event ModPlayerEvents.NaturalLifeRegenDelegate NaturalLifeRegenHook = (ModPlayer m, ref float regen) => { };
+        public override void NaturalLifeRegen(ref float regen)
+        {
+            foreach(ModPlayerEvents.NaturalLifeRegenDelegate g in NaturalLifeRegenHook.GetInvocationList())
+                g(this, ref regen);
+        }
+
         public override void PostUpdate()
         {
             if (!IsUltraDashing) UltraDashDir = Utils.AngleLerp(UltraDashDir,-MathHelper.PiOver2,0.2f);

@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -317,6 +318,22 @@ namespace AyaMod.Helpers
             {
                 camera = projectile.ModProjectile as BaseCameraProj;
                 return true;
+            }
+            return false;
+        }
+
+        public static bool CameraSourcedProj(this Projectile projectile, out BaseCameraProj proj, int depth = 0)
+        {
+            proj = null;
+            var source = projectile.GetGlobalProjectile<AyaGlobalProjectile>().SpawnSource;
+            if (projectile.TryGetCameraProj(out BaseCameraProj c))
+            {
+                proj = c;
+                return true;
+            }
+            else if (depth <= 10 && source is EntitySource_Parent parent && parent.Entity is Projectile parentProj && parentProj.active)
+            {
+                return parentProj.CameraSourcedProj(out BaseCameraProj b, depth + 1);
             }
             return false;
         }

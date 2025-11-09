@@ -55,9 +55,15 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void ModifyHitNPCAlt(NPC target, ref NPC.HitModifiers modifiers)
         {
-            if (target.HasBuff(ModContent.BuffType<ConfusedBuff>()))
+            if (target.HasBuff<ConfusedBuff>())
             {
                 modifiers.FinalDamage *= 3f;
+            }
+        }
+        public override void OnHitNPCAlt(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            if (target.HasBuff<ConfusedBuff>())
+            {
                 target.ClearBuff<ConfusedBuff>();
             }
         }

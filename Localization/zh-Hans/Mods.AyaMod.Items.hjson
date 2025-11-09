@@ -767,3 +767,23 @@ FrugalHammer: {
 	DisplayName: 节俭 锻锤
 	Tooltip: ""
 }
+
+DevouringHammer: {
+	DisplayName: 吞噬 锻锤
+	Tooltip: ""
+}
+
+MindControllerHammer: {
+	DisplayName: 控脑 锻锤
+	Tooltip: ""
+}
+
+AbundantHammer: {
+	DisplayName: 丰饶 锻锤
+	Tooltip: ""
+}
+
+NecromanticHammer: {
+	// DisplayName: Necromantic Hammer
+	// Tooltip: ""
+}

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terraria.ID;
 
 namespace AyaMod.Content.Items.PrefixHammers
 {
@@ -37,6 +38,46 @@ namespace AyaMod.Content.Items.PrefixHammers
         {
             base.SetDefaults();
             PrefixToForge = GetInstance<MindController>();
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<ReforgeHammer>()
+                .AddIngredient(ItemID.TissueSample, 5)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
+    }
+    public class DevouringHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Devouring>();
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<ReforgeHammer>()
+                .AddIngredient(ItemID.ShadowScale, 5)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
+    }
+    public class AbundantHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Abundant>();
+        }
+    }
+    public class NecromanticHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Necromantic>();
         }
     }
 }

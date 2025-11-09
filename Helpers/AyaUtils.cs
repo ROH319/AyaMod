@@ -20,6 +20,7 @@ namespace AyaMod.Helpers
             return whoami > -1 && whoami < Main.maxProjectiles && Main.projectile[whoami].active && (types.Length == 0 || types.Contains(Main.projectile[whoami].type));
         }
 
+
         #endregion
 
         #region Players

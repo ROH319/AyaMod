@@ -40,3 +40,22 @@ MindController: {
 	DisplayName: 控脑
 	PrefixExtraTooltip: "[c/78BE78:敌人每有一个减益，增加{0}%伤害]"
 }
+
+Devouring: {
+	DisplayName: 吞噬
+	PrefixExtraTooltip: "[c/78BE78:聚焦时将敌人拉向光标]"
+}
+
+Abundant: {
+	DisplayName: 丰饶
+	PrefixExtraTooltip:
+		'''
+		[c/78BE78:玩家生命再生大于零时，将其归零]
+		[c/78BE78:弹幕命中敌人有几率治疗玩家，几率取决于玩家原本的生命再生]
+		'''
+}
+
+Necromantic: {
+	DisplayName: 死灵
+	PrefixExtraTooltip: "[c/78BE78:拍摄有几率产生一个削弱的地牢幽魂（无掉落物）]"
+}
