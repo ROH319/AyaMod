@@ -50,14 +50,6 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
             npc.damage /= 2;
             nerfed = true;
         }
-        public override bool PreKill(NPC npc)
-        {
-            //if (nerfed)
-            //{
-            //    NPCLoader.blockLoot.Add(ItemID.Ectoplasm);
-            //}
-            return base.PreKill(npc);
-        }
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
             npcLoot.RemoveWhere(rule => rule is CommonDrop commonDrop && commonDrop.itemId == ItemID.Ectoplasm && LockSpiritDrop(npcLoot, rule));

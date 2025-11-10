@@ -627,3 +627,13 @@ NecromanticHammer: {
 	DisplayName: Necromantic Hammer
 	Tooltip: ""
 }
+
+AlchemisticalHammer: {
+	DisplayName: Alchemistical Hammer
+	Tooltip: ""
+}
+
+TetradHammer: {
+	DisplayName: Tetrad Hammer
+	Tooltip: ""
+}

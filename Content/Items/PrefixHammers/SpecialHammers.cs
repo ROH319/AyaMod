@@ -80,4 +80,30 @@ namespace AyaMod.Content.Items.PrefixHammers
             PrefixToForge = GetInstance<Necromantic>();
         }
     }
+    public class AlchemisticalHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Alchemistical>();
+        }
+    }
+    public class TetradHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Tetrad>();
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<ReforgeHammer>()
+                .AddIngredient(ItemID.WarriorEmblem)
+                .AddIngredient(ItemID.RangerEmblem)
+                .AddIngredient(ItemID.SorcererEmblem)
+                .AddIngredient(ItemID.SummonerEmblem)
+                .Register();
+        }
+    }
 }

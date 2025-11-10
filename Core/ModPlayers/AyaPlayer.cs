@@ -234,6 +234,7 @@ namespace AyaMod.Core.ModPlayers
 
         }
 
+        public static event ModPlayerEvents.PlayerDelegate PostUpdateMiscEffectsHook = (p) => { };
         public override void PostUpdateMiscEffects()
         {
             AddDashes(Player);
@@ -246,6 +247,11 @@ namespace AyaMod.Core.ModPlayers
 
             NotUsingCameraTimer++;
             noHitTimer++;
+
+            foreach(ModPlayerEvents.PlayerDelegate g in PostUpdateMiscEffectsHook.GetInvocationList())
+            {
+                g(Player);
+            }
             //Main.NewText($"{Player.velocity.Y} {Player.wingTime} {Player.wingTimeMax} {Main.time}");
             //Main.NewText($"{Player.dashDelay}");
             //Console.WriteLine($"{Player.dashDelay} {DashDelay}");

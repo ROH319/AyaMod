@@ -59,3 +59,6 @@ Necromantic: {
 	DisplayName: 死灵
 	PrefixExtraTooltip: "[c/78BE78:拍摄有几率产生一个削弱的地牢幽魂（无掉落物）]"
 }
+
+// Alchemistical.DisplayName: Alchemistical
+// Tetrad.DisplayName: Tetrad
