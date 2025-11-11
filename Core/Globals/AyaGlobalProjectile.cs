@@ -14,6 +14,7 @@ namespace AyaMod.Core.Globals
         public delegate void ProjectileModifyHitNPCDelegate(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers);
         public delegate void ProjectileHitNPCDelegate(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone);
         public delegate bool? ProjectileCanDamageChecker(Projectile projectile);
+        public delegate void ProjectileDelegate(Projectile projectile);
 
         public StatModifier SpeedModifier;
 
@@ -33,14 +34,16 @@ namespace AyaMod.Core.Globals
             }
         }
 
+        public static event ProjectileDelegate OnProjectilePostAI = (p) => { };
         public override void PostAI(Projectile projectile)
         {
-
-            if (projectile.hostile)
+            foreach(ProjectileDelegate del in OnProjectilePostAI.GetInvocationList())
             {
-                var speedModifier = SpeedModifier.ApplyTo(1f);
-                projectile.position += projectile.velocity * (speedModifier - 1f);
+                del.Invoke(projectile);
             }
+
+            var speedModifier = SpeedModifier.ApplyTo(1f);
+            projectile.position += projectile.velocity * (speedModifier - 1f);
         }
 
         public static event ProjectileHitNPCDelegate OnProjectileHitNPC = (p, n, h, d) => { };

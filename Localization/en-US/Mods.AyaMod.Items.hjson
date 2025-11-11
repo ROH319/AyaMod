@@ -642,3 +642,18 @@ PhantomHammer: {
 	DisplayName: Phantom Hammer
 	Tooltip: ""
 }
+
+EquilibratedHammer: {
+	DisplayName: Equilibrated Hammer
+	Tooltip: ""
+}
+
+GreedyHammer: {
+	DisplayName: Greedy Hammer
+	Tooltip: ""
+}
+
+SpectralHammer: {
+	DisplayName: Spectral Hammer
+	Tooltip: ""
+}

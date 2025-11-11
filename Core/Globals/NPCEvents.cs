@@ -8,8 +8,9 @@ using Terraria;
 
 namespace AyaMod.Core.Globals
 {
-    public class CameraNPCEvents
+    public class NPCEvents
     {
+        public delegate void NPCDelegate(NPC npc);
         public delegate void CameraNPCDelegate(BaseCameraProj projectile, NPC npc);
 
     }

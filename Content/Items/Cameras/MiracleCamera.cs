@@ -477,6 +477,7 @@ namespace AyaMod.Content.Items.Cameras
         public override void SetStaticDefaults()
         {
             Projectile.SetTrail(2, 25);
+            ProjectileID.Sets.CultistIsResistantTo[Type] = true;
         }
         public override void SetDefaults()
         {

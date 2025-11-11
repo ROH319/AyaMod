@@ -66,3 +66,16 @@ Phantom: {
 	DisplayName: Phantom
 	PrefixExtraTooltip: ""
 }
+
+Equilibrated: {
+	DisplayName: Equilibrated
+	PrefixExtraTooltip: ""
+}
+Greedy: {
+	DisplayName: Greedy
+	PrefixExtraTooltip: ""
+}
+Spectral: {
+	DisplayName: Spectral
+	PrefixExtraTooltip: ""
+}

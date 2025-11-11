@@ -802,3 +802,18 @@ PhantomHammer: {
 	DisplayName: 魅影 锻锤
 	Tooltip: ""
 }
+
+EquilibratedHammer: {
+	DisplayName: 两仪 锻锤
+	Tooltip: ""
+}
+
+GreedyHammer: {
+	DisplayName: 贪婪 锻锤
+	Tooltip: ""
+}
+
+SpectralHammer: {
+	DisplayName: 幻灵 锻锤
+	Tooltip: ""
+}

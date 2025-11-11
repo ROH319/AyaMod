@@ -114,4 +114,43 @@ namespace AyaMod.Content.Items.PrefixHammers
                 .Register();
         }
     }
+    public class EquilibratedHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Equilibrated>();
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<ReforgeHammer>()
+                .AddIngredient(ItemID.LightShard)
+                .AddIngredient(ItemID.DarkShard)
+                .Register();
+        }
+    }
+    public class GreedyHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Greedy>();
+        }
+    }
+    public class SpectralHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Spectral>();
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<ReforgeHammer>()
+                .AddIngredient(ItemID.Ectoplasm, 8)
+                .Register();
+        }
+    }
 }

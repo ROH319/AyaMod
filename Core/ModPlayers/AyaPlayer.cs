@@ -26,6 +26,8 @@ namespace AyaMod.Core.ModPlayers
         public StatModifier WingTimeModifier = StatModifier.Default;
         public StatModifier AccSpeedModifier = StatModifier.Default;
 
+        public int ItemTimer = 0;
+        public int NotItemTimer = 0;
         public int NotUsingCameraTimer = 0;
 
         public bool UltraMoveEnabled = false;
@@ -245,6 +247,16 @@ namespace AyaMod.Core.ModPlayers
                 freeFlyFrame = FreeFlyFrame;
             }
 
+            if(Player.itemTime > 0)
+            {
+                ItemTimer++;
+                NotItemTimer = 0;
+            }
+            else
+            {
+                NotItemTimer++;
+                ItemTimer = 0;
+            }
             NotUsingCameraTimer++;
             noHitTimer++;
 

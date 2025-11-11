@@ -66,6 +66,16 @@ namespace AyaMod.Core.Globals
                 ChlorophyteFilm.SpawnSpore(npc);
             }
         }
+
+        public static event NPCEvents.NPCDelegate OnNPCKill = (n) => { };
+        public override void OnKill(NPC npc)
+        {
+            foreach(NPCEvents.NPCDelegate del in OnNPCKill.GetInvocationList())
+            {
+                del.Invoke(npc);
+            }
+        }
+
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
             bool devEffect = Main.player.Any(player => player.AliveCheck(npc.Center, 2000) && player.DevEffect());
@@ -123,6 +133,10 @@ namespace AyaMod.Core.Globals
                 //军火商
                 case NPCID.ArmsDealer:
                     shop.Add(new Item(ItemType<TriggerShutter>()) { shopCustomPrice = Item.buyPrice(gold: 1) });
+                    break;
+                //巫医
+                case NPCID.WitchDoctor:
+                    shop.Add(new Item(ItemType<AbundantHammer>()) { shopCustomPrice = Item.buyPrice(gold: 7) });
                     break;
                 //机械师
                 case NPCID.Mechanic:

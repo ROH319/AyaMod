@@ -67,19 +67,19 @@ namespace AyaMod.Core.Globals
                 g.Invoke(projectile, target, hit, damageDone);
         }
 
-        public static event CameraNPCEvents.CameraNPCDelegate HoverNPCHook = (p, n) => { };
+        public static event NPCEvents.CameraNPCDelegate HoverNPCHook = (p, n) => { };
         public static void HoverNPC(BaseCameraProj projectile, NPC npc)
         {
             if (HoverNPCHook == null) return;
-            foreach (CameraNPCEvents.CameraNPCDelegate g in HoverNPCHook.GetInvocationList())
+            foreach (NPCEvents.CameraNPCDelegate g in HoverNPCHook.GetInvocationList())
                 g.Invoke(projectile, npc);
         }
 
-        public static event CameraNPCEvents.CameraNPCDelegate NotHoverNPCHook = (p, n) => { };
+        public static event NPCEvents.CameraNPCDelegate NotHoverNPCHook = (p, n) => { };
         public static void NotHoverNPC(BaseCameraProj projectile, NPC npc)
         {
             if (NotHoverNPCHook == null) return;
-            foreach (CameraNPCEvents.CameraNPCDelegate g in NotHoverNPCHook.GetInvocationList())
+            foreach (NPCEvents.CameraNPCDelegate g in NotHoverNPCHook.GetInvocationList())
                 g.Invoke(projectile, npc);
         }
 

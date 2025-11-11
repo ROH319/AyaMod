@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -29,7 +30,23 @@ namespace AyaMod.Helpers
 
 
         #region NPC
-
+        /// <summary>
+        /// 从原版NPC类复制的方法
+        /// </summary>
+        /// <param name="npc"></param>
+        public static void NPCLoot_DropItems(this NPC npc)
+        {
+            Player closestPlayer = Main.player[Player.FindClosest(npc.position, npc.width, npc.height)];
+            DropAttemptInfo dropAttemptInfo = default(DropAttemptInfo);
+            dropAttemptInfo.player = closestPlayer;
+            dropAttemptInfo.npc = npc;
+            dropAttemptInfo.IsExpertMode = Main.expertMode;
+            dropAttemptInfo.IsMasterMode = Main.masterMode;
+            dropAttemptInfo.IsInSimulation = false;
+            dropAttemptInfo.rng = Main.rand;
+            DropAttemptInfo info = dropAttemptInfo;
+            Main.ItemDropSolver.TryDropping(info);
+        }
 
         #endregion
 

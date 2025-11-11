@@ -76,10 +76,27 @@ Tetrad: {
 
 Phantom: {
 	DisplayName: 魅影
-	PrefixExtraTooltip: 
+	PrefixExtraTooltip:
 		'''
 		[c/78BE78:允许穿墙拍摄，但拍摄不造成伤害]
 		[c/78BE78:衍生弹幕可以穿墙]
 		'''
+}
+
+Equilibrated: {
+	DisplayName: 两仪
+	PrefixExtraTooltip: 
+		'''
+		[c/78BE78:使用物品时随时间增加至多20%伤害]
+		[c/78BE78:否则，随时间增加至多20%减伤]
+		'''
+}
+Greedy: {
+	DisplayName: 贪婪
+	PrefixExtraTooltip: "[c/78BE78:+7%战利品爆发几率（普通敌人14倍，boss7倍）]"
+}
+Spectral: {
+	DisplayName: 幻灵
+	PrefixExtraTooltip: "[c/78BE78:追踪弹幕获得穿墙能力，速度增加20%]"
 }
 

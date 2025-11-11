@@ -66,6 +66,10 @@ namespace AyaMod.Content.Items.Cameras
     public class FantasticBubble1 : ModProjectile
     {
         public override string Texture => AssetDirectory.Projectiles + Name;
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.CultistIsResistantTo[Type] = true;
+        }
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 18;
@@ -129,6 +133,10 @@ namespace AyaMod.Content.Items.Cameras
     public class FantasticBubble2 : ModProjectile
     {
         public override string Texture => AssetDirectory.Projectiles + Name;
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.CultistIsResistantTo[Type] = true;
+        }
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 30;
