@@ -38,6 +38,13 @@ namespace AyaMod.Helpers
             return Language.Exists(key) ? Language.GetTextValue(key, args) : key;
         }
 
+        /// <summary>
+        /// 返回从start到end的直线段上，是否有碰撞到实心方块
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="interval"></param>
+        /// <returns>为true表示没碰撞</returns>
         public static bool CheckLineCollisionTile(Vector2 start, Vector2 end, int interval = 8)
         {
             bool canhit = true;

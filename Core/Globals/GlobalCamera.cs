@@ -31,6 +31,26 @@ namespace AyaMod.Core.Globals
             return result;
         }
 
+
+        public static event ProjectileCanDamageChecker OnProjectileCanDamage = (p) => null;
+        public override bool? CanDamage(Projectile projectile)
+        {
+            bool? result = null;
+            foreach (ProjectileCanDamageChecker del in OnProjectileCanDamage.GetInvocationList())
+            {
+                bool? canDamage = del.Invoke(projectile);
+                if (canDamage.HasValue)
+                {
+                    if (!canDamage.Value)
+                    {
+                        return false;
+                    }
+                    result = true;
+                }
+            }
+            return result ?? base.CanDamage(projectile);
+        }
+
         public static event ProjectileModifyHitNPCDelegate ModifyHitNPCHook = (Projectile p, NPC n, ref NPC.HitModifiers m) => { };
         public override void ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
         {

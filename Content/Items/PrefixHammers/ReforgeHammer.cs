@@ -57,15 +57,20 @@ namespace AyaMod.Content.Items.PrefixHammers
 
         public override void SaveData(TagCompound tag)
         {
-            tag.Add("PrefixToForge", PrefixToForge?.Type ?? -1);
+            if (PrefixToForge == null) return;
+            tag.Add("PrefixToForge", $"{PrefixToForge.FullName}");
         }
         public override void LoadData(TagCompound tag)
         {
             if (tag.ContainsKey("PrefixToForge"))
             {
-                int prefixType = tag.GetAsInt("PrefixToForge");
-                if (prefixType > 0)
-                    PrefixToForge = PrefixLoader.GetPrefix(prefixType);
+                tag.TryGet<string>("PrefixToForge", out string str);
+                string prefixName = str;
+                if (!string.IsNullOrEmpty(prefixName))
+                {
+                    ModContent.TryFind<ModPrefix>(prefixName, out ModPrefix prefix);
+                    PrefixToForge = prefix;
+                }
             }
         }
     }

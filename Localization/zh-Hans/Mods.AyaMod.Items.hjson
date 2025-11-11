@@ -784,16 +784,21 @@ AbundantHammer: {
 }
 
 NecromanticHammer: {
-	// DisplayName: Necromantic Hammer
-	// Tooltip: ""
+	DisplayName: 死灵 锻锤
+	Tooltip: ""
 }
 
 AlchemisticalHammer: {
-	// DisplayName: Alchemistical Hammer
-	// Tooltip: ""
+	DisplayName: 炼金 锻锤
+	Tooltip: ""
 }
 
 TetradHammer: {
-	// DisplayName: Tetrad Hammer
-	// Tooltip: ""
+	DisplayName: 四象 锻锤
+	Tooltip: ""
+}
+
+PhantomHammer: {
+	DisplayName: 魅影 锻锤
+	Tooltip: ""
 }

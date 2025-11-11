@@ -57,8 +57,29 @@ Abundant: {
 
 Necromantic: {
 	DisplayName: 死灵
-	PrefixExtraTooltip: "[c/78BE78:拍摄有几率产生一个削弱的地牢幽魂（无掉落物）]"
+	PrefixExtraTooltip: "[c/BE7878:拍摄有几率产生一个削弱的地牢幽魂（无掉落物）]"
 }
 
-// Alchemistical.DisplayName: Alchemistical
-// Tetrad.DisplayName: Tetrad
+Alchemistical: {
+	DisplayName: 炼金
+	PrefixExtraTooltip:
+		'''
+		[c/78BE78:拍摄会延长目标的随机一个持续时间低于20s的减益5s持续时间]
+		[c/78BE78:拍摄会延长自身的随机一个持续时间低于180s高于20s的减益10s持续时间]
+		'''
+}
+
+Tetrad: {
+	DisplayName: 四象
+	PrefixExtraTooltip: "[c/78BE78:记者伤害可以获得其余四职业25%的增伤]"
+}
+
+Phantom: {
+	DisplayName: 魅影
+	PrefixExtraTooltip: 
+		'''
+		[c/78BE78:允许穿墙拍摄，但拍摄不造成伤害]
+		[c/78BE78:衍生弹幕可以穿墙]
+		'''
+}
+

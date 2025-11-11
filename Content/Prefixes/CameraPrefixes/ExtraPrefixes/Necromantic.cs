@@ -14,7 +14,7 @@ using Terraria.ID;
 
 namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 {
-    public class Necromantic() : ExtraCameraPrefix(damageMult:1.15f,critBonus:15)
+    public class Necromantic() : ExtraCameraPrefix(damageMult:1.16f,critBonus:16)
     {
         public override void Load()
         {

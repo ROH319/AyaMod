@@ -13,7 +13,7 @@ namespace AyaMod.Core.Globals
     {
         public delegate void ProjectileModifyHitNPCDelegate(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers);
         public delegate void ProjectileHitNPCDelegate(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone);
-
+        public delegate bool? ProjectileCanDamageChecker(Projectile projectile);
 
         public StatModifier SpeedModifier;
 

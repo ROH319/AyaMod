@@ -14,10 +14,10 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
         public static void TetradDamageBonus(Player player)
         {
             if (player.HeldItem.prefix != PrefixType<Tetrad>()) return;
-            var melee = player.GetDamage(DamageClass.Melee).Additive - 1f;
-            var ranged = player.GetDamage(DamageClass.Ranged).Additive - 1f;
-            var magic = player.GetDamage(DamageClass.Magic).Additive - 1f;
-            var summon = player.GetDamage(DamageClass.Summon).Additive - 1f;
+            var melee = player.GetTotalDamage(DamageClass.Melee).Additive - 1f;
+            var ranged = player.GetTotalDamage(DamageClass.Ranged).Additive - 1f;
+            var magic = player.GetTotalDamage(DamageClass.Magic).Additive - 1f;
+            var summon = player.GetTotalDamage(DamageClass.Summon).Additive - 1f;
             player.GetDamage(ReporterDamage.Instance) += (melee + ranged + magic + summon) * 0.25f;
         }
     }

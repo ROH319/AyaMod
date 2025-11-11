@@ -36,6 +36,8 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
                 {
                     if (!Main.debuff[target.buffType[i]] || target.buffTime[i] >= TimeleftThreshold) continue;
                     target.buffTime[i] += TimeToAdd;
+                    var name = Lang.GetBuffName(target.buffType[i]);
+                    CombatText.NewText(target.getRect(), Main.DiscoColor, $"+{TimeToAdd / 60}s{name}");
                 }
             }
 
@@ -47,6 +49,8 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
                     || player.buffTime[i] >= FriendlyTimeleftMax || player.buffTime[i] <= FriendlyTimeleftMin) continue;
 
                 player.buffTime[i] += FriendlyTimeToAdd;
+                CombatText.NewText(player.getRect(), Main.DiscoColor, $"+{FriendlyTimeToAdd / 60}s");
+
             }
         }
 

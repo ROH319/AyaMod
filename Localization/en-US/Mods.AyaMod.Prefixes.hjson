@@ -52,5 +52,17 @@ Necromantic: {
 	PrefixExtraTooltip: ""
 }
 
-Alchemistical.DisplayName: Alchemistical
-Tetrad.DisplayName: Tetrad
+Alchemistical: {
+	DisplayName: Alchemistical
+	PrefixExtraTooltip: ""
+}
+
+Tetrad: {
+	DisplayName: Tetrad
+	PrefixExtraTooltip: ""
+}
+
+Phantom: {
+	DisplayName: Phantom
+	PrefixExtraTooltip: ""
+}

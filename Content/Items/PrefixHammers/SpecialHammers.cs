@@ -88,6 +88,14 @@ namespace AyaMod.Content.Items.PrefixHammers
             PrefixToForge = GetInstance<Alchemistical>();
         }
     }
+    public class PhantomHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Phantom>();
+        }
+    }
     public class TetradHammer : BasePrefixHammer
     {
         public override void SetDefaults()
