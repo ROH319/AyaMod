@@ -817,3 +817,18 @@ SpectralHammer: {
 	DisplayName: 幻灵 锻锤
 	Tooltip: ""
 }
+
+FestiveHammer: {
+	DisplayName: 节庆 锻锤
+	Tooltip: ""
+}
+
+HarvestingHammer: {
+	DisplayName: 收割 锻锤
+	Tooltip: ""
+}
+
+IntelligentHammer: {
+	DisplayName: 智能 锻锤
+	Tooltip: ""
+}

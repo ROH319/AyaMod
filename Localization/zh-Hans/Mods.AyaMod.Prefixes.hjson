@@ -85,18 +85,51 @@ Phantom: {
 
 Equilibrated: {
 	DisplayName: 两仪
-	PrefixExtraTooltip: 
+	PrefixExtraTooltip:
 		'''
 		[c/78BE78:使用物品时随时间增加至多20%伤害]
 		[c/78BE78:否则，随时间增加至多20%减伤]
 		'''
 }
+
 Greedy: {
 	DisplayName: 贪婪
 	PrefixExtraTooltip: "[c/78BE78:+7%战利品爆发几率（普通敌人14倍，boss7倍）]"
 }
+
 Spectral: {
 	DisplayName: 幻灵
 	PrefixExtraTooltip: "[c/78BE78:追踪弹幕获得穿墙能力，速度增加20%]"
 }
 
+Festive: {
+	DisplayName: 节庆
+	PrefixExtraTooltip:
+		'''
+		[c/BE7878:不追踪的弹幕速度降低20%]
+		[c/78BE78:每拍摄五次，引爆场上的弹幕，造成弹幕1.6倍的范围伤害]
+		'''
+}
+
+Harvesting: {
+	DisplayName: 收割
+	PrefixExtraTooltip:
+		'''
+		[c/78BE78:穿透弹幕+20%伤害和10%暴击]
+		[c/78BE78:不追踪不穿透弹幕可以穿透一次]
+		'''
+}
+
+Intelligent: {
+	DisplayName: 智能
+	PrefixExtraTooltip:
+		'''
+		[c/78BE78:拍摄框自动吸附距离鼠标15格内的敌人]
+		[c/78BE78:索敌范围受镜头大小加成]
+		'''
+}
+
+Evolutive: {
+	DisplayName: 进化
+	PrefixExtraTooltip: "[c/78BE78:击杀敌人后，武器增加等同于接触伤害一半的伤害，持续5s或被更高的覆盖]"
+}

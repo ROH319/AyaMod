@@ -356,14 +356,14 @@ namespace AyaMod.Content.Items.Cameras
             trueFactor = trueFactor % 1f;
 
             float tlFactor = Utils.Remap(Projectile.timeLeft, Projectile.MaxTimeleft() - 30, Projectile.MaxTimeleft(), 1f, 0f);
-
+            //var myradius = miracleCamera.StarRadius * tlFactor * (1 + MathF.Cos(Main.GameUpdateCount * 0.04f) * 0.1f);
             Vector2 pos = AyaUtils.GetPentagramPos(camera.Center, miracleCamera.StarRadius * tlFactor * (1 + MathF.Cos(Main.GameUpdateCount * 0.04f) * 0.1f),
                 trueFactor, MathHelper.TwoPi / 10f + miracleCamera.OrbitRotation);
 
             Projectile.Center = Vector2.Lerp(Projectile.Center, pos, 0.9f);
             Vector2 nextPos = camera.Center + (pos - camera.Center).RotatedBy(MathHelper.ToRadians(144));
             Projectile.velocity = nextPos - pos;
-
+            //if (CurrentStack == 1) Main.NewText($"{factor}");
             foreach (var particle in ParticleManager.Particles)
             {
                 if (particle is RingParticle && particle.Source is EntitySource_Parent parent && parent.Entity is Projectile parentproj)

@@ -153,4 +153,36 @@ namespace AyaMod.Content.Items.PrefixHammers
                 .Register();
         }
     }
+    public class FestiveHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Festive>();
+        }
+    }
+    public class HarvestingHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Harvesting>();
+        }
+    }
+    public class IntelligentHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Intelligent>();
+        }
+    }
+    public class EvolutiveHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Evolutive>();
+        }
+    }
 }

@@ -31,6 +31,13 @@ namespace AyaMod.Core.Globals
             return result;
         }
 
+        public delegate void PlayerCameraDelegate(Player player, BaseCameraProj projectile);
+        public static event PlayerCameraDelegate PostAIHook = (plr, p) => { };
+        public override void PostAI(Projectile projectile)
+        {
+            foreach (PlayerCameraDelegate g in PostAIHook.GetInvocationList())
+                g.Invoke(Main.player[projectile.owner], projectile.ModProjectile as BaseCameraProj);
+        }
 
         public static event ProjectileCanDamageChecker OnProjectileCanDamage = (p) => null;
         public override bool? CanDamage(Projectile projectile)

@@ -143,6 +143,10 @@ namespace AyaMod.Core.Globals
                     shop.Add(new Item(ItemType<DigitalCamera>()) { shopCustomPrice = Item.buyPrice(gold: 10) });
                     shop.Add(new Item(ItemType<IntelligentGyroscope>()) { shopCustomPrice = Item.buyPrice(gold: 3) });
                     break;
+                //机器侠
+                case NPCID.Cyborg:
+                    shop.Add(new Item(ItemType<IntelligentHammer>()) { shopCustomPrice = Item.buyPrice(gold: 20) });
+                    break;
                 default:
                     break;
             }

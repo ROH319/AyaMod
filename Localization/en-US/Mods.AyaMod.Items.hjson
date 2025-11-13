@@ -657,3 +657,18 @@ SpectralHammer: {
 	DisplayName: Spectral Hammer
 	Tooltip: ""
 }
+
+FestiveHammer: {
+	DisplayName: Festive Hammer
+	Tooltip: ""
+}
+
+HarvestingHammer: {
+	DisplayName: Harvesting Hammer
+	Tooltip: ""
+}
+
+IntelligentHammer: {
+	DisplayName: Intelligent Hammer
+	Tooltip: ""
+}

@@ -71,11 +71,33 @@ Equilibrated: {
 	DisplayName: Equilibrated
 	PrefixExtraTooltip: ""
 }
+
 Greedy: {
 	DisplayName: Greedy
 	PrefixExtraTooltip: ""
 }
+
 Spectral: {
 	DisplayName: Spectral
+	PrefixExtraTooltip: ""
+}
+
+Festive: {
+	DisplayName: Festive
+	PrefixExtraTooltip: ""
+}
+
+Harvesting: {
+	DisplayName: Harvesting
+	PrefixExtraTooltip: ""
+}
+
+Intelligent: {
+	DisplayName: Intelligent
+	PrefixExtraTooltip: ""
+}
+
+Evolutive: {
+	DisplayName: Evolutive
 	PrefixExtraTooltip: ""
 }

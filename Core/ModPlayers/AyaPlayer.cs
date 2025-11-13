@@ -267,6 +267,7 @@ namespace AyaMod.Core.ModPlayers
             //Main.NewText($"{Player.velocity.Y} {Player.wingTime} {Player.wingTimeMax} {Main.time}");
             //Main.NewText($"{Player.dashDelay}");
             //Console.WriteLine($"{Player.dashDelay} {DashDelay}");
+            //Main.NewText($"{Player.itemTime} {Player.itemTimeMax} {Main.time}");
         }
 
 

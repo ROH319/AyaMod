@@ -46,6 +46,15 @@ namespace AyaMod.Core.Globals
             projectile.position += projectile.velocity * (speedModifier - 1f);
         }
 
+        public static event ProjectileModifyHitNPCDelegate ModifyProjectileHitNPC = (Projectile p, NPC target, ref NPC.HitModifiers modifiers) => { };
+        public override void ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
+        {
+            foreach(ProjectileModifyHitNPCDelegate m in ModifyProjectileHitNPC.GetInvocationList())
+            {
+                m.Invoke(projectile, target, ref modifiers);
+            }
+        }
+
         public static event ProjectileHitNPCDelegate OnProjectileHitNPC = (p, n, h, d) => { };
         public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
