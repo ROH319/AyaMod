@@ -44,11 +44,38 @@ namespace AyaMod.Helpers
         public static void DrawRing(int pointCount, Vector2 center, float radius, Color drawcolor, float rot, Vector2 scale)
         {
             var star = TextureAssets.Extra[98].Value;
+            Vector2 origin = new Vector2(36, 36);
             for (int i = 0; i < pointCount; i++)
             {
                 float dir = MathHelper.TwoPi / pointCount * i + rot;
                 Vector2 drawpos = center + dir.ToRotationVector2() * radius;
-                Main.spriteBatch.Draw(star, drawpos - Main.screenPosition, null, drawcolor, dir, new Vector2(36, 36), scale, 0, 0);
+                Main.spriteBatch.Draw(star, drawpos - Main.screenPosition, null, drawcolor, dir, origin, scale, 0, 0);
+            }
+        }
+        public static void DrawZ(Vector2 center, Color drawColor, float rot, float radius, float widthScale, float scale)
+        {
+            var star = TextureAssets.Extra[98].Value;
+            Vector2 origin = star.Size() / 2;
+            Vector2[] poses = new Vector2[] 
+            { 
+                new Vector2(-radius, -radius).RotatedBy(rot),
+                new Vector2(radius, -radius).RotatedBy(rot),
+                new Vector2(-radius, radius).RotatedBy(rot),
+                new Vector2(radius, radius).RotatedBy(rot),
+            };
+            Vector2 drawScale = new Vector2(0.3f * widthScale, 0.6f) * 0.6f * scale;
+            float length = drawScale.Y * 72;
+
+            for(int j = 0;j < 3; j++) 
+            {
+                int drawcount = (int)(Vector2.Distance(poses[j], poses[j + 1]) / length * 4f);
+                Vector2 dir = poses[j].DirectionToSafe(poses[j + 1]);
+                float drawrot = dir.ToRotation();
+                for (int i = 0; i < drawcount; i++)
+                {
+                    Vector2 drawpos = center + Vector2.Lerp(poses[j], poses[j + 1], i / (float)drawcount);
+                    Main.spriteBatch.Draw(star, drawpos - Main.screenPosition, null, drawColor, drawrot - MathHelper.PiOver2, origin, drawScale, 0, 0);
+                }
             }
         }
 

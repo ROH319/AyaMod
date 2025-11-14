@@ -832,3 +832,13 @@ IntelligentHammer: {
 	DisplayName: 智能 锻锤
 	Tooltip: ""
 }
+
+DoremyCamera: {
+	// DisplayName: Doremy Camera
+	// Tooltip: ""
+}
+
+EvolutiveHammer: {
+	// DisplayName: Evolutive Hammer
+	// Tooltip: ""
+}

@@ -1,4 +1,4 @@
-﻿AcidBuff: {
+AcidBuff: {
 	// DisplayName: Acid Buff
 	// Description: Mods.AyaMod.Buffs.AcidBuff.Description
 }
@@ -91,4 +91,9 @@ StealthBuff: {
 StealthNoHitBuff: {
 	DisplayName: 潜行
 	Description: "{$Mods.AyaMod.Buffs.StealthBuff.Description}"
+}
+
+TiredBuff: {
+	// DisplayName: Tired Buff
+	// Description: Mods.AyaMod.Buffs.TiredBuff.Description
 }

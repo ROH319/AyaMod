@@ -92,3 +92,8 @@ StealthNoHitBuff: {
 	DisplayName: Stealth No Hit Buff
 	Description: Mods.AyaMod.Buffs.StealthNoHitBuff.Description
 }
+
+TiredBuff: {
+	DisplayName: Tired Buff
+	Description: Mods.AyaMod.Buffs.TiredBuff.Description
+}

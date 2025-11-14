@@ -1,4 +1,5 @@
 ﻿using AyaMod.Core.Globals;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,12 +79,24 @@ namespace AyaMod.Helpers
             return canhit;
         }
 
+        public static float CheckCollisionDistance(Vector2 start, Vector2 dir, int interval = 8, int maxdistance = 1000)
+        {
+            int distance = interval;
+            while (distance < maxdistance)
+            {
+                var checkpos = start + dir * distance;
+                if (PointInTile(checkpos)) break;
+                distance += interval;
+            }
+            return distance;
+        }
+
         public static bool PointInTile(Vector2 point)
         {
             var startCoords = new Point((int)(point.X / 16), (int)(point.Y / 16));
-            for(int x = -1;x<=1;x++)
+            for (int x = -1; x <= 1; x++)
             {
-                for(int y = -1;y<=1;y++)
+                for (int y = -1; y <= 1; y++)
                 {
                     var coords = startCoords + new Point(x, y);
                     if (WorldGen.InWorld(coords.X, coords.Y))
@@ -115,12 +128,12 @@ namespace AyaMod.Helpers
         public static Vector2[] GetCameraRect(Vector2 center, float rot, float size)
         {
             List<Vector2> pos = new();
-            
-            for(float i = -1; i < 2; i += 2)
+
+            for (float i = -1; i < 2; i += 2)
             {
-                for(float j = -1; j < 2; j += 2)
+                for (float j = -1; j < 2; j += 2)
                 {
-                    pos.Add(center + new Vector2(i * size / 2,j * size / 2).RotatedBy(rot));
+                    pos.Add(center + new Vector2(i * size / 2, j * size / 2).RotatedBy(rot));
                 }
             }
             return pos.ToArray();
@@ -136,7 +149,7 @@ namespace AyaMod.Helpers
             */
             for (float i = -1; i < 2; i += 2)
             {
-                for(float j = -1; j < 2; j += 2)
+                for (float j = -1; j < 2; j += 2)
                 {
                     pos.Add(center + new Vector2(i * sizeX / 2, j * sizeY / 2).RotatedBy(rot));
                 }
@@ -246,6 +259,64 @@ namespace AyaMod.Helpers
         }
         public static Color HSL2RGB(Vector3 hsl, byte alpha = 255) => HSL2RGB(hsl.X, hsl.Y, hsl.Z, alpha);
 
+        public static float Fract(float value) => (float)(value - Math.Floor(value));
+        public static float GetNoise(float t)
+        {
+            float fractional = Fract(t);
+            return MathHelper.SmoothStep(0,1, (float)Math.Sin(13 * Math.Sqrt(t)) * fractional);
+        }
+        public static float GetPerlinNoise(float t, float persistence)
+        {
+            return (float)(
+                GetNoise(t * 0.8f) * persistence +
+                GetNoise(t * 0.8f) * (persistence * 0.5) +
+                GetNoise(t * 3.4f) * (persistence * 0.25f) +
+                GetNoise(t * 6.8f) * (persistence * 0.125f)) / (persistence);
+        }
+        public static float GetRandomFlicker(float t)
+        {
+            float seed = Fract(t * 0.173f);
+            float random = Main.rand.NextFloat(1);
+            float threshold = 0.85f;
+            return random > threshold ? random * 1.5f : 0f;
+        }
 
+        public static float GetFlickeringBrightness(float timer, float baseBrightness = 0.7f, float intensity = 0.4f, float frequency = 1.7f, float randomness = 0.6f)
+        {
+            // 总时间基准（转换为秒）
+            float t = timer;
+
+            // 1. 基础正弦波 - 创建循环模式
+            float sinusoid = MathHelper.SmoothStep(
+                -1,
+                1,
+                MathHelper.Clamp((float)Math.Sin(t * frequency), -0.99f, 0.99f)
+            );
+
+            // 2. 高频噪声 - 增加细节
+            float fastNoise = GetPerlinNoise(t * frequency * 4f, 0.3f) * 0.3f;
+
+            // 3. 低频变化 - 较长的亮度周期
+            float slowWave = MathHelper.Lerp(
+                0.2f,
+                0.8f,
+                GetPerlinNoise(t * 0.3f, 0.8f)
+            );
+
+            // 4. 随机闪烁 - 突然变化
+            float randomPulse = GetRandomFlicker(t * 10f);
+
+            // 组合所有成分
+            float combined = (sinusoid + fastNoise + slowWave + randomPulse) / 4f;
+
+            // 应用强度控制
+            combined = MathHelper.Lerp(baseBrightness, combined, intensity);
+
+            // 应用随机性过滤
+            combined = MathHelper.Lerp(combined, randomPulse, randomness);
+
+            // 确保值在0-1范围内
+            return MathHelper.Clamp(combined, 0f, 1f);
+        }
     }
 }
