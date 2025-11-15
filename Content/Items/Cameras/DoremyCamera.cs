@@ -131,10 +131,23 @@ namespace AyaMod.Content.Items.Cameras
                     StarParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, new Color(255, 20, 255).AdditiveColor(), Projectile.scale * 0.6f, 0.4f, 1.4f, 0.82f, 0.9f, vel.ToRotation(), Projectile.Opacity);
                 }
             }
+            if(factor < 0.2f)
+            {
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Vector2 pos = Projectile.Center + 0.9f * Main.rand.NextFloat(0.9f, 1.1f) * Main.rand.NextVector2Unit() * Projectile.width / 2 * Projectile.scale;
+                    Vector2 vel = pos.DirectionToSafe(Projectile.Center) * Main.rand.NextFloat(1,3);
+                    Dust d = Dust.NewDustPerfect(pos,  DustID.PurpleTorch, vel, Scale: 2f);
+                    d.noGravity = true;
+                }
+            }
+
         }
         public override void OnKill(int timeLeft)
         {
-            int type = ProjectileType<DreamShot>();
+            //int type = ProjectileType<DreamShot>();
+            int type = ProjectileType<DreamEssence>();
             int damage = (int)(Projectile.damage * 0.4f);
             float startRot = Main.rand.NextFloat(MathHelper.TwoPi);
             for(int i = 0; i < 3; i++)
@@ -366,6 +379,148 @@ namespace AyaMod.Content.Items.Cameras
             Main.spriteBatch.Draw(ball7, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * 1f, Projectile.rotation, ball7.Size() / 2, ballScale * 0.1f, 0, 0);
 
             RenderHelper.DrawRing(60, Projectile.Center, 0.4f * 32f * Projectile.scale, Color.Violet, Projectile.rotation, new Vector2(0.2f, 0.8f) * 0.3f);
+
+            return false;
+        }
+    }
+
+    public class DreamEssence : ModProjectile
+    {
+        public override string Texture => AssetDirectory.EmptyTexturePass;
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.CultistIsResistantTo[Type] = true;
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 64;
+            Projectile.friendly = true;
+            Projectile.SetImmune(100);
+            Projectile.timeLeft = 10 * 60;
+        }
+        public override void OnSpawn(IEntitySource source)
+        {
+            Projectile.Opacity = 0f;
+            Projectile.scale = 0f;
+            Projectile.localAI[1] = 0.6f;
+        }
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            EndMove();
+        }
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            EndMove();
+            return base.OnTileCollide(oldVelocity);
+        }
+        public override void AI()
+        {
+
+            float factor = Projectile.TimeleftFactor();
+
+            if (Projectile.ai[2] < 0)
+            {
+                Projectile.velocity *= 0.83f;
+                Projectile.extraUpdates = 0;
+                float deathFactor = Projectile.timeLeft / 50f;
+
+                Projectile.scale = Utils.Remap(deathFactor, 0, 1f, 1.5f, 1f);
+                Projectile.Opacity = deathFactor;
+                Projectile.localAI[1] = Utils.Remap(deathFactor, 0f, 1f, 1f, 0.6f);
+                return;
+            }
+
+            if (factor > 0.95f)
+            {
+                Projectile.velocity = Projectile.velocity * 0.97f;
+                float collisionDistance = AyaUtils.CheckCollisionDistance(Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitX), maxdistance: 300);
+                float extraFactor = Utils.Remap(collisionDistance, 0, 200, 0.7f, 1f);
+                Projectile.velocity = Projectile.velocity * extraFactor;
+            }
+            Projectile.localAI[0] = Utils.Remap(factor, 0.7f, 0.97f, 0.05f, 0f);
+            Projectile.Chase(1400, 18, Projectile.localAI[0]);
+            Projectile.Opacity += 0.03f;
+            if (Projectile.Opacity > 1f) Projectile.Opacity = 1f;
+            Projectile.scale += 0.03f;
+            if (Projectile.scale > 1f) Projectile.scale = 1f;
+
+            //Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.PurpleTorch, Projectile.velocity * 0f, Scale: 2f);
+            //d.noGravity = true;
+            if(Projectile.timeLeft % 2 == 0)
+            {
+                Vector2 vec = Main.rand.NextVector2Unit();
+                Vector2 pos = Projectile.Center /*+ vec * Main.rand.NextFloat(10, 12)*/;
+                Vector2 vel = Projectile.velocity * 0.3f;
+                Color pink = new Color(255, 105, 180);
+                Color blue = new Color(65, 105, 225);
+                Color color = (Projectile.timeLeft % 4 == 0 ? pink : blue) * Main.rand.NextFloat(0.5f, 1f);
+                //var light = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel * 0.8f, color, 30);
+                //light.Scale = 1.5f;
+            }
+        }
+        public void EndMove()
+        {
+            Projectile.penetrate++;
+            Projectile.timeLeft = 20;
+            Projectile.ai[2] = -1;
+
+            for (int i = 0; i < 20; i++)
+            {
+                Vector2 vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(1, 3) * 3;
+                Dust d = Dust.NewDustDirect(Projectile.position - new Vector2(Projectile.width / 2, Projectile.height / 2), Projectile.width * 2, Projectile.height * 2, DustID.PurpleTorch, vel.X, vel.Y, Scale: 2f);
+                d.noGravity = true;
+            }
+        }
+        public static void DrawRing(int pointCount, Vector2 center, Vector2 distCenter, Color drawcolor, float radius, float rot, Vector2 scale, float distance)
+        {
+
+            var star = TextureAssets.Extra[98].Value;
+            Vector2 origin = new Vector2(36, 36);
+            for (int i = 0; i < pointCount; i++)
+            {
+                float dir = MathHelper.TwoPi / pointCount * i + rot;
+                Vector2 drawpos = center + dir.ToRotationVector2() * radius;
+                if (drawpos.Distance(distCenter) > distance) continue;
+                Main.spriteBatch.Draw(star, drawpos - Main.screenPosition, null, drawcolor, dir, origin, scale, 0, 0);
+            }
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            float radius = 26 * Projectile.scale;
+
+            Color pink = new Color(255,105,180).AdditiveColor();
+            Color blue = new Color(65, 105, 225).AdditiveColor();
+            Color gradientColor = Color.Lerp(pink, blue, MathF.Sin((float)(Main.timeForVisualEffects * 0.02f + Projectile.whoAmI)) * 0.5f + 0.5f);
+            Vector2 baseScale = new Vector2(0.25f, 0.8f);
+            int drawcount = 12;
+            float rad = radius * Projectile.localAI[1] * (MathF.Sin((float)(Main.timeForVisualEffects * 0.03f + Projectile.whoAmI)) * 0.2f + 1f);
+            for(int i = 0; i < drawcount; i++)
+            {
+                float sign = i % 2 == 0 ? -1 : 1;
+                float dir = MathHelper.TwoPi / drawcount * i + (float)(Main.timeForVisualEffects * 0.01f) * sign;
+                Vector2 drawpos = Projectile.Center + dir.ToRotationVector2() * rad;
+                DrawRing(40, drawpos, Projectile.Center, (i % 2 == 0 ? pink : blue) * Projectile.Opacity, rad, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.2f, radius);
+            }
+
+            RenderHelper.DrawRing(80, Projectile.Center, radius, pink * Projectile.Opacity, Projectile.rotation, baseScale * 0.4f);
+
+
+            Texture2D ball7 = Request<Texture2D>(AssetDirectory.Extras + "Ball7_1", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D ball4 = Request<Texture2D>(AssetDirectory.Extras + "Ball4_1", AssetRequestMode.ImmediateLoad).Value;
+
+            float ballScale = Projectile.width / (float)ball7.Width * Projectile.scale * 4;
+            Color backColor = Color.Lerp(Color.DarkViolet, Color.White, 0f);
+            Color darkvio = Color.DarkViolet;
+            //打底紫光
+            Main.spriteBatch.Draw(ball7, Projectile.Center - Main.screenPosition, null, backColor * Projectile.Opacity * 0.15f, Projectile.rotation, ball7.Size() / 2, ballScale * 1.5f, 0, 0);
+            Main.spriteBatch.Draw(ball7, Projectile.Center - Main.screenPosition, null, darkvio * Projectile.Opacity * 0.5f, Projectile.rotation, ball7.Size() / 2, ballScale * 0.65f, 0, 0);
+
+
+            //高光
+            Main.spriteBatch.Draw(ball7, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * 0.3f, Projectile.rotation, ball7.Size() / 2, ballScale * 0.4f, 0, 0);
+            //Main.spriteBatch.Draw(ball7, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * 0.5f, Projectile.rotation, ball7.Size() / 2, ballScale * 0.3f, 0, 0);
+            //Main.spriteBatch.Draw(ball7, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * 0.8f, Projectile.rotation, ball7.Size() / 2, ballScale * 0.2f, 0, 0);
+            Main.spriteBatch.Draw(ball7, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * 1f, Projectile.rotation, ball7.Size() / 2, ballScale * 0.1f, 0, 0);
 
             return false;
         }
