@@ -1,5 +1,6 @@
 ﻿using AyaMod.Common.Easer;
 using AyaMod.Content.Buffs;
+using AyaMod.Content.Items.Lens;
 using AyaMod.Content.Particles;
 using AyaMod.Core;
 using AyaMod.Core.Loaders;
@@ -41,11 +42,11 @@ namespace AyaMod.Content.Items.Cameras
 
     public class DoremyCameraProj : BaseCameraProj
     {
-        public override Color outerFrameColor => new Color(174, 238, 180);
-        public override Color innerFrameColor => new Color(248, 222, 96) * 0.7f;
+        public override Color outerFrameColor => new Color(179, 0, 255);
+        public override Color innerFrameColor => new Color(102,0,255) * 0.7f;
         public override Color focusCenterColor => base.focusCenterColor;
         public override Color flashColor => new Color(196, 243, 240).AdditiveColor() * 0.5f;
-
+        public override ILens Lens => LensLoader.GetLens<CircleLens>();
         public override void OnSnap()
         {
             if (!Projectile.MyClient()) return;
@@ -398,6 +399,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.SetImmune(100);
             Projectile.timeLeft = 10 * 60;
         }
+        public override bool? CanDamage() => Projectile.ai[2] >= 0 && Projectile.TimeleftFactor() < 0.95f;
         public override void OnSpawn(IEntitySource source)
         {
             Projectile.Opacity = 0f;
@@ -412,6 +414,11 @@ namespace AyaMod.Content.Items.Cameras
         {
             EndMove();
             return base.OnTileCollide(oldVelocity);
+        }
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+        {
+            width = 24; height = 24;
+            return base.TileCollideStyle(ref width, ref height, ref fallThrough, ref hitboxCenterFrac);
         }
         public override void AI()
         {
@@ -574,7 +581,8 @@ namespace AyaMod.Content.Items.Cameras
                 if(DormantTimeleft % 120 == 0)
                 {
                     Vector2 vel = new Vector2(0, -5);
-                    int type = ProjectileType<DreamShot>();
+                    //int type = ProjectileType<DreamShot>();
+                    int type = ProjectileType<DreamEssence>();
                     Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, vel, type, npc.damage / 3, 0, Main.myPlayer);
 
                 }

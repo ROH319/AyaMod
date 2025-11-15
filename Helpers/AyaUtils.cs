@@ -57,6 +57,34 @@ namespace AyaMod.Helpers
         }
 
         /// <summary>
+        /// 检测圆与矩形碰撞（矩形不旋转）
+        /// </summary>
+        /// <param name="circleCenter">圆心位置</param>
+        /// <param name="circleRadius">圆的半径</param>
+        /// <param name="rect">矩形（位置和大小）</param>
+        /// <returns>是否发生碰撞</returns>
+        public static bool CheckCircleRectangleCollision(Vector2 circleCenter, float circleRadius, Rectangle rect)
+        {
+            // 1. 计算矩形的四个边界的绝对坐标
+            float left = rect.Left;
+            float right = rect.Right;
+            float top = rect.Top;
+            float bottom = rect.Bottom;
+
+            // 2. 找到圆上距离矩形最近的点（矩形坐标系）
+            float closestX = MathHelper.Clamp(circleCenter.X, left, right);
+            float closestY = MathHelper.Clamp(circleCenter.Y, top, bottom);
+
+            // 3. 计算最近点和圆心的距离平方（避免开方运算）
+            float distanceX = circleCenter.X - closestX;
+            float distanceY = circleCenter.Y - closestY;
+            float distanceSquared = distanceX * distanceX + distanceY * distanceY;
+
+            // 4. 检查距离是否小于半径
+            return distanceSquared < (circleRadius * circleRadius);
+        }
+
+        /// <summary>
         /// 返回从start到end的直线段上，是否有碰撞到实心方块
         /// </summary>
         /// <param name="start"></param>

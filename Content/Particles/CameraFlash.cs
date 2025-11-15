@@ -42,4 +42,33 @@ namespace AyaMod.Content.Particles
             spriteBatch.Draw(TextureAssets.BlackTile.Value, Center - Main.screenPosition, null, color * alpha, Rotation, TextureAssets.BlackTile.Value.Size() / 2, new Vector2(ScaleX, ScaleY) * Scale, 0, 0);
         }
     }
+
+    public class CameraFlashCircle : Particle
+    {
+        public override string Texture => AssetDirectory.Extras + "Ball8";
+        public int totalTime;
+        public float radius;
+        public static CameraFlashCircle Spawn(IEntitySource source, Vector2 center, Color color, float scale, int flashTime)
+        {
+            CameraFlashCircle flash = NewParticle<CameraFlashCircle>(source, center, Vector2.Zero, color, 1f);
+            flash.totalTime = flashTime;
+            flash.radius = scale;
+            return flash;
+        }
+        public override void AI()
+        {
+            float factor = timer / totalTime;
+            float alphaFactor = Utils.Remap(factor, 0, 1f, 1.5f, 0f);
+            alpha = alphaFactor;
+            Scale = Utils.Remap(factor, 0, 1f, 1.3f, 0.7f);
+            timer++;
+
+            if (factor > 1f) active = false;
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Texture2D texture = GetTexture().Value;
+            spriteBatch.Draw(texture, Center - Main.screenPosition, null, color * alpha, Rotation, texture.Size() / 2, radius / 256f * Scale, 0, 0);
+        }
+    }
 }

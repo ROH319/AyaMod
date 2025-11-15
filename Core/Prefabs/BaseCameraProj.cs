@@ -24,6 +24,8 @@ namespace AyaMod.Core.Prefabs
 
         public ILens lens;
 
+        public virtual ILens Lens { get; }
+
         public float FocusFactor;
 
         public int EffectCounter;
@@ -228,7 +230,7 @@ namespace AyaMod.Core.Prefabs
 
             CameraStats = camera.CameraStats;
             size = player.Camera().SizeModifier.ApplyTo(camera.CameraStats.Size) * camera.Item.GetGlobalItem<CameraGlobalItem>().SizeMult;
-            lens = player.GetModPlayer<CameraPlayer>().GetLens();
+            lens = Lens ?? player.GetModPlayer<CameraPlayer>().GetLens();
         }
 
         public sealed override void AI()
