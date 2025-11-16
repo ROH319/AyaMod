@@ -391,6 +391,7 @@ namespace AyaMod.Content.Items.Cameras
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.CultistIsResistantTo[Type] = true;
+            Projectile.SetTrail(4, 40);
         }
         public override void SetDefaults()
         {
@@ -398,6 +399,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.friendly = true;
             Projectile.SetImmune(100);
             Projectile.timeLeft = 10 * 60;
+            Projectile.hide = true;
         }
         public override bool? CanDamage() => Projectile.ai[2] >= 0 && Projectile.TimeleftFactor() < 0.95f;
         public override void OnSpawn(IEntitySource source)
@@ -419,6 +421,10 @@ namespace AyaMod.Content.Items.Cameras
         {
             width = 24; height = 24;
             return base.TileCollideStyle(ref width, ref height, ref fallThrough, ref hitboxCenterFrac);
+        }
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            overWiresUI.Add(index);
         }
         public override void AI()
         {
@@ -451,18 +457,11 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.scale += 0.03f;
             if (Projectile.scale > 1f) Projectile.scale = 1f;
 
-            //Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.PurpleTorch, Projectile.velocity * 0f, Scale: 2f);
-            //d.noGravity = true;
-            if(Projectile.timeLeft % 2 == 0)
             {
-                Vector2 vec = Main.rand.NextVector2Unit();
-                Vector2 pos = Projectile.Center /*+ vec * Main.rand.NextFloat(10, 12)*/;
-                Vector2 vel = Projectile.velocity * 0.3f;
-                Color pink = new Color(255, 105, 180);
-                Color blue = new Color(65, 105, 225);
-                Color color = (Projectile.timeLeft % 4 == 0 ? pink : blue) * Main.rand.NextFloat(0.5f, 1f);
-                //var light = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel * 0.8f, color, 30);
-                //light.Scale = 1.5f;
+                Vector2 vel = Projectile.velocity.RotatedBy(MathHelper.PiOver2).SafeNormalize(Vector2.UnitX) * MathF.Sin(Main.GameUpdateCount * 0.1f + Projectile.whoAmI) * 10f;
+                Vector2 dustpos = Projectile.Center;
+                Dust d = Dust.NewDustPerfect(dustpos, DustID.PurpleTorch, Projectile.velocity * 0.2f /*+ vel * 0.2f*/, Scale: 2f);
+                d.noGravity = true;
             }
         }
         public void EndMove()
@@ -491,8 +490,75 @@ namespace AyaMod.Content.Items.Cameras
                 Main.spriteBatch.Draw(star, drawpos - Main.screenPosition, null, drawcolor, dir, origin, scale, 0, 0);
             }
         }
+        public Color ColorFunction(float progress)
+        {
+            Color drawColor = new Color(138, 43, 226);
+            return Color.Lerp(drawColor, Color.Black, progress).AdditiveColor() * Projectile.Opacity;
+        }
+        public float WidthFunction(float progress)
+        {
+            return 2f;
+        }
+        public float AlphaFunction(float progress)
+        {
+            float fadeinFactor = Utils.Remap(progress, 0f, 0.05f, 0f, 1f);
+            return EaseManager.Evaluate(Ease.InOutSine, 1f - progress, 1f) * Projectile.Opacity * fadeinFactor;
+        }
         public override bool PreDraw(ref Color lightColor)
         {
+            #region 拖尾
+            List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
+            Vector2 lastTrailPos = Vector2.Zero;
+
+            int mult = 1;
+            int total = (int)(Projectile.oldPos.Length * mult - mult);
+            //strip.PrepareStrip(Projectile.oldPos, 2, ColorFunction, WidthFunction,
+            //    Projectile.Size / 2 - Main.screenPosition, AlphaFunction);
+            //Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
+            //strip.DrawTrail();
+
+            for (int i = 0; i < total - 1; i++)
+            {
+                if (Projectile.oldPos[(int)(i / mult)] == Vector2.Zero || Projectile.oldPos[(int)(i / mult) + 1] == Vector2.Zero) continue;
+                float factor = (float)i / total;//factor 1为轨迹尾部， 0为轨迹头部
+                float lerpFactor = Utils.Remap(i % mult, 0, mult - 1, 1 / mult, 1f);
+                if (float.IsNaN(lerpFactor)) lerpFactor = 0f;
+                Vector2 trailPos = Vector2.Lerp(Projectile.oldPos[(int)(i / mult)], Projectile.oldPos[(int)(i / mult) + 1], lerpFactor);
+                trailPos += Projectile.Size / 2;
+
+                Color color = ColorFunction(factor);
+                float alpha = AlphaFunction(factor);
+                var normalDir = lastTrailPos - trailPos;
+                normalDir = normalDir.RotatedBy(MathHelper.PiOver2);
+                normalDir = normalDir.SafeNormalize(Vector2.Zero);
+
+                lastTrailPos = trailPos;
+
+                if (i == 0) continue;
+
+                float width = WidthFunction(factor);
+                Vector2 top = trailPos - Main.screenPosition + normalDir * width * 0.5f;
+                Vector2 bottom = trailPos - Main.screenPosition - normalDir * width * 0.5f;
+
+                bars.Add(new CustomVertexInfo(top, color * alpha, new Vector3(factor, 1, alpha)));
+                bars.Add(new CustomVertexInfo(bottom, color * alpha, new Vector3(factor, 0, alpha)));
+
+            }
+
+            //for (int i = 0; i < 2; i++)
+            {
+                if (bars.Count > 2)
+                {
+                    Main.spriteBatch.End();
+                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, default, Main.GameViewMatrix.TransformationMatrix);
+                    Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
+                    Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
+                    Main.spriteBatch.End();
+                    Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+                }
+            }
+            #endregion
+
             float radius = 26 * Projectile.scale;
 
             Color pink = new Color(255,105,180).AdditiveColor();
