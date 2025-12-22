@@ -1,4 +1,5 @@
 ﻿using AyaMod.Content.Items.Cameras;
+using AyaMod.Content.ScreenEffects;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using System;
@@ -87,6 +88,18 @@ namespace AyaMod.Core.Systems
             {
                 projectile.Aya().SpeedModifier = StatModifier.Default;
             }
+            //BlackHoleScreen.Active = false;
+        }
+        public override void PostUpdatePlayers()
+        {
+            foreach(var projectile in Main.ActiveProjectiles)
+            {
+                if (projectile.ModProjectile != null && projectile.ModProjectile is BaseCameraProj)
+                {
+                    var camera = projectile.ModProjectile as BaseCameraProj;
+                    camera.UpdateHeld();
+                }
+            }
         }
         public override void PostUpdateEverything()
         {
@@ -103,6 +116,11 @@ namespace AyaMod.Core.Systems
             {
                 player.Aya().itemTimeLastFrame = player.itemTime;
             }
+        }
+
+        public override void PostDrawTiles()
+        {
+            //BlackHoleScreen.Active = false;
         }
     }
 }

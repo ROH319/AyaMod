@@ -124,6 +124,106 @@ namespace AyaMod.Helpers
         }
 
         /// <summary>
+        /// 求解过两点且半径为r的圆心（返回0/1/2个圆心）
+        /// </summary>
+        /// <param name="p1">点1</param>
+        /// <param name="p2">点2</param>
+        /// <param name="radius">圆半径</param>
+        /// <returns>符合条件的圆心列表</returns>
+        public static List<Vector2> FindCircleCenters(Vector2 p1, Vector2 p2, float radius)
+        {
+            List<Vector2> centers = new List<Vector2>();
+
+            // 1. 计算两点间距和中点
+            float d = Vector2.Distance(p1, p2);
+            Vector2 mid = (p1 + p2) / 2f;
+
+            // 边界1：两点重合（无数个圆心，返回空或自定义逻辑）
+            if (d < float.Epsilon)
+            {
+                // 两点重合时，以p1为圆心、radius为半径的圆都满足，此处返回空（可根据需求修改）
+                return centers;
+            }
+
+            // 边界2：两点间距超过直径（无满足条件的圆）
+            float halfD = d / 2f;
+            if (halfD > radius + float.Epsilon) // 加浮点误差容错
+            {
+                return centers;
+            }
+
+            // 边界3：两点间距等于直径（仅1个圆心：中点）
+            if (Math.Abs(halfD - radius) < float.Epsilon)
+            {
+                centers.Add(mid);
+                return centers;
+            }
+
+            // 2. 计算中垂线方向和高度h
+            float h = (float)Math.Sqrt(radius * radius - halfD * halfD); // 中垂线上的偏移距离
+
+            // 两点连线的方向向量（p2 - p1），旋转90°得到中垂线方向
+            Vector2 dir = p2 - p1;
+            // 垂直向量（顺时针旋转90°：(x,y)→(y,-x)；逆时针：(-y,x)，对应两个圆心）
+            Vector2 perp1 = new Vector2(dir.Y, -dir.X); // 顺时针垂直向量
+            Vector2 perp2 = new Vector2(-dir.Y, dir.X); // 逆时针垂直向量
+
+            // 归一化垂直向量，避免长度干扰
+            perp1 = Vector2.Normalize(perp1);
+            perp2 = Vector2.Normalize(perp2);
+
+            // 3. 计算两个圆心
+            Vector2 center1 = mid + perp1 * h;
+            Vector2 center2 = mid + perp2 * h;
+
+            centers.Add(center1);
+            centers.Add(center2);
+
+            return centers;
+        }
+        /// <summary>
+        /// 判断以a为圆心时，b/c中哪个是劣弧的顺时针起始点
+        /// </summary>
+        /// <param name="a">圆心</param>
+        /// <param name="b">点B</param>
+        /// <param name="c">点C</param>
+        /// <returns>劣弧顺时针起始点（b/c）；共线时返回Vector2.Zero</returns>
+        public static Vector2 GetClockwiseStartOfMinorArc(Vector2 a, Vector2 b, Vector2 c)
+        {
+            // 1. 构建以a为原点的向量
+            Vector2 ab = b - a;
+            Vector2 ac = c - a;
+
+            // 边界：b/c与圆心重合，或b=c（无弧）
+            if (ab.LengthSquared() < float.Epsilon || ac.LengthSquared() < float.Epsilon || b == c)
+            {
+                return Vector2.Zero;
+            }
+
+            // 2. 计算二维向量叉乘的Z轴分量（核心：判断旋转方向）
+            // 叉乘公式：ab × ac = ab.X * ac.Y - ab.Y * ac.X
+            float crossProduct = ab.X * ac.Y - ab.Y * ac.X;
+
+            // 3. 处理共线情况（叉乘=0，劣弧退化为直线）
+            if (Math.Abs(crossProduct) < float.Epsilon)
+            {
+                return Vector2.Zero;
+            }
+
+            // 4. 判断顺时针起始点
+            if (crossProduct > 0)
+            {
+                // 叉乘>0：c在ab逆时针方向 → 从b顺时针到c是劣弧 → 起始点为b
+                return b;
+            }
+            else
+            {
+                // 叉乘<0：c在ab顺时针方向 → 从c顺时针到b是劣弧 → 起始点为c
+                return c;
+            }
+        }
+
+        /// <summary>
         /// 检测矩形与圆环的碰撞
         /// </summary>
         /// <param name="rect">目标矩形</param>

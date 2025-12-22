@@ -232,13 +232,19 @@ namespace AyaMod.Core.Prefabs
             size = player.Camera().SizeModifier.ApplyTo(camera.CameraStats.Size) * camera.Item.GetGlobalItem<CameraGlobalItem>().SizeMult;
             lens = Lens ?? player.GetModPlayer<CameraPlayer>().GetLens();
         }
+        /// <summary>
+        /// 在所有弹幕更新前更新手持弹幕
+        /// </summary>
+        public virtual void UpdateHeld()
+        {
+            player.heldProj = Projectile.whoAmI;
+        }
 
         public sealed override void AI()
         {
             if (!player.AliveCheck(Projectile.Center, int.MaxValue)) return;
             var mplr = player.GetModPlayer<CameraPlayer>();
 
-            player.heldProj = Projectile.whoAmI;
 
             MoveMent(mplr);
 
@@ -381,7 +387,7 @@ namespace AyaMod.Core.Prefabs
             if (canhit)
                 CombinedOnSnapInSight();
 
-            CheckSnapProjectile(rects);
+            CheckSnapProjectile();
 
             if (ClientConfig.Instance.SnapFlash && CanSpawnFlash)
             {
@@ -391,13 +397,19 @@ namespace AyaMod.Core.Prefabs
             PostSnap();
         }
 
-        public void CheckSnapProjectile(List<Rectangle> rects)
+        public void CheckSnapProjectile()
         {
             foreach(var projectile in Main.ActiveProjectiles)
             {
                 var hitbox = projectile.GetHitbox();
                 if (lens.Colliding(Projectile.Center, Size, Projectile.rotation, hitbox))
+                {
                     OnSnapProjectile(projectile);
+                    if (projectile.ModProjectile is not null && projectile.ModProjectile is ISnappableProjectile snappable)
+                    {
+                        snappable.OnSnap();
+                    }
+                }
             }
         }
 

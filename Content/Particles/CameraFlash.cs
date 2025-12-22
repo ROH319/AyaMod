@@ -17,24 +17,19 @@ namespace AyaMod.Content.Particles
         public override string Texture => AssetDirectory.EmptyTexturePass;
         public float ScaleX;
         public float ScaleY;
-        public int totalTime;
         public static CameraFlash Spawn(IEntitySource source, Vector2 center, Color color, float rot, float scaleX, float scaleY, int flashTime)
         {
-            CameraFlash flash = NewParticle<CameraFlash>(source, center, Vector2.Zero, color, scaleX, rot);
+            CameraFlash flash = NewParticle<CameraFlash>(source, center, Vector2.Zero, color, scaleX, rot, 1f, flashTime);
             flash.ScaleX = scaleX;
             flash.ScaleY = scaleY;
-            flash.totalTime = flashTime;
             return flash;
         }
         public override void AI()
         {
-            float factor = timer / totalTime;
+            float factor = GetTimeFactor();
             float alphaFactor = Utils.Remap(factor, 0, 1f, 1.5f, 0f);
             alpha = alphaFactor;
             Scale = Utils.Remap(factor, 0, 1f, 1.3f, 0.7f);
-            timer++;
-
-            if (factor > 1f) active = false;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -46,24 +41,19 @@ namespace AyaMod.Content.Particles
     public class CameraFlashCircle : Particle
     {
         public override string Texture => AssetDirectory.Extras + "Ball8";
-        public int totalTime;
         public float radius;
         public static CameraFlashCircle Spawn(IEntitySource source, Vector2 center, Color color, float scale, int flashTime)
         {
-            CameraFlashCircle flash = NewParticle<CameraFlashCircle>(source, center, Vector2.Zero, color, 1f);
-            flash.totalTime = flashTime;
+            CameraFlashCircle flash = NewParticle<CameraFlashCircle>(source, center, Vector2.Zero, color, 1f, flashTime);
             flash.radius = scale;
             return flash;
         }
         public override void AI()
         {
-            float factor = timer / totalTime;
+            float factor = GetTimeFactor();
             float alphaFactor = Utils.Remap(factor, 0, 1f, 1.5f, 0f);
             alpha = alphaFactor;
             Scale = Utils.Remap(factor, 0, 1f, 1.3f, 0.7f);
-            timer++;
-
-            if (factor > 1f) active = false;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {

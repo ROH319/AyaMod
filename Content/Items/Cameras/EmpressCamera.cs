@@ -323,7 +323,7 @@ namespace AyaMod.Content.Items.Cameras
 
                 var particle = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel + Projectile.velocity * 0.15f, Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.8f), Main.rand.Next(15,25));
                 particle.Scale = Main.rand.NextFloat(1,1.5f);
-                particle.VelMult = 0.92f;
+                particle.SetVelMult(.92f);
                 //Dust d = Dust.NewDustPerfect(pos, dusttype, vel, Scale: 1.5f);
                 //d.noGravity = true;
             }

@@ -112,7 +112,7 @@ namespace AyaMod.Core.ModPlayers
                 HoldNonCameraCounter++;
                 HoldCameraCounter = 0;
             }
-
+            //Main.NewText($"{Player.velocity.X} {Player.accRunSpeed}");
             PostUpdateHook.Invoke(Player);
         }
 

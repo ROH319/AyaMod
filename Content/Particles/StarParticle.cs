@@ -17,22 +17,18 @@ namespace AyaMod.Content.Particles
 
         public float scaleX = 1f;
         public float scaleY = 1f;
-        public float Fadeout = 1f;
-        public float VelMult = 1f;
         public static StarParticle Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color, float scale, float scaleX, float scaleY, float fadeout, float velMult, float rot, float alpha)
         {
             StarParticle star = NewParticle<StarParticle>(source, center, velocity, color, scale, rot, alpha);
             star.scaleX = scaleX;
             star.scaleY = scaleY;
-            star.Fadeout = fadeout;
-            star.VelMult = velMult;
+            star.SetAlphaMult(fadeout);
+            star.SetVelMult(velMult);
             return star;
         }
 
         public override void AI()
         {
-            alpha *= Fadeout;
-            Velocity *= VelMult;
             if (alpha < 0.01f) active = false;
             base.AI();
         }

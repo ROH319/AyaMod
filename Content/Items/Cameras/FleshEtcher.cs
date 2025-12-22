@@ -179,7 +179,7 @@ namespace AyaMod.Content.Items.Cameras
                     }
                     float scaleFactor = Utils.Remap(MathF.Abs(j), 0, 3, 0.5f, 1.3f) * Utils.Remap(MathF.Sin(x),0,1f,1.2f,0.6f);
                     Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition + offset, null, Color.White * Projectile.Opacity * 0.6f, direction.ToRotation() + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale  * scaleFactor * 1.1f, SpriteEffects.None, 0);
-                    Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition + offset, null, Color.White * Projectile.Opacity * 0.8f, direction.ToRotation() + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale * scaleFactor * 0.6f, SpriteEffects.None, 0);
+                    Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition + offset, null, new Color(240, 166, 166) * Projectile.Opacity * 0.8f, direction.ToRotation() + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale * scaleFactor * 0.6f, SpriteEffects.None, 0);
 
                 }
             }

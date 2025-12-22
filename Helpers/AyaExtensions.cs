@@ -118,6 +118,18 @@ namespace AyaMod.Helpers
             return true;
         }
 
+        public static int GetMyGroupIndex(this Projectile projectile)
+        {
+            int totalIndexes = 0;
+            for(int i = 0; i < projectile.whoAmI; i++)
+            {
+                var p = Main.projectile[i];
+                if (p.active && p.type == projectile.type && p.owner == projectile.owner)
+                    totalIndexes++;
+            }
+            return totalIndexes;
+        }
+
         #endregion
 
         public static List<Item> ChooseFilms(this Player player, Item weapon, int count = 1)

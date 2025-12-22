@@ -3,6 +3,7 @@ using AyaMod.Content.Buffs;
 using AyaMod.Content.Particles;
 using AyaMod.Core;
 using AyaMod.Core.Attributes;
+using AyaMod.Core.Loaders;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
@@ -240,7 +241,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Texture2D sampler = TextureAssets.Extra[189].Value;
             Texture2D star = TextureAssets.Extra[98].Value;
 
-            Effect effect = AssetDirectory.Trail;
+            Effect effect = ShaderLoader.GetShader("Trail");
 
             List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
 

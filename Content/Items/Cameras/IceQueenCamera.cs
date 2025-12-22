@@ -1,5 +1,6 @@
 ﻿using AyaMod.Content.Particles;
 using AyaMod.Core;
+using AyaMod.Core.Loaders;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
@@ -176,7 +177,7 @@ namespace AyaMod.Content.Items.Cameras
 
             Texture2D shape = Request<Texture2D>(AssetDirectory.Extras + "Laser3", AssetRequestMode.ImmediateLoad).Value;
             //Texture2D sampler = Request<Texture2D>(AssetDirectory.Extras + "DRGFX_SpinRing1_Broken_Sharper", AssetRequestMode.ImmediateLoad).Value;
-            Effect effect = AssetDirectory.Trail;
+            Effect effect = ShaderLoader.GetShader("Trail");
             List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
 
             float timeFactor = Projectile.TimeleftFactor();

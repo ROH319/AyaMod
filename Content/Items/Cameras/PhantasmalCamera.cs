@@ -2,6 +2,7 @@
 using AyaMod.Content.Particles;
 using AyaMod.Core;
 using AyaMod.Core.Configs;
+using AyaMod.Core.Loaders;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
 using AyaMod.Core.Systems.Trails;
@@ -256,7 +257,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.rotation = Projectile.velocity.ToRotation();
 
             {
-                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 323,Scale:0.8f);
+                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.MoonBoulder, Scale:0.8f);
                 d.noGravity = true;
             }
         }
@@ -283,7 +284,7 @@ namespace AyaMod.Content.Items.Cameras
             Texture2D shape = TextureAssets.Extra[197].Value;
             Texture2D sampler = TextureAssets.Extra[189].Value;
 
-            Effect effect = AssetDirectory.Trail;
+            Effect effect = ShaderLoader.GetShader("Trail");
 
             List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
 

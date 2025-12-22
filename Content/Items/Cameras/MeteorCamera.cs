@@ -14,6 +14,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using AyaMod.Common.Easer;
 using AyaMod.Core;
+using AyaMod.Content.Dusts;
+using AyaMod.Content.Particles;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -69,7 +71,7 @@ namespace AyaMod.Content.Items.Cameras
                 Vector2 dir = rot.ToRotationVector2();
                 float radius = length * 0.8f + MathF.Sin(factor * MathHelper.TwoPi * 5) * length / 2;
                 Vector2 pos = Projectile.Center + dir * radius;
-                Vector2 vel = (pos - Projectile.Center).Length(5);
+                Vector2 vel = (pos - Projectile.Center).Length(5) + new Vector2(0,-5);
                 Dust d = Dust.NewDustPerfect(pos, DustID.YellowStarDust, vel,Scale:1f);
                 d.noGravity = true;
 
@@ -87,11 +89,6 @@ namespace AyaMod.Content.Items.Cameras
     public class MeteorStar : ModProjectile
     {
         public override string Texture => AssetDirectory.Extras + "RoundTriangle2";
-
-        public override void SetStaticDefaults()
-        {
-            Projectile.SetTrail(2, 20);
-        }
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 64;
@@ -131,6 +128,18 @@ namespace AyaMod.Content.Items.Cameras
 
             }
 
+
+            {
+                foreach(var dust in Main.dust.Where(x => x.active && x.type == DustType<YellowStarDust>()))
+                {
+                    float dist = Projectile.Distance(dust.position);
+                    if (dist > Projectile.width) continue;
+                    float distortfactor = Utils.Remap(dist, 0, Projectile.width / 3, 1, 0f);
+                    Vector2 vel0 = Projectile.DirectionToSafe(dust.position) * distortfactor;
+                    Vector2 vel1 = Projectile.velocity * 0.4f * distortfactor;
+                    dust.velocity += vel0 + vel1;
+                }
+            }
             //Projectile.Opacity = EaseManager.Evaluate(Ease.OutCubic, factor, 1);
             //Projectile.velocity *= 0.95f;
 
@@ -142,25 +151,50 @@ namespace AyaMod.Content.Items.Cameras
                 float speedy = Projectile.velocity.Y + Main.rand.NextFloat(-2, 2);
                 Dust d = Dust.NewDustDirect(Projectile.position + Projectile.Size / 4, Projectile.width / 2, Projectile.height / 2, DustID.YellowStarDust, speedx, speedy,Scale:1.2f);
                 d.noGravity = true;
+
+                if (Main.rand.NextBool(5))
+                {
+                    Vector2 pos = Projectile.Center + Main.rand.NextFloat(MathHelper.TwoPi).ToRotationVector2() * Projectile.width / 3;
+                    StarParticle.Spawn(Projectile.GetSource_FromAI(), pos, Projectile.velocity * 0.7f, new Color(255, 255, 128).AdditiveColor(), 0.5f, 0.2f, 2.5f, 0.85f, 0.96f, Projectile.velocity.ToRotation(), 1f);
+
+                }
             }
         }
 
         public override void OnKill(int timeLeft)
         {
 
-            int dustamount = 60;
-            float startRot = Projectile.rotation + MathHelper.TwoPi / 10;
-            float length = 30;
-            for (int i = 0; i < dustamount; i++)
             {
-                float factor = (float)i / dustamount;
-                float rot = MathHelper.TwoPi * factor + startRot;
-                Vector2 dir = rot.ToRotationVector2();
-                float radius = length * 0.8f + MathF.Sin(factor * MathHelper.TwoPi * 5) * length / 2;
-                Vector2 pos = Projectile.Center + dir * radius;
-                Vector2 vel = (pos - Projectile.Center).Length(4) + Projectile.velocity * 0.25f;
-                Dust d = Dust.NewDustPerfect(pos, DustID.YellowStarDust, vel, Scale: 1.5f);
-                d.noGravity = true;
+                int dustamount = 60;
+                float startRot = Projectile.rotation + MathHelper.TwoPi / 10;
+                float length = 30;
+                for (int i = 0; i < dustamount; i++)
+                {
+                    float factor = (float)i / dustamount;
+                    float rot = MathHelper.TwoPi * factor + startRot;
+                    Vector2 dir = rot.ToRotationVector2();
+                    float radius = length * 0.8f + MathF.Sin(factor * MathHelper.TwoPi * 5) * length / 2;
+                    Vector2 pos = Projectile.Center + dir * radius;
+                    Vector2 vel = (pos - Projectile.Center).Length(4) + Projectile.velocity * 0.25f;
+                    Dust d = Dust.NewDustPerfect(pos, DustID.YellowStarDust, vel, Scale: 1.5f);
+                    d.noGravity = true;
+                }
+            }
+
+            if (Projectile.ai[0] > 0)
+            {
+                int dustamount = 30;
+                float length = 14;
+                for(int i = 0; i < dustamount; i++)
+                {
+                    float speed = Main.rand.NextFloat(0.1f,1f);
+                    float rot = Main.rand.NextFloat(MathHelper.TwoPi);
+                    Vector2 dir = /*rot.ToRotationVector2()*/-Projectile.velocity.SafeNormalize(Vector2.One).RotatedByRandom(1.7f * Utils.Remap(speed, 0.1f,1f,1,0));
+                    Vector2 pos = Projectile.Center + dir;
+                    Vector2 vel = (pos - Projectile.Center).Length(length * speed);
+                    Dust d = Dust.NewDustPerfect(pos + Projectile.velocity * 2, DustType<YellowStarDust>(), vel, Scale: Main.rand.NextFloat(2,3f) * 0.8f);
+                    //d.noGravity = true;
+                }
             }
 
             if (Projectile.ai[0] < 0)

@@ -458,10 +458,10 @@ namespace AyaMod.Content.Items.Cameras
             if (Projectile.scale > 1f) Projectile.scale = 1f;
 
             {
-                Vector2 vel = Projectile.velocity.RotatedBy(MathHelper.PiOver2).SafeNormalize(Vector2.UnitX) * MathF.Sin(Main.GameUpdateCount * 0.1f + Projectile.whoAmI) * 10f;
-                Vector2 dustpos = Projectile.Center;
-                Dust d = Dust.NewDustPerfect(dustpos, DustID.PurpleTorch, Projectile.velocity * 0.2f /*+ vel * 0.2f*/, Scale: 2f);
-                d.noGravity = true;
+                //Vector2 vel = Projectile.velocity.RotatedBy(MathHelper.PiOver2).SafeNormalize(Vector2.UnitX) * MathF.Sin(Main.GameUpdateCount * 0.1f + Projectile.whoAmI) * 10f;
+                //Vector2 dustpos = Projectile.Center;
+                //Dust d = Dust.NewDustPerfect(dustpos, DustID.PurpleTorch, Projectile.velocity * 0.2f /*+ vel * 0.2f*/, Scale: 2f);
+                //d.noGravity = true;
             }
         }
         public void EndMove()

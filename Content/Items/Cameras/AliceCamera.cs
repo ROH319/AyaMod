@@ -62,6 +62,8 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnSpawn(IEntitySource source)
         {
+
+            
             for(int i = 0; i < 5; i++)
             {
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ProjectileType<MarisaCircle>(), 

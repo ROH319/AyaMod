@@ -10,12 +10,22 @@ namespace AyaMod.Core.Loaders
     {
         public void PreLoad(Mod mod) { }
 
+        /// <summary>
+        /// 对每个Type进行加载
+        /// </summary>
+        /// <param name="mod"></param>
+        /// <param name="type"></param>
         public void Load(Mod mod, Type type) { }
 
         public void PostLoad(Mod mod) { }
 
         public void PreSetUp(Mod mod) { }
 
+        /// <summary>
+        /// 对每个Type进行设置
+        /// </summary>
+        /// <param name="mod"></param>
+        /// <param name="type"></param>
         public void SetUp(Mod mod, Type type) { }
 
         public void PostSetUp(Mod mod) { }

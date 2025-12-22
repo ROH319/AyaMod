@@ -834,11 +834,21 @@ IntelligentHammer: {
 }
 
 DoremyCamera: {
-	// DisplayName: Doremy Camera
-	// Tooltip: ""
+	DisplayName: 美梦镜
+	Tooltip: ""
 }
 
 EvolutiveHammer: {
-	// DisplayName: Evolutive Hammer
-	// Tooltip: ""
+	DisplayName: 进化 锻锤
+	Tooltip: ""
+}
+
+GalaxyProjector: {
+	DisplayName: 星空投影仪
+	Tooltip: ""
+}
+
+ShaderReloader: {
+	DisplayName: Shader Reloader
+	Tooltip: ""
 }

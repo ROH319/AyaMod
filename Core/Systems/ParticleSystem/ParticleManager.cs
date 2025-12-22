@@ -41,10 +41,9 @@ namespace AyaMod.Core.Systems.ParticleSystem
         public override void Load()
         {
             if (Main.dedServ) return;
-            On_Main.DrawDust += ParticleDrawer;
         }
 
-        private void ParticleDrawer(On_Main.orig_DrawDust orig, Main self)
+        public static void ParticleDrawer(On_Main.orig_DrawDust orig, Main self)
         {
             orig(self);
             if (Main.gameMenu) return;
@@ -88,17 +87,7 @@ namespace AyaMod.Core.Systems.ParticleSystem
                 if (particle == null)
                     continue;
 
-                particle.AI();
-                if (particle.ShouldUpdateCenter())
-                    particle.Center += particle.Velocity;
-                if (particle.ShouldUpdateRotation())
-                    particle.Rotation += particle.AngularSpeed;
-                if (!particle.active)
-                {
-                    particle.oldCenter = null;
-                    particle.oldRot = null;
-                }
-
+                particle.InnerAI();
             }
 
             Particles.RemoveAll(p => p == null || !p.active);

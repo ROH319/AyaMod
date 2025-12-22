@@ -1,5 +1,6 @@
 ﻿using AyaMod.Common.Easer;
 using AyaMod.Core;
+using AyaMod.Core.Loaders;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
@@ -107,7 +108,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             Texture2D sampler = Request<Texture2D>(AssetDirectory.Extras + "Airwaves_Swirlin", AssetRequestMode.ImmediateLoad).Value;
             Texture2D star = TextureAssets.Extra[98].Value;
 
-            Effect effect = AssetDirectory.Trail;
+            Effect effect = ShaderLoader.GetShader("Trail");
 
             List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
 

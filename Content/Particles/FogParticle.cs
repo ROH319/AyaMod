@@ -13,14 +13,11 @@ namespace AyaMod.Content.Particles
     public class FogParticle : Particle
     {
         public override string Texture => AssetDirectory.Extras + "Cloud";
-
-        public float fadeout = 0.97f;
-        public float velMult = 1f;
         public static FogParticle Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color = default(Color), float scale = 1f, float fadeout = 0.97f, float velMult = 1, float alpha = 1)
         {
             FogParticle fog = NewParticle<FogParticle>(source, center, velocity, color, scale, 0, alpha);
-            fog.fadeout = fadeout;
-            fog.velMult = velMult;
+            fog.SetAlphaMult(fadeout);
+            fog.SetVelMult(velMult);
             return fog;
         }
         public override void OnSpawn()
@@ -29,8 +26,7 @@ namespace AyaMod.Content.Particles
         }
         public override void AI()
         {
-            alpha *= fadeout;
-            Velocity *= velMult;
+            timer--;
             if (alpha < 0.01f) active = false;
         }
     }

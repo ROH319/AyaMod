@@ -20,6 +20,8 @@ namespace AyaMod.Core
 
         public const string Buffs_Films = Buffs + "Films/";
 
+        public const string Dusts = Textures + "Dusts/";
+
         public const string Items = Textures + "Items/";
 
         public const string Accessories = Items + "Accessories/";

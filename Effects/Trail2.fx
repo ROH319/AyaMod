@@ -1,58 +1,79 @@
-sampler uImage0 : register(s0);
-sampler uImage1 : register(s1);
-sampler uImage2 : register(s2);
+
+texture uNoise; // 遮罩纹理
+texture uCloud; // 云纹理
+texture uColorMap; // 色度图
+
+sampler uImage0 : register(s0); // 主纹理输入
+
+sampler2D noiseTex = sampler_state
+{
+    texture = <uNoise>;
+    magfilter = LINEAR;
+    minfilter = LINEAR;
+    mipfilter = LINEAR;
+    AddressU = wrap;
+    AddressV = wrap; //循环UV
+};
+sampler2D colorMapTex = sampler_state
+{
+    texture = <uColorMap>;
+    magfilter = LINEAR;
+    minfilter = LINEAR;
+    mipfilter = LINEAR;
+    AddressU = clamp;
+    AddressV = clamp; //循环UV
+};
+sampler2D cloudTex = sampler_state
+{
+    texture = <uCloud>;
+    magfilter = LINEAR;
+    minfilter = LINEAR;
+    mipfilter = LINEAR;
+    AddressU = wrap;
+    AddressV = wrap; //循环UV
+};
+
+float maskScale;
+float2 maskOffset;
+float cloudScale;
+float2 cloudOffset;
+float distortIntensity;
+float preMultR = 1;
+float colorMult = 2;
 float timer;
-float mult = 1;
-float radius = 0;
-float4x4 uTransform;
 
-struct VSInput
+struct PixelShaderInput
 {
-    float2 Pos : POSITION0;
+    float4 Position : SV_Position;
+    float2 TextureCoordinate : TEXCOORD0;
     float4 Color : COLOR0;
-    float3 Texcoord : TEXCOORD0;
-};
-
-struct PSInput
-{
-    float4 Pos : SV_POSITION;
-    float4 Color : COLOR0;
-    float3 Texcoord : TEXCOORD0;
 };
 
 
-float4 PixelShaderFunction(PSInput input) : COLOR0
+float4 PixelShaderFunction(PixelShaderInput input) : COLOR0
 {
-    float3 coord = input.Texcoord;
-    //float2 ncoord = input.Pos.xy;
-    //float alpha = tex2D(uImage2, ncoord).r;
-    //float y = timer + coord.x; //插值，让图片循环采样
-    float4 c1 = tex2D(uImage1, float2(coord.x, coord.y)); //image1是形状（激光），c1就是取色
+    float2 coord = input.TextureCoordinate;
+    float4 mainColor = tex2D(uImage0, coord.xy); //image1是形状，c1就是取色
+    if(mainColor.r < 0.05)
+        return float4(0, 0, 0, 0);
     
-    float4 c3 = tex2D(uImage2, float2(coord.x, coord.y * mult + radius)); //image2是蒙版
-    c1 *= c3;
-    float4 c = tex2D(uImage0, float2(c1.r, 0)); //image0是色度图，用了c1.r也就是黑白图片的亮度来做插值，亮度高的地方就映射到右边，亮度低就映射到左边
+    float4 maskColor = tex2D(noiseTex, float2(coord.xy * maskScale + maskOffset));
+    float2 distort = maskColor.rg;
+    
+    float2 cloudUV = coord.xy * cloudScale + cloudOffset;
+    float4 cloudColor = tex2D(cloudTex, lerp(cloudUV, cloudUV + distort, distortIntensity)); //cloud是云彩纹理
+    mainColor = mainColor * cloudColor;
+    
+    float4 c = tex2D(colorMapTex, float2(mainColor.r * preMultR, 0)); //image0是色度图，用了c1.r也就是黑白图片的亮度来做插值，亮度高的地方就映射到右边，亮度低就映射到左边
     //if (c.r < 0.1)
     //    return float4(0, 0, 0, 0);
-    return c * coord.z; //纹理坐标的z是透明度
+    return colorMult * c * input.Color;
 }
-
-PSInput VertexShaderFunction(VSInput input)
-{
-    PSInput output;
-    output.Color = input.Color;
-    output.Texcoord = input.Texcoord;
-    //output.Texcoord.z *= tex2D(uImage2, input.Pos).r;
-    output.Pos = mul(float4(input.Pos, 0, 1), uTransform);
-    return output;
-}
-
 
 technique Technique1
 {
     pass ColorBar
     {
-        VertexShader = compile vs_2_0 VertexShaderFunction();
         PixelShader = compile ps_2_0 PixelShaderFunction();
     }
 }

@@ -235,7 +235,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Texture2D sampler = TextureAssets.Extra[189].Value;
             Texture2D star = TextureAssets.Extra[98].Value;
 
-            Effect effect = AssetDirectory.Trail;
+            Effect effect = ShaderLoader.GetShader("Trail");
 
             List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
 

@@ -25,7 +25,6 @@ namespace AyaMod.Content.Particles
         public override void AI()
         {
             action();
-            if (timer++ > 60) active = false;
         }
     }
 }

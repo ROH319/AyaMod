@@ -682,3 +682,13 @@ EvolutiveHammer: {
 	DisplayName: Evolutive Hammer
 	Tooltip: ""
 }
+
+GalaxyProjector: {
+	DisplayName: Galaxy Projector
+	Tooltip: ""
+}
+
+ShaderReloader: {
+	DisplayName: Shader Reloader
+	Tooltip: ""
+}

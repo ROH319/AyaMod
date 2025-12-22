@@ -3,6 +3,10 @@ sampler uImage1 : register(s1);
 sampler uImage2 : register(s2);
 float timer;
 
+float maskFactor = 0;
+bool preMult = false;
+float colorMult = 2;
+
 float4x4 uTransform;
 
 struct VSInput
@@ -24,13 +28,13 @@ float4 PixelShaderFunction(PSInput input) : COLOR0
 {
     float3 coord = input.Texcoord;
     float y = timer + coord.x; //插值，让图片循环采样
-    float4 c1 = tex2D(uImage1, float2(coord.x, coord.y)); //image1是形状（激光），c1就是取色
+    float4 c1 = tex2D(uImage1, float2(y, coord.y)); //image1是形状（激光），c1就是取色
     float4 c3 = tex2D(uImage2, float2(y, coord.y)); //image2是蒙版
-    c1 *= c3;
-    float4 c = tex2D(uImage0, float2(c1.r, 0)); //image0是色度图，用了c1.r也就是黑白图片的亮度来做插值，亮度高的地方就映射到右边，亮度低就映射到左边
+    c1 = lerp(c1 * c3, c1, maskFactor) * input.Color;
+    float4 c = tex2D(uImage0, float2(preMult ? c1.r * coord.z : c1.r, 0)); //image0是色度图，用了c1.r也就是黑白图片的亮度来做插值，亮度高的地方就映射到右边，亮度低就映射到左边
     //if (c.r < 0.1)
     //    return float4(0, 0, 0, 0);
-    return 2 * c * coord.z; //纹理坐标的z是透明度
+    return colorMult * (preMult ? c : c * coord.z); //纹理坐标的z是透明度
 }
 
 PSInput VertexShaderFunction(VSInput input)

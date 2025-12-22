@@ -53,6 +53,32 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnSnapInSight()
         {
+            int dustamount = 36;
+            float speed = 10f;
+            //for (int i = 0; i < dustamount; i++)
+            //{
+            //    float distFactor = Main.rand.NextFloat(0.3f, 1f);
+            //    Vector2 dir = Main.rand.NextFloat(MathHelper.TwoPi).ToRotationVector2();
+            //    Vector2 pos = Projectile.Center + dir * distFactor * 50;
+            //    Vector2 vel = dir * speed * distFactor;
+            //    var d = Dust.NewDustPerfect(pos, DustID.PurpleTorch, vel, 0, Scale: 2f);
+            //    d.noGravity = true;
+            //}
+            var pos = AyaUtils.GetCameraRect(Projectile.Center, Projectile.rotation, Size * 0.75f, Size * 1.4f * 0.75f);
+
+            for (int i = 0; i < dustamount; i++)
+            {
+                float distFactor = Main.rand.NextFloat(1f, 1f) * 0.65f;
+                Vector2 p = pos[0];
+                float factor = i / (float)dustamount;
+                if (factor < 0.25f) p = Vector2.Lerp(pos[0], pos[1], Utils.Remap(factor, 0, 0.25f, 0f, 1f));
+                else if (factor < 0.5f) p = Vector2.Lerp(pos[1], pos[3], Utils.Remap(factor, 0.25f, 0.5f, 0f, 1f));
+                else if (factor < 0.75f) p = Vector2.Lerp(pos[3], pos[2], Utils.Remap(factor, 0.5f, 0.75f, 0f, 1f));
+                else p = Vector2.Lerp(pos[2], pos[0], Utils.Remap(factor, 0.75f, 1f, 0f, 1f));
+                var d = Dust.NewDustPerfect(p, DustID.PurpleTorch, Projectile.DirectionToSafe(p) * speed * distFactor, Scale: 2.5f);
+                d.noGravity = true;
+            }
+
             if (!Projectile.MyClient()) return;
 
             if (++EffectCounter >= 3)

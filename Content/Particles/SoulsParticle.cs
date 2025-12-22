@@ -36,6 +36,7 @@ namespace AyaMod.Content.Particles
             if (alpha > 0f) alpha = AlphaFadeout.Apply(alpha);
             if (Scale > 0f) Scale = ScaleFadeout.Apply(Scale);
 
+            timer--;
             if (Scale < 0.001f) active = false;
 
             Velocity.X = VelocityFadeout.Apply(Velocity.X);

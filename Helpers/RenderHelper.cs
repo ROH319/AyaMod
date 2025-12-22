@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ID;
 
 namespace AyaMod.Helpers
 {
@@ -14,12 +15,16 @@ namespace AyaMod.Helpers
         public static RenderTarget2D render;
 
         public static void CreateRender()
-        {
+        { 
+            if (Main.dedServ) return;
             GraphicsDevice gd = Main.instance.GraphicsDevice;
+
+            if (render != null) render.Dispose();
+
             int width = gd.PresentationParameters.BackBufferWidth;
             int height = gd.PresentationParameters.BackBufferHeight;
             SurfaceFormat format = gd.PresentationParameters.BackBufferFormat;
-            render = new RenderTarget2D(gd, width, height, false, format, 0);
+            render = new RenderTarget2D(gd, width, height, false, format, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
         }
 
         public static BlendState ReverseSubtract = new BlendState()

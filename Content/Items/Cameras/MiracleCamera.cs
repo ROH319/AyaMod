@@ -506,7 +506,7 @@ namespace AyaMod.Content.Items.Cameras
                 Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(20);
                 float speedFactor = 0.4f;
                 var l = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, Projectile.velocity * speedFactor, Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.8f), 15);
-                l.VelMult = 0.94f;
+                l.SetVelMult(0.94f);
                 l.Scale = Main.rand.NextFloat(0.8f, 1.2f);
             }
             Projectile.rotation += 0.02f;
