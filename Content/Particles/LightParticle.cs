@@ -17,7 +17,7 @@ namespace AyaMod.Content.Particles
     {
         public override string Texture => AssetDirectory.Extras + "Ball";
         public bool HighLight;
-        public static LightParticle Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color, int totaltime, bool highLight = true)
+        public static LightParticle Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color, int totaltime, bool highLight = false)
         {
             LightParticle light = NewParticle<LightParticle>(source, center, velocity, color, maxtime: totaltime);
             light.HighLight = highLight;

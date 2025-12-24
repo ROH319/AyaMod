@@ -107,7 +107,7 @@ namespace AyaMod.Content.Items.Lens
         public void SpawnFlash(Vector2 center, Color color, float size, float rot, int flashTime)
         {
             //TODO：填写正确的生成源
-            CameraFlashCircle.Spawn(null, center, color, size * 0.7f, flashTime);
+            CameraFlashCircle.Spawn(null, center, color, size * 0.6f, flashTime);
         }
     }
 }

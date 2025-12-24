@@ -1,4 +1,5 @@
 ﻿using AyaMod.Common.Easer;
+using AyaMod.Content.Buffs;
 using AyaMod.Content.Items.Lens;
 using AyaMod.Content.Particles;
 using AyaMod.Content.ScreenEffects;
@@ -10,6 +11,7 @@ using AyaMod.Core.Prefabs;
 using AyaMod.Core.Systems;
 using AyaMod.Core.Systems.Trails;
 using AyaMod.Helpers;
+using Microsoft.Build.Evaluation;
 using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,6 +27,7 @@ using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.WorldBuilding;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -35,7 +38,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 150;
+            Item.damage = 200;
 
             Item.useTime = Item.useAnimation = 30;
             Item.useStyle = ItemUseStyleID.Rapier;
@@ -65,61 +68,74 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void OnHitNPCAlt(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            
+            GalaxyPlayer galaxyPlayer = Main.player[Projectile.owner].GetModPlayer<GalaxyPlayer>();
+            if (galaxyPlayer == null) return;
+
+            int lightedCount = galaxyPlayer.ConstellationLevel;
+
+            float progressIncrease = Main.rand.NextFloat(0.15f, 0.25f) * Utils.Remap(lightedCount, 0, 4, 2f, 1f) * 0.8f;
+            int index = -1;
+            while(index < 0 || (galaxyPlayer.ConstellationProgress[index] >= 1f && galaxyPlayer.ConstellationLevel < 5))
+            {
+                index = Main.rand.Next(5);
+            }
+            galaxyPlayer.ConstellationProgress[index] += progressIncrease;
         }
         public override void OnSnap()
         {
-            #region 猎户座
+            bool canAttack = Main.rand.NextBool(5, 10);
+            if (!canAttack) return;
+
+            GalaxyPlayer galaxyPlayer = player.GetModPlayer<GalaxyPlayer>();
+            int attackIndex = galaxyPlayer.ChooseToAttack();
+
+            //Main.NewText($"{attackIndex} {Main.GameUpdateCount}");
+            //attackIndex = 3;
+            var source = Projectile.GetSource_FromAI();
+            if (attackIndex >= 0)
             {
-                //int type = ProjectileType<OrionComet>();
-                //for (int i = 0; i < 3; i++)
-                //{
-                //    Vector2 vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(1, 3) * 5;
-                //    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, type, Projectile.damage, 0f, Projectile.owner);
-                //}
+                //Console.WriteLine($"ConstellationAttack: {attackIndex}");
+                galaxyPlayer.ConstellationAtkCD[attackIndex] = galaxyPlayer.ConstellationCDMax[attackIndex];
+                switch (attackIndex)
+                {
+                    case (int)ConstellationType.Orion:
+                        int orionDamage = Projectile.damage;
+                        OrionAttack(5, source, galaxyPlayer.GetConstellationCenter(ConstellationType.Orion), orionDamage, Projectile.owner);
+                        break;
+                    case (int)ConstellationType.Cancer:
+                        int cancerDamage = Projectile.damage;
+                        CancerAttack(source, Projectile.Center, cancerDamage, Projectile.owner);
+                        break;
+                    case (int)ConstellationType.Hercules:
+                        Vector2 herculesCenter = galaxyPlayer.GetConstellationCenter(ConstellationType.Hercules);
+                        int herculesDamage = Projectile.damage;
+                        HerculesAttack(source, herculesCenter, herculesDamage, Projectile.owner, herculesCenter.DirectionToSafe(Projectile.Center).ToRotation());
+                        break;
+                    case (int)ConstellationType.Pegasus:
+                        int pegasusDamage = Projectile.damage;
+                        PegasusAttack(source, galaxyPlayer.GetConstellationCenter(ConstellationType.Pegasus), pegasusDamage, Projectile.owner);
+                        break;
+                    case (int)ConstellationType.Lyra:
+                        int lyraDamage = Projectile.damage;
+                        LyraAttack(source, player.Center + GalaxyPlayer.lyraOffset, Projectile.Center, lyraDamage, Projectile.owner);
+                        break;
+                    default: break;
+
+                }
             }
-            #endregion
-
-            #region 巨蟹
-            {
-                //float startRot = Main.rand.NextFloat(MathHelper.TwoPi);
-                //float radius = 250;
-                //float speed = 7.2f;
-                //float rotSpeed = speed / radius;
-
-                //float a = 350;
-                //float b = 100;
-                //for (int i = 0; i < 2; i++)
-                //{
-                //    int type = ProjectileType<CancerBlackHole>();
-                //    Vector2 dir = (startRot + MathHelper.Pi * i).ToRotationVector2();
-                //    Vector2 vel = dir.RotatedBy(MathHelper.PiOver2) * speed;
-
-                //    var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, type, Projectile.damage, 0, Projectile.owner, a, b);
-                //    p.localAI[2] = 0.01f;
-                //    (p.ModProjectile as CancerBlackHole).Phase = i * MathHelper.Pi;
-                //    (p.ModProjectile as CancerBlackHole).Blue = i > 0;
-                //}
-            }
-            #endregion
-
-            #region 武仙
-
-            {
-                //int type = ProjectileType<HerculesLaser>();
-                //Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), player.Center, Vector2.Zero, type, Projectile.damage, 0, Projectile.owner);
-            }
-
-            #endregion
 
             #region 天马
             {
                 for (int i = 0; i < 1; i++)
                 {
-                    //PegasusRail.SpawnRail(Projectile.GetSource_FromAI(), Projectile.Center, 60, 2 * 60, 80 + i * 40, Projectile.damage, Projectile.owner, 0.8f, 3);
+
 
                 }
                 //StarPerishParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, 60, 0.5f);
+                //Vector2 pos = Projectile.Center;
+                //Vector2 vel = new Vector2(0, -1f).RotatedByRandom(0.4f) * 8f;
+                //Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ProjectileType<PegasusStarVisual>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+
 
                 //Vector2 origin = Projectile.Center + new Vector2(Main.rand.Next(-200, 200), -1000);
                 //Vector2 vel = origin.DirectionTo(Projectile.Center) * 12f;
@@ -131,20 +147,6 @@ namespace AyaMod.Content.Items.Cameras
             #region 天琴
             {
 
-                Vector2 lyrapos = player.Center + GalaxyPlayer.lyraOffset;
-                Vector2 camerapos = Projectile.Center;
-                float radius = 800;
-                var circles = Helper.FindCircleCenters(lyrapos, camerapos, radius);
-                if (circles.Count > 0)
-                {
-                    Vector2 start = Helper.GetClockwiseStartOfMinorArc(circles[0], lyrapos, camerapos);
-                    bool clockwise = start == lyrapos;
-                    Vector2 end = clockwise ? camerapos : lyrapos;
-                    var a1 = circles[0].AngleTo(start);
-                    var a2 = circles[0].AngleTo(end);
-                    var l = LyraMusicalStaff.Spawn(Projectile.GetSource_FromAI(), circles[0], 60, 3 * 60, radius, Projectile.damage, Projectile.owner, (MathHelper.PiOver2) * clockwise.ToDirectionInt());
-                    l.Projectile.rotation = l.Projectile.Center.AngleTo(lyrapos);
-                }
 
                 //var flare = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, player.DirectionToSafe(Projectile.Center) * 1f, ProjectileType<LyraFlare>(), Projectile.damage, 0f, Projectile.owner);
             }
@@ -169,13 +171,70 @@ namespace AyaMod.Content.Items.Cameras
             //    Smoke_UnholyTwisting.Spawn(Projectile.GetSource_FromAI(), pos, vel, color, scale * 0.8f, rot, (int)(dist / range * 30 + 60), 0.98f);
             //}
         }
+
+        public static void OrionAttack(int count, IEntitySource source, Vector2 pos, int dmg, int owner, float startSpeed = 5f)
+        {
+            int type = ProjectileType<OrionComet>();
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(1, 3) * startSpeed;
+                Projectile.NewProjectileDirect(source, pos, vel, type, dmg, 0f, owner);
+            }
+        }
+        public static void CancerAttack(IEntitySource source, Vector2 pos, int dmg, int owner)
+        {
+            float startRot = Main.rand.NextFloat(MathHelper.TwoPi);
+            float radius = 250;
+            float speed = 7.2f;
+            float rotSpeed = speed / radius;
+
+            float a = 350;
+            float b = 100;
+            int type = ProjectileType<CancerBlackHole>();
+            for (int i = 0; i < 2; i++)
+            {
+                Vector2 dir = (startRot + MathHelper.Pi * i).ToRotationVector2();
+                Vector2 vel = dir.RotatedBy(MathHelper.PiOver2) * speed;
+
+                var p = Projectile.NewProjectileDirect(source, pos, vel, type, dmg, 0, owner, a, b);
+                p.localAI[2] = 0.01f;
+                (p.ModProjectile as CancerBlackHole).Phase = i * MathHelper.Pi;
+                (p.ModProjectile as CancerBlackHole).Blue = i > 0;
+            }
+        }
+        public static void HerculesAttack(IEntitySource source, Vector2 pos, int dmg, int owner, float rot)
+        {
+            int type = ProjectileType<HerculesLaser>();
+            var p = Projectile.NewProjectileDirect(source, pos, Vector2.Zero, type, dmg, 0, owner);
+            p.rotation = rot;
+        }
+        public static void PegasusAttack(IEntitySource source, Vector2 pos, int dmg, int owner)
+        {
+            PegasusRail.SpawnRail(source, pos, 60, 2 * 60, 80, dmg, owner, 0.8f, 3);
+        }
+        public static void LyraAttack(IEntitySource source, Vector2 lyrapos, Vector2 camerapos, int dmg, int owner, float radius = 800f)
+        {
+            var circles = Helper.FindCircleCenters(lyrapos, camerapos, radius);
+            if (circles.Count > 0)
+            {
+                Vector2 start = Helper.GetClockwiseStartOfMinorArc(circles[0], lyrapos, camerapos);
+                bool clockwise = start == lyrapos;
+                Vector2 end = clockwise ? camerapos : lyrapos;
+                var a1 = circles[0].AngleTo(start);
+                var a2 = circles[0].AngleTo(end);
+                var l = LyraMusicalStaff.Spawn(source, circles[0], 60, 3 * 60, radius, dmg, owner, (MathHelper.PiOver2) * clockwise.ToDirectionInt());
+                l.Projectile.rotation = l.Projectile.Center.AngleTo(lyrapos);
+            }
+        }
     }
-    public class CelestialMap : ModProjectile
+    public class CelestialMap : ModProjectile, ISinkProjectile
     {
         public override string Texture => AssetDirectory.Extras + "Galaxy1";
 
         public ref float State => ref Projectile.ai[0];
         public ref float BorderRadius => ref Projectile.localAI[0];
+
+        public float SinkDepth => 2;
 
         public float[] StarX;
         public float[] StarY;
@@ -261,6 +320,9 @@ namespace AyaMod.Content.Items.Cameras
             var galaxyShader = ShaderLoader.GetShader("MaskEffect");
             if (galaxyShader == null)
                 return false;
+            Player player = Main.player[Projectile.owner];
+            GalaxyPlayer galaxyPlayer = player.GetModPlayer<GalaxyPlayer>();
+
 
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Texture2D block = TextureAssets.MagicPixel.Value;
@@ -290,9 +352,6 @@ namespace AyaMod.Content.Items.Cameras
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
 
-            //Main.spriteBatch.Draw(ball, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * Projectile.Opacity * 0.2f, Projectile.rotation, ball.Size() / 2f, Projectile.width / (float)ball.Width * 0.7f * BorderRadius, 0, 0);
-
-
 
             galaxyShader.Parameters["drawInner"].SetValue(BorderRadius > 0f);
             galaxyShader.Parameters["uShape"].SetValue(shape);
@@ -318,13 +377,19 @@ namespace AyaMod.Content.Items.Cameras
 
                 distanceMask.CurrentTechnique.Passes[0].Apply();
 
-
-                DrawEdges(Projectile.Center + GalaxyPlayer.pegasusOffset, GalaxyPlayer.PegasusPoses, GalaxyPlayer.PegasusEdges, 1, GalaxyPlayer.pegasusScale, GalaxyPlayer.pegasusRot, Color.White * Projectile.Opacity * 0.5f);
-                DrawEdges(Projectile.Center + GalaxyPlayer.lyraOffset, GalaxyPlayer.LyraPoses, GalaxyPlayer.LyraEdges, 1, GalaxyPlayer.lyraScale, GalaxyPlayer.lyraRot, Color.White * Projectile.Opacity * 0.5f);
-                DrawEdges(Projectile.Center + GalaxyPlayer.hercOffset, GalaxyPlayer.HerculesPoses, GalaxyPlayer.HerculesEdges, 1, GalaxyPlayer.hercScale, GalaxyPlayer.hercRot, Color.White * Projectile.Opacity * 0.5f);
-                DrawEdges(Projectile.Center + GalaxyPlayer.orionOffset, GalaxyPlayer.OrionPoses, GalaxyPlayer.OrionEdges, 1, GalaxyPlayer.orionScale, GalaxyPlayer.orionRot, Color.White * Projectile.Opacity * 0.5f);
-                DrawEdges(Projectile.Center + GalaxyPlayer.cancerOffset, GalaxyPlayer.CancerPoses, GalaxyPlayer.CancerEdges, 1, GalaxyPlayer.cancerScale, GalaxyPlayer.cancerRot, Color.White * Projectile.Opacity * 0.5f);
-
+                for (int i = 0;i < 5; i++)
+                {
+                    ConstellationType type = (ConstellationType)i;
+                    Vector2 center = galaxyPlayer.GetConstellationCenter(type);
+                    Vector2[] poses = GalaxyPlayer.GetConstellationPoses(type);
+                    Vector2[] edges = GalaxyPlayer.GetConstellationEdges(type);
+                    float scale = GalaxyPlayer.GetConstellationScale(type);
+                    float rot = GalaxyPlayer.GetConstellationRotation(type);
+                    float consAlpha = galaxyPlayer.ConstellationProgress[i];
+                    Color baseColor = galaxyPlayer.ConstellationTimeleft[i] > 0 ? new Color(250, 250, 94) : Color.SkyBlue;
+                    Color consColor = baseColor * Projectile.Opacity * 0.5f * consAlpha;
+                    DrawEdges(center, poses, edges, 1f, scale, rot, consColor);
+                }
             }
 
             Main.spriteBatch.End();
@@ -332,12 +397,16 @@ namespace AyaMod.Content.Items.Cameras
 
             if (BorderRadius > 0f)
             {
-                DrawStars(GalaxyPlayer.PegasusPoses, Projectile.Center, -Main.screenPosition + GalaxyPlayer.pegasusOffset, GalaxyPlayer.pegasusScale, GalaxyPlayer.pegasusRot, Color.LightSkyBlue * Projectile.Opacity, r);
-                DrawStars(GalaxyPlayer.LyraPoses, Projectile.Center, -Main.screenPosition + GalaxyPlayer.lyraOffset, GalaxyPlayer.lyraScale, GalaxyPlayer.lyraRot, Color.LightSkyBlue * Projectile.Opacity, r);
-                DrawStars(GalaxyPlayer.HerculesPoses, Projectile.Center, -Main.screenPosition + GalaxyPlayer.hercOffset, GalaxyPlayer.hercScale, GalaxyPlayer.hercRot, Color.LightSkyBlue * Projectile.Opacity, r);
-                DrawStars(GalaxyPlayer.OrionPoses, Projectile.Center, -Main.screenPosition + GalaxyPlayer.orionOffset, GalaxyPlayer.orionScale, GalaxyPlayer.orionRot, Color.LightSkyBlue * Projectile.Opacity, r);
-                DrawStars(GalaxyPlayer.CancerPoses, Projectile.Center, -Main.screenPosition + GalaxyPlayer.cancerOffset, GalaxyPlayer.cancerScale, GalaxyPlayer.cancerRot, Color.LightSkyBlue * Projectile.Opacity, r);
-
+                for (int i = 0; i < 5; i++)
+                {
+                    ConstellationType type = (ConstellationType)i;
+                    Vector2[] poses = GalaxyPlayer.GetConstellationPoses(type);
+                    Vector2 offset = GalaxyPlayer.GetConstellationOffset(type) - Main.screenPosition;
+                    float scale = GalaxyPlayer.GetConstellationScale(type);
+                    float rot = GalaxyPlayer.GetConstellationRotation(type);
+                    Color color = Color.LightSkyBlue * Projectile.Opacity;
+                    DrawStars(poses, Projectile.Center, offset, scale, rot, color, r);
+                }
 
                 Color starColor = Color.White;
                 for (int i = 0; i < starCount; i++)
@@ -386,24 +455,34 @@ namespace AyaMod.Content.Items.Cameras
             }
         }
     }
-
+    public enum ConstellationType
+    {
+        //猎户座
+        Orion,
+        //巨蟹座
+        Cancer,
+        //武仙座
+        Hercules,
+        //天马座
+        Pegasus,
+        //天琴座
+        Lyra
+    }
     public class GalaxyPlayer : ModPlayer
     {
-        public enum ConstellationType
-        {
-            //猎户座
-            Orion,
-            //巨蟹座
-            Cancer,
-            //武仙座
-            Hercules,
-            //天马座
-            Pegasus,
-            //天琴座
-            Lyra
-        }
 
         public float[] ConstellationProgress = new float[5];
+        /// <summary>
+        /// 星座点亮剩余时间，每帧递减，到达0后熄灭
+        /// </summary>
+        public int[] ConstellationTimeleft = new int[5];
+        /// <summary>
+        /// 已点亮星座个数
+        /// </summary>
+        public int ConstellationLevel => ConstellationProgress.Count(p => p >= 1f);
+
+        public int[] ConstellationAtkCD = new int[5];
+        public int[] ConstellationCDMax = [0, 10 * 60, 6 * 60, 1 * 60, 3 * 60];
 
         public static Vector2 pegasusOffset = new(-270, 100);
         public static float pegasusScale = 1.2f, pegasusRot = 0.3f;
@@ -580,6 +659,120 @@ namespace AyaMod.Content.Items.Cameras
             new Vector2(0,3),
         ];
 
+        /// <summary>
+        /// 选择一个可以发动攻击的星座
+        /// </summary>
+        /// <returns>返回星座type，-1为没有可以发动攻击的星座</returns>
+        public int ChooseToAttack()
+        {
+            List<int> choices = new List<int>();
+            for(int i = 0;i < ConstellationProgress.Length;i++)
+            {
+                if(ConstellationProgress[i] >= 1f && ConstellationAtkCD[i] <= 1f)
+                {
+                    choices.Add(i);
+                }
+            }
+            if(choices.Count == 0)
+            {
+                return -1;
+            }
+            return Main.rand.Next(choices);
+        }
+        /// <summary>
+        /// 获取星座的绝对位置（加上玩家后的）
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public Vector2 GetConstellationCenter(ConstellationType type) => GetConstellationOffset(type) + Player.Center;
+        /// <summary>
+        /// 获取星座的相对位置
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Vector2 GetConstellationOffset(ConstellationType type) => type switch
+        {
+            ConstellationType.Orion => orionOffset,
+            ConstellationType.Cancer => cancerOffset,
+            ConstellationType.Hercules => hercOffset,
+            ConstellationType.Pegasus => pegasusOffset,
+            ConstellationType.Lyra => lyraOffset,
+            _ => Vector2.Zero
+        };
+        public static Vector2[] GetConstellationPoses(ConstellationType type) => type switch
+        {
+            ConstellationType.Orion => OrionPoses,
+            ConstellationType.Cancer => CancerPoses,
+            ConstellationType.Hercules => HerculesPoses,
+            ConstellationType.Pegasus => PegasusPoses,
+            ConstellationType.Lyra => LyraPoses,
+            _ => []
+        };
+        public static Vector2[] GetConstellationEdges(ConstellationType type) => type switch
+        {
+            ConstellationType.Orion => OrionEdges,
+            ConstellationType.Cancer => CancerEdges,
+            ConstellationType.Hercules => HerculesEdges,
+            ConstellationType.Pegasus => PegasusEdges,
+            ConstellationType.Lyra => LyraEdges,
+            _ => []
+        };
+        public static float GetConstellationScale(ConstellationType type) => type switch
+        {
+            ConstellationType.Orion => orionScale,
+            ConstellationType.Cancer => cancerScale,
+            ConstellationType.Hercules => hercScale,
+            ConstellationType.Pegasus => pegasusScale,
+            ConstellationType.Lyra => lyraScale,
+            _ => 1f
+        };
+        public static float GetConstellationRotation(ConstellationType type) => type switch
+        {
+            ConstellationType.Orion => orionRot,
+            ConstellationType.Cancer => cancerRot,
+            ConstellationType.Hercules => hercRot,
+            ConstellationType.Pegasus => pegasusRot,
+            ConstellationType.Lyra => lyraRot,
+            _ => 0f
+        };
+        public override void PreUpdateBuffs()
+        {
+            for(int i = 0;i < 5;i++)
+            {
+                if (ConstellationTimeleft[i] > 0)
+                {
+                    if (ConstellationTimeleft[i] == 1)
+                        ConstellationProgress[i] = 0;
+                    ConstellationTimeleft[i]--;
+                }
+
+                ConstellationProgress[i] = MathHelper.Clamp(ConstellationProgress[i], 0f, 1f);
+                if (ConstellationProgress[i] > 0.9999f && ConstellationTimeleft[i] <= 0)
+                {
+                    ConstellationTimeleft[i] = 25 * 60;
+                }
+
+                if (ConstellationTimeleft[i] > 0)
+                    ApplyConstellationBuff((ConstellationType)i);
+
+                if (ConstellationAtkCD[i] > 0) ConstellationAtkCD[i]--;
+            }
+        }
+        public void ApplyConstellationBuff(ConstellationType type)
+        {
+            int bufftype = type switch
+            {
+                ConstellationType.Orion => BuffType<OrionBuff>(),
+                ConstellationType.Cancer => BuffType<CancerBuff>(),
+                ConstellationType.Hercules => BuffType<HerculesBuff>(),
+                ConstellationType.Pegasus => BuffType<PegasusBuff>(),
+                ConstellationType.Lyra => BuffType<LyraBuff>(),
+                _ => -1
+            };
+            if (bufftype < 0) return;
+
+            Player.AddBuff(bufftype, 2);
+        }
     }
 
     public class OrionComet : ModProjectile
@@ -614,7 +807,7 @@ namespace AyaMod.Content.Items.Cameras
                 return;
             }
 
-            if (factor < 0.98f)
+            if (factor < 0.95f)
             {
                 if (!Projectile.Chase(2000, 29, 0.05f))
                 {
@@ -649,6 +842,29 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.penetrate++;
             Projectile.timeLeft = 20;
             Projectile.ai[2] = -1;
+
+            StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, new Color(40, 40, 135) with { A = 127 }, 20, 2f);
+
+            StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, Color.White.AdditiveColor(), 20, 1f);
+
+            var p = StarPerishParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, 30, 0.3f);
+            p.Rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+
+            float speed = 10;
+            for (int i = 0; i < 25; i++)
+            {
+                float distFactor = Main.rand.NextFloat(0.3f, 1f);
+                Vector2 dir = Main.rand.NextFloat(MathHelper.TwoPi).ToRotationVector2();
+                Vector2 pos = Projectile.Center + dir * distFactor * 10;
+                Vector2 vel = dir * speed * distFactor;
+                float scaleFactor = Main.rand.NextFloat(0.5f, 1.5f) * 0.7f;
+                float velmult = Main.rand.NextFloat(0.88f, 0.94f);
+                float scaleMult = Main.rand.NextFloat(0.92f, 0.99f);
+                var l2 = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.DarkBlue, 60, true);
+                l2.SetVelMult(velmult);
+                l2.SetScaleMult(scaleMult);
+                l2.Scale = 3f * scaleFactor;
+            }
 
             //for (int i = 0; i < 20; i++)
             //{
@@ -777,11 +993,12 @@ namespace AyaMod.Content.Items.Cameras
             {
                 float floatScale = MathF.Sin((float)Main.timeForVisualEffects * 0.1f) * 0.1f + 1f;
                 float floatScale2 = MathF.Cos((float)Main.timeForVisualEffects * 0.1f) * 0.08f + 1f;
-                float baseScale = Projectile.scale * 1.2f;
-                for (int i = 0; i < 6; i++)
+                float baseScale = Projectile.scale * 1.1f;
+                for (int i = 0; i < 4; i++)
                 {
                     Vector2 offset = (MathHelper.TwoPi / 4f * i + (float)Main.timeForVisualEffects * 0.08f).ToRotationVector2() * 2 * floatScale;
-                    Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + offset, null, Color.MediumBlue * 0.1f * Projectile.Opacity, 0, texture.Size() / 2, baseScale * floatScale * 1.5f, 0);
+                    Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + offset, null, Color.MediumBlue.AdditiveColor() * 0.1f * Projectile.Opacity, 0, texture.Size() / 2, baseScale * floatScale * 1.5f, 0);
+                    Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition + offset, null, Color.LightSkyBlue.AdditiveColor() * 0.1f * Projectile.Opacity, 0, texture.Size() / 2, baseScale * floatScale * 1.25f, 0);
                 }
                 Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White, 0, texture.Size() / 2, baseScale * floatScale2, 0);
             }
@@ -923,7 +1140,7 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 256;
+            Projectile.width = Projectile.height = (int)((256 + 512) / 1.5f);
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -944,7 +1161,7 @@ namespace AyaMod.Content.Items.Cameras
             float maxtime = Projectile.GetGlobalProjectile<AyaGlobalProjectile>().MaxTimeleft;
             float fadetime = 60f / maxtime;
 
-            float maxRadius = 100f;
+            float maxRadius = 80f;
 
             if (factor > 1 - fadetime)
             {
@@ -976,6 +1193,16 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.scale = Radius / maxRadius;
             Projectile.rotation += 0.005f;
 
+            float devourRange = 1000f;
+            foreach (var npc in Main.ActiveNPCs)
+            {
+                if (npc.friendly || npc.lifeMax <= 5 || npc.life <= 0 || npc.knockBackResist <= 0f || npc.Distance(Projectile.Center) > devourRange) continue;
+                float dist = npc.Distance(Projectile.Center);
+                npc.position += npc.DirectionToSafe(Projectile.Center) * 1f;
+                
+                npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionToSafe(Projectile.Center) * (4f + dist / 40), 0.15f);
+            }
+
             float maxSpeed = 40;
             if (Projectile.velocity.Length() > maxSpeed)
                 Projectile.velocity = Projectile.velocity.Length(maxSpeed);
@@ -1000,8 +1227,8 @@ namespace AyaMod.Content.Items.Cameras
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-            Color bloomColor = Blue ? new Color(100, 149, 237, 0) : new Color(237, 208, 100, 0);
-            Color bloomColor2 = Blue ? Color.LightSkyBlue : Color.LightCoral;
+            Color bloomColor = Blue ? new Color(100, 149, 237, 0) : new Color(234, 161, 217, 0);
+            Color bloomColor2 = Blue ? Color.DarkBlue : Color.LightCoral;
             Main.EntitySpriteDraw(ball2, Projectile.Center - Main.screenPosition, null, bloomColor * 1f, 0, ball2.Size() / 2, Projectile.scale * 5f, 0);
             Main.EntitySpriteDraw(ball2, Projectile.Center - Main.screenPosition, null, bloomColor * 0.2f, 0, ball2.Size() / 2, Projectile.scale * 5f, 0);
             //Main.EntitySpriteDraw(ball2, Projectile.Center - Main.screenPosition, null, new Color(65, 105, 225, 0) * 1f, 0, ball2.Size() / 2, Projectile.scale * 5f, 0);
@@ -1016,9 +1243,9 @@ namespace AyaMod.Content.Items.Cameras
             Texture2D flow = Request<Texture2D>(AssetDirectory.Extras + "GenFX_plasma_horizontal2", AssetRequestMode.ImmediateLoad).Value;
             Texture2D cloud = Request<Texture2D>(AssetDirectory.Extras + "GFX_clouds1_withMotes", AssetRequestMode.ImmediateLoad).Value;
             Texture2D mask = Request<Texture2D>(AssetDirectory.Extras + "Laser2", AssetRequestMode.ImmediateLoad).Value;
-            Texture2D colorMap = Request<Texture2D>(AssetDirectory.Extras + "Blue-Map3", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D colorMap = Request<Texture2D>(AssetDirectory.Extras + "Blue-Map", AssetRequestMode.ImmediateLoad).Value;
             if (!Blue)
-                colorMap = Request<Texture2D>(AssetDirectory.Extras + "Red-Map", AssetRequestMode.ImmediateLoad).Value;
+                colorMap = Request<Texture2D>(AssetDirectory.Extras + "Purple-Map", AssetRequestMode.ImmediateLoad).Value;
 
             Vector2 scale = new Vector2(1, 1f) * Projectile.scale * 1.2f * Radius / 100f;
             Effect shader = ShaderLoader.GetShader("Polarize");
@@ -1035,7 +1262,7 @@ namespace AyaMod.Content.Items.Cameras
             shader.Parameters["maskFactor"].SetValue(0.5f);
             shader.Parameters["cloudScale"].SetValue(new Vector2(2f, 3f));
 
-            if (!Blue) shader.Parameters["preMultR"].SetValue(1.15f);
+            if (!Blue) shader.Parameters["preMultR"].SetValue(1f);
             shader.Parameters["flowx"].SetValue((float)(flowTime + Projectile.whoAmI * 3));
             shader.Parameters["multx"].SetValue(2);
             shader.Parameters["thresholdY"].SetValue(0f);
@@ -1052,7 +1279,7 @@ namespace AyaMod.Content.Items.Cameras
             shader.Parameters["flowx"].SetValue((float)(flowTime * 6 + Projectile.whoAmI * 3 + 0.8));
             shader.Parameters["maskFactor"].SetValue(0f);
             shader.Parameters["multx"].SetValue(1);
-            if (!Blue) shader.Parameters["preMultR"].SetValue(1.3f);
+            if (!Blue) shader.Parameters["preMultR"].SetValue(1.2f);
             shader.CurrentTechnique.Passes[0].Apply();
             Main.spriteBatch.Draw(flow, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * 0.6f, (float)(0/* + Main.timeForVisualEffects * 0.002f*/), flow.Size() / 2, scale * 0.4f, 0, 0);
 
@@ -1064,7 +1291,7 @@ namespace AyaMod.Content.Items.Cameras
             Texture2D ball1 = Request<Texture2D>(AssetDirectory.Extras + "Ball1", AssetRequestMode.ImmediateLoad).Value;
 
             int bloomCount = 90;
-            Color bloomColor = Blue ? new Color(173, 216, 230, 0) : new Color(230, 187, 173, 0);
+            Color bloomColor = Blue ? new Color(188, 190, 229, 0) : new Color(230, 183, 229, 0);
             for (int i = 0; i < bloomCount; i++)
             {
                 Vector2 pos = Projectile.Center + (MathHelper.TwoPi / bloomCount * i + (float)Main.timeForVisualEffects * 0.2f).ToRotationVector2() * radius * 1.2f;
@@ -1081,8 +1308,8 @@ namespace AyaMod.Content.Items.Cameras
 
             int pointCount = 120;
             float rot = (float)Main.timeForVisualEffects * 0.01f;
-            Color drawColor = Blue ? new Color(0, 0, 205, 0) : new Color(205, 0, 0, 0);
-            Color drawColor2 = Blue ? new Color(135, 206, 250, 0) : new Color(250, 206, 135, 0);
+            Color drawColor = Blue ? new Color(0, 0, 205, 0) : new Color(144, 0, 206, 0);
+            Color drawColor2 = Blue ? new Color(152, 162, 249, 0) : new Color(249, 172, 225, 0);
             var star = TextureAssets.Extra[98].Value;
             Vector2 origin = new Vector2(36, 36);
             float time = (float)(Main.timeForVisualEffects * 0.001f);
@@ -1102,8 +1329,9 @@ namespace AyaMod.Content.Items.Cameras
     public class HerculesLaser : ModProjectile
     {
         public override string Texture => AssetDirectory.Extras + "Laser4";
-
-        public ref float Rot => ref Projectile.ai[0];
+        public ref float StartupProgress => ref Projectile.ai[0];
+        public ref float StarRot => ref Projectile.localAI[0];
+        public ref float DustFlag => ref Projectile.localAI[1];
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 60;
@@ -1119,10 +1347,10 @@ namespace AyaMod.Content.Items.Cameras
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             float point = 0f;
-            float width = Projectile.width;
+            float width = Projectile.width * 3f;
             float height = 2400;
             Vector2 endPoint = Projectile.Center;
-            Vector2 startPoint = Projectile.Center + Rot.ToRotationVector2() * height;
+            Vector2 startPoint = Projectile.Center + Projectile.rotation.ToRotationVector2() * height;
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), startPoint, endPoint, width, ref point);
         }
 
@@ -1133,14 +1361,63 @@ namespace AyaMod.Content.Items.Cameras
             if (!player.AliveCheck(Projectile.Center, 2000)) return;
 
             CameraPlayer cp = player.GetModPlayer<CameraPlayer>();
+            GalaxyPlayer gp = player.GetModPlayer<GalaxyPlayer>();
 
-            //Projectile.Center = player.Center;
+            Projectile.Center = gp.GetConstellationCenter(ConstellationType.Hercules);
 
             var dir = Projectile.Center.DirectionToSafe(cp.MouseWorld);
-            Rot = Utils.AngleLerp(Rot, dir.ToRotation(), 0.01f);
+            Projectile.rotation = Utils.AngleLerp(Projectile.rotation, dir.ToRotation(), 0.015f);
+
+            int startupTimer = Projectile.GetGlobalProjectile<AyaGlobalProjectile>().MaxTimeleft - Projectile.timeLeft;
+            StartupProgress = Utils.Remap(startupTimer, 0f, 45f, 0f, 1f);
+
+            if(StartupProgress < 0.99f)
+            {
+                int dustamount = 10;
+                float lengthfactor = Utils.Remap(StartupProgress, 0f, 1f, 1.5f, 0.2f);
+                for (int i = 0; i < dustamount; i++)
+                {
+                    float distFactor = Main.rand.NextFloat(0.8f,1.2f);
+
+                    Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * distFactor * 100f * lengthfactor;
+
+                    float scale = Main.rand.NextFloat(0.7f, 1.4f);
+                    Vector2 vel = pos.DirectionToSafe(Projectile.Center).RotateRandom(0.3f) * Utils.Remap(distFactor, 0.8f, 1.2f, 0.6f, 1.4f) * 1.3f;
+                    Dust d = Dust.NewDustPerfect(pos, DustID.MushroomSpray, vel, Scale: 1f);
+                    d.noGravity = true;
+                    //var l2 = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.Blue, 60, true);
+                    //l2.SetVelMult(0.95f);
+                    //l2.SetScaleMult(0.9f);
+                    //l2.Scale = scale;
+                }
+            }
+
+            if (StartupProgress >= 1f && DustFlag < 1f)
+            {
+                int dustamount = 70;
+                for (int i = 0; i < dustamount; i++)
+                {
+
+                    Vector2 pos = Projectile.Center + Main.rand.NextFloat(MathHelper.TwoPi).ToRotationVector2() * Main.rand.NextFloat(20f);
+                    Vector2 vel = (pos - Projectile.Center).SafeNormalize(Vector2.Zero) * Main.rand.NextFloat(2f, 8f) * 1.5f;
+                    //Dust d = Dust.NewDustPerfect(pos, DustID.BlueTorch, vel, Scale: 3f);
+                    Dust d = Dust.NewDustPerfect(pos, DustID.MushroomSpray, vel, Scale: 2f);
+                    d.noGravity = true;
+
+                    //var l2 = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.Blue, 60, true);
+                    //l2.SetVelMult(0.95f);
+                    //l2.SetScaleMult(0.99f);
+                    //l2.Scale = Main.rand.NextFloat(0.7f, 1.4f) * 2f;
+                }
+
+                DustFlag = 2f;
+            }
+
+            float rotIncrease = EaseManager.Evaluate(Ease.OutCubic, Utils.Remap(StartupProgress, 0f, 1f, 1f, 0f), 1f) * 0.2f;
+            StarRot += rotIncrease;
 
             int dustcount = 50;
-            Vector2 dire = Rot.ToRotationVector2();
+            Vector2 dire = Projectile.rotation.ToRotationVector2();
             var normal = dire.RotatedBy(MathHelper.PiOver2);
             float maxwidth = 130 * Projectile.scale;
             for (int i = 0; i < dustcount; i++)
@@ -1157,8 +1434,6 @@ namespace AyaMod.Content.Items.Cameras
                 //l.SetScaleMult(0.9f);
             }
 
-
-            Projectile.rotation = Rot;
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -1166,35 +1441,69 @@ namespace AyaMod.Content.Items.Cameras
             //Texture2D texture = TextureAssets.Projectile[Type].Value;
             //Texture2D texture = TextureAssets.Extra[197].Value;
             Texture2D texture = Request<Texture2D>(AssetDirectory.Extras + "T_Repeating whisp Noise2", AssetRequestMode.ImmediateLoad).Value;
-
-            float timefactor = Projectile.TimeleftFactor();
+            Texture2D shape2 = Request<Texture2D>(AssetDirectory.Extras + "Laser2", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D star = Request<Texture2D>(AssetDirectory.Extras + "GenFX_Flare_White2", AssetRequestMode.ImmediateLoad).Value;
+            float timefactor = Projectile.TimeleftFactor(-45);
 
             float timeFadeout = Utils.Remap(timefactor, 0, 0.1f, 0, 1f);
             float timeFadein = Utils.Remap(timefactor, 0.9f, 1f, 1f, 0f);
-            float length = 2000f;
-            Texture2D mainColor = Request<Texture2D>(AssetDirectory.Extras + "Blue-Map", AssetRequestMode.ImmediateLoad).Value;
-            Texture2D colorMap2 = Request<Texture2D>(AssetDirectory.Extras + "Blue-Map", AssetRequestMode.ImmediateLoad).Value;
             //Texture2D shape = TextureAssets.Extra[197].Value;
-            Texture2D shape = Request<Texture2D>(AssetDirectory.Extras + "Laser5", AssetRequestMode.ImmediateLoad).Value;
-            Texture2D shape2 = Request<Texture2D>(AssetDirectory.Extras + "Laser2", AssetRequestMode.ImmediateLoad).Value;
-            Texture2D shape3 = Request<Texture2D>(AssetDirectory.Extras + "Laser6", AssetRequestMode.ImmediateLoad).Value;
 
-            Texture2D mask = TextureAssets.Extra[193].Value;
+            if(StartupProgress < 1f)
+            {
+                float starScale = MathF.Sin(StartupProgress * MathHelper.Pi) * 2f;
+                Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor(), StarRot, star.Size() / 2, starScale, 0, 0);
+            }
+
+            if (timeFadein > 0f)
+            {
+                DrawLaser(shape2, timeFadein * timeFadeout);
+                DrawFlowNebula(shape2, timeFadein, timeFadeout);
+            }
+
+            Texture2D ball = Request<Texture2D>(AssetDirectory.Extras + "Ball5", AssetRequestMode.ImmediateLoad).Value;
+
+            float ballScale = Projectile.scale * timeFadein * timeFadeout * 0.7f;
+            Main.EntitySpriteDraw(ball, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * 0.05f, 0, ball.Size() / 2, ballScale * 1f, 0);
+
+            Main.EntitySpriteDraw(ball, Projectile.Center - Main.screenPosition, null, Color.LightSkyBlue.AdditiveColor(), 0, ball.Size() / 2, ballScale * 0.5f, 0);
+
+            Main.EntitySpriteDraw(ball, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor(), 0, ball.Size() / 2, ballScale * 0.4f, 0);
+
+            Texture2D light = Request<Texture2D>(AssetDirectory.Extras + "Ball4_1", AssetRequestMode.ImmediateLoad).Value;
+
+            Vector2 lightScale = new Vector2(5f, 0.2f) * Projectile.scale * timeFadein * timeFadeout;
+
+            Main.EntitySpriteDraw(light, Projectile.Center - Main.screenPosition, null, Color.White * 0.2f, (float)(Main.timeForVisualEffects * 0.002f), light.Size() / 2, lightScale * 0.4f, 0);
+            Main.EntitySpriteDraw(light, Projectile.Center - Main.screenPosition, null, Color.White * 0.2f, (float)(Main.timeForVisualEffects * 0.002f + MathHelper.PiOver2), light.Size() / 2, new Vector2(lightScale.X * 0.7f, lightScale.Y) * 0.4f, 0);
+
+
+            return false;
+        }
+
+        public void DrawLaser(Texture2D shape2, float scaleFactor)
+        {
+
+            Texture2D mainColor = Request<Texture2D>(AssetDirectory.Extras + "Blue-Map", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D shape = Request<Texture2D>(AssetDirectory.Extras + "Laser5", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D shape3 = Request<Texture2D>(AssetDirectory.Extras + "Laser6", AssetRequestMode.ImmediateLoad).Value;
             Texture2D mask2 = Request<Texture2D>(AssetDirectory.Extras + "GFX_clouds1_withMotes", AssetRequestMode.ImmediateLoad).Value;
             Texture2D mask3 = Request<Texture2D>(AssetDirectory.Extras + "GenFX_plasma_horizontal2", AssetRequestMode.ImmediateLoad).Value;
             Texture2D mask4 = Request<Texture2D>(AssetDirectory.Extras + "GenFX_FX3_flame_fire_smoke_sojin_seamless_dense_horiz", AssetRequestMode.ImmediateLoad).Value;
-
+            Texture2D colorMap2 = Request<Texture2D>(AssetDirectory.Extras + "Blue-Map", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D mask = TextureAssets.Extra[193].Value;
             Effect effect = ShaderLoader.GetShader("Trail");
 
             List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
             List<CustomVertexInfo> bars2 = new List<CustomVertexInfo>();
 
-            float width = 250 * Projectile.scale * timeFadein * timeFadeout;
+            float width = 250 * Projectile.scale * scaleFactor;
 
+            float length = 2000f;
             int count = 300;
             for (int i = 0; i < count; i++)
             {
-                Vector2 dir = Rot.ToRotationVector2();
+                Vector2 dir = Projectile.rotation.ToRotationVector2();
                 var normal = dir.RotatedBy(MathHelper.PiOver2).SafeNormalize(Vector2.Zero);
 
                 var factor = i / (float)count;//0是激光起始点
@@ -1219,12 +1528,6 @@ namespace AyaMod.Content.Items.Cameras
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
                 RasterizerState originalState = Main.graphics.GraphicsDevice.RasterizerState;
 
-                // 干掉注释掉就可以只显示三角形栅格
-                //RasterizerState rasterizerState = new RasterizerState();
-                //rasterizerState.CullMode = CullMode.None;
-                //rasterizerState.FillMode = FillMode.WireFrame;
-                //Main.graphics.GraphicsDevice.RasterizerState = rasterizerState;
-
                 var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
                 var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
                 // 把变换和所需信息丢给shader
@@ -1240,10 +1543,6 @@ namespace AyaMod.Content.Items.Cameras
                 Main.graphics.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
                 Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointWrap;
                 Main.graphics.GraphicsDevice.SamplerStates[2] = SamplerState.PointWrap;
-
-                //Main.graphics.GraphicsDevice.Textures[0] = (Texture)TextureAssets.MagicPixel;
-                //Main.graphics.GraphicsDevice.Textures[1] = (Texture)TextureAssets.MagicPixel;
-                //Main.graphics.GraphicsDevice.Textures[2] = (Texture)TextureAssets.MagicPixel;
 
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
@@ -1301,58 +1600,40 @@ namespace AyaMod.Content.Items.Cameras
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
             }
-            {
+        }
 
-                Texture2D flow = Request<Texture2D>(AssetDirectory.Extras + "GenFX_PlagueofMurlocs_Water_BW", AssetRequestMode.ImmediateLoad).Value;
-                Texture2D cloud = Request<Texture2D>(AssetDirectory.Extras + "GFX_clouds1_sparseMotes", AssetRequestMode.ImmediateLoad).Value;
-                Texture2D colorMap = Request<Texture2D>(AssetDirectory.Extras + "Blue-Map4", AssetRequestMode.ImmediateLoad).Value;
-                Vector2 scale = new Vector2(1, 1f) * Projectile.scale * 1f;
-                Effect shader = ShaderLoader.GetShader("Polarize");
+        public void DrawFlowNebula(Texture2D shape2, float fadein, float fadeout)
+        {
 
-                var flowTime = Main.timeForVisualEffects * 0.006f;
+            Texture2D flow = Request<Texture2D>(AssetDirectory.Extras + "GenFX_PlagueofMurlocs_Water_BW", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D cloud = Request<Texture2D>(AssetDirectory.Extras + "GFX_clouds1_sparseMotes", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D colorMap = Request<Texture2D>(AssetDirectory.Extras + "Blue-Map4", AssetRequestMode.ImmediateLoad).Value;
+            Vector2 scale = new Vector2(1, 1f) * Projectile.scale * 1f * fadein;
+            Effect shader = ShaderLoader.GetShader("Polarize");
 
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            var flowTime = Main.timeForVisualEffects * 0.006f;
 
-                shader.Parameters["uMask"].SetValue(shape2);
-                shader.Parameters["uColorMap"].SetValue(colorMap);
-                shader.Parameters["uCloud"].SetValue(cloud);
-                shader.Parameters["preMultR"].SetValue(1.5f);
-                shader.Parameters["uTime"].SetValue((float)-Main.timeForVisualEffects * 0.004f + Projectile.whoAmI * 8);
-                shader.Parameters["uTime2"].SetValue((float)-Main.timeForVisualEffects * 0.005f + Projectile.whoAmI * 8);
-                //shader.Parameters["uTime2"].SetValue(25576.707f);
-                shader.Parameters["maskFactor"].SetValue(0.7f);
-                shader.Parameters["cloudScale"].SetValue(new Vector2(2f, 3f));
-                shader.Parameters["thresholdY"].SetValue(0f);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-                shader.Parameters["flowx"].SetValue((float)(flowTime + Projectile.whoAmI * 3));
-                shader.Parameters["multx"].SetValue(2);
-                shader.CurrentTechnique.Passes[0].Apply();
-                Main.spriteBatch.Draw(flow, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * 0.9f * timeFadein * timeFadeout, (float)(0/* + Main.timeForVisualEffects * 0.002f*/), flow.Size() / 2, scale * 0.7f, 0, 0);
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            shader.Parameters["uMask"].SetValue(shape2);
+            shader.Parameters["uColorMap"].SetValue(colorMap);
+            shader.Parameters["uCloud"].SetValue(cloud);
+            shader.Parameters["preMultR"].SetValue(1.5f);
+            shader.Parameters["uTime"].SetValue((float)-Main.timeForVisualEffects * 0.004f + Projectile.whoAmI * 8);
+            shader.Parameters["uTime2"].SetValue((float)-Main.timeForVisualEffects * 0.005f + Projectile.whoAmI * 8);
+            //shader.Parameters["uTime2"].SetValue(25576.707f);
+            shader.Parameters["maskFactor"].SetValue(0.7f);
+            shader.Parameters["cloudScale"].SetValue(new Vector2(2f, 3f));
+            shader.Parameters["thresholdY"].SetValue(0f);
 
-            }
+            shader.Parameters["flowx"].SetValue((float)(flowTime + Projectile.whoAmI * 3));
+            shader.Parameters["multx"].SetValue(2);
+            shader.CurrentTechnique.Passes[0].Apply();
+            Main.spriteBatch.Draw(flow, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * 0.9f * fadein * fadeout, (float)(0/* + Main.timeForVisualEffects * 0.002f*/), flow.Size() / 2, scale * 0.7f, 0, 0);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-
-            Texture2D ball = Request<Texture2D>(AssetDirectory.Extras + "Ball5", AssetRequestMode.ImmediateLoad).Value;
-
-            float ballScale = Projectile.scale * timeFadein * timeFadeout * 0.7f;
-            Main.EntitySpriteDraw(ball, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * 0.05f, 0, ball.Size() / 2, ballScale * 1f, 0);
-
-            Main.EntitySpriteDraw(ball, Projectile.Center - Main.screenPosition, null, Color.LightSkyBlue.AdditiveColor(), 0, ball.Size() / 2, ballScale * 0.5f, 0);
-
-            Main.EntitySpriteDraw(ball, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor(), 0, ball.Size() / 2, ballScale * 0.4f, 0);
-
-            Texture2D light = Request<Texture2D>(AssetDirectory.Extras + "Ball4_1", AssetRequestMode.ImmediateLoad).Value;
-
-            Vector2 lightScale = new Vector2(5f, 0.2f) * Projectile.scale * timeFadein * timeFadeout;
-
-            Main.EntitySpriteDraw(light, Projectile.Center - Main.screenPosition, null, Color.White * 0.2f, (float)(Main.timeForVisualEffects * 0.002f), light.Size() / 2, lightScale * 0.4f, 0);
-            Main.EntitySpriteDraw(light, Projectile.Center - Main.screenPosition, null, Color.White * 0.2f, (float)(Main.timeForVisualEffects * 0.002f + MathHelper.PiOver2), light.Size() / 2, new Vector2(lightScale.X * 0.7f, lightScale.Y) * 0.4f, 0);
-
-
-            return false;
         }
     }
 
@@ -1431,11 +1712,7 @@ namespace AyaMod.Content.Items.Cameras
                 //Dust d = Dust.NewDustPerfect(pos, DustID.GemSapphire, vel, Scale: 1f);
                 //Dust d1 = Dust.NewDustPerfect(pos, DustID.WhiteTorch, vel, Scale: 0.8f);
                 //d1.noGravity = true;
-                //var l = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.White, 60);
-                //l.Scale = 0.9f;
-                //l.SetScaleMult(0.92f);
-                //l.SetVelMult(0.96f);
-                var l2 = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.Blue, 60);
+                var l2 = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.Blue, 60, true);
                 l2.Scale = 0.9f;
                 l2.SetScaleMult(0.92f);
                 l2.SetVelMult(0.96f);
@@ -1645,7 +1922,7 @@ namespace AyaMod.Content.Items.Cameras
                         n = Main.rand.NextFromList(0, 1, 2, 3);
                     }
                     selected.Add(n);
-                    Vector2 targetPos = cameraPos + new Vector2(Main.rand.Next(70, 150) * 1.2f, 0).RotatedBy(n * MathHelper.PiOver2 + startRot + Main.rand.NextFloat(-randRotRange, randRotRange));
+                    Vector2 targetPos = cameraPos + new Vector2(Main.rand.Next(50, 150) * 1.5f, 0).RotatedBy(n * MathHelper.PiOver2 + startRot + Main.rand.NextFloat(-randRotRange, randRotRange));
                     Vector2 origin = cameraPos + new Vector2((j % 2 == 0 ? -1 : 1) * (targetPos.X < cameraPos.X).ToDirectionInt() * Main.rand.Next(100, 300), Main.rand.Next(-1600, -1200) - i * 300 + j * 150);
                     Vector2 vel = origin.DirectionTo(targetPos) * 12f;
                     Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), origin, vel, ProjectileType<PegasusMeteorStar>(), Projectile.damage, 0f, Projectile.owner, targetPos.X, targetPos.Y);
@@ -1716,7 +1993,7 @@ namespace AyaMod.Content.Items.Cameras
                 //l.SetVelMult(0.95f);
                 //l.SetScaleMult(0.97f);
                 //l.Scale = scale;
-                var l2 =LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.Blue, 60);
+                var l2 =LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.Blue, 60, true);
                 l2.SetVelMult(0.95f);
                 l2.SetScaleMult(0.97f);
                 l2.Scale = scale;
@@ -1728,7 +2005,7 @@ namespace AyaMod.Content.Items.Cameras
         public override void OnKill(int timeLeft)
         {
             Projectile.position = Projectile.Center;
-            Projectile.width = Projectile.height = 128;
+            Projectile.width = Projectile.height = 256;
             Projectile.Center = Projectile.position;
 
             if (Projectile.owner == Main.myPlayer)
@@ -1741,13 +2018,9 @@ namespace AyaMod.Content.Items.Cameras
 
                 StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, Color.White.AdditiveColor(), 20, 1f);
 
-                //LightSpotParticle.SpawnFlare(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, new Color(40,40,136).AdditiveColor(), 0f, 30, 0.5f, 1f,0.5f);
-                //StarParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, new Color(20,20,135).AdditiveColor(), 3f, 0.25f, 1.5f, 0.7f, 1f, i * MathHelper.PiOver2, 1f);
-                //StarParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, new Color(20,20,135).AdditiveColor(), 3f, 0.25f, 1.5f, 0.7f, 1f, i * MathHelper.PiOver2, 1f);
-                //StarParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, new Color(20,20,135).AdditiveColor(), 3f, 0.25f, 1.5f, 0.7f, 1f, i * MathHelper.PiOver2, 1f);
             }
 
-            var p = StarPerishParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, 45, 0.5f);
+            var p = StarPerishParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, 30, 0.5f);
             p.Rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
 
@@ -1767,7 +2040,7 @@ namespace AyaMod.Content.Items.Cameras
                 //l.SetVelMult(velmult);
                 //l.SetScaleMult(scaleMult);
                 //l.Scale = 2f * scaleFactor;
-                var l2 = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.DarkBlue, 60);
+                var l2 = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.DarkBlue, 60, true);
                 l2.SetVelMult(velmult);
                 l2.SetScaleMult(scaleMult);
                 l2.Scale = 3f * scaleFactor;
@@ -1910,6 +2183,7 @@ namespace AyaMod.Content.Items.Cameras
         public override void OnSpawn(IEntitySource source)
         {
             Projectile.timeLeft = (int)TotalTime;
+            //Projectile.Opacity = 0.7f;
         }
         public override void AI()
         {
@@ -1926,14 +2200,14 @@ namespace AyaMod.Content.Items.Cameras
                 flare.scale *= 0.5f;
             }
 
-            int dustamount = 4;
+            int dustamount = 6;
 
             for(int i = 0; i < dustamount; i++)
             {
                 float trailfactor = Main.rand.NextFloat();
                 Vector2 pos = Projectile.Center + (Projectile.rotation + CurrentRot * trailfactor).ToRotationVector2() * (Radius + Main.rand.NextFloat(-1f, 1f) * 130);
                 Vector2 vel = Projectile.Center.DirectionToSafe(pos).RotatedBy(MathF.Sign(TotalRot) * MathHelper.PiOver2) * Main.rand.NextFloat(0.5f, 1.5f);
-                var l2 = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.Blue, 60);
+                var l2 = LightParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.Blue, 60, true);
                 l2.Scale = 1f;
                 l2.SetScaleMult(0.92f);
                 l2.SetVelMult(0.96f);
@@ -2193,7 +2467,7 @@ namespace AyaMod.Content.Items.Cameras
         {
             CanDamageFlag = 1;
 
-            Projectile.Scale(6f);
+            Projectile.Scale(7f);
 
             RingParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, new Color(20, 20, 135, 0), 20, Projectile.width / 2f, 1f, 0f, 0.2f, 0.7f, 30, 120, Ease.OutCubic, Ease.OutSine);
 
@@ -2216,11 +2490,11 @@ namespace AyaMod.Content.Items.Cameras
                 var cameraProj = camera.ModProjectile as BaseCameraProj;
                 int totalNotes = player.ownedProjectileCounts[Type];
                 int index = Projectile.GetMyGroupIndex();
-                float radius = (int)(1 * cameraProj.size);
+                float radius = (int)(0.8f * cameraProj.size);
                 Vector2 offset = (MathHelper.TwoPi / totalNotes * index + Main.GameUpdateCount * 0.013f).ToRotationVector2() * radius;
                 Vector2 targetPos = camera.Center + offset;
 
-                float chaseFactor = Utils.Remap(Projectile.timeLeft, 2 * 60 + 30, 3 * 60, 0.07f, 0f);
+                float chaseFactor = Utils.Remap(Projectile.timeLeft, 2 * 60 + 30, 3 * 60, 0.08f, 0.01f);
 
                 Projectile.velocity = Projectile.velocity * 0.99f;
                 Projectile.Center = Vector2.Lerp(Projectile.Center, targetPos, chaseFactor);
@@ -2237,11 +2511,16 @@ namespace AyaMod.Content.Items.Cameras
             Main.spriteBatch.Draw(ball2, Projectile.Center - Main.screenPosition, null, Color.DarkBlue.AdditiveColor() * 0.6f, 0, ball2.Size() / 2, Projectile.scale * 1.2f, 0, 0);
 
             float bloomAlpha = Projectile.Opacity * 0.5f * (MathF.Sin((float)(Main.timeForVisualEffects * 0.05f)) * 0.5f + 1f);
-            RenderHelper.DrawBloom(4,2, texture, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * bloomAlpha, 0f, texture.Size() / 2, Projectile.scale);
-            RenderHelper.DrawBloom(4, 2, texture, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * bloomAlpha, 0f, texture.Size() / 2, Projectile.scale);
+            float noteScale = Projectile.scale * 1.3f;
+            RenderHelper.DrawBloom(4, 2, texture, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * bloomAlpha, 0f, texture.Size() / 2, noteScale);
+            RenderHelper.DrawBloom(4, 2, texture, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * bloomAlpha, 0f, texture.Size() / 2, noteScale);
 
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity,
-                0f, texture.Size() / 2, Projectile.scale, 0, 0);
+                0f, texture.Size() / 2, noteScale, 0, 0);
+
+            float bloomAlpha2 = Projectile.Opacity * 0.5f * (MathF.Cos((float)(Main.timeForVisualEffects * 0.05f)) * 0.5f + 1f);
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * bloomAlpha2 * Projectile.Opacity,
+                0f, texture.Size() / 2, noteScale, 0, 0);
 
             return false;
         }

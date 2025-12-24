@@ -44,7 +44,7 @@ namespace AyaMod.Content.Particles
         public float radius;
         public static CameraFlashCircle Spawn(IEntitySource source, Vector2 center, Color color, float scale, int flashTime)
         {
-            CameraFlashCircle flash = NewParticle<CameraFlashCircle>(source, center, Vector2.Zero, color, 1f, flashTime);
+            CameraFlashCircle flash = NewParticle<CameraFlashCircle>(source, center, Vector2.Zero, color, 1f, maxtime:flashTime);
             flash.radius = scale;
             return flash;
         }
@@ -53,7 +53,7 @@ namespace AyaMod.Content.Particles
             float factor = GetTimeFactor();
             float alphaFactor = Utils.Remap(factor, 0, 1f, 1.5f, 0f);
             alpha = alphaFactor;
-            Scale = Utils.Remap(factor, 0, 1f, 1.3f, 0.7f);
+            Scale = Utils.Remap(factor, 0, 1f, 1.3f, 0.8f);
         }
         public override void Draw(SpriteBatch spriteBatch)
         {

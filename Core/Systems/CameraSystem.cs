@@ -101,6 +101,38 @@ namespace AyaMod.Core.Systems
                 }
             }
         }
+        public override void PreUpdateProjectiles()
+        {
+            //ISinkProjectile的实现
+            for(int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile projectile = Main.projectile[i];
+                if (projectile.ModProjectile == null || projectile.ModProjectile is not ISinkProjectile || !projectile.active) continue;
+                var sinkProjectile = projectile.ModProjectile as ISinkProjectile;
+
+                for(int j = 0; j < i; j++)
+                {
+                    Projectile pre = Main.projectile[j];
+                    if (pre.active)
+                    {
+                        if(pre.ModProjectile == null || pre.ModProjectile is not ISinkProjectile) continue;
+                        var sinkPre = pre.ModProjectile as ISinkProjectile;
+                        if (sinkPre.SinkDepth < sinkProjectile.SinkDepth)
+                            SwapProjectile(j, i);
+                    }
+                    SwapProjectile(j, i);
+                }
+            }
+        }
+        public static void SwapProjectile(int index, int index2)
+        {
+            var temp = Main.projectile[index];
+            Main.projectile[index] = Main.projectile[index2];
+            Main.projectile[index2] = temp;
+
+            Main.projectile[index2].whoAmI = index;
+            Main.projectile[index].whoAmI = index2;
+        }
         public override void PostUpdateEverything()
         {
             foreach(var projectile in Main.ActiveProjectiles)

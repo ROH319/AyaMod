@@ -22,6 +22,12 @@ namespace AyaMod.Helpers
 
         public static float TimeleftFactor(this Projectile projectile) => projectile.timeLeft / projectile.MaxTimeleft();
 
+        public static float TimeleftFactor(this Projectile projectile, int increase)
+        {
+            float denominator = projectile.MaxTimeleft() + increase;
+            if (denominator == 0f) return 0;
+            return projectile.timeLeft / denominator;
+        }
         public static float TimeleftFactorPositive(this Projectile projectile) => Utils.Remap(projectile.TimeleftFactor(), 0, 1f, 1f, 0f);
 
         public static float MaxTimeleft(this Projectile projectile) => projectile.GetGlobalProjectile<AyaGlobalProjectile>().MaxTimeleft;

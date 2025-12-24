@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AyaMod.Content.Buffs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,6 +65,11 @@ namespace AyaMod.Core.Globals
             }
         }
 
+        public override void GrapplePullSpeed(Projectile projectile, Player player, ref float speed)
+        {
+            if (player.HasBuff<PegasusBuff>())
+                speed *= 1.25f;
+        }
         public override bool InstancePerEntity => true;
     }
 }

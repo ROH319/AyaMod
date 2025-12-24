@@ -70,6 +70,10 @@ namespace AyaMod.Content.Items.Cameras
                     Projectile.damage, Projectile.knockBack, Projectile.owner, Projectile.whoAmI, i);
             }
         }
+        public override void OnSnap()
+        {
+            
+        }
     }
     public class MarisaCircle : ModProjectile
     {
