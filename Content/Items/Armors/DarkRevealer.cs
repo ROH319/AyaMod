@@ -21,7 +21,7 @@ namespace AyaMod.Content.Items.Armors
 {
     [PlayerEffect(OverrideEffectName = "DarkSetBonus")]
     [AutoloadEquip(EquipType.Head)]
-    public class DarkRevealerMask : ModItem
+    public class DarkRevealerMask : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(CritBonus);
@@ -125,7 +125,7 @@ namespace AyaMod.Content.Items.Armors
     }
 
     [AutoloadEquip(EquipType.Body)]
-    public class DarkRevealerCloak : ModItem
+    public class DarkRevealerCloak : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(RegenBonus, DamageBonus);
@@ -160,7 +160,7 @@ namespace AyaMod.Content.Items.Armors
     }
 
     [AutoloadEquip(EquipType.Legs)]
-    public class DarkRevealerLeggings : ModItem
+    public class DarkRevealerLeggings : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus, MoveSpeedBonus);

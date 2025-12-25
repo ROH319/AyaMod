@@ -1,4 +1,5 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Content.Items.Materials;
+using AyaMod.Core;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -16,7 +17,7 @@ using Terraria.Localization;
 namespace AyaMod.Content.Items.Armors
 {
     [AutoloadEquip(EquipType.Head)]
-    public class LilyWhiteHat : ModItem
+    public class LilyWhiteHat : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus);
@@ -31,14 +32,21 @@ namespace AyaMod.Content.Items.Armors
         {
             Item.width = 19;
             Item.height = 12;
-            Item.SetShopValues(ItemRarityColor.Blue1, Item.sellPrice(gold: 1));
+            Item.SetShopValues(ItemRarityColor.Blue1, Item.sellPrice(silver: 2));
             Item.defense = 4;
         }
         public override void UpdateEquip(Player player)
         {
-            player.GetDamage<ReporterDamage>() += (float)DamageBonus / 100f;
+            player.GetDamage<ReporterDamage>() += DamageBonus / 100f;
         }
-
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemType<SakuraPetal>(), 10)
+                .AddIngredient(ItemID.Silk, 6)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
             return body.type == ItemType<LilyWhiteDress>() && legs.type == ItemType<LilyWhiteBoots>();
@@ -76,7 +84,7 @@ namespace AyaMod.Content.Items.Armors
     }
 
     [AutoloadEquip(EquipType.Body)]
-    public class LilyWhiteDress : ModItem
+    public class LilyWhiteDress : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(CritBonus);
@@ -85,7 +93,7 @@ namespace AyaMod.Content.Items.Armors
         {
             Item.width = 19;
             Item.height = 12;
-            Item.SetShopValues(ItemRarityColor.Blue1, Item.sellPrice(gold: 1));
+            Item.SetShopValues(ItemRarityColor.Blue1, Item.sellPrice(silver: 4));
             Item.defense = 5;
         }
         public override void UpdateEquip(Player player)
@@ -93,22 +101,42 @@ namespace AyaMod.Content.Items.Armors
             player.GetCritChance<ReporterDamage>() += CritBonus;
         }
         public static int CritBonus = 6;
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemType<SakuraPetal>(), 15)
+                .AddIngredient(ItemID.Silk, 10)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 
     [AutoloadEquip(EquipType.Legs)]
-    public class LilyWhiteBoots : ModItem
+    public class LilyWhiteBoots : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(MoveSpeedBonus);
         public override void SetDefaults()
         {
             Item.width = 19;
             Item.height = 12;
-            Item.SetShopValues(ItemRarityColor.Blue1, Item.sellPrice(gold: 1));
+            Item.SetShopValues(ItemRarityColor.Blue1, Item.sellPrice(silver: 3));
             Item.defense = 4;
         }
         public override void UpdateEquip(Player player)
         {
-            player.moveSpeed += 0.05f;
+            player.moveSpeed += MoveSpeedBonus / 100f;
+        }
+        public static int MoveSpeedBonus = 5;
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemType<SakuraPetal>(), 12)
+                .AddIngredient(ItemID.Silk, 8)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
 
