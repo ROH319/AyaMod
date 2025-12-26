@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace AyaMod.Core.ModPlayers
@@ -30,6 +31,8 @@ namespace AyaMod.Core.ModPlayers
         public StatModifier ChaseSpeedModifier = StatModifier.Default;
         public StatModifier SizeModifier = StatModifier.Default;
         public StatModifier StunTimeModifier = StatModifier.Default;
+        public StatModifier AutoSnapDamageModifier = StatModifier.Default;
+        public StatModifier ManualSnapDamageModifier = StatModifier.Default;
 
         public float SingleTargetMultiplier = 0f;
 
@@ -78,6 +81,8 @@ namespace AyaMod.Core.ModPlayers
             ChaseSpeedModifier = StatModifier.Default;
             SizeModifier = StatModifier.Default;
             StunTimeModifier = StatModifier.Default;
+            AutoSnapDamageModifier = StatModifier.Default;
+            ManualSnapDamageModifier = StatModifier.Default;
 
             SingleTargetMultiplier = 0f;
 
@@ -112,6 +117,9 @@ namespace AyaMod.Core.ModPlayers
                 HoldNonCameraCounter++;
                 HoldCameraCounter = 0;
             }
+
+            //Tile tile = Main.tile[(int)(MouseWorld.X / 16f), (int)(MouseWorld.Y / 16f)];
+            //Main.NewText($"{tile.TileType} {tile.TileType > TileID.Count}");
             //Main.NewText($"{Player.velocity.X} {Player.accRunSpeed}");
             PostUpdateHook.Invoke(Player);
         }
@@ -186,6 +194,14 @@ namespace AyaMod.Core.ModPlayers
                     itemDrop = ItemType<WaveCamera>();
             }
 
+        }
+
+        public float GetCameraDamageModifier(bool autoSnap = true)
+        {
+            if (autoSnap)
+                return AutoSnapDamageModifier.ApplyTo(CameraAutoSnapDamageModifier);
+            else
+                return ManualSnapDamageModifier.ApplyTo(CameraManualSnapDamageModifier);
         }
 
         public static float CameraAutoSnapDamageModifier = 0.9f;

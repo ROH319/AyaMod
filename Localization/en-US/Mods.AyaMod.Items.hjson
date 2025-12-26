@@ -87,6 +87,7 @@ HandmadeCamera: {
 ToyCamera: {
 	DisplayName: Toy Camera
 	Tooltip: ""
+	DecraftCondition: Mods.AyaMod.Items.ToyCamera.DecraftCondition
 }
 
 ShadowCamera: {
@@ -690,5 +691,141 @@ GalaxyProjector: {
 
 ShaderReloader: {
 	DisplayName: Shader Reloader
+	Tooltip: ""
+}
+
+FormerHellWalkerHelmet: {
+	HellWalkerBonus: Mods.AyaMod.Items.FormerHellWalkerHelmet.HellWalkerBonus
+	DisplayName: Former Hell Walker Helmet
+	Tooltip: ""
+}
+
+RainforestVoiceHelmet: {
+	RainforestVoiceBonus: Mods.AyaMod.Items.RainforestVoiceHelmet.RainforestVoiceBonus
+	DisplayName: Rainforest Voice Helmet
+	Tooltip: ""
+}
+
+RumorBreakerHelmet: {
+	RumorBreakerBonus: Mods.AyaMod.Items.RumorBreakerHelmet.RumorBreakerBonus
+	DisplayName: Rumor Breaker Helmet
+	Tooltip: ""
+}
+
+RumorBroadcasterHelmet: {
+	RumorBroadcasterBonus: Mods.AyaMod.Items.RumorBroadcasterHelmet.RumorBroadcasterBonus
+	DisplayName: Rumor Broadcaster Helmet
+	Tooltip: ""
+}
+
+SpiritNewsHood: {
+	SpiritNewsBonus: Mods.AyaMod.Items.SpiritNewsHood.SpiritNewsBonus
+	DisplayName: Spirit News Hood
+	Tooltip: ""
+}
+
+WindDriverHeadgear: {
+	WindDriverBonus: Mods.AyaMod.Items.WindDriverHeadgear.WindDriverBonus
+	DisplayName: Wind Driver Headgear
+	Tooltip: ""
+}
+
+FormerHellWalkerLongcoat: {
+	DisplayName: Former Hell Walker Longcoat
+	Tooltip: ""
+}
+
+FormerHellWalkerPants: {
+	DisplayName: Former Hell Walker Pants
+	Tooltip: ""
+}
+
+RainforestVoiceChestplate: {
+	DisplayName: Rainforest Voice Chestplate
+	Tooltip: ""
+}
+
+RainforestVoicePants: {
+	DisplayName: Rainforest Voice Pants
+	Tooltip: ""
+}
+
+RumorBreakerChestplate: {
+	DisplayName: Rumor Breaker Chestplate
+	Tooltip: ""
+}
+
+RumorBreakerGreaves: {
+	DisplayName: Rumor Breaker Greaves
+	Tooltip: ""
+}
+
+RumorBroadcasterChestplate: {
+	DisplayName: Rumor Broadcaster Chestplate
+	Tooltip: ""
+}
+
+RumorBroadcasterGreaves: {
+	DisplayName: Rumor Broadcaster Greaves
+	Tooltip: ""
+}
+
+SpiritNewsBoots: {
+	DisplayName: Spirit News Boots
+	Tooltip: ""
+}
+
+SpiritNewsCloak: {
+	DisplayName: Spirit News Cloak
+	Tooltip: ""
+}
+
+WindDriverHaori: {
+	DisplayName: Wind Driver Haori
+	Tooltip: ""
+}
+
+WindDriverLeggings: {
+	DisplayName: Wind Driver Leggings
+	Tooltip: ""
+}
+
+Developer: {
+	DisplayName: Developer
+	Tooltip: ""
+}
+
+UninhibitedDrink: {
+	DisplayName: Uninhibited Drink
+	Tooltip: ""
+}
+
+IzanagiObject: {
+	DisplayName: Izanagi Object
+	Tooltip: ""
+}
+
+MapleLeaf: {
+	DisplayName: Maple Leaf
+	Tooltip: ""
+}
+
+SakuraPetal: {
+	DisplayName: Sakura Petal
+	Tooltip: ""
+}
+
+WindyStarFragment: {
+	DisplayName: Windy Star Fragment
+	Tooltip: ""
+}
+
+MapleTreeSaplingSeed: {
+	DisplayName: Maple Tree Sapling Seed
+	Tooltip: ""
+}
+
+Tripod: {
+	DisplayName: Tripod
 	Tooltip: ""
 }

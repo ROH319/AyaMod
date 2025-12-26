@@ -109,13 +109,14 @@ namespace AyaMod.Core.Prefabs
         {
             if (player.HasEffect<NoDmgModifier>()) return;
 
-            if (player.GetModPlayer<CameraPlayer>().CanAutoSnap(this))
+            CameraPlayer cp = player.GetModPlayer<CameraPlayer>();
+            if (cp.CanAutoSnap(this))
             {
-                damage *= CameraPlayer.CameraAutoSnapDamageModifier;
+                damage *= cp.GetCameraDamageModifier();
             }
             else
             {
-                damage *= CameraPlayer.CameraManualSnapDamageModifier;
+                damage *= cp.GetCameraDamageModifier(false);
             }
         }
     }

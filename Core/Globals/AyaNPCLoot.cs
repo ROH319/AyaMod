@@ -1,6 +1,8 @@
 ﻿using AyaMod.Common.ItemDropRules;
 using AyaMod.Content.Items.Accessories;
 using AyaMod.Content.Items.Cameras;
+using AyaMod.Content.Items.Films;
+using AyaMod.Content.Items.PrefixHammers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +24,7 @@ namespace AyaMod.Core.Globals
             {
                 #region Boss
                 case NPCID.EyeofCthulhu:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CthulhuLens>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<CthulhuLens>(), 4));
                     break;
                 case NPCID.EaterofWorldsBody or NPCID.EaterofWorldsHead or NPCID.EaterofWorldsTail:
                     {
@@ -35,31 +37,31 @@ namespace AyaMod.Core.Globals
                     npcLoot.Add(ItemDropRule.Common(ItemType<Legilimency>(), 4));
                     break;
                 case NPCID.QueenBee:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BeeCamera>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<BeeCamera>(), 4));
                     break;
                 case NPCID.Deerclops:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ColdSnap>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<ColdSnap>(), 4));
                     break;
                 case NPCID.WallofFlesh:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<YukariCamera>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<YukariCamera>(), 4));
                     break;
                 case NPCID.BloodNautilus:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ScarletCamera>(), 1));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<ScarletCamera>(), 1));
                     break;
                 case NPCID.Spazmatism:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SpazmatismLens>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<SpazmatismLens>(), 4));
                     break;
                 case NPCID.Retinazer:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<RetinazerLens>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<RetinazerLens>(), 4));
                     break;
                 case NPCID.Plantera:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<YukaCamera>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<YukaCamera>(), 4));
                     break;
                 case NPCID.DukeFishron:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DukeCamera>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<DukeCamera>(), 4));
                     break;
                 case NPCID.HallowBoss:
-                    npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<EmpressCamera>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<EmpressCamera>(), 4));
                     break;
                 #endregion
 
@@ -67,7 +69,12 @@ namespace AyaMod.Core.Globals
                     npcLoot.Add(ItemDropRule.ByCondition(new DownedSkeletron(), ItemType<SpiritHeart>(), 6));
                     break;
                 case NPCID.PirateGhost:
-                    npcLoot.Add(new CommonDrop(ItemType<CaptainCamera>(),4,1,1,10));
+                    npcLoot.Add(new CommonDrop(ItemType<CaptainCamera>(), 10, 1, 1, 4));
+                    break;
+                case NPCID.Drippler:
+                case NPCID.BloodZombie:
+                    npcLoot.Add(new CommonDrop(ItemType<BloodyFilm>(), 10, 1, 1, 1));
+                    npcLoot.Add(new CommonDrop(ItemType<BloodthirstyHammer>(), 10, 1, 1, 1));
                     break;
                 default: break;
             }

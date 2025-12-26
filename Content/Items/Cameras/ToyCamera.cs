@@ -9,11 +9,17 @@ using Terraria.ID;
 using Terraria;
 using AyaMod.Helpers;
 using Terraria.ModLoader;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Cameras
 {
     public class ToyCamera : BaseCamera
     {
+        public LocalizedText DecraftCondition { get; set; }
+        public override void SetStaticDefaults()
+        {
+            DecraftCondition = this.GetLocalization(nameof(DecraftCondition));
+        }
         public override void SetOtherDefaults()
         {
             Item.width = 52;
@@ -37,11 +43,18 @@ namespace AyaMod.Content.Items.Cameras
             CreateRecipe()
                 .AddIngredient(ItemID.Wood, 15)
                 .AddIngredient(ItemID.CopperBar, 10)
-                .Register();
+                .Register()
+                .DisableDecraft();
             CreateRecipe()
                 .AddIngredient(ItemID.Wood, 15)
                 .AddIngredient(ItemID.TinBar, 10)
+                .Register()
+                .DisableDecraft();
+            Recipe recipe = CreateRecipe()
+                .AddIngredient<FlawlessCamera>()
+                .AddDecraftCondition(DecraftCondition, () => NPC.downedBoss3)
                 .Register();
+            recipe.DisableRecipe();
         }
     }
 

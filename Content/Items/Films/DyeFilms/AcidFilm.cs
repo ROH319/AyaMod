@@ -20,7 +20,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         public override int DyeID => 3040;
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.AddBuff(ModContent.BuffType<AcidBuff>(), Main.player[projectile.Projectile.owner].DevEffect() ? AcidDotTimeDev : AcidDotTime);
+            target.AddBuff(BuffType<AcidBuff>(), Main.player[projectile.Projectile.owner].DevEffect() ? AcidDotTimeDev : AcidDotTime);
         }
 
         public static int AcidDotDmg = 16;

@@ -61,8 +61,8 @@ namespace AyaMod.Core.BuilderToggles
             (Main.player[Main.myPlayer].HasEffect<NoDmgModifier>() ? DisabledText.Value :
             CurrentState switch
             {
-                0 => OffDmgText.WithFormatArgs(CameraPlayer.CameraManualSnapDamageModifier).Value,
-                1 => OnDmgText.WithFormatArgs(CameraPlayer.CameraAutoSnapDamageModifier).Value,
+                0 => OffDmgText.WithFormatArgs(Main.LocalPlayer.GetModPlayer<CameraPlayer>().GetCameraDamageModifier(false)).Value,
+                1 => OnDmgText.WithFormatArgs(Main.LocalPlayer.GetModPlayer<CameraPlayer>().GetCameraDamageModifier()).Value,
                 _ => "???"
             });
 

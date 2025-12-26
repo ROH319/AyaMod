@@ -97,3 +97,38 @@ TiredBuff: {
 	DisplayName: Tired Buff
 	Description: Mods.AyaMod.Buffs.TiredBuff.Description
 }
+
+CancerBuff: {
+	DisplayName: Cancer Buff
+	Description: Mods.AyaMod.Buffs.CancerBuff.Description
+}
+
+HerculesBuff: {
+	DisplayName: Hercules Buff
+	Description: Mods.AyaMod.Buffs.HerculesBuff.Description
+}
+
+LyraBuff: {
+	DisplayName: Lyra Buff
+	Description: Mods.AyaMod.Buffs.LyraBuff.Description
+}
+
+OrionBuff: {
+	DisplayName: Orion Buff
+	Description: Mods.AyaMod.Buffs.OrionBuff.Description
+}
+
+PegasusBuff: {
+	DisplayName: Pegasus Buff
+	Description: Mods.AyaMod.Buffs.PegasusBuff.Description
+}
+
+UninhibitedBuff: {
+	DisplayName: Uninhibited Buff
+	Description: Mods.AyaMod.Buffs.UninhibitedBuff.Description
+}
+
+TripodBuff: {
+	DisplayName: Tripod Buff
+	Description: Mods.AyaMod.Buffs.TripodBuff.Description
+}

@@ -21,7 +21,7 @@ namespace AyaMod.Core.Prefabs
             Item.width = Item.height = 32;
             Item.consumable = true;
             Item.maxStack = 9999;
-            Item.ammo = ModContent.ItemType<CameraFilm>();
+            Item.ammo = ItemType<CameraFilm>();
         }
 
         public override bool? CanBeChosenAsAmmo(Item weapon, Player player)

@@ -87,6 +87,20 @@ namespace AyaMod.Content.Items.PrefixHammers
             base.SetDefaults();
             PrefixToForge = GetInstance<Alchemistical>();
         }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<ReforgeHammer>()
+                .AddIngredient(ItemID.Blinkroot, 5)
+                .AddIngredient(ItemID.Daybloom, 5)
+                .AddIngredient(ItemID.Deathweed, 5)
+                .AddIngredient(ItemID.Fireblossom, 5)
+                .AddIngredient(ItemID.Moonglow, 5)
+                .AddIngredient(ItemID.Shiverthorn, 5)
+                .AddIngredient(ItemID.Waterleaf, 5)
+                .AddTile(TileID.AlchemyTable)
+                .Register();
+        }
     }
     public class PhantomHammer : BasePrefixHammer
     {

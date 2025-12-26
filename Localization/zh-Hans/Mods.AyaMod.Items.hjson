@@ -87,6 +87,7 @@ HandmadeCamera: {
 ToyCamera: {
 	DisplayName: 玩具相机
 	Tooltip: ""
+	// DecraftCondition: Mods.AyaMod.Items.ToyCamera.DecraftCondition
 }
 
 ShadowCamera: {
@@ -655,12 +656,12 @@ LilyWhiteHat: {
 }
 
 LilyWhiteBoots: {
-	DisplayName: 报春者棉衫
-	Tooltip: 增加5%移动速度
+	DisplayName: 春意长靴
+	Tooltip: "{$CommonItemTooltip.PercentIncreasedMovementSpeed}"
 }
 
 LilyWhiteDress: {
-	DisplayName: 春意长靴
+	DisplayName: 报春者棉衫
 	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance}"
 }
 
@@ -851,4 +852,140 @@ GalaxyProjector: {
 ShaderReloader: {
 	DisplayName: Shader Reloader
 	Tooltip: ""
+}
+
+FormerHellWalkerHelmet: {
+	// HellWalkerBonus: Mods.AyaMod.Items.FormerHellWalkerHelmet.HellWalkerBonus
+	// DisplayName: Former Hell Walker Helmet
+	// Tooltip: ""
+}
+
+RainforestVoiceHelmet: {
+	// RainforestVoiceBonus: Mods.AyaMod.Items.RainforestVoiceHelmet.RainforestVoiceBonus
+	// DisplayName: Rainforest Voice Helmet
+	// Tooltip: ""
+}
+
+RumorBreakerHelmet: {
+	// RumorBreakerBonus: Mods.AyaMod.Items.RumorBreakerHelmet.RumorBreakerBonus
+	// DisplayName: Rumor Breaker Helmet
+	// Tooltip: ""
+}
+
+RumorBroadcasterHelmet: {
+	// RumorBroadcasterBonus: Mods.AyaMod.Items.RumorBroadcasterHelmet.RumorBroadcasterBonus
+	// DisplayName: Rumor Broadcaster Helmet
+	// Tooltip: ""
+}
+
+SpiritNewsHood: {
+	// SpiritNewsBonus: Mods.AyaMod.Items.SpiritNewsHood.SpiritNewsBonus
+	// DisplayName: Spirit News Hood
+	// Tooltip: ""
+}
+
+WindDriverHeadgear: {
+	// WindDriverBonus: Mods.AyaMod.Items.WindDriverHeadgear.WindDriverBonus
+	// DisplayName: Wind Driver Headgear
+	// Tooltip: ""
+}
+
+FormerHellWalkerLongcoat: {
+	// DisplayName: Former Hell Walker Longcoat
+	// Tooltip: ""
+}
+
+FormerHellWalkerPants: {
+	// DisplayName: Former Hell Walker Pants
+	// Tooltip: ""
+}
+
+RainforestVoiceChestplate: {
+	// DisplayName: Rainforest Voice Chestplate
+	// Tooltip: ""
+}
+
+RainforestVoicePants: {
+	// DisplayName: Rainforest Voice Pants
+	// Tooltip: ""
+}
+
+RumorBreakerChestplate: {
+	// DisplayName: Rumor Breaker Chestplate
+	// Tooltip: ""
+}
+
+RumorBreakerGreaves: {
+	// DisplayName: Rumor Breaker Greaves
+	// Tooltip: ""
+}
+
+RumorBroadcasterChestplate: {
+	// DisplayName: Rumor Broadcaster Chestplate
+	// Tooltip: ""
+}
+
+RumorBroadcasterGreaves: {
+	// DisplayName: Rumor Broadcaster Greaves
+	// Tooltip: ""
+}
+
+SpiritNewsBoots: {
+	// DisplayName: Spirit News Boots
+	// Tooltip: ""
+}
+
+SpiritNewsCloak: {
+	// DisplayName: Spirit News Cloak
+	// Tooltip: ""
+}
+
+WindDriverHaori: {
+	// DisplayName: Wind Driver Haori
+	// Tooltip: ""
+}
+
+WindDriverLeggings: {
+	// DisplayName: Wind Driver Leggings
+	// Tooltip: ""
+}
+
+Developer: {
+	DisplayName: 显影液
+	Tooltip: ""
+}
+
+UninhibitedDrink: {
+	DisplayName: 风流饮品
+	Tooltip: ""
+}
+
+IzanagiObject: {
+	DisplayName: 伊奘诺物质
+	Tooltip: ""
+}
+
+MapleLeaf: {
+	DisplayName: 枫叶
+	Tooltip: ""
+}
+
+SakuraPetal: {
+	DisplayName: 樱花瓣
+	Tooltip: ""
+}
+
+WindyStarFragment: {
+	DisplayName: 疾风流星碎片
+	Tooltip: ""
+}
+
+MapleTreeSaplingSeed: {
+	DisplayName: 枫树树苗
+	Tooltip: ""
+}
+
+Tripod: {
+	// DisplayName: Tripod
+	// Tooltip: ""
 }

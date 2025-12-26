@@ -97,3 +97,50 @@ TiredBuff: {
 	// DisplayName: Tired Buff
 	// Description: Mods.AyaMod.Buffs.TiredBuff.Description
 }
+
+CancerBuff: {
+	DisplayName: 巨蟹座之沁愈
+	Description: 增加10生命恢复
+}
+
+HerculesBuff: {
+	DisplayName: 武仙座之庇佑
+	Description: 增加15防御和5%减伤
+}
+
+LyraBuff: {
+	DisplayName: 天琴座之谐鸣
+	Description:
+		'''
+		增加15%近战和鞭子攻速、50%箭矢和镜头跟随速度、30%鞭子和拍照范围
+		降低50%弹药和胶卷消耗，以及15%魔力消耗
+		'''
+}
+
+OrionBuff: {
+	DisplayName: 猎户座之贯射
+	Description: 增加15%伤害
+}
+
+PegasusBuff: {
+	DisplayName: 天马座之疾驰
+	Description:
+		'''
+		增加25%移动速度、加速度、钩爪牵引速度和翅膀飞行速度
+		飞行时间翻倍
+		'''
+}
+
+UninhibitedBuff: {
+	DisplayName: 风流
+	Description: 增加镜头跟随速度
+}
+
+TripodBuff: {
+	DisplayName: 稳定
+	Description: 
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseChaseSpeed}
+		连拍伤害惩罚降低{1}%，手动拍摄伤害增加{2}%
+		'''
+}

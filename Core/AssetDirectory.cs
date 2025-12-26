@@ -30,11 +30,17 @@ namespace AyaMod.Core
 
         public const string Cameras = Items + "Cameras/";
 
+        public const string Consumables = Items + "Consumables/";
+
         public const string Lens = Items + "Lens/";
 
         public const string Films = Items + "Films/";
 
         public const string DyeFilms = Films + "DyeFilms/";
+
+        public const string Materials = Items + "Materials/";
+
+        public const string Placeables = Items + "Placeables/";
 
         public const string PrefixHammers = Items + "PrefixHammers/";
 
@@ -45,6 +51,8 @@ namespace AyaMod.Core
         public const string Projectiles = Textures + "Projectiles/";
 
         public const string Projectiles_Films = Projectiles + "Films/";
+
+        public const string Tiles = Textures + "Tiles/";
 
         public const string UI = Textures + "UI/";
         

@@ -151,6 +151,10 @@ namespace AyaMod.Core.Globals
                     break;
             }
         }
+        public override bool PreChatButtonClicked(NPC npc, bool firstButton)
+        {
+            return base.PreChatButtonClicked(npc, firstButton);
+        }
         public override bool InstancePerEntity => true;
     }
 }

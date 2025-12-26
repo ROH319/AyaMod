@@ -17,3 +17,6 @@ Keybinds: {
 
 DropConditions.PostSkeletron: Needs killed Skeletron
 NPCs.Lantern.DisplayName: Lantern
+Tiles.IzanagiObjectOre.MapEntry: Izanagi Object Ore
+WorldGen.BlessWithIzanagiOreMessage: Mods.AyaMod.WorldGen.BlessWithIzanagiOreMessage
+RecipeGroups.AnyDyeItem: Any Dye Item

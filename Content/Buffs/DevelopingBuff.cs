@@ -12,10 +12,6 @@ namespace AyaMod.Content.Buffs
     public class DevelopingBuff : ModBuff
     {
         public override string Texture => AssetDirectory.Buffs + Name;
-        public override void SetStaticDefaults()
-        {
-            Main.buffNoSave[Type] = false;
-        }
 
         public override void Update(Player player, ref int buffIndex)
         {

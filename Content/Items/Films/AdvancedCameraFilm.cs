@@ -14,10 +14,10 @@ using Terraria.Localization;
 namespace AyaMod.Content.Items.Films
 {
     [PlayerEffect]
-    public class CameraFilm : BaseFilm
+    public class AdvancedCameraFilm : BaseFilm
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus);
-        public static int DamageBonus = 10;
+        public static int DamageBonus = 15;
         public override void Load()
         {
             AyaPlayer.ModifyWeaponDamageHook += ModifyCameraDamage;
@@ -28,25 +28,25 @@ namespace AyaMod.Content.Items.Films
         }
         public static void ModifyCameraDamage(Player player, Item item, ref StatModifier modifier)
         {
-            if (!player.HasEffect<CameraFilm>()) return;
+            if (!player.HasEffect<AdvancedCameraFilm>()) return;
             modifier *= 1 + DamageBonus / 100f;
         }
         public override void PreAI(BaseCameraProj projectile)
         {
-            projectile.player.AddEffect<CameraFilm>();
+            projectile.player.AddEffect<AdvancedCameraFilm>();
         }
-        
+
         public override void AddRecipes()
         {
-            CreateRecipe(150)
-                .AddIngredient(ItemID.SilverOre)
-                .AddIngredient(ItemID.Gel, 2)
-                .AddTile(TileID.Furnaces)
+            CreateRecipe(200)
+                .AddIngredient(ItemID.MythrilOre)
+                .AddIngredient(ItemID.Gel, 3)
+                .AddTile(TileID.AdamantiteForge)
                 .Register();
-            CreateRecipe(150)
-                .AddIngredient(ItemID.TungstenOre)
-                .AddIngredient(ItemID.Gel, 2)
-                .AddTile(TileID.Furnaces)
+            CreateRecipe(200)
+                .AddIngredient(ItemID.OrichalcumOre)
+                .AddIngredient(ItemID.Gel, 3)
+                .AddTile(TileID.AdamantiteForge)
                 .Register();
         }
     }

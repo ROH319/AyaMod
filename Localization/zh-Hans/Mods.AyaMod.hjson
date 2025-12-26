@@ -17,3 +17,6 @@ Keybinds: {
 
 DropConditions.PostSkeletron: 需要击败骷髅王
 // NPCs.Lantern.DisplayName: Lantern
+// Tiles.IzanagiObjectOre.MapEntry: Izanagi Object Ore
+// WorldGen.BlessWithIzanagiOreMessage: Mods.AyaMod.WorldGen.BlessWithIzanagiOreMessage
+RecipeGroups.AnyDyeItem: 任意基础染料材料
