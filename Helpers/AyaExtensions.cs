@@ -245,6 +245,11 @@ namespace AyaMod.Helpers
             return target;
         }
 
+        public static string WrapWithColorCode(this string s, Color color)
+        {
+            return $"[c/{color.R:X2}{color.G:X2}{color.B:X2}:{s}]";
+        }
+
         public static float AngleBetween(this Vector2 a, Vector2 b)
         {
             // 使用长度的平方来避免开方

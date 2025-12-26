@@ -68,7 +68,7 @@ namespace AyaMod.Core.Globals
         public override void GrapplePullSpeed(Projectile projectile, Player player, ref float speed)
         {
             if (player.HasBuff<PegasusBuff>())
-                speed *= 1.25f;
+                speed *= 1 + PegasusBuff.MovementBonus / 100f;
         }
         public override bool InstancePerEntity => true;
     }

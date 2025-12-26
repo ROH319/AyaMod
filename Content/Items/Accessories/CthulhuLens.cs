@@ -11,7 +11,7 @@ using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Accessories
 {
-    public class CthulhuLens : BaseAccessories
+    public class CthulhuLens : BaseAccessories, IPlaceholderItem
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SpeedIncrease);
         public override void SetDefaults()

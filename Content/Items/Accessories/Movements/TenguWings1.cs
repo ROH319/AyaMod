@@ -18,7 +18,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
 {
     [AutoloadEquip(EquipType.Wings)]
     [PlayerEffect]
-    public class TenguWings1 : BaseAccessories
+    public class TenguWings1 : BaseAccessories, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Accessories + "Movements/" + Name;
 
@@ -26,8 +26,10 @@ namespace AyaMod.Content.Items.Accessories.Movements
         public static float Acceleration = 1.75f;
         public static float MaxAscentMultiplier = 2f;
         public static int FlyTime = 170;
-
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(FlySpeed, MaxAscentMultiplier, Acceleration, FlyTime);
+        public static int GlideSpeedBonus = 20;
+        public static int GlideGravDecrease = 90;
+        public override LocalizedText Tooltip => 
+            base.Tooltip.WithFormatArgs(FlySpeed, MaxAscentMultiplier, Acceleration, FlyTime, GlideSpeedBonus, GlideGravDecrease);
 
         public override void SetStaticDefaults()
         {
@@ -43,8 +45,6 @@ namespace AyaMod.Content.Items.Accessories.Movements
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            if (player.HeldCamera() && player.wingTime == player.wingTimeMax)
-                player.Aya().FreeFlyFrame += 15;
             player.AddEffect<TenguWings1>();
         }
         public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising, ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
@@ -81,10 +81,33 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 }
 
                 player.Aya().AccSpeedModifier += 0.25f;
+
+                //不飞行的状态下按住up可以进行滑翔
+                bool inUse = player.wingsLogic > 0 && player.controlJump && player.velocity.Y != 0f;
+                if (!inUse && player.TryingToHoverUp)
+                {
+                    speed *= 1f + GlideSpeedBonus / 100f;
+                }
             }
         }
         public override bool WingUpdate(Player player, bool inUse)
         {
+            inUse = player.wingsLogic > 0 && player.controlJump && player.velocity.Y != 0f;
+
+            if (!inUse && player.TryingToHoverUp)
+            {
+                float gravMult = 1f - GlideGravDecrease / 100f;
+                if (player.gravDir == 1f)
+                {
+                    if (player.velocity.Y > player.maxFallSpeed * 0.2f)
+                        player.velocity.Y = player.maxFallSpeed * gravMult;
+                }
+                else
+                {
+                    if (player.velocity.Y < (0f - player.maxFallSpeed) * 0.2f)
+                        player.velocity.Y = (0f - player.maxFallSpeed) * gravMult;
+                }
+            }
             return base.WingUpdate(player, inUse);
         }
 

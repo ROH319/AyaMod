@@ -9,11 +9,11 @@ namespace AyaMod.Content.Buffs
     {
         public override string Texture => AssetDirectory.Buffs + Name;
         public override LocalizedText Description => base.Description.WithFormatArgs(ChaseSpeedBonus);
+        public static int ChaseSpeedBonus = 15;
         public override void Update(Player player, ref int buffIndex)
         {
             player.GetModPlayer<CameraPlayer>().ChaseSpeedModifier += ChaseSpeedBonus / 100f;
         }
-        public static int ChaseSpeedBonus = 15;
 
     }
 }

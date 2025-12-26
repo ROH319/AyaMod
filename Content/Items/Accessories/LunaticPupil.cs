@@ -1,11 +1,7 @@
 ﻿using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Enums;
 using Terraria.ID;
@@ -28,7 +24,7 @@ namespace AyaMod.Content.Items.Accessories
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
-            Item.SetShopValues(ItemRarityColor.Cyan9, Item.sellPrice(0,15));
+            Item.SetShopValues(ItemRarityColor.Cyan9, Item.sellPrice(0, 15));
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -36,16 +32,15 @@ namespace AyaMod.Content.Items.Accessories
             int speed = hideVisual ? SpeedIncrease : SpeedIncreaseVisual;
             if (hideVisual)
             {
-                player.Camera().SizeModifier -= (float)SizeDecrease / 100f;
+                player.Camera().SizeModifier -= SizeDecrease / 100f;
                 Visual = -1;
-                //player.Camera().SingleTargetMultiplier += (float)SingleTargetIncrease / 100f;
             }
             else
             {
-                player.Camera().SizeModifier += (float)SizeIncrease / 100f;
+                player.Camera().SizeModifier += SizeIncrease / 100f;
                 Visual = 1;
             }
-            player.GetAttackSpeed<ReporterDamage>() += (float)speed / 100f;
+            player.GetAttackSpeed<ReporterDamage>() += speed / 100f;
         }
 
         public static int SpeedIncreaseVisual = 20;
@@ -61,29 +56,29 @@ namespace AyaMod.Content.Items.Accessories
             {
                 var visualon = VisualOn.WithFormatArgs(SpeedIncreaseVisual, SizeIncrease);
                 var visualoff = VisualOff.WithFormatArgs(SpeedIncrease, SizeDecrease);
-                if(Visual == 1)
+                if (Visual == 1)
                 {
                     tooltips.Insert(index + 1, new TooltipLine(Mod, "LunaticPupil_ExtraTooltip", visualon.Value)
                     {
-                        OverrideColor = new Microsoft.Xna.Framework.Color(150, 150, 255)
+                        OverrideColor = new Color(150, 150, 255)
                     });
                 }
-                else if(Visual == -1)
+                else if (Visual == -1)
                 {
                     tooltips.Insert(index + 1, new TooltipLine(Mod, "LunaticPupil_ExtraTooltip", visualoff.Value)
                     {
-                        OverrideColor = new Microsoft.Xna.Framework.Color(255, 150, 255)
+                        OverrideColor = new Color(255, 150, 255)
                     });
                 }
                 else
                 {
                     tooltips.Insert(index + 1, new TooltipLine(Mod, "LunaticPupil_ExtraTooltip", visualoff.Value)
                     {
-                        OverrideColor = new Microsoft.Xna.Framework.Color(255, 150, 255)
+                        OverrideColor = new Color(255, 150, 255)
                     });
                     tooltips.Insert(index + 1, new TooltipLine(Mod, "LunaticPupil_ExtraTooltip", visualon.Value)
                     {
-                        OverrideColor = new Microsoft.Xna.Framework.Color(150, 150, 255)
+                        OverrideColor = new Color(150, 150, 255)
                     });
                 }
             }

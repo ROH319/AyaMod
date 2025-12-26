@@ -53,7 +53,7 @@ namespace AyaMod.Helpers
 
         public static string GetText(string key, params object[] args)
         {
-            return Language.Exists(key) ? Language.GetTextValue(key, args) : key;
+            return Language.Exists("Mods.AyaMod." + key) ? Language.GetTextValue($"Mods.AyaMod.{key}", args) : key;
         }
 
         /// <summary>

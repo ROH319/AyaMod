@@ -23,7 +23,7 @@ using static AyaMod.Core.ModPlayers.AyaPlayer;
 namespace AyaMod.Content.Items.Accessories.Movements
 {
     [PlayerEffect]
-    public class GaleGeta2 : BaseAccessories
+    public class GaleGeta2 : BaseAccessories, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Accessories + "Movements/" + Name;
         public override void SetDefaults()

@@ -1,15 +1,26 @@
 ﻿using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
-using Terraria.ID;
 using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films
 {
     public class DurableFilm : BaseFilm
     {
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus.ToString());
+        public static int DamageBonus = 10;
+        public static int AmmoCostDec = 40;
+        public static int AmmoCostDecDev = 100;
+        public override StatModifier DamageModifier => base.DamageModifier + DamageBonus / 100f;
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            FilmArgs = [("ammocost", AmmoCostDec.ToString(), AmmoCostDecDev.ToString())];
+        }
         public override bool CanBeConsumedAsAmmo(Item weapon, Player player)
         {
-            int chance = player.DevEffect() ? 100 : 40;
+            int chance = player.DevEffect() ? AmmoCostDecDev : AmmoCostDec;
             if (Main.rand.Next(100) < chance)
                 return false;
             return true;

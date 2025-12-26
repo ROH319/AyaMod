@@ -9,6 +9,11 @@ namespace AyaMod.Content.Items.Films
     {
         public static int StunTimeBonus = 30;
         public static int StunTimeBonusDev = 45;
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            FilmArgs = [("flashtime", StunTimeBonus.ToString(), StunTimeBonusDev.ToString())];
+        }
         public override void PreAI(BaseCameraProj projectile)
         {
             projectile.player.GetModPlayer<CameraPlayer>().StunTimeModifier += projectile.player.DevEffect() ? StunTimeBonusDev : StunTimeBonus;

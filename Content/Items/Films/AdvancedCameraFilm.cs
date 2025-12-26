@@ -13,29 +13,16 @@ using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films
 {
-    [PlayerEffect]
     public class AdvancedCameraFilm : BaseFilm
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus);
         public static int DamageBonus = 15;
-        public override void Load()
+        public override StatModifier DamageModifier => base.DamageModifier + DamageBonus / 100f;
+        public override void SetDefaults()
         {
-            AyaPlayer.ModifyWeaponDamageHook += ModifyCameraDamage;
+            base.SetDefaults();
+            Item.SetShopValues(Terraria.Enums.ItemRarityColor.Orange3, Item.sellPrice(copper: 6));
         }
-        public override void Unload()
-        {
-            AyaPlayer.ModifyWeaponDamageHook -= ModifyCameraDamage;
-        }
-        public static void ModifyCameraDamage(Player player, Item item, ref StatModifier modifier)
-        {
-            if (!player.HasEffect<AdvancedCameraFilm>()) return;
-            modifier *= 1 + DamageBonus / 100f;
-        }
-        public override void PreAI(BaseCameraProj projectile)
-        {
-            projectile.player.AddEffect<AdvancedCameraFilm>();
-        }
-
         public override void AddRecipes()
         {
             CreateRecipe(200)

@@ -107,6 +107,14 @@ namespace AyaMod.Core.Prefabs
 
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
         {
+            var films = player.ChooseFilms(player.HeldItem, CameraStats.FilmSlot);
+            foreach(var film in films)
+            {
+                if (film.ModItem is not BaseFilm) continue;
+                BaseFilm f = film.ModItem as BaseFilm;
+                damage = damage.CombineWith(f.DamageModifier);
+            }
+
             if (player.HasEffect<NoDmgModifier>()) return;
 
             CameraPlayer cp = player.GetModPlayer<CameraPlayer>();

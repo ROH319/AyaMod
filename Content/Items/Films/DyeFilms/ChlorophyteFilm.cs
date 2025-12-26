@@ -19,7 +19,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
 
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (CheckEffect())
+            if (CheckEffect(projectile.player))
             {
                 target.AddBuff(BuffType<FlourishingPoisonBuff>(), 2 * 60);
             }

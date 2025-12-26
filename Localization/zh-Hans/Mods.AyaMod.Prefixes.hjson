@@ -133,3 +133,16 @@ Evolutive: {
 	DisplayName: 进化
 	PrefixExtraTooltip: "[c/78BE78:击杀敌人后，武器增加等同于接触伤害一半的伤害，持续5s或被更高的覆盖]"
 }
+
+Soaring: {
+	DisplayName: 翔龙
+	PrefixExtraTooltip:
+		'''
+		[c/78BE78:滞空3s后获得增益]
+		  [c/78BE78:{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}]
+		  [c/78BE78:{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance@1}]
+		  [c/78BE78:{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed@2}]
+		  [c/78BE78:{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseChaseSpeed@3}]
+		[c/78BE78:接触物块、使用钩爪和坐骑均会取消增益]
+		'''
+}

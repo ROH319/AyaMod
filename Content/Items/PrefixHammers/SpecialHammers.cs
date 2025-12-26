@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.PrefixHammers
 {
@@ -189,6 +190,15 @@ namespace AyaMod.Content.Items.PrefixHammers
         {
             base.SetDefaults();
             PrefixToForge = GetInstance<Intelligent>();
+        }
+    }
+    public class SoaringHammer : BasePrefixHammer
+    {
+        
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Soaring>();
         }
     }
     public class EvolutiveHammer : BasePrefixHammer

@@ -2,6 +2,7 @@
 using AyaMod.Content.Items.Accessories;
 using AyaMod.Content.Items.Cameras;
 using AyaMod.Content.Items.Films;
+using AyaMod.Content.Items.Materials;
 using AyaMod.Content.Items.PrefixHammers;
 using System;
 using System.Collections.Generic;
@@ -57,6 +58,15 @@ namespace AyaMod.Core.Globals
                 case NPCID.Plantera:
                     npcLoot.Add(ItemDropRule.Common(ItemType<YukaCamera>(), 4));
                     break;
+                case NPCID.Everscream:
+                    npcLoot.Add(ItemDropRule.Common(ItemType<FestiveHammer>(), 4));
+                    break;
+                case NPCID.Pumpking:
+                    npcLoot.Add(ItemDropRule.Common(ItemType<HarvestingHammer>(), 4));
+                    break;
+                case NPCID.DD2Betsy:
+
+                    break;
                 case NPCID.DukeFishron:
                     npcLoot.Add(ItemDropRule.Common(ItemType<DukeCamera>(), 4));
                     break;
@@ -75,6 +85,24 @@ namespace AyaMod.Core.Globals
                 case NPCID.BloodZombie:
                     npcLoot.Add(new CommonDrop(ItemType<BloodyFilm>(), 10, 1, 1, 1));
                     npcLoot.Add(new CommonDrop(ItemType<BloodthirstyHammer>(), 10, 1, 1, 1));
+                    break;
+                case NPCID.LunarTowerSolar:
+                case NPCID.LunarTowerVortex:
+                case NPCID.LunarTowerNebula:
+                case NPCID.LunarTowerStardust:
+                    {
+                        int windyStarFragment = ItemType<WindyStarFragment>();
+                        var parameters = new DropOneByOne.Parameters()
+                        {
+                            ChanceNumerator = 1,
+                            ChanceDenominator = 1,
+                            MinimumStackPerChunkBase = 1,
+                            MaximumStackPerChunkBase = 2,
+                            MinimumItemDropsCount = 12,
+                            MaximumItemDropsCount = 15
+                        };
+                        npcLoot.Add(new DropOneByOne(windyStarFragment, parameters));
+                    }
                     break;
                 default: break;
             }

@@ -132,3 +132,8 @@ TripodBuff: {
 	DisplayName: Tripod Buff
 	Description: Mods.AyaMod.Buffs.TripodBuff.Description
 }
+
+SoaringBuff: {
+	DisplayName: Soaring Buff
+	Description: Mods.AyaMod.Buffs.SoaringBuff.Description
+}

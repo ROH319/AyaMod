@@ -2,13 +2,20 @@
 using AyaMod.Helpers;
 using Terraria.ID;
 using Terraria;
+using System.Collections.Generic;
+using Humanizer;
 
 namespace AyaMod.Content.Items.Films
 {
     public class BlackWhiteFilm : BaseFilm
     {
-        public static int ArmorPenBonus;
-        public static int ArmorPenBonusDev;
+        public static int ArmorPenBonus = 7;
+        public static int ArmorPenBonusDev = 9;
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            FilmArgs = [("armorpen", ArmorPenBonus.ToString(), ArmorPenBonusDev.ToString())];
+        }
         public override void ModifyHitNPCFilm(BaseCameraProj projectile, NPC target, ref NPC.HitModifiers modifiers)
         {
             modifiers.ArmorPenetration += projectile.player.DevEffect() ? ArmorPenBonusDev : ArmorPenBonus;

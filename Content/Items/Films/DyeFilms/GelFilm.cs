@@ -11,7 +11,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         public override int DyeID => 3561;
         public override void OnSnapInSight(BaseCameraProj projectile)
         {
-            if(CheckEffect())
+            if(CheckEffect(projectile.player))
             {
                 bool deveffect = Main.player[projectile.Projectile.owner].DevEffect();
                 Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(),projectile.Projectile.Center,Vector2.Zero,

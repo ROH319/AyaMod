@@ -7,7 +7,10 @@ CommonItemTooltip: {
 	IncreaseChaseSpeed: 增加{0}%拍摄框跟随速度
 }
 
-Extras.StunTimeTooltip: "{0}帧（{1}s）眩晕时间"
+Extras: {
+	StunTimeTooltip: "{0}帧（{1}s）眩晕时间"
+	IPlaceholderItemText: 此物品的贴图为占位符）
+}
 
 GoldenCamera: {
 	DisplayName: 闪金相机
@@ -87,7 +90,7 @@ HandmadeCamera: {
 ToyCamera: {
 	DisplayName: 玩具相机
 	Tooltip: ""
-	// DecraftCondition: Mods.AyaMod.Items.ToyCamera.DecraftCondition
+	DecraftCondition: 击败骷髅王后
 }
 
 ShadowCamera: {
@@ -217,7 +220,7 @@ HallowCamera: {
 
 CameraFilm: {
 	DisplayName: 相机胶片
-	Tooltip: ""
+	Tooltip: 增加{0}%相机伤害
 }
 
 AcidFilm: {
@@ -516,7 +519,8 @@ TenguWings: {
 		水平加速：{2}
 		飞行时间：{3}
 		手持相机时：
-		 - 飞行的前10帧不消耗飞行时间
+		 - 不飞行的状态下按住up可以进行滑翔
+		 - 滑翔时水平速度增加{4}%，重力降低{5}%
 		'''
 }
 
@@ -529,10 +533,10 @@ TenguWings1: {
 		水平加速：{2}
 		飞行时间：{3}
 		手持相机时：
-		 - 飞行的前15帧不消耗飞行时间
+		 - 不飞行的状态下按住up可以进行滑翔
+		 - 滑翔时水平速度增加{4}%，重力降低{5}%
 		 - 飞行时增加25%加速度
 		 - 可以悬停、横向飞行和垂直加速飞行
-		 - 滑翔坠落速度减半
 		'''
 }
 
@@ -550,7 +554,7 @@ TenguWings2: {
 }
 
 CorruptPupil2: {
-	DisplayName: Corrupt Pupil2
+	DisplayName: 结界之瞳
 	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
@@ -559,7 +563,7 @@ CorruptPupil2: {
 }
 
 CrimsonPupil2: {
-	DisplayName: Crimson Pupil2
+	DisplayName: 禁忌之瞳
 	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedFocusSpeed}
@@ -745,7 +749,7 @@ DarkRevealerLeggings: {
 	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
-		增加{1}%移动速度
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
 		'''
 }
 
@@ -855,109 +859,157 @@ ShaderReloader: {
 }
 
 FormerHellWalkerHelmet: {
-	// HellWalkerBonus: Mods.AyaMod.Items.FormerHellWalkerHelmet.HellWalkerBonus
-	// DisplayName: Former Hell Walker Helmet
-	// Tooltip: ""
+	HellWalkerBonus: Mods.AyaMod.Items.FormerHellWalkerHelmet.HellWalkerBonus
+	DisplayName: 漫游者头盔
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance@1}
+		'''
 }
 
 RainforestVoiceHelmet: {
-	// RainforestVoiceBonus: Mods.AyaMod.Items.RainforestVoiceHelmet.RainforestVoiceBonus
-	// DisplayName: Rainforest Voice Helmet
-	// Tooltip: ""
+	RainforestVoiceBonus: Mods.AyaMod.Items.RainforestVoiceHelmet.RainforestVoiceBonus
+	DisplayName: 雨林之声头盔
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance@1}
+		'''
 }
 
 RumorBreakerHelmet: {
-	// RumorBreakerBonus: Mods.AyaMod.Items.RumorBreakerHelmet.RumorBreakerBonus
-	// DisplayName: Rumor Breaker Helmet
-	// Tooltip: ""
+	RumorBreakerBonus: Mods.AyaMod.Items.RumorBreakerHelmet.RumorBreakerBonus
+	DisplayName: 谣言粉碎者头盔
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance@1}
+		'''
 }
 
 RumorBroadcasterHelmet: {
-	// RumorBroadcasterBonus: Mods.AyaMod.Items.RumorBroadcasterHelmet.RumorBroadcasterBonus
-	// DisplayName: Rumor Broadcaster Helmet
-	// Tooltip: ""
+	RumorBroadcasterBonus: Mods.AyaMod.Items.RumorBroadcasterHelmet.RumorBroadcasterBonus
+	DisplayName: 谣言散播者头盔
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance@1}
+		'''
 }
 
 SpiritNewsHood: {
-	// SpiritNewsBonus: Mods.AyaMod.Items.SpiritNewsHood.SpiritNewsBonus
-	// DisplayName: Spirit News Hood
-	// Tooltip: ""
+	SpiritNewsBonus: Mods.AyaMod.Items.SpiritNewsHood.SpiritNewsBonus
+	DisplayName: 灵讯兜帽
+	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}"
 }
 
 WindDriverHeadgear: {
-	// WindDriverBonus: Mods.AyaMod.Items.WindDriverHeadgear.WindDriverBonus
-	// DisplayName: Wind Driver Headgear
-	// Tooltip: ""
+	WindDriverBonus: Mods.AyaMod.Items.WindDriverHeadgear.WindDriverBonus
+	DisplayName: 冯风使者头饰
+	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}"
 }
 
 FormerHellWalkerLongcoat: {
-	// DisplayName: Former Hell Walker Longcoat
-	// Tooltip: ""
+	DisplayName: 漫游者风衣
+	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}"
 }
 
 FormerHellWalkerPants: {
-	// DisplayName: Former Hell Walker Pants
-	// Tooltip: ""
+	DisplayName: 漫游者护胫
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed}
+		'''
 }
 
 RainforestVoiceChestplate: {
-	// DisplayName: Rainforest Voice Chestplate
-	// Tooltip: ""
+	DisplayName: 雨林之声胸甲
+	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}"
 }
 
 RainforestVoicePants: {
-	// DisplayName: Rainforest Voice Pants
-	// Tooltip: ""
+	DisplayName: 雨林之声护胫
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+		'''
 }
 
 RumorBreakerChestplate: {
-	// DisplayName: Rumor Breaker Chestplate
-	// Tooltip: ""
+	DisplayName: 谣言粉碎者胸甲
+	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}"
 }
 
 RumorBreakerGreaves: {
-	// DisplayName: Rumor Breaker Greaves
-	// Tooltip: ""
+	DisplayName: 谣言粉碎者护胫
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+		'''
 }
 
 RumorBroadcasterChestplate: {
-	// DisplayName: Rumor Broadcaster Chestplate
-	// Tooltip: ""
+	DisplayName: 谣言散播者胸甲
+	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance}"
 }
 
 RumorBroadcasterGreaves: {
-	// DisplayName: Rumor Broadcaster Greaves
-	// Tooltip: ""
+	DisplayName: 谣言散播者护胫
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+		'''
 }
 
 SpiritNewsBoots: {
-	// DisplayName: Spirit News Boots
-	// Tooltip: ""
+	DisplayName: 灵讯靴子
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+		'''
 }
 
 SpiritNewsCloak: {
-	// DisplayName: Spirit News Cloak
-	// Tooltip: ""
+	DisplayName: 灵讯斗篷
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance@1}
+		'''
 }
 
 WindDriverHaori: {
-	// DisplayName: Wind Driver Haori
-	// Tooltip: ""
+	DisplayName: 冯风使者羽织
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance@1}
+		'''
 }
 
 WindDriverLeggings: {
-	// DisplayName: Wind Driver Leggings
-	// Tooltip: ""
+	DisplayName: 冯风使者靴
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance}
+		{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+		'''
 }
 
 Developer: {
 	DisplayName: 显影液
-	Tooltip: ""
+	Tooltip: 加强胶卷的效果
 }
 
 UninhibitedDrink: {
 	DisplayName: 风流饮品
-	Tooltip: ""
+	Tooltip: 提高{0}%镜头跟随速度
 }
 
 IzanagiObject: {
@@ -982,10 +1034,68 @@ WindyStarFragment: {
 
 MapleTreeSaplingSeed: {
 	DisplayName: 枫树树苗
-	Tooltip: ""
+	Tooltip: 可以种在泥上生长
 }
 
 Tripod: {
-	// DisplayName: Tripod
+	DisplayName: 三脚架
+	Tooltip: 增加拍摄框跟随速度和相机伤害
+}
+
+AdvancedCameraFilm: {
+	DisplayName: 高级相机胶片
+	Tooltip: 增加{0}%相机伤害
+}
+
+BlackWhiteFilm: {
+	DisplayName: 黑白胶片
+	Tooltip: 拍照具有 <armorpen> 点护甲穿透
+}
+
+BloodyFilm: {
+	DisplayName: 血色胶片
+	Tooltip:
+		'''
+		拍照命中恢复 <hitheal> 生命值
+		消弹每个恢复 <projheal> 生命值
+		'''
+}
+
+DoomFilm: {
+	DisplayName: 厄运胶片
+	Tooltip: 拍摄同时施加 <debuff>
+}
+
+DurableFilm: {
+	DisplayName: 耐用胶片
+	Tooltip:
+		'''
+		<ammocost>%不消耗概率
+		增加{0}%相机伤害
+		'''
+}
+
+FlashyFilm: {
+	DisplayName: 闪光胶片
+	Tooltip: 增加<flashtime>%眩晕时间
+}
+
+MiasmaFilm: {
+	DisplayName: 毒气胶片
+	Tooltip: ""
+}
+
+SoaringHammer: {
+	DisplayName: 翔龙 锻锤
+	Tooltip: ""
+}
+
+MapleGlazedSalmon: {
+	// DisplayName: Maple Glazed Salmon
+	// Tooltip: ""
+}
+
+SakuraPudding: {
+	// DisplayName: Sakura Pudding
 	// Tooltip: ""
 }

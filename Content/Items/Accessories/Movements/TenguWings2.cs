@@ -1,4 +1,5 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Content.Items.Materials;
+using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using System;
@@ -9,13 +10,14 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.ID;
 using Terraria.Localization;
 using static Terraria.ID.ArmorIDs;
 
 namespace AyaMod.Content.Items.Accessories.Movements
 {
     [AutoloadEquip(EquipType.Wings)]
-    public class TenguWings2 : BaseAccessories
+    public class TenguWings2 : BaseAccessories, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Accessories + "Movements/" + Name;
 
@@ -59,6 +61,14 @@ namespace AyaMod.Content.Items.Accessories.Movements
         {
             speed = 9f;
             acceleration *= 2.5f;
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<TenguWings1>()
+                .AddIngredient(ItemID.EmpressFlightBooster)
+                .AddIngredient<WindyStarFragment>()
+                .Register();
         }
     }
 }

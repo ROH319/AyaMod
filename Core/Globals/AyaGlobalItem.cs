@@ -2,11 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.Localization;
 
 namespace AyaMod.Core.Globals
 {
@@ -25,7 +27,15 @@ namespace AyaMod.Core.Globals
 
             return base.WingUpdate(wings, player, inUse);
         }
+        public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
+        {
+            if (item.ModItem == null || item.ModItem is not IPlaceholderItem) return;
 
+            tooltips.Add(new TooltipLine(Mod, "IPlaceholderItemText", AyaUtils.GetText("Items.Extras.IPlaceholderItemText"))
+            {
+                OverrideColor = Color.Red
+            });
+        }
         public override bool PreDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
             if (item.ModItem == null || item.ModItem is not IPlaceholderItem) return true;

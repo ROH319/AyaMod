@@ -18,9 +18,10 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override int DyeID => 3038;
+        public override float EffectChance => 20;
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if(CheckEffect())
+            if(CheckEffect(projectile.player))
             {
                 bool devEffect = Main.player[projectile.Projectile.owner].DevEffect();
                 Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), target.Center, Vector2.Zero,
@@ -28,7 +29,6 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             }
         }
 
-        public override float EffectChance => 20;
     }
 
     public class HadesExplosion : ModProjectile

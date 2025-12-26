@@ -17,7 +17,7 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
             GlobalCamera.PreAIHook += DevouringEffect;
         }
 
-        public static bool DevouringEffect(Terraria.Player player, Core.Prefabs.BaseCameraProj projectile)
+        public static bool DevouringEffect(Player player, BaseCameraProj projectile)
         {
             if(projectile.player.ItemAnimationActive && projectile.player.TryGetHeldModItem(out ModItem moditem) && moditem is BaseCamera camera && camera.Item.prefix == PrefixType<Devouring>())
             {

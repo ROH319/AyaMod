@@ -22,7 +22,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         public override int DyeID => 3597;
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (!CheckEffect()) return;
+            if (!CheckEffect(projectile.player)) return;
             Vector2 pos = Vector2.Lerp(projectile.Projectile.Center, target.Center, 0.5f);
             Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), pos,
                 Vector2.Zero, ProjectileType<FlameingWave>(), damageDone, projectile.Projectile.knockBack, projectile.Projectile.owner);

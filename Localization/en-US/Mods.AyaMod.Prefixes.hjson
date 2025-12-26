@@ -101,3 +101,8 @@ Evolutive: {
 	DisplayName: Evolutive
 	PrefixExtraTooltip: ""
 }
+
+Soaring: {
+	DisplayName: Soaring
+	PrefixExtraTooltip: ""
+}

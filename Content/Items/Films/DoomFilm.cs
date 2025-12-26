@@ -23,6 +23,20 @@ namespace AyaMod.Content.Items.Films
             if (curse)
                 target.AddBuff(BuffID.CursedInferno, 5 * 60);
         }
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            bool dev = Main.LocalPlayer.DevEffect();
+            foreach (var tooltip in tooltips)
+            {
+                if (!tooltip.Name.StartsWith("Tooltip")) continue;
+                var text = tooltip.Text;
+                string ichor = Lang.GetBuffName(BuffID.Ichor);
+                string curse = Lang.GetBuffName(BuffID.CursedInferno);
+                if (!dev && !WorldGen.crimson) ichor = ichor.WrapWithColorCode(Color.Gray);
+                if (!dev && WorldGen.crimson) curse = curse.WrapWithColorCode(Color.Gray);
+                tooltip.Text = text.Replace("<debuff>", ichor + " " + curse);
+            }
+        }
         public override void AddRecipes()
         {
             CreateRecipe(200)

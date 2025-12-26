@@ -1,4 +1,5 @@
 ﻿using AyaMod.Content.Items.Films;
+using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace AyaMod.Core.Prefabs
     public abstract class BaseFilm : ModItem
     {
         public override string Texture => AssetDirectory.Films + Name;
+        public virtual StatModifier DamageModifier => StatModifier.Default;
+        public List<(string name, string value, string valueDev)> FilmArgs = [];
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 999;
@@ -34,11 +37,27 @@ namespace AyaMod.Core.Prefabs
         }
         public virtual float EffectChance => 100;
 
-        public virtual float GetTotalChance() => EffectChance;//TODO：让这个能被加成
+        public virtual float GetTotalChance(Player player) => player.Camera().FilmEffectChanceModifier.ApplyTo(EffectChance);
 
-        public virtual bool CheckEffect()
+        public virtual bool CheckEffect(Player player)
         {
-            return Main.rand.Next(100) < GetTotalChance();
+            return Main.rand.Next(100) < GetTotalChance(player);
+        }
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            bool dev = Main.LocalPlayer.DevEffect();
+            foreach (var tooltip in tooltips)
+            {
+                if (!tooltip.Name.StartsWith("Tooltip")) continue;
+                var text = tooltip.Text;
+                foreach(var args in FilmArgs)
+                {
+                    if (!text.Contains($"<{args.name}>")) continue;
+                    string value = dev ? $"[c/808080:{args.value}]" : $"{args.value}";
+                    string valueDev = dev ? $"{args.valueDev}" : $"[c/808080:{args.valueDev}]";
+                    tooltip.Text = text.Replace($"<{args.name}>", value + "/" + valueDev);
+                }
+            }
         }
 
         public virtual void ModifyHitNPCFilm(BaseCameraProj projectile, NPC target, ref NPC.HitModifiers modifiers) { }

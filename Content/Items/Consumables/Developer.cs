@@ -5,7 +5,7 @@ using Terraria.ID;
 
 namespace AyaMod.Content.Items.Consumables
 {
-    public class Developer : ModItem
+    public class Developer : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Consumables + Name;
 

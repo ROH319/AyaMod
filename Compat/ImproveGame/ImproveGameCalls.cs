@@ -1,4 +1,6 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Content.Buffs;
+using AyaMod.Content.Items.Placeables;
+using AyaMod.Core;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -17,6 +19,9 @@ namespace AyaMod.Compat.ImproveGame
         {
             if (ModLoader.TryGetMod("ImproveGame",out Mod qot))
             {
+
+                #region 添加属性面板支持
+
                 string category = "AyaMod.Reporter";
                 Texture2D texture = Request<Texture2D>(AssetDirectory.Accessories + "ReporterEmblem",ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
                 string nameKey = "Mods.AyaMod.UI.PlayerStats.Reporter";
@@ -38,6 +43,13 @@ namespace AyaMod.Compat.ImproveGame
                 string sizeNameKey = "Mods.AyaMod.UI.PlayerStats.Size";
                 qot.Call("AddStat", category, sizeNameKey,
                     () => BonusSyntax(ReporterSize(), true));
+
+                #endregion
+
+                #region 添加放置站支持
+                qot.Call("AddStation", ItemType<Tripod>(), BuffType<TripodBuff>());
+
+                #endregion
             }
         }
         public static float ReporterDamage()

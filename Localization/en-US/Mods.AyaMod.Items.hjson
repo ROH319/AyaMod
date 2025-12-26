@@ -7,7 +7,10 @@ CommonItemTooltip: {
 	IncreaseChaseSpeed: Increase camera chase speed by {0}%
 }
 
-Extras.StunTimeTooltip: "{0}frame({1}s) stun time"
+Extras: {
+	StunTimeTooltip: "{0}frame({1}s) stun time"
+	IPlaceholderItemText: This item's texture is placeholder:)
+}
 
 GoldenCamera: {
 	DisplayName: Golden Camera
@@ -827,5 +830,55 @@ MapleTreeSaplingSeed: {
 
 Tripod: {
 	DisplayName: Tripod
+	Tooltip: ""
+}
+
+AdvancedCameraFilm: {
+	DisplayName: Advanced Camera Film
+	Tooltip: ""
+}
+
+BlackWhiteFilm: {
+	DisplayName: Black White Film
+	Tooltip: ""
+}
+
+BloodyFilm: {
+	DisplayName: Bloody Film
+	Tooltip: ""
+}
+
+DoomFilm: {
+	DisplayName: Doom Film
+	Tooltip: ""
+}
+
+DurableFilm: {
+	DisplayName: Durable Film
+	Tooltip: ""
+}
+
+FlashyFilm: {
+	DisplayName: Flashy Film
+	Tooltip: ""
+}
+
+MiasmaFilm: {
+	DisplayName: Miasma Film
+	Tooltip: ""
+}
+
+SoaringHammer: {
+	DisplayName: Soaring Hammer
+	Tooltip: ""
+}
+
+MapleGlazedSalmon: {
+	DisplayName: Maple Glazed Salmon
+	Tooltip: ""
+}
+
+SakuraPudding: {
+	DisplayName: Sakura Pudding
 	Tooltip: ""
 }

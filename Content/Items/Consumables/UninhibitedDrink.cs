@@ -3,13 +3,14 @@ using AyaMod.Content.Items.Materials;
 using AyaMod.Core;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Consumables
 {
-    public class UninhibitedDrink : ModItem
+    public class UninhibitedDrink : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Consumables + Name;
-
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(UninhibitedBuff.ChaseSpeedBonus);
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 20;

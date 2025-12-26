@@ -1,7 +1,9 @@
-﻿using AyaMod.Content.Tiles;
+﻿using AyaMod.Content.Buffs;
+using AyaMod.Content.Tiles;
 using AyaMod.Core;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Placeables
 {

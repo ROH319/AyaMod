@@ -42,12 +42,12 @@ namespace AyaMod.Content.Items.Cameras
             CreateRecipe()
                 .AddIngredient(ItemID.SpiderFang, 12)
                 .AddIngredient(ItemID.CursedFlame, 8)
-                .AddTile(ItemID.MythrilAnvil)
+                .AddTile(TileID.MythrilAnvil)
                 .Register();
             CreateRecipe()
                 .AddIngredient(ItemID.SpiderFang, 12)
                 .AddIngredient(ItemID.Ichor, 8)
-                .AddTile(ItemID.MythrilAnvil)
+                .AddTile(TileID.MythrilAnvil)
                 .Register();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using AyaMod.Common.Easer;
+using AyaMod.Content.Items.Materials;
 using AyaMod.Content.Particles;
 using AyaMod.Core;
 using AyaMod.Core.Attributes;
@@ -20,7 +21,7 @@ using static AyaMod.Core.ModPlayers.AyaPlayer;
 namespace AyaMod.Content.Items.Accessories.Movements
 {
     [PlayerEffect]
-    public class GaleGeta : BaseAccessories
+    public class GaleGeta : BaseAccessories, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Accessories + "Movements/" + Name;
         public override void SetDefaults()
@@ -52,6 +53,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
             CreateRecipe()
                 .AddIngredient(ItemID.LightningBoots)
                 .AddIngredient(ItemID.AmphibianBoots)
+                .AddIngredient<MapleLeaf>(30)
                 .AddIngredient(ItemID.SoulofFlight, 7)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();

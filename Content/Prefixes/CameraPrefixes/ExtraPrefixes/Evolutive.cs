@@ -29,8 +29,11 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 
         public void SetEvolutiveDamage(int damage)
         {
-            EvolutiveDamage = damage;
-            EvolutiveTimeleft = EvolutiveMaxTime;
+            if(damage > EvolutiveDamage)
+            {
+                EvolutiveDamage = damage;
+                EvolutiveTimeleft = EvolutiveMaxTime;
+            }
         }
         public override void ModifyWeaponDamage(Item item, ref StatModifier damage)
         {

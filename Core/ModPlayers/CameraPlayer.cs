@@ -1,4 +1,5 @@
 ﻿using AyaMod.Content.Items.Cameras;
+using AyaMod.Content.Items.Films;
 using AyaMod.Content.Items.Lens;
 using AyaMod.Core.BuilderToggles;
 using AyaMod.Core.Configs;
@@ -28,6 +29,9 @@ namespace AyaMod.Core.ModPlayers
         public ILens CurrentLens;
         public static ILens DefaultLens;
 
+        public StatModifier FilmEffectChanceModifier = StatModifier.Default;
+        public StatModifier AmmoCostModifier = StatModifier.Default;
+        public StatModifier FilmCostModifier = StatModifier.Default;
         public StatModifier ChaseSpeedModifier = StatModifier.Default;
         public StatModifier SizeModifier = StatModifier.Default;
         public StatModifier StunTimeModifier = StatModifier.Default;
@@ -40,7 +44,13 @@ namespace AyaMod.Core.ModPlayers
 
         public float FlashTimerMax = 15;
 
+        /// <summary>
+        /// 手持相机计时器
+        /// </summary>
         public int HoldCameraCounter = 0;
+        /// <summary>
+        /// 手持非相机计时器
+        /// </summary>
         public int HoldNonCameraCounter = 0;
 
         public int CameraAltCooldown;
@@ -78,6 +88,9 @@ namespace AyaMod.Core.ModPlayers
         {
             CurrentLens = null;
 
+            FilmEffectChanceModifier = StatModifier.Default;
+            AmmoCostModifier = StatModifier.Default;
+            FilmCostModifier = StatModifier.Default;
             ChaseSpeedModifier = StatModifier.Default;
             SizeModifier = StatModifier.Default;
             StunTimeModifier = StatModifier.Default;
@@ -202,6 +215,15 @@ namespace AyaMod.Core.ModPlayers
                 return AutoSnapDamageModifier.ApplyTo(CameraAutoSnapDamageModifier);
             else
                 return ManualSnapDamageModifier.ApplyTo(CameraManualSnapDamageModifier);
+        }
+
+        public override bool CanConsumeAmmo(Item weapon, Item ammo)
+        {
+            if (ammo.ammo == ItemType<CameraFilm>() && Main.rand.NextFloat() > FilmCostModifier.ApplyTo(1f))
+                return false;
+            if (Main.rand.NextFloat() > AmmoCostModifier.ApplyTo(1f))
+                return false;
+            return base.CanConsumeAmmo(weapon, ammo);
         }
 
         public static float CameraAutoSnapDamageModifier = 0.9f;
