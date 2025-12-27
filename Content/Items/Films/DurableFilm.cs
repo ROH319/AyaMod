@@ -10,8 +10,8 @@ namespace AyaMod.Content.Items.Films
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus.ToString());
         public static int DamageBonus = 10;
-        public static int AmmoCostDec = 40;
-        public static int AmmoCostDecDev = 100;
+        public static int AmmoCostDec = 30;
+        public static int AmmoCostDecDev = 50;
         public override StatModifier DamageModifier => base.DamageModifier + DamageBonus / 100f;
         public override void SetDefaults()
         {

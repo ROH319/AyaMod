@@ -10,25 +10,15 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
     public class MindController() : ExtraCameraPrefix(focusSpeedMult:0.9f,critBonus:15,sizeMult:1.1f)
     {
         public override LocalizedText PrefixExtraTooltip => base.PrefixExtraTooltip.WithFormatArgs(MindBonusPerDebuff);
-        public override void Load()
+        public override void Camera_ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
         {
-            GlobalCamera.ModifyHitNPCHook += MindDamage;
-        }
-
-        public static void MindDamage(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
-        {
-            BaseCameraProj camera = projectile.ModProjectile as BaseCameraProj;
-
-            if (camera != null)
+            int debuffcount = 0;
+            for (int i = 0; i < NPC.maxBuffs; i++)
             {
-                int debuffcount = 0;
-                for (int i = 0; i < NPC.maxBuffs; i++)
-                {
-                    if (target.buffTime[i] <= 0 || !Main.debuff[target.buffType[i]]) continue;
-                    debuffcount++;
-                }
-                modifiers.FinalDamage += MindBonusPerDebuff / 100f * debuffcount; 
+                if (target.buffTime[i] <= 0 || !Main.debuff[target.buffType[i]]) continue;
+                debuffcount++;
             }
+            modifiers.FinalDamage += MindBonusPerDebuff / 100f * debuffcount;
         }
         public static int MindBonusPerDebuff = 10;
     }

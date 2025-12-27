@@ -137,3 +137,18 @@ SoaringBuff: {
 	DisplayName: Soaring Buff
 	Description: Mods.AyaMod.Buffs.SoaringBuff.Description
 }
+
+EnergeticBuff: {
+	DisplayName: Energetic Buff
+	Description: Mods.AyaMod.Buffs.EnergeticBuff.Description
+}
+
+HotSpringCDBuff: {
+	DisplayName: Hot Spring C D Buff
+	Description: Mods.AyaMod.Buffs.HotSpringCDBuff.Description
+}
+
+NoblyBuff: {
+	DisplayName: Nobly Buff
+	Description: Mods.AyaMod.Buffs.NoblyBuff.Description
+}

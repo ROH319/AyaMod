@@ -1,4 +1,6 @@
 ﻿using AyaMod.Core;
+using AyaMod.Core.Globals;
+using AyaMod.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -12,6 +14,23 @@ namespace AyaMod.Content.Items.Armors
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus);
         public static LocalizedText SpiritNewsBonus { get; set; }
         public static int DamageBonus = 10;
+
+        public static int SurroundMax = 12;
+        public override void Load()
+        {
+            GlobalCamera.OnHitNPCHook += GlobalCamera_OnHitNPCHook;
+        }
+
+        public static void GlobalCamera_OnHitNPCHook(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Player player = Main.player[projectile.owner];
+            if (target.life <= 0 && player != null && player.setBonus == SpiritNewsBonus.Value)
+            {
+                Vector2 vel = Main.rand.NextVector2Unit() * 6f;
+                int type = ProjectileType<EarthSpirits>();
+                Projectile.NewProjectileDirect(target.GetSource_Death(), target.Center, vel, type, target.damage / 2, 0f, player.whoAmI);
+            }
+        }
 
         public override void SetStaticDefaults()
         {
@@ -48,6 +67,86 @@ namespace AyaMod.Content.Items.Armors
                 .AddIngredient(ItemID.Bone, 30)
                 .AddTile(TileID.WorkBenches)
                 .Register();
+        }
+    }
+    public class EarthSpirits : ModProjectile
+    {
+        public override string Texture => AssetDirectory.EmptyTexturePass;
+        
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 32;
+            Projectile.friendly = true;
+            Projectile.timeLeft = 1 * 60;
+            Projectile.tileCollide = false;
+        }
+        public override bool? CanDamage() => false;
+        public override void AI()
+        {
+            Player player = Main.player[Projectile.owner];
+            if (player == null || !player.Alive()) return;
+
+            int totalSpirits = player.ownedProjectileCounts[Type];
+            int index = Projectile.GetMyGroupIndex();
+
+            if (totalSpirits > SpiritNewsHood.SurroundMax && Projectile.ai[0] < 1)
+            {
+                int value = totalSpirits - SpiritNewsHood.SurroundMax;
+                if (index < value)
+                {
+                    TransformToShot();
+                }
+            }
+
+            int radius = 200;
+            Vector2 offset = (MathHelper.TwoPi / totalSpirits * index + Main.GameUpdateCount * 0.01f).ToRotationVector2() * radius;
+            Vector2 targetPos = player.Center + offset;
+
+            float chaseFactor = Utils.Remap(Projectile.timeLeft, 2, 1 * 60, 0.15f, 0f);
+
+            Projectile.velocity = Projectile.velocity * 0.99f;
+            Projectile.Center = Vector2.Lerp(Projectile.Center, targetPos, chaseFactor);
+
+            if (Projectile.timeLeft < 3 && Projectile.ai[0] < 1) Projectile.timeLeft++;
+
+            int dustamount = 1;
+            for(int i = 0; i < dustamount; i++)
+            {
+                Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.GreenFairy, Main.rand.NextVector2Unit() * 2, Scale:1.5f);
+                d.noGravity = true;
+            }
+        }
+        public void TransformToShot()
+        {
+            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity, ProjectileType<SpiritShot>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+
+            Projectile.ai[0] = 2;
+        }
+    }
+    public class SpiritShot : ModProjectile
+    {
+        public override string Texture => AssetDirectory.EmptyTexturePass;
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 32;
+            Projectile.friendly = true;
+            Projectile.timeLeft = 6 * 60;
+
+        }
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Helper.GenDustRand(32, DustID.HallowSpray, Projectile.Center, 20, 40, 2, 5, scale: 1.5f, noGravity: true);
+        }
+        public override void AI()
+        {
+            Projectile.Chase(2500, 32, 0.06f);
+
+            int dustamount = 1;
+            for (int i = 0; i < dustamount; i++)
+            {
+                Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.HallowSpray, Main.rand.NextVector2Unit() * 2, Scale: 1.5f);
+                d.noGravity = true;
+            }
         }
     }
     [AutoloadEquip(EquipType.Body)]

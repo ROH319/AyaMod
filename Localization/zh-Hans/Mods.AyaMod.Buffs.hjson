@@ -155,3 +155,22 @@ SoaringBuff: {
 		{$Mods.AyaMod.Items.CommonItemTooltip.IncreaseChaseSpeed@3}
 		'''
 }
+
+EnergeticBuff: {
+	DisplayName: 精力充沛
+	Description:
+		'''
+		增加{0}点生命再生、{1}点防御和{2}%移速
+		移除自动连拍惩罚
+		'''
+}
+
+HotSpringCDBuff: {
+	DisplayName: 温泉冷却
+	Description: 你现在不能泡温泉
+}
+
+NoblyBuff: {
+	// DisplayName: Nobly Buff
+	// Description: Mods.AyaMod.Buffs.NoblyBuff.Description
+}

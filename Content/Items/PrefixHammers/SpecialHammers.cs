@@ -1,4 +1,5 @@
-﻿using AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes;
+﻿using AyaMod.Content.Items.Materials;
+using AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace AyaMod.Content.Items.PrefixHammers
         {
             CreateRecipe()
                 .AddIngredient<ReforgeHammer>()
-                .AddIngredient(ItemID.TissueSample, 5)
+                .AddIngredient(ItemID.TissueSample, 10)
                 .AddTile(TileID.Anvils)
                 .Register();
         }
@@ -60,7 +61,7 @@ namespace AyaMod.Content.Items.PrefixHammers
         {
             CreateRecipe()
                 .AddIngredient<ReforgeHammer>()
-                .AddIngredient(ItemID.ShadowScale, 5)
+                .AddIngredient(ItemID.ShadowScale, 10)
                 .AddTile(TileID.Anvils)
                 .Register();
         }
@@ -153,6 +154,51 @@ namespace AyaMod.Content.Items.PrefixHammers
             PrefixToForge = GetInstance<Greedy>();
         }
     }
+    public class NamelessHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Nameless>();
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<IzanagiObject>(20)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
+        }
+    }
+    public class PhotosyntheticHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Photosynthetic>();
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.ChlorophyteBar, 10)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
+        }
+    }
+    public class HallowedHammer : BasePrefixHammer
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            PrefixToForge = GetInstance<Hallowed>();
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.HallowedBar, 10)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
+        }
+    }
     public class SpectralHammer : BasePrefixHammer
     {
         public override void SetDefaults()
@@ -164,7 +210,7 @@ namespace AyaMod.Content.Items.PrefixHammers
         {
             CreateRecipe()
                 .AddIngredient<ReforgeHammer>()
-                .AddIngredient(ItemID.Ectoplasm, 8)
+                .AddIngredient(ItemID.Ectoplasm, 10)
                 .Register();
         }
     }

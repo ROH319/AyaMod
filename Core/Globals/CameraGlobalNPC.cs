@@ -25,9 +25,11 @@ namespace AyaMod.Core.Globals
                 (projectile.ModProjectile as BaseCameraProj).ApplyStun(npc, ref modifiers);
                 modifiers.DisableKnockback();
             }
-            base.ModifyHitByProjectile(npc, projectile, ref modifiers);
         }
-
+        public override bool PreAI(NPC npc)
+        {
+            return base.PreAI(npc);
+        }
 
         public override void PostAI(NPC npc)
         {

@@ -12,17 +12,12 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 {
     public class Devouring() : ExtraCameraPrefix(damageMult: 1.1f, critBonus:5)
     {
-        public override void Load()
+        public override void Camera_PreAI(Player player, BaseCameraProj projectile)
         {
-            GlobalCamera.PreAIHook += DevouringEffect;
-        }
-
-        public static bool DevouringEffect(Player player, BaseCameraProj projectile)
-        {
-            if(projectile.player.ItemAnimationActive && projectile.player.TryGetHeldModItem(out ModItem moditem) && moditem is BaseCamera camera && camera.Item.prefix == PrefixType<Devouring>())
+            if (projectile.player.ItemAnimationActive)
             {
                 float devourRange = projectile.size * 1.5f;
-                foreach(var npc in Main.ActiveNPCs)
+                foreach (var npc in Main.ActiveNPCs)
                 {
                     if (npc.friendly || npc.lifeMax <= 5 || npc.life <= 0 || npc.Distance(projectile.Projectile.Center) > devourRange) continue;
 
@@ -30,7 +25,6 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
                     //npc.velocity += npc.DirectionToSafe(projectile.Projectile.Center) * 0.05f;
                 }
             }
-            return true;
         }
     }
 }

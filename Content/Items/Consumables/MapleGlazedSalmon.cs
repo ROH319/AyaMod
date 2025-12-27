@@ -1,6 +1,7 @@
 ﻿using AyaMod.Content.Items.Materials;
 using AyaMod.Core;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 
 namespace AyaMod.Content.Items.Consumables
@@ -10,7 +11,9 @@ namespace AyaMod.Content.Items.Consumables
         public override string Texture => AssetDirectory.Consumables + Name;
         public override void SetStaticDefaults()
         {
+            Item.ResearchUnlockCount = 20;
             ItemID.Sets.IsFood[Type] = true;
+            Main.RegisterItemAnimation(Type, new DrawAnimationVertical(int.MaxValue, 3));
         }
         public override void SetDefaults()
         {

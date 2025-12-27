@@ -11,22 +11,13 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
     [ProjectileEffect]
     public class Alchemistical() : ExtraCameraPrefix(damageMult:1.1f,focusSpeedMult:0.9f)
     {
-        public override void Load()
+        public override void GlobalProjectile_Spawn(Projectile projectile, IEntitySource source)
         {
-            AyaGlobalProjectile.OnProjectileSpawn += AlchemistSpawn;
-            GlobalCamera.OnHitNPCHook += AlchemistHit;
-        }
-
-        public static void AlchemistSpawn(Projectile projectile, IEntitySource source)
-        {
-            if (projectile.hostile) return;
-            Player player = Main.player[projectile.owner];
-            if (!player.TryGetHeldModItem(out var moditem) || moditem is not BaseCamera || moditem.Item.prefix != PrefixType<Alchemistical>()) return;
+            if (projectile.hostile) return; 
             if (projectile.ModProjectile is not BaseCameraProj) return;
             projectile.AddEffect<Alchemistical>();
         }
-
-        public static void AlchemistHit(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
+        public override void Camera_OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (!projectile.HasEffect<Alchemistical>()) return;
 
@@ -53,7 +44,6 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 
             }
         }
-
         public static int TimeleftThreshold = 20 * 60;
         public static int TimeToAdd = 5 * 60;
         public static int FriendlyTimeleftMin = 20 * 60;

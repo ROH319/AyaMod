@@ -24,7 +24,7 @@ namespace AyaMod.Content.Items.Cameras
 
             Item.useTime = Item.useAnimation = 45;
             Item.useStyle = ItemUseStyleID.Rapier;
-            Item.shoot = ModContent.ProjectileType<HallowCameraProj>();
+            Item.shoot = ProjectileType<HallowCameraProj>();
             Item.shootSpeed = 8;
             Item.knockBack = 8f;
 

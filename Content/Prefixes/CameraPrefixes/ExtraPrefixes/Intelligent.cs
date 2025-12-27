@@ -9,18 +9,11 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 {
     public class Intelligent() : ExtraCameraPrefix(critBonus:10,sizeMult:0.9f)
     {
-        public override void Load()
+        public override void Camera_PostAI(Player player, BaseCameraProj projectile)
         {
-            GlobalCamera.PostAIHook += IntelligentChase;
-        }
-
-        public static void IntelligentChase(Player player, BaseCameraProj projectile)
-        {
-            if (player.HeldItem.prefix != PrefixType<Intelligent>()) return;
-
             NPC target = null;
             float minDist = player.Camera().SizeModifier.ApplyTo(ChaseRange);
-            foreach(var npc in Main.ActiveNPCs)
+            foreach (var npc in Main.ActiveNPCs)
             {
                 if (!npc.CanBeChasedBy()) continue;
                 if (npc.Distance(projectile.Projectile.Center) > minDist) continue;
@@ -34,7 +27,6 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
                 projectile.Projectile.Center = Vector2.Lerp(projectile.Projectile.Center, target.Center, chaseFactor * 2f);
             }
         }
-
         public static int ChaseRange = 16 * 15;
     }
 }

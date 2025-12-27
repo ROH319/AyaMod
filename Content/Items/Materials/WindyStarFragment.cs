@@ -11,6 +11,7 @@ namespace AyaMod.Content.Items.Materials
         {
             ItemID.Sets.ItemIconPulse[Type] = true;
             ItemID.Sets.ItemNoGravity[Type] = true;
+            Item.ResearchUnlockCount = 25;
         }
         public override void SetDefaults()
         {

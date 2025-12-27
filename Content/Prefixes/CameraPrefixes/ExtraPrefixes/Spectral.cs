@@ -12,25 +12,15 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
     [ProjectileEffect]
     public class Spectral() : ExtraCameraPrefix(damageMult:1.15f,focusSpeedMult:0.9f,sizeMult:1.1f)
     {
-        public override void Load()
+        public override void GlobalProjectile_Spawn(Projectile projectile, IEntitySource source)
         {
-            AyaGlobalProjectile.OnProjectileSpawn += SpectralSpawn;
-            AyaGlobalProjectile.OnProjectilePostAI += SpectralAI;
-        }
-
-        public static void SpectralSpawn(Projectile projectile, IEntitySource source)
-        {
-            if (!ProjectileID.Sets.CultistIsResistantTo[projectile.type]) return;
-            if (projectile.hostile) return;
-            Player player = Main.player[projectile.owner];
-            if (player.HeldItem.prefix != PrefixType<Spectral>()) return;
+            if (!ProjectileID.Sets.CultistIsResistantTo[projectile.type] || projectile.hostile) return;
             BaseCameraProj camera = null;
             if (!projectile.CameraSourcedProj(out camera)) return;
             projectile.tileCollide = false;
             projectile.AddEffect<Spectral>();
         }
-
-        public static void SpectralAI(Projectile projectile)
+        public override void GlobalProjectile_PostAI(Projectile projectile)
         {
             if (projectile.HasEffect<Spectral>())
                 projectile.GetGlobalProjectile<AyaGlobalProjectile>().SpeedModifier += 0.2f;

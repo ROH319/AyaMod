@@ -14,42 +14,30 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
     [ProjectileEffect]
     public class Festive() : ExtraCameraPrefix(focusSpeedMult:1.1f,sizeMult:1.1f)
     {
-        public override void Load()
-        {
-            AyaGlobalProjectile.OnProjectileSpawn += FestiveSpawn;
-            AyaGlobalProjectile.OnProjectilePostAI += FestiveAI;
-            GlobalCamera.SnapHook += FestiveSnap;
-        }
-
-        public static void FestiveSpawn(Projectile projectile, IEntitySource source)
+        public override void GlobalProjectile_Spawn(Projectile projectile, IEntitySource source)
         {
             if (ProjectileID.Sets.CultistIsResistantTo[projectile.type]) return;
             if (projectile.hostile) return;
-            Player player = Main.player[projectile.owner];
-            if (player.HeldItem.prefix != PrefixType<Festive>()) return;
             BaseCameraProj camera = null;
             if (!projectile.CameraSourcedProj(out camera)) return;
             if (projectile.ModProjectile != null && !ProjectileLoader.ShouldUpdatePosition(projectile)) return;
             projectile.AddEffect<Festive>();
         }
-
-        public static void FestiveAI(Projectile projectile)
+        public override void Camera_PostAI(Player player, BaseCameraProj projectile)
         {
-            if(projectile.HasEffect<Festive>())
+            if (projectile.Projectile.HasEffect<Festive>())
             {
-                projectile.GetGlobalProjectile<AyaGlobalProjectile>().SpeedModifier -= 0.2f;
+                projectile.Projectile.GetGlobalProjectile<AyaGlobalProjectile>().SpeedModifier -= 0.2f;
             }
         }
-
-        public static void FestiveSnap(BaseCameraProj projectile)
+        public override void Camera_OnSnap(BaseCameraProj projectile)
         {
-            if (projectile.player.HeldItem.prefix != PrefixType<Festive>()) return;
             var mplr = projectile.player.GetModPlayer<FestivePlayer>();
             mplr.FestiveCounter++;
-            if(mplr.FestiveCounter >= 5)
+            if (mplr.FestiveCounter >= 5)
             {
                 float damageMult = 1.6f;
-                foreach(var proj in Main.ActiveProjectiles)
+                foreach (var proj in Main.ActiveProjectiles)
                 {
                     if (proj.hostile || proj.owner != projectile.player.whoAmI) continue;
                     if (proj.ModProjectile != null && proj.ModProjectile.CanDamage().HasValue && !(bool)proj.ModProjectile.CanDamage()) continue;
@@ -63,7 +51,6 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
                 mplr.FestiveCounter = 0;
             }
         }
-
     }
     public class FestiveExplosion : ModProjectile
     {

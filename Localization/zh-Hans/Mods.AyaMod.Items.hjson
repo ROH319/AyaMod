@@ -859,7 +859,13 @@ ShaderReloader: {
 }
 
 FormerHellWalkerHelmet: {
-	HellWalkerBonus: Mods.AyaMod.Items.FormerHellWalkerHelmet.HellWalkerBonus
+	HellWalkerBonus:
+		'''
+		踉跄不再减少防御，拥有踉跄效果时增加{0}%聚焦速度
+		双击下键在当前位置产生一圈温泉领域，进入此区域获得8s增益
+		 - 增加{1}点生命再生、{2}点防御和{3}%移速
+		 - 移除自动连拍惩罚
+		'''
 	DisplayName: 漫游者头盔
 	Tooltip:
 		'''
@@ -1098,4 +1104,34 @@ MapleGlazedSalmon: {
 SakuraPudding: {
 	// DisplayName: Sakura Pudding
 	// Tooltip: ""
+}
+
+IzanagiCamera: {
+	DisplayName: 伊奘诺相机
+	Tooltip: ""
+}
+
+HallowedHammer: {
+	DisplayName: 圣耀 锻锤
+	Tooltip: ""
+}
+
+NamelessHammer: {
+	DisplayName: 无名 锻锤
+	Tooltip: ""
+}
+
+PhotosyntheticHammer: {
+	DisplayName: 光合 锻锤
+	Tooltip: ""
+}
+
+MaplePumpkinPie: {
+	DisplayName: 枫糖南瓜派
+	Tooltip: ""
+}
+
+NoblyDrink: {
+	DisplayName: 幽雅饮品
+	Tooltip: ""
 }

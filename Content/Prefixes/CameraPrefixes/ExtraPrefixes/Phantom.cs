@@ -4,6 +4,7 @@ using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 
 namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 {
@@ -13,14 +14,10 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
         {
             CameraPlayer.CheckSnapThrouthWallEvent += PhantomSnap;
             GlobalCamera.OnProjectileCanDamage += PhantomCanDamage;
-            AyaGlobalProjectile.OnProjectileSpawn += PhantomSpawn;
         }
-
-        public static void PhantomSpawn(Projectile projectile, Terraria.DataStructures.IEntitySource source)
+        public override void GlobalProjectile_Spawn(Projectile projectile, IEntitySource source)
         {
             if (projectile.hostile) return;
-            Player player = Main.player[projectile.owner];
-            if (player.HeldItem.prefix != PrefixType<Phantom>()) return;
             BaseCameraProj camera = null;
             if (!projectile.CameraSourcedProj(out camera)) return;
             projectile.tileCollide = false;

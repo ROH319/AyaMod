@@ -23,6 +23,7 @@ namespace AyaMod.Core.ModPlayers
         public int freeFlyFrame = 0;
         public int FreeFlyFrame = 0;
         public float AttackSpeed;
+        public StatModifier HealLifeModifier = StatModifier.Default;
         public StatModifier WingTimeModifier = StatModifier.Default;
         public StatModifier AccSpeedModifier = StatModifier.Default;
 
@@ -156,6 +157,15 @@ namespace AyaMod.Core.ModPlayers
             }
         }
 
+        public static event ModPlayerEvents.PlayerDelegate DoubleTapHook = (p) => { };
+        public override void ArmorSetBonusActivated()
+        {
+            foreach (ModPlayerEvents.PlayerDelegate g in DoubleTapHook.GetInvocationList())
+            {
+                g(Player);
+            }
+        }
+
         public override void PreUpdate()
         {
 
@@ -164,6 +174,7 @@ namespace AyaMod.Core.ModPlayers
         {
             FreeFlyFrame = 0;
             AttackSpeed = 1f;
+            HealLifeModifier = StatModifier.Default;
             AccSpeedModifier = StatModifier.Default;
             WingTimeModifier = StatModifier.Default;
             HasDash = false;
@@ -197,18 +208,12 @@ namespace AyaMod.Core.ModPlayers
                 Player.accRunSpeed = AccSpeedModifier.ApplyTo(Player.accRunSpeed);
             }
         }
-
+        public static event ModPlayerEvents.PlayerDelegate PreUpdateMovementHook = (p) => { };
         public override void PreUpdateMovement()
         {
-            if (Player.grappling[0] == -1 && !Player.tongued
-                && !Player.CCed && !Player.mount.Active)
-            {
-                var tile = Main.tile[(int)(Player.position.X / 16f), (int)((Player.position.Y + Player.height + 4) / 16f)];
-                if(Player.velocity.Y > 0 && Player.wingTime <= 0 && Player.HasEffect<TenguWings1>() && !tile.HasTile)
-                {
-                    Player.position -= Player.velocity * 0.5f;
-                }
-            }
+            foreach (ModPlayerEvents.PlayerDelegate p in PreUpdateMovementHook.GetInvocationList())
+                p(Player);
+
             if(UltraMoveEnabled && IsUltraDashing)
             {
                 Player.velocity = UltraDashDir.ToRotationVector2() * 30f;
@@ -276,6 +281,11 @@ namespace AyaMod.Core.ModPlayers
         {
             foreach(ModPlayerEvents.NaturalLifeRegenDelegate g in NaturalLifeRegenHook.GetInvocationList())
                 g(this, ref regen);
+        }
+
+        public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
+        {
+            healValue = (int)HealLifeModifier.ApplyTo(healValue);
         }
 
         public override void PostUpdate()

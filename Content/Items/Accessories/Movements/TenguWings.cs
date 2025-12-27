@@ -14,6 +14,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using AyaMod.Content.Items.Materials;
 using AyaMod.Core.Attributes;
+using AyaMod.Core.ModPlayers;
 
 namespace AyaMod.Content.Items.Accessories.Movements
 {
@@ -33,6 +34,10 @@ namespace AyaMod.Content.Items.Accessories.Movements
         public override LocalizedText Tooltip => 
             base.Tooltip.WithFormatArgs(FlySpeed, MaxAscentMultiplier, Acceleration, FlyTime, GlideSpeedBonus, GlideGravDecrease);
 
+        public override void Load()
+        {
+            AyaPlayer.PreUpdateMovementHook += GlideMovement;
+        }
         public override void SetStaticDefaults()
         {
             //flySpeedOverride最大水平速度：7.5f->38mph
@@ -44,6 +49,28 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Item.DefaultToAccessory();
             Item.SetShopValues(ItemRarityColor.Pink5, Item.sellPrice(gold: 1));
 
+        }
+        public override void UpdateAccessory(Player player, bool hideVisual)
+        {
+            player.AddEffect<TenguWings>();
+        }
+        public static void GlideMovement(Player player)
+        {
+            if (!player.HeldCamera() || !player.HasEffect<TenguWings>()) return;
+            if (!player.controlJump && player.TryingToHoverUp)
+            {
+                float gravMult = 1f - GlideGravDecrease / 100f;
+                if (player.gravDir == 1f)
+                {
+                    if (player.velocity.Y > player.maxFallSpeed * gravMult)
+                        player.velocity.Y = player.maxFallSpeed * gravMult;
+                }
+                else
+                {
+                    if (player.velocity.Y < (0f - player.maxFallSpeed) * gravMult)
+                        player.velocity.Y = (0f - player.maxFallSpeed) * gravMult;
+                }
+            }
         }
         public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising, ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
         {
@@ -63,31 +90,11 @@ namespace AyaMod.Content.Items.Accessories.Movements
             {
                 //不飞行的状态下按住up可以进行滑翔
                 bool inUse = player.wingsLogic > 0 && player.controlJump && player.velocity.Y != 0f;
-                if (!inUse && player.TryingToHoverUp)
+                if (!player.controlJump && player.TryingToHoverUp)
                 {
                     speed *= 1f + GlideSpeedBonus / 100f;
                 }
             }
-        }
-        public override bool WingUpdate(Player player, bool inUse)
-        {
-            inUse = player.wingsLogic > 0 && player.controlJump && player.velocity.Y != 0f;
-
-            if (!inUse && player.TryingToHoverUp)
-            {
-                float gravMult = 1f - GlideGravDecrease / 100f;
-                if(player.gravDir == 1f)
-                {
-                    if (player.velocity.Y > player.maxFallSpeed * gravMult)
-                        player.velocity.Y = player.maxFallSpeed * gravMult;
-                }
-                else
-                {
-                    if (player.velocity.Y < (0f - player.maxFallSpeed) * gravMult)
-                        player.velocity.Y = (0f - player.maxFallSpeed) * gravMult;
-                }
-            }
-            return base.WingUpdate(player, inUse);
         }
         public override void AddRecipes()
         {

@@ -7,16 +7,10 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 {
     public class Evolutive() : ExtraCameraPrefix()
     {
-        public override void Load()
-        {
-            AyaGlobalProjectile.OnProjectileHitNPC += EvolutiveHit;
-        }
-
-        public static void EvolutiveHit(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
+        public override void GlobalProjectile_OnHit(Projectile projectile, NPC target, NPC.HitInfo info, int damageDone)
         {
             if (target.life > 0) return;
             Player player = Main.player[projectile.owner];
-            if (player == null || player.HeldItem.prefix != PrefixType<Evolutive>()) return;
             var mplr = player.GetModPlayer<EvolutivePlayer>();
             mplr.SetEvolutiveDamage(target.damage / 2);
         }

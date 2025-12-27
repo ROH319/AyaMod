@@ -6,14 +6,8 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 {
     public class Tetrad() : ExtraCameraPrefix(damageMult:1.08f,focusSpeedMult:0.96f,critBonus:4)
     {
-        public override void Load()
+        public override void Player_PostUpdateMiscEffects(Player player)
         {
-            AyaPlayer.PostUpdateMiscEffectsHook += TetradDamageBonus;
-        }
-
-        public static void TetradDamageBonus(Player player)
-        {
-            if (player.HeldItem.prefix != PrefixType<Tetrad>()) return;
             var melee = player.GetTotalDamage(DamageClass.Melee).Additive - 1f;
             var ranged = player.GetTotalDamage(DamageClass.Ranged).Additive - 1f;
             var magic = player.GetTotalDamage(DamageClass.Magic).Additive - 1f;

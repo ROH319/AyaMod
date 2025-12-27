@@ -67,6 +67,9 @@ namespace AyaMod.Core.ModPlayers
 
         public bool FreeSnap;
 
+        public bool CanReceiveAutoSnapModifier;
+        public bool CanReceiveManualSnapModifier;
+
         public override void Load()
         {
             DefaultLens = new DefaultLens();
@@ -102,6 +105,9 @@ namespace AyaMod.Core.ModPlayers
             Developing = false;
 
             SpiritSnap = false;
+
+            CanReceiveAutoSnapModifier = false;
+            CanReceiveManualSnapModifier = false;
         }
 
         public override void PreUpdate()
@@ -131,6 +137,7 @@ namespace AyaMod.Core.ModPlayers
                 HoldCameraCounter = 0;
             }
 
+            //Main.NewText($"{Player.TryingToHoverUp}");
             //Tile tile = Main.tile[(int)(MouseWorld.X / 16f), (int)(MouseWorld.Y / 16f)];
             //Main.NewText($"{tile.TileType} {tile.TileType > TileID.Count}");
             //Main.NewText($"{Player.velocity.X} {Player.accRunSpeed}");

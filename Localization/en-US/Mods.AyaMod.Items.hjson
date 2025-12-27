@@ -882,3 +882,33 @@ SakuraPudding: {
 	DisplayName: Sakura Pudding
 	Tooltip: ""
 }
+
+IzanagiCamera: {
+	DisplayName: Izanagi Camera
+	Tooltip: ""
+}
+
+HallowedHammer: {
+	DisplayName: Hallowed Hammer
+	Tooltip: ""
+}
+
+NamelessHammer: {
+	DisplayName: Nameless Hammer
+	Tooltip: ""
+}
+
+PhotosyntheticHammer: {
+	DisplayName: Photosynthetic Hammer
+	Tooltip: ""
+}
+
+MaplePumpkinPie: {
+	DisplayName: Maple Pumpkin Pie
+	Tooltip: ""
+}
+
+NoblyDrink: {
+	DisplayName: Nobly Drink
+	Tooltip: ""
+}

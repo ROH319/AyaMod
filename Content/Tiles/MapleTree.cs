@@ -47,6 +47,7 @@ namespace AyaMod.Content.Tiles
         }
         public override int SaplingGrowthType(ref int style)
         {
+            style = 0;
             return TileType<MapleTreeSapling>();
         }
     }

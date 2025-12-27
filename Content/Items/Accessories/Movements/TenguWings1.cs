@@ -1,5 +1,6 @@
 ﻿using AyaMod.Core;
 using AyaMod.Core.Attributes;
+using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using System;
@@ -31,6 +32,10 @@ namespace AyaMod.Content.Items.Accessories.Movements
         public override LocalizedText Tooltip => 
             base.Tooltip.WithFormatArgs(FlySpeed, MaxAscentMultiplier, Acceleration, FlyTime, GlideSpeedBonus, GlideGravDecrease);
 
+        public override void Load()
+        {
+            AyaPlayer.PreUpdateMovementHook += GlideMovement;
+        }
         public override void SetStaticDefaults()
         {
             Wing.Sets.Stats[Item.wingSlot] = new WingStats(FlyTime, FlySpeed, Acceleration, false, 9f, 9f);
@@ -47,6 +52,24 @@ namespace AyaMod.Content.Items.Accessories.Movements
         {
             player.AddEffect<TenguWings1>();
         }
+        public static void GlideMovement(Player player)
+        {
+            if (!player.HeldCamera() || !player.HasEffect<TenguWings1>()) return;
+            if (!player.controlJump && player.TryingToHoverUp)
+            {
+                float gravMult = 1f - GlideGravDecrease / 100f;
+                if (player.gravDir == 1f)
+                {
+                    if (player.velocity.Y > player.maxFallSpeed * 0.2f)
+                        player.velocity.Y = player.maxFallSpeed * gravMult;
+                }
+                else
+                {
+                    if (player.velocity.Y < (0f - player.maxFallSpeed) * 0.2f)
+                        player.velocity.Y = (0f - player.maxFallSpeed) * gravMult;
+                }
+            }
+        }
         public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising, ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
         {
             ascentWhenFalling = 0.5f;
@@ -55,12 +78,17 @@ namespace AyaMod.Content.Items.Accessories.Movements
             maxAscentMultiplier = MaxAscentMultiplier;
             constantAscend = 0.1f;
 
-            if (player.controlJump && player.HeldCamera())
+            if (player.HeldCamera())
             {
-                ascentWhenFalling = 0.75f;
-                ascentWhenRising = 0.2f;
-                maxAscentMultiplier = 2.3f;
-                constantAscend = 0.125f;
+                if (player.controlJump)
+                {
+                    ascentWhenFalling = 0.75f;
+                    ascentWhenRising = 0.2f;
+                    maxAscentMultiplier = 2.3f;
+                    constantAscend = 0.125f;
+                }
+
+                bool inUse = player.wingsLogic > 0 && player.controlJump && player.velocity.Y != 0f;
             }
         }
 
@@ -84,33 +112,13 @@ namespace AyaMod.Content.Items.Accessories.Movements
 
                 //不飞行的状态下按住up可以进行滑翔
                 bool inUse = player.wingsLogic > 0 && player.controlJump && player.velocity.Y != 0f;
-                if (!inUse && player.TryingToHoverUp)
+
+                if (!player.controlJump && player.TryingToHoverUp)
                 {
                     speed *= 1f + GlideSpeedBonus / 100f;
                 }
             }
         }
-        public override bool WingUpdate(Player player, bool inUse)
-        {
-            inUse = player.wingsLogic > 0 && player.controlJump && player.velocity.Y != 0f;
-
-            if (!inUse && player.TryingToHoverUp)
-            {
-                float gravMult = 1f - GlideGravDecrease / 100f;
-                if (player.gravDir == 1f)
-                {
-                    if (player.velocity.Y > player.maxFallSpeed * 0.2f)
-                        player.velocity.Y = player.maxFallSpeed * gravMult;
-                }
-                else
-                {
-                    if (player.velocity.Y < (0f - player.maxFallSpeed) * 0.2f)
-                        player.velocity.Y = (0f - player.maxFallSpeed) * gravMult;
-                }
-            }
-            return base.WingUpdate(player, inUse);
-        }
-
         public override void AddRecipes()
         {
             CreateRecipe()

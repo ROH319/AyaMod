@@ -146,3 +146,30 @@ Soaring: {
 		[c/78BE78:接触物块、使用钩爪和坐骑均会取消增益]
 		'''
 }
+
+Hallowed: {
+	DisplayName: 圣耀
+	PrefixExtraTooltip:
+		'''
+		[c/78BE78:攻击免疫击退的敌人时积攒眩晕值]
+		[c/78BE78:攒满后可眩晕5倍单次拍摄眩晕时间]
+		'''
+}
+
+Nameless: {
+	DisplayName: 无名
+	PrefixExtraTooltip:
+		'''
+		[c/78BE78:胶卷效果触发几率增加]
+		[c/BE7878:衍生弹幕伤害减半]
+		'''
+}
+
+Photosynthetic: {
+	DisplayName: 光合
+	PrefixExtraTooltip:
+		'''
+		[c/78BE78:拍摄框中心位置亮度高时，逐渐增加至多20%范围和15%聚焦速度]
+		[c/78BE78:亮度低会逐渐失去增幅]
+		'''
+}

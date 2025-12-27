@@ -16,19 +16,13 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 {
     public class Necromantic() : ExtraCameraPrefix(damageMult:1.16f,critBonus:16)
     {
-        public override void Load()
+        public override void Camera_OnSnap(BaseCameraProj projectile)
         {
-            GlobalCamera.SnapHook += NecromanticSnap;
-        }
-
-        public static void NecromanticSnap(BaseCameraProj projectile)
-        {
-            if(projectile.player.HeldItem.prefix != PrefixType<Necromantic>() || Main.rand.NextFloat(100) >= SpawnGhostChance) return;
+            if (Main.rand.NextFloat(100) >= SpawnGhostChance) return;
             var n = NPC.NewNPC(projectile.Projectile.GetSource_FromThis(), (int)projectile.Projectile.Center.X, (int)projectile.Projectile.Center.Y, NPCID.DungeonSpirit);
             NPC npc = Main.npc[n];
             npc.GetGlobalNPC<GhostNerfed>().nerfed = true;
         }
-
         public static int SpawnGhostChance = 20;
     }
 

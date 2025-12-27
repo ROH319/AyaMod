@@ -1,4 +1,5 @@
-﻿using AyaMod.Core.Attributes;
+﻿using AyaMod.Content.Prefixes.CameraPrefixes;
+using AyaMod.Core.Attributes;
 using AyaMod.Core.Globals;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
@@ -359,6 +360,14 @@ namespace AyaMod.Helpers
                 return parentProj.CameraSourcedProj(out BaseCameraProj b, depth + 1);
             }
             return false;
+        }
+
+        public static bool HeldItemCameraPrefix(this Player player, out BaseCameraPrefix cameraPrefix)
+        {
+            var prefix = PrefixLoader.GetPrefix(player.HeldItem.prefix);
+            cameraPrefix = prefix as BaseCameraPrefix;
+            if (prefix == null || prefix is not BaseCameraPrefix) return false;
+            return true;
         }
 
         public static bool TypeAlive(this Projectile projectile, params int[] type) => projectile.Alive() && (type.Length == 0 || type.Contains(projectile.type));

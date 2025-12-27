@@ -6,16 +6,10 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
 {
     public class Equilibrated() : ExtraCameraPrefix(focusSpeedMult:0.9f,critBonus:5,sizeMult:1.05f)
     {
-        public override void Load()
+        public override void Player_PostUpdateMiscEffects(Player player)
         {
-            AyaPlayer.PostUpdateMiscEffectsHook += DualBonus;
-        }
-
-        public static void DualBonus(Player player)
-        {
-            if(player.HeldItem.prefix != PrefixType<Equilibrated>()) return;
             int itemtime = player.GetModPlayer<AyaPlayer>().ItemTimer;
-            if(itemtime > 0)
+            if (itemtime > 0)
             {
                 float bonus = Utils.Remap(itemtime, 0, 3 * 60, 0f, DamageBonus / 100f);
                 player.GetDamage(ReporterDamage.Instance) += bonus;

@@ -106,3 +106,18 @@ Soaring: {
 	DisplayName: Soaring
 	PrefixExtraTooltip: ""
 }
+
+Hallowed: {
+	DisplayName: Hallowed
+	PrefixExtraTooltip: ""
+}
+
+Nameless: {
+	DisplayName: Nameless
+	PrefixExtraTooltip: ""
+}
+
+Photosynthetic: {
+	DisplayName: Photosynthetic
+	PrefixExtraTooltip: ""
+}

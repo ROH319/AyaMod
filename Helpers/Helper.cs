@@ -77,6 +77,15 @@ namespace AyaMod.Helpers
             return dustType;
         }
 
+        public static void GenDustRand(int count, int type, Vector2 pos, float distMin, float distMax, float maxSpeed, float minSpeed, int alpha = 0, float scale = 1f, bool noGravity = false)
+        {
+            for(int i = 0; i < count; i++)
+            {
+                Vector2 vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(minSpeed, maxSpeed);
+                Dust d = Dust.NewDustPerfect(pos, type, vel, alpha, Scale:scale);
+                d.noGravity = noGravity;
+            }
+        }
         public static void DashHandle(this Player player, out int dir, out bool dashing)
         {
             dir = 0;
