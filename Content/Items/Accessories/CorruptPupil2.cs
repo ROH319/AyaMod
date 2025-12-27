@@ -17,6 +17,8 @@ namespace AyaMod.Content.Items.Accessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SpeedIncrease, SizeIncrease);
 
+        public static int SpeedIncrease = 12;
+        public static int SizeIncrease = 12;
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -25,11 +27,9 @@ namespace AyaMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetAttackSpeed<ReporterDamage>() += (float)SpeedIncrease / 100f;
-            player.Camera().SizeModifier += (float)SizeIncrease / 100f;
+            player.GetAttackSpeed<ReporterDamage>() += SpeedIncrease / 100f;
+            player.Camera().SizeModifier += SizeIncrease / 100f;
         }
-        public static int SpeedIncrease = 12;
-        public static int SizeIncrease = 12;
 
         public override void AddRecipes()
         {

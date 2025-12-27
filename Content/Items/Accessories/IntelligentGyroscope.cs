@@ -14,6 +14,7 @@ namespace AyaMod.Content.Items.Accessories
     public class IntelligentGyroscope : BaseAccessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(ChaseSpeedBonus);
+        public static int ChaseSpeedBonus = 15;
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -24,8 +25,5 @@ namespace AyaMod.Content.Items.Accessories
         {
             player.Camera().ChaseSpeedModifier += ChaseSpeedBonus / 100f;
         }
-
-        public static int ChaseSpeedBonus = 15;
-
     }
 }

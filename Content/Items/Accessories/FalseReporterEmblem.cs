@@ -15,6 +15,8 @@ namespace AyaMod.Content.Items.Accessories
     public class FalseReporterEmblem : BaseAccessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageIncrease, DefenceDecrease);
+        public static int DamageIncrease = 15;
+        public static int DefenceDecrease = 6;
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -23,13 +25,9 @@ namespace AyaMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetDamage<ReporterDamage>() += (float)DamageIncrease / 100f;
+            player.GetDamage<ReporterDamage>() += DamageIncrease / 100f;
             player.statDefense -= DefenceDecrease;
         }
-
-        public static int DamageIncrease = 15;
-        public static int DefenceDecrease = 6;
-
         public override void AddRecipes()
         {
             CreateRecipe()

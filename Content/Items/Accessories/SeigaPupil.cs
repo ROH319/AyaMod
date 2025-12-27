@@ -18,6 +18,8 @@ namespace AyaMod.Content.Items.Accessories
     public class SeigaPupil : BaseAccessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(ChaseSpeedBonus);
+        public static int SpiritSnapDistance = 35 * 16;
+        public static int ChaseSpeedBonus = 25;
         public override void Load()
         {
             CameraPlayer.CheckSnapThrouthWallEvent += SeigaSight;
@@ -40,9 +42,6 @@ namespace AyaMod.Content.Items.Accessories
             player.Camera().ChaseSpeedModifier += ChaseSpeedBonus / 100f;
             player.AddEffect<SeigaPupil>();
         }
-        public static int SpiritSnapDistance = 35 * 16;
-        public static int ChaseSpeedBonus = 25;
-
         public override void AddRecipes()
         {
             CreateRecipe()

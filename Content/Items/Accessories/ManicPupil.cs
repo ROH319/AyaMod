@@ -17,6 +17,8 @@ namespace AyaMod.Content.Items.Accessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SpeedIncrease, MaxSpeedIncrease);
 
+        public static int SpeedIncrease = 2;
+        public static int MaxSpeedIncrease = 20;
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -36,8 +38,5 @@ namespace AyaMod.Content.Items.Accessories
             if (ayaPlayer.NotUsingCameraTimer > 2 * 60) ayaPlayer.ManicStack = 0;
             ayaPlayer.AttackSpeed += ayaPlayer.ManicStack * SpeedIncrease / 100f;
         }
-
-        public static int SpeedIncrease = 2;
-        public static int MaxSpeedIncrease = 20;
     }
 }

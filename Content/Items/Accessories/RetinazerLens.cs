@@ -15,7 +15,9 @@ namespace AyaMod.Content.Items.Accessories
     public class RetinazerLens : BaseAccessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SpeedIncrease, SizeDecrease);
-
+        public static int SpeedIncrease = 20;
+        public static int SizeDecrease = 10;
+        public static int SingleTargetIncrease = 18;
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -24,13 +26,8 @@ namespace AyaMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetAttackSpeed<ReporterDamage>() += (float)SpeedIncrease / 100f;
-            player.Camera().SizeModifier -= (float)SizeDecrease / 100f;
-            //player.Camera().SingleTargetMultiplier += (float)SingleTargetIncrease / 100f;
+            player.GetAttackSpeed<ReporterDamage>() += SpeedIncrease / 100f;
+            player.Camera().SizeModifier -= SizeDecrease / 100f;
         }
-
-        public static int SpeedIncrease = 20;
-        public static int SizeDecrease = 10;
-        public static int SingleTargetIncrease = 18;
     }
 }

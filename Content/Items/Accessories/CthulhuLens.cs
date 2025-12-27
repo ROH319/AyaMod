@@ -14,6 +14,7 @@ namespace AyaMod.Content.Items.Accessories
     public class CthulhuLens : BaseAccessories, IPlaceholderItem
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SpeedIncrease);
+        public static int SpeedIncrease = 10;
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -22,10 +23,7 @@ namespace AyaMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetAttackSpeed<ReporterDamage>() += (float)SpeedIncrease / 100f;
+            player.GetAttackSpeed<ReporterDamage>() += SpeedIncrease / 100f;
         }
-
-        public static int SpeedIncrease = 10;
-
     }
 }

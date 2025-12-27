@@ -14,6 +14,11 @@ namespace AyaMod.Content.Items.Accessories
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(SpeedIncreaseVisual, SizeIncrease, SpeedIncrease, SizeDecrease);
         public static LocalizedText VisualOn { get; private set; }
         public static LocalizedText VisualOff { get; private set; }
+        public static int SpeedIncreaseVisual = 20;
+        public static int SpeedIncrease = 30;
+        public static int SizeIncrease = 25;
+        public static int SizeDecrease = 12;
+        public static int SingleTargetIncrease = 24;
 
         public static int Visual = 0;
         public override void SetStaticDefaults()
@@ -42,12 +47,6 @@ namespace AyaMod.Content.Items.Accessories
             }
             player.GetAttackSpeed<ReporterDamage>() += speed / 100f;
         }
-
-        public static int SpeedIncreaseVisual = 20;
-        public static int SpeedIncrease = 30;
-        public static int SizeIncrease = 25;
-        public static int SizeDecrease = 12;
-        public static int SingleTargetIncrease = 24;
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

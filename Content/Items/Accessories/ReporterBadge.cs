@@ -15,7 +15,8 @@ namespace AyaMod.Content.Items.Accessories
     public class ReporterBadge : BaseAccessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageIncrease, CritIncrease);
-
+        public static int DamageIncrease = 7;
+        public static int CritIncrease = 7;
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -27,10 +28,6 @@ namespace AyaMod.Content.Items.Accessories
             player.GetDamage<ReporterDamage>() += (float)DamageIncrease / 100f;
             player.GetCritChance<ReporterDamage>() += CritIncrease;
         }
-
-        public static int DamageIncrease = 7;
-        public static int CritIncrease = 7;
-
         public override void AddRecipes()
         {
             CreateRecipe()

@@ -20,6 +20,9 @@ namespace AyaMod.Content.Items.Accessories
     public class FalsePHDJ : BaseAccessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageIncrease, CritIncrease, HurtIncrease);
+        public static int DamageIncrease = 15;
+        public static int CritIncrease = 10;
+        public static int HurtIncrease = 10;
         public override void Load()
         {
             AyaPlayer.ModifyHitByBothHook += FalseHurt;
@@ -32,7 +35,7 @@ namespace AyaMod.Content.Items.Accessories
         
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetDamage<ReporterDamage>() += (float)DamageIncrease / 100f;
+            player.GetDamage<ReporterDamage>() += DamageIncrease / 100f;
             player.GetCritChance<ReporterDamage>() += CritIncrease;
             player.AddEffect<FalsePHDJ>();
         }
@@ -40,14 +43,9 @@ namespace AyaMod.Content.Items.Accessories
         {
             if (player.HasEffect<FalsePHDJ>())
             {
-                modifiers.FinalDamage *= 1f + (float)FalsePHDJ.HurtIncrease / 100f;
+                modifiers.FinalDamage *= 1f + HurtIncrease / 100f;
             }
         } 
-
-        public static int DamageIncrease = 15;
-        public static int CritIncrease = 10;
-        public static int HurtIncrease = 10;
-
         public override void AddRecipes()
         {
             CreateRecipe()

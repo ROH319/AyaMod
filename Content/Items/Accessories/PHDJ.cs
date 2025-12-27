@@ -15,6 +15,8 @@ namespace AyaMod.Content.Items.Accessories
     public class PHDJ : BaseAccessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageIncrease, CritIncrease);
+        public static int DamageIncrease = 15;
+        public static int CritIncrease = 10;
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -23,13 +25,9 @@ namespace AyaMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetDamage<ReporterDamage>() += (float)DamageIncrease / 100f;
+            player.GetDamage<ReporterDamage>() += DamageIncrease / 100f;
             player.GetCritChance<ReporterDamage>() += CritIncrease;
         }
-
-        public static int DamageIncrease = 15;
-        public static int CritIncrease = 10;
-
         public override void AddRecipes()
         {
             CreateRecipe()

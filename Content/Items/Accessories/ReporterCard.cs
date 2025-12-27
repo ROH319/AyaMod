@@ -16,6 +16,7 @@ namespace AyaMod.Content.Items.Accessories
     {
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageIncrease);
 
+        public static int DamageIncrease = 8;
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -24,11 +25,8 @@ namespace AyaMod.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetDamage<ReporterDamage>() += (float)DamageIncrease / 100f;
+            player.GetDamage<ReporterDamage>() += DamageIncrease / 100f;
         }
-
-        public static int DamageIncrease = 8;
-
         public override void AddRecipes()
         {
             CreateRecipe()

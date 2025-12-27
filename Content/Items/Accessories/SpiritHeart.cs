@@ -15,6 +15,7 @@ namespace AyaMod.Content.Items.Accessories
     [PlayerEffect]
     public class SpiritHeart : BaseAccessories
     {
+        public static int SpiritSnapDistance = 20 * 16;
         public override void Load()
         {
             CameraPlayer.CheckSnapThrouthWallEvent += SpiritDele;
@@ -38,7 +39,5 @@ namespace AyaMod.Content.Items.Accessories
         {
             player.AddEffect<SpiritHeart>();
         }
-
-        public static int SpiritSnapDistance = 20 * 16;
     }
 }
