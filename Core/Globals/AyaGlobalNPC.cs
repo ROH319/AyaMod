@@ -66,6 +66,19 @@ namespace AyaMod.Core.Globals
                 ChlorophyteFilm.SpawnSpore(npc);
             }
         }
+        public static event NPCEvents.HitByProjectileModifierDelegate HitByProjectileModifier = (NPC n, Projectile p, ref NPC.HitModifiers m) => { };
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
+        {
+            foreach(NPCEvents.HitByProjectileModifierDelegate del in HitByProjectileModifier.GetInvocationList())
+                del(npc, projectile, ref modifiers);
+        }
+
+        public static event NPCEvents.ModifyIncomingHitDelegate ModifyHitHook = (NPC n, ref NPC.HitModifiers m) => { };
+        public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
+        {
+            foreach (NPCEvents.ModifyIncomingHitDelegate del in ModifyHitHook.GetInvocationList())
+                del(npc, ref modifiers);
+        }
 
         public static event NPCEvents.NPCDelegate OnNPCKill = (n) => { };
         public override void OnKill(NPC npc)

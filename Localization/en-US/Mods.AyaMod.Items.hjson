@@ -912,3 +912,8 @@ NoblyDrink: {
 	DisplayName: Nobly Drink
 	Tooltip: ""
 }
+
+Tester: {
+	DisplayName: Tester
+	Tooltip: ""
+}

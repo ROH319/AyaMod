@@ -1,4 +1,5 @@
 ﻿using AyaMod.Core;
+using AyaMod.Core.Attributes;
 using AyaMod.Core.Globals;
 using AyaMod.Helpers;
 using Terraria;
@@ -8,6 +9,7 @@ using Terraria.Localization;
 namespace AyaMod.Content.Items.Armors
 {
     [AutoloadEquip(EquipType.Head)]
+    [PlayerEffect(OverrideEffectName = "SpiritNewsSet")]
     public class SpiritNewsHood : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
@@ -24,12 +26,11 @@ namespace AyaMod.Content.Items.Armors
         public static void GlobalCamera_OnHitNPCHook(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             Player player = Main.player[projectile.owner];
-            if (target.life <= 0 && player != null && player.setBonus == SpiritNewsBonus.Value)
-            {
-                Vector2 vel = Main.rand.NextVector2Unit() * 6f;
-                int type = ProjectileType<EarthSpirits>();
-                Projectile.NewProjectileDirect(target.GetSource_Death(), target.Center, vel, type, target.damage / 2, 0f, player.whoAmI);
-            }
+            if (player == null || !player.HasEffect("SpiritNewsSet") || target.life > 0) return;
+
+            Vector2 vel = Main.rand.NextVector2Unit() * 6f;
+            int type = ProjectileType<EarthSpirits>();
+            Projectile.NewProjectileDirect(target.GetSource_Death(), target.Center, vel, type, target.damage / 2, 0f, player.whoAmI);
         }
 
         public override void SetStaticDefaults()
@@ -55,11 +56,7 @@ namespace AyaMod.Content.Items.Armors
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = SpiritNewsBonus.Value;
-            SpiritNewsSetEffect(player);
-        }
-        public static void SpiritNewsSetEffect(Player player)
-        {
-
+            player.AddEffect("SpiritNewsSet");
         }
         public override void AddRecipes()
         {
@@ -112,7 +109,8 @@ namespace AyaMod.Content.Items.Armors
             int dustamount = 1;
             for(int i = 0; i < dustamount; i++)
             {
-                Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.GreenFairy, Main.rand.NextVector2Unit() * 2, Scale:1.5f);
+                Vector2 vel = -Vector2.UnitY.RotatedByRandom(0.3f) * 2;
+                Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.GreenFairy, vel, Scale:1.5f);
                 d.noGravity = true;
             }
         }
@@ -144,7 +142,8 @@ namespace AyaMod.Content.Items.Armors
             int dustamount = 1;
             for (int i = 0; i < dustamount; i++)
             {
-                Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.HallowSpray, Main.rand.NextVector2Unit() * 2, Scale: 1.5f);
+                Vector2 vel = Projectile.velocity.Length(3);
+                Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.HallowSpray, vel, Scale: 1.5f);
                 d.noGravity = true;
             }
         }

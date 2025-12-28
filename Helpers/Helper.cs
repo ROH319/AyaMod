@@ -77,7 +77,7 @@ namespace AyaMod.Helpers
             return dustType;
         }
 
-        public static void GenDustRand(int count, int type, Vector2 pos, float distMin, float distMax, float maxSpeed, float minSpeed, int alpha = 0, float scale = 1f, bool noGravity = false)
+        public static void GenDustRand(int count, int type, Vector2 pos, float distMin, float distMax, float minSpeed, float maxSpeed, int alpha = 0, float scale = 1f, bool noGravity = false)
         {
             for(int i = 0; i < count; i++)
             {

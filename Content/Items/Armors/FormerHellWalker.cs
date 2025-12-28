@@ -1,5 +1,6 @@
 ﻿using AyaMod.Content.Buffs;
 using AyaMod.Core;
+using AyaMod.Core.Attributes;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Helpers;
 using Terraria;
@@ -10,6 +11,7 @@ using Terraria.Localization;
 namespace AyaMod.Content.Items.Armors
 {
     [AutoloadEquip(EquipType.Head)]
+    [PlayerEffect(OverrideEffectName ="FormerHellSet")]
     public class FormerHellWalkerHelmet : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
@@ -46,6 +48,7 @@ namespace AyaMod.Content.Items.Armors
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = HellWalkerBonus.WithFormatArgs(AttackSpeedBonus, EnergeticBuff.RegenBonus, EnergeticBuff.DefenseBonus, EnergeticBuff.MovementBonus).Value;
+            player.AddEffect("FormerHellSet");
             HellWalkerSetEffect(player);
         }
         public static void HellWalkerSetEffect(Player player)
@@ -58,6 +61,7 @@ namespace AyaMod.Content.Items.Armors
         }
         public static void HellWalkerKeyEffect(Player player)
         {
+            if (!player.HasEffect("FormerHellSet")) return;
             if (player.ownedProjectileCounts[ProjectileType<HotSpringCircle>()] > 0 || player.HasBuff<HotSpringCDBuff>())
                 return;
 

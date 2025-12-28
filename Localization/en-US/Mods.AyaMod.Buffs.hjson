@@ -152,3 +152,8 @@ NoblyBuff: {
 	DisplayName: Nobly Buff
 	Description: Mods.AyaMod.Buffs.NoblyBuff.Description
 }
+
+PurifiedBuff: {
+	DisplayName: Purified Buff
+	Description: Mods.AyaMod.Buffs.PurifiedBuff.Description
+}

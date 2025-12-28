@@ -171,6 +171,11 @@ HotSpringCDBuff: {
 }
 
 NoblyBuff: {
-	// DisplayName: Nobly Buff
-	// Description: Mods.AyaMod.Buffs.NoblyBuff.Description
+	DisplayName: 幽雅
+	Description: 提高{0}%药水治疗量
+}
+
+PurifiedBuff: {
+	DisplayName: Purified Buff
+	Description: Mods.AyaMod.Buffs.PurifiedBuff.Description
 }

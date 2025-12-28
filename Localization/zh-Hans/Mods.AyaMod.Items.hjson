@@ -905,7 +905,11 @@ RumorBroadcasterHelmet: {
 }
 
 SpiritNewsHood: {
-	SpiritNewsBonus: Mods.AyaMod.Items.SpiritNewsHood.SpiritNewsBonus
+	SpiritNewsBonus:
+		'''
+		被相机杀死的敌人死亡后化为怨灵环绕玩家
+		怨灵接触弹幕或敌人或超出上限后化为追踪魂火
+		'''
 	DisplayName: 灵讯兜帽
 	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}"
 }
@@ -1097,13 +1101,13 @@ SoaringHammer: {
 }
 
 MapleGlazedSalmon: {
-	// DisplayName: Maple Glazed Salmon
-	// Tooltip: ""
+	DisplayName: 枫糖三文鱼
+	Tooltip: ""
 }
 
 SakuraPudding: {
-	// DisplayName: Sakura Pudding
-	// Tooltip: ""
+	DisplayName: 樱花布丁
+	Tooltip: ""
 }
 
 IzanagiCamera: {
@@ -1133,5 +1137,10 @@ MaplePumpkinPie: {
 
 NoblyDrink: {
 	DisplayName: 幽雅饮品
+	Tooltip: "{$Mods.AyaMod.Buffs.NoblyBuff.Description}"
+}
+
+Tester: {
+	DisplayName: 测试用物品
 	Tooltip: ""
 }

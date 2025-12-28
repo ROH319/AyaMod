@@ -53,6 +53,10 @@ namespace AyaMod.Content.Items.Armors
                 .Register();
         }
     }
+    public class RumorVortex : ModProjectile
+    {
+        public override string Texture => AssetDirectory.Projectiles + Name;
+    }
     [AutoloadEquip(EquipType.Body)]
     public class RumorBroadcasterChestplate : ModItem, IPlaceholderItem
     {

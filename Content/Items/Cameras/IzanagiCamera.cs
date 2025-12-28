@@ -30,6 +30,7 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override void HoldItem(Player player)
         {
+            base.HoldItem(player);
             player.AddBuff(BuffType<DevelopingBuff>(), 2);
             player.Camera().FilmEffectChanceModifier *= 1.5f;
         }
