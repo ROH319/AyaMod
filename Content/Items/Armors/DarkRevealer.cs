@@ -19,13 +19,14 @@ using Terraria.ID;
 
 namespace AyaMod.Content.Items.Armors
 {
-    [PlayerEffect(OverrideEffectName = "DarkSetBonus")]
+    [PlayerEffect(OverrideEffectName = DarkRevealerSet)]
     [AutoloadEquip(EquipType.Head)]
     public class DarkRevealerMask : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(CritBonus);
 
+        public const string DarkRevealerSet = "DarkRevealerSet";
         public static LocalizedText DarkBonus { get; set; }
 
         public override void Load()
@@ -78,7 +79,7 @@ namespace AyaMod.Content.Items.Armors
 
         public static void DarkSetBonus(Player player)
         {
-            player.AddEffect("DarkSetBonus");
+            player.AddEffect(DarkRevealerSet);
             if (player.Aya().noHitTimer > NoHitSecondRequired * 60 && !player.HasBuff<StealthNoHitBuff>())
             {
                 player.AddBuff(BuffType<StealthNoHitBuff>(), 2);
@@ -88,7 +89,7 @@ namespace AyaMod.Content.Items.Armors
                     var length = Main.rand.NextFloat(20, 100);
                     Vector2 pos = player.Center + Main.rand.NextVector2Unit() * length;
                     Vector2 vel = pos.DirectionToSafe(player.Center) * Utils.Remap(length, 20, 100, 1f, 6);
-                    Dust d = Dust.NewDustPerfect(pos, 27, vel);
+                    Dust d = Dust.NewDustPerfect(pos, DustID.Shadowflame, vel);
                     d.scale *= 2f;
                     d.noGravity = true;
                 }
@@ -98,7 +99,7 @@ namespace AyaMod.Content.Items.Armors
 
         public static void DarkHover(BaseCameraProj camera, NPC npc)
         {
-            if(camera.player.HasEffect("DarkSetBonus"))
+            if(camera.player.HasEffect(DarkRevealerSet))
             {
                 var darkReveal = npc.GetGlobalNPC<DarkRevealNPC>();
                 darkReveal.darkRevealTimer++;
@@ -112,7 +113,7 @@ namespace AyaMod.Content.Items.Armors
 
         public static void DarkClear(BaseCameraProj camera, int captureCount)
         {
-            if (camera.player.HasEffect("DarkSetBonus"))
+            if (camera.player.HasEffect(DarkRevealerSet))
             {
                 camera.player.AddBuff(BuffType<StealthBuff>(), StealthDuration * 60);
             }

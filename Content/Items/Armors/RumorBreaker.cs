@@ -1,8 +1,10 @@
 ﻿using AyaMod.Content.Buffs;
+using AyaMod.Content.Projectiles.Auras;
 using AyaMod.Core;
 using AyaMod.Core.Attributes;
 using AyaMod.Core.Globals;
 using AyaMod.Core.ModPlayers;
+using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -14,11 +16,12 @@ using Terraria.Localization;
 namespace AyaMod.Content.Items.Armors
 {
     [AutoloadEquip(EquipType.Head)]
-    [PlayerEffect(OverrideEffectName = "RumorBreakerSet")]
+    [PlayerEffect(OverrideEffectName = RumorBreakerSet)]
     public class RumorBreakerHelmet : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus, CritBonus);
+        public const string RumorBreakerSet = "RumorBreakerSet";
         public static LocalizedText RumorBreakerBonus { get; set; }
 
         public static int DamageBonus = 10;
@@ -27,6 +30,7 @@ namespace AyaMod.Content.Items.Armors
         public override void Load()
         {
             AyaPlayer.DoubleTapHook += RumorBreakerKeyEffect;
+            GlobalCamera.SnapHook += RumorBreakerSnap;
         }
         public override void SetStaticDefaults()
         {
@@ -52,7 +56,7 @@ namespace AyaMod.Content.Items.Armors
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = RumorBreakerBonus.Value;
-            player.AddEffect("RumorBreakerSet");
+            player.AddEffect(RumorBreakerSet);
             RumorBreakerSetEffect(player);
         }
         public static void RumorBreakerSetEffect(Player player)
@@ -63,7 +67,7 @@ namespace AyaMod.Content.Items.Armors
         }
         public static void RumorBreakerKeyEffect(Player player)
         {
-            if (!player.HasEffect("RumorBreakerSet")) return;
+            if (!player.HasEffect(RumorBreakerSet)) return;
             foreach (Projectile p in Main.ActiveProjectiles)
             {
                 if (p.type != ProjectileType<PurifyAura>()) continue;
@@ -71,6 +75,17 @@ namespace AyaMod.Content.Items.Armors
             }
         }
 
+        public static void RumorBreakerSnap(BaseCameraProj projectile)
+        {
+            if (!projectile.player.HasEffect(RumorBreakerSet)) return;
+            //每5次拍摄触发
+            if (projectile.player.Camera().GlobalSnapCounter % 5 != 0) return;
+
+            var aura = AuraFriendly.Spawn(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, 2 * 60, BuffType<PurifiedBuff>(), 
+                3 * 60, 300f, new Color(255,247,170,128), new Color(255,255,81,156), projectile.player.whoAmI);
+            aura.SetRadiusFadeout(1f, Common.Easer.Ease.Linear);
+            aura.SetAlphaFadeout(0.6f, Common.Easer.Ease.OutSine);
+        }
         public override void AddRecipes()
         {
             CreateRecipe()
@@ -102,7 +117,7 @@ namespace AyaMod.Content.Items.Armors
         {
             Player player = Main.player[Projectile.owner];
             if (player == null || !player.Alive()) return;
-            if (!player.HasEffect("RumorBreakerSet")) Projectile.Kill();
+            if (!player.HasEffect(RumorBreakerHelmet.RumorBreakerSet)) Projectile.Kill();
 
             Projectile.Center = Vector2.Lerp(Projectile.Center, player.Center, 0.2f);
 
@@ -156,6 +171,12 @@ namespace AyaMod.Content.Items.Armors
                 if (npc.Distance(Projectile.Center) > range) continue;
 
                 npc.AddBuff(BuffType<PurifiedBuff>(), duration);
+                int dustamount = 32;
+                for(int i = 0; i < dustamount; i++)
+                {
+                    Dust d = Dust.NewDustDirect(npc.position, npc.width, npc.height, DustID.YellowTorch, 0, Main.rand.NextFloat(-1, -4), Scale: 1.5f);
+                    d.noGravity = true;
+                }
             }
         }
         public static void TryCleanDebuff(Player player)

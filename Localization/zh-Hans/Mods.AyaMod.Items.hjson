@@ -416,7 +416,7 @@ ShiftingPearlsandsFilm: {
 }
 
 ShiftingSandsFilm: {
-	DisplayName: 珍珠流沙胶片
+	DisplayName: 流沙胶片
 	Tooltip: ""
 }
 

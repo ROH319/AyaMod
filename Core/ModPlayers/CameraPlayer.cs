@@ -53,6 +53,11 @@ namespace AyaMod.Core.ModPlayers
         /// </summary>
         public int HoldNonCameraCounter = 0;
 
+        /// <summary>
+        /// 全局拍摄计数器，每次拍摄递增
+        /// </summary>
+        public int GlobalSnapCounter = 0;
+
         public int CameraAltCooldown;
 
         /// <summary>
@@ -152,7 +157,7 @@ namespace AyaMod.Core.ModPlayers
         public void OnSnap()
         {
             FlashTimer = FlashTimerMax;
-
+            GlobalSnapCounter++;
             Helper.PlayPitched("Snap", ClientConfig.Instance.SnapVolume, position: Player.Center);
         }
 

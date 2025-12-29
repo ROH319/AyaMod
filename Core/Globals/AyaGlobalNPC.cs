@@ -1,7 +1,9 @@
-﻿using AyaMod.Content.Items.Accessories;
+﻿using AyaMod.Content.Buffs;
+using AyaMod.Content.Items.Accessories;
 using AyaMod.Content.Items.Cameras;
 using AyaMod.Content.Items.Films.DyeFilms;
 using AyaMod.Content.Items.PrefixHammers;
+using AyaMod.Core.Systems;
 using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
@@ -22,6 +24,8 @@ namespace AyaMod.Core.Globals
 
         public bool ElectrifiedBuff;
         public bool ShadowSuckBuff;
+        public bool Madness;
+        public int SpreadRumorCounter;
 
         public bool Acid;
         public bool BlueAcid;
@@ -36,6 +40,7 @@ namespace AyaMod.Core.Globals
 
             ElectrifiedBuff = false;
             ShadowSuckBuff = false;
+            Madness = false;
 
             Acid = false;
             BlueAcid = false;
@@ -47,7 +52,7 @@ namespace AyaMod.Core.Globals
         {
             return base.PreAI(npc);
         }
-
+        public static event NPCEvents.NPCDelegate PostAIHook = (n) => { };
         public override void PostAI(NPC npc)
         {
             if (Scared && !npc.boss && (npc.life / (float)npc.lifeMax) < 0.15f)
@@ -65,6 +70,9 @@ namespace AyaMod.Core.Globals
             {
                 ChlorophyteFilm.SpawnSpore(npc);
             }
+
+            foreach(NPCEvents.NPCDelegate del in PostAIHook.GetInvocationList())
+                del(npc);
         }
         public static event NPCEvents.HitByProjectileModifierDelegate HitByProjectileModifier = (NPC n, Projectile p, ref NPC.HitModifiers m) => { };
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
@@ -87,6 +95,8 @@ namespace AyaMod.Core.Globals
             {
                 del.Invoke(npc);
             }
+            if (npc.type == NPCID.GoblinSummoner && !AyaWorld.downedGoblinSummoner)
+                AyaWorld.downedGoblinSummoner = true;
         }
 
         public override void UpdateLifeRegen(NPC npc, ref int damage)
@@ -134,6 +144,12 @@ namespace AyaMod.Core.Globals
                 if (damage < 4) 
                     damage = 4;
             }
+            if (Madness)
+            {
+                npc.lifeRegen -= MadnessBuff.DPS * 2;
+                if (damage < 10)
+                    damage = 10;
+            }
         }
         public override void ModifyShop(NPCShop shop)
         {
@@ -167,6 +183,14 @@ namespace AyaMod.Core.Globals
         public override bool PreChatButtonClicked(NPC npc, bool firstButton)
         {
             return base.PreChatButtonClicked(npc, firstButton);
+        }
+
+        public override void Unload()
+        {
+            HitByProjectileModifier = null;
+            ModifyHitHook = null;
+            OnNPCKill = null;
+            PostAIHook = null;
         }
         public override bool InstancePerEntity => true;
     }

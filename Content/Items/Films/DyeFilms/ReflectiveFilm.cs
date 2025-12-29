@@ -1,8 +1,10 @@
 ﻿using AyaMod.Content.Buffs.Films;
+using AyaMod.Content.Items.Materials;
 using AyaMod.Core;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Core.Prefabs;
 using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
@@ -14,6 +16,8 @@ namespace AyaMod.Content.Items.Films.DyeFilms
 
         public override int DyeID => 3190;
 
+        public static int DmgReduceFlat = 6;
+        public static int DmgReduceFlatDev = 18;
         public override void Load()
         {
             AyaPlayer.OnHitByBothHook += OnHit;
@@ -30,8 +34,5 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                 projectile.player.AddBuff(BuffType<ReflectiveBuff>(), 60);
             }
         }
-
-        public static int DmgReduceFlat = 6;
-        public static int DmgReduceFlatDev = 18;
     }
 }

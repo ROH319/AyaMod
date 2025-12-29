@@ -123,10 +123,16 @@ namespace AyaMod.Core.Globals
         public override void Unload()
         {
             PreAIHook = null;
+            PostAIHook = null;
+            OnProjectileCanDamage = null;
+            ModifyHitNPCHook = null;
+            OnHitNPCHook = null;
             HoverNPCHook = null;
             NotHoverNPCHook = null;
+            PreClearHook = null;
             PostClearHook = null;
             SnapHook = null;
+            SnapInSightHook = null;
         }
     }
 }

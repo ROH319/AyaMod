@@ -49,6 +49,27 @@ namespace AyaMod.Helpers
             Main.ItemDropSolver.TryDropping(info);
         }
 
+        public static NPC FindCloestNPC(Vector2 pos, float range = int.MaxValue, bool ignoreTile = false)
+        {
+            NPC target = null;
+            float minDist = range;
+            foreach(var npc in Main.ActiveNPCs)
+            {
+                if (npc.CanBeChasedBy())
+                {
+                    if (minDist == -1 || npc.Distance(pos) < minDist)
+                    {
+                        if (ignoreTile || Collision.CanHit(pos, 1, 1, npc.position, npc.width, npc.height))
+                        {
+                            target = npc;
+                            minDist = npc.Distance(pos);
+                        }
+                    }
+                }
+            }
+            return target;
+        }
+
         #endregion
 
         public static string GetText(string key, params object[] args)

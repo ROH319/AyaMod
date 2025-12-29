@@ -15,6 +15,7 @@ Keybinds: {
 	SpecialMove.DisplayName: Special Move
 }
 
+Conditions.DownedGoblinSummoner: Downed goblin summoner
 DropConditions.PostSkeletron: Needs killed Skeletron
 NPCs.Lantern.DisplayName: Lantern
 Tiles.IzanagiObjectOre.MapEntry: Izanagi Object Ore

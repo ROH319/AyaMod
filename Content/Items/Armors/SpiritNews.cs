@@ -9,11 +9,12 @@ using Terraria.Localization;
 namespace AyaMod.Content.Items.Armors
 {
     [AutoloadEquip(EquipType.Head)]
-    [PlayerEffect(OverrideEffectName = "SpiritNewsSet")]
+    [PlayerEffect(OverrideEffectName = SpiritNewsSet)]
     public class SpiritNewsHood : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus);
+        public const string SpiritNewsSet = "SpiritNewsSet";
         public static LocalizedText SpiritNewsBonus { get; set; }
         public static int DamageBonus = 10;
 
@@ -26,7 +27,7 @@ namespace AyaMod.Content.Items.Armors
         public static void GlobalCamera_OnHitNPCHook(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             Player player = Main.player[projectile.owner];
-            if (player == null || !player.HasEffect("SpiritNewsSet") || target.life > 0) return;
+            if (player == null || !player.HasEffect(SpiritNewsSet) || target.life > 0) return;
 
             Vector2 vel = Main.rand.NextVector2Unit() * 6f;
             int type = ProjectileType<EarthSpirits>();
@@ -35,7 +36,7 @@ namespace AyaMod.Content.Items.Armors
 
         public override void SetStaticDefaults()
         {
-            SpiritNewsBonus = this.GetLocalization("SpiritNewsBonus");
+            SpiritNewsBonus = this.GetLocalization(nameof(SpiritNewsBonus));
         }
         public override void SetDefaults()
         {
@@ -56,7 +57,7 @@ namespace AyaMod.Content.Items.Armors
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = SpiritNewsBonus.Value;
-            player.AddEffect("SpiritNewsSet");
+            player.AddEffect(SpiritNewsSet);
         }
         public override void AddRecipes()
         {

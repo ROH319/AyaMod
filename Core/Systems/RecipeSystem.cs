@@ -1,4 +1,7 @@
-﻿using AyaMod.Content.Items.Materials;
+﻿using AyaMod.Content.Items.Films;
+using AyaMod.Content.Items.Films.DyeFilms;
+using AyaMod.Content.Items.Materials;
+using AyaMod.Core.Conditions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,6 +78,95 @@ namespace AyaMod.Core.Systems
                 .DisableDecraft()
                 .Register();
 
+            RegisterFilmRecipe();
+        }
+
+        public static void RegisterFilmRecipe()
+        {
+            List<int> filmList = [
+                ItemType<ReflectiveFilm>(),
+                ItemType<GelFilm>(),
+                ItemType<PinkGelFilm>(),
+                ItemType<AcidFilm>(),
+                ItemType<PurpleOozeFilm>(),
+                ItemType<FogboundFilm>(),
+                ItemType<BloodbathFilm>(),
+            ];
+            List<int> filmPostEyes = [
+                ItemType<HadesFilm>(),
+                ItemType<ReflectiveFilm>(),
+                ItemType<ShiftingSandsFilm>(),
+            ];
+            List<int> filmPostBrain = [
+                ItemType<ShadowFilm>(),
+                ItemType<GrimFilm>(),
+                ItemType<BurningHadesFilm>(),
+                ItemType<ReflectiveSilverFilm>(),
+            ];
+            List<int> filmPostSke = [
+                ItemType<WispFilm>(),
+                ItemType<BlueAcidFilm>(),
+                ItemType<TwilightFilm>(),
+            ];
+            List<int> filmHardmode = [
+                ItemType<PixieFilm>(),
+                ItemType<ShiftingPearlsandsFilm>(),
+                ItemType<ReflectiveGoldFilm>(),
+                ItemType<InfernalWispFilm>(),
+            ];
+            List<int> filmPostAnyMech = [
+                ItemType<UnicornWispFilm>(),
+                ItemType<LokisFilm>(),
+            ];
+            List<int> filmPostAllMech = [
+                ItemType<ReflectiveMetalFilm>(),
+                ItemType<ChlorophyteFilm>(),
+                ItemType<PhaseFilm>()
+            ];
+            List<int> filmPostPlant = [
+                ItemType<GlowingMushroomFilm>(),
+                ItemType<RedAcidFilm>(),
+            ];
+            List<int> filmPostGolem = [
+                ItemType<NegativeFilm>(),
+                ItemType<ReflectiveObsidianFilm>(),
+                ItemType<MartianFilm>(),
+                ItemType<MidnightRainbowFilm>(),
+                ItemType<PrismaticFilm>(),
+            ];
+            List<int> filmPostKakaa = [
+                ItemType<SolarFilm>(),
+                ItemType<VortexFilm>(),
+                ItemType<NebulaFilm>(),
+                ItemType<StardustFilm>(),
+            ];
+
+            CreateFilmRecipe(filmList);
+            CreateFilmRecipe(filmPostEyes, Condition.DownedEyeOfCthulhu);
+            CreateFilmRecipe(filmPostBrain, Condition.DownedBrainOfCthulhu);
+            CreateFilmRecipe(filmPostSke, Condition.DownedSkeletron);
+            CreateFilmRecipe(filmHardmode, Condition.Hardmode);
+            CreateFilmRecipe(filmPostAnyMech, Condition.DownedMechBossAny);
+            CreateFilmRecipe(filmPostAllMech, Condition.DownedMechBossAll);
+            CreateFilmRecipe(filmPostPlant, Condition.DownedPlantera);
+            CreateFilmRecipe(filmPostGolem, Condition.DownedGolem);
+            CreateFilmRecipe(filmPostKakaa, Condition.DownedCultist);
+
+            CreateFilmRecipe([ItemType<ShadowflameHadesFilm>()], AyaConditions.DownedGoblinSummoner);
+            CreateFilmRecipe([ItemType<LivingFlameFilm>()], Condition.DownedSkeletronPrime);
+            CreateFilmRecipe([ItemType<LivingOceanFilm>()], Condition.DownedDestroyer);
+            CreateFilmRecipe([ItemType<LivingRainbowFilm>()], Condition.DownedTwins);
+        }
+        public static void CreateFilmRecipe(List<int> filmList, Condition condition = null)
+        {
+            foreach (var film in filmList)
+            {
+                Recipe.Create(film, 200)
+                    .AddIngredient<CameraFilm>(200)
+                    .AddIngredient<StrangePlantEssence>()
+                    .AddCondition(condition)
+                    .Register();
+            }
         }
     }
 }

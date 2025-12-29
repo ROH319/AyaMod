@@ -11,11 +11,12 @@ using Terraria.Localization;
 namespace AyaMod.Content.Items.Armors
 {
     [AutoloadEquip(EquipType.Head)]
-    [PlayerEffect(OverrideEffectName ="FormerHellSet")]
+    [PlayerEffect(OverrideEffectName = FormerHellSet)]
     public class FormerHellWalkerHelmet : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus, CritBonus);
+        public const string FormerHellSet = "FormerHellSet";
         public static LocalizedText HellWalkerBonus { get; set; }
 
         public static int DamageBonus = 5;
@@ -48,7 +49,7 @@ namespace AyaMod.Content.Items.Armors
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = HellWalkerBonus.WithFormatArgs(AttackSpeedBonus, EnergeticBuff.RegenBonus, EnergeticBuff.DefenseBonus, EnergeticBuff.MovementBonus).Value;
-            player.AddEffect("FormerHellSet");
+            player.AddEffect(FormerHellSet);
             HellWalkerSetEffect(player);
         }
         public static void HellWalkerSetEffect(Player player)
@@ -61,7 +62,7 @@ namespace AyaMod.Content.Items.Armors
         }
         public static void HellWalkerKeyEffect(Player player)
         {
-            if (!player.HasEffect("FormerHellSet")) return;
+            if (!player.HasEffect(FormerHellSet)) return;
             if (player.ownedProjectileCounts[ProjectileType<HotSpringCircle>()] > 0 || player.HasBuff<HotSpringCDBuff>())
                 return;
 

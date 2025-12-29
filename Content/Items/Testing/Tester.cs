@@ -1,4 +1,4 @@
-﻿using AyaMod.Content.Projectiles;
+﻿using AyaMod.Content.Projectiles.Auras;
 using AyaMod.Core;
 using AyaMod.Helpers;
 using System;
@@ -34,7 +34,7 @@ namespace AyaMod.Content.Items.Testing
             switch (index)
             {
                 case 0:
-                    var aura = BaseBuffAura.Spawn(source, Main.MouseWorld, 2 * 60, BuffID.Ichor, 60, 400, new Color(20,20,20,128), new Color(168,74,69,255), player.whoAmI, true);
+                    var aura = AuraFriendly.Spawn(source, Main.MouseWorld, 2 * 60, BuffID.Ichor, 60, 400, new Color(20,20,20,128), new Color(168,74,69,255), player.whoAmI);
                     aura.SetRadiusFadein(0.4f, Common.Easer.Ease.OutCubic);
                     aura.SetRadiusFadeout(0.6f, Common.Easer.Ease.OutCubic);
                     break;

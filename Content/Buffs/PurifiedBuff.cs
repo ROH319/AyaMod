@@ -1,5 +1,6 @@
 ﻿using AyaMod.Core;
 using AyaMod.Core.Globals;
+using AyaMod.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,10 @@ namespace AyaMod.Content.Buffs
             float regen = Utils.Remap(time, BuffTimeMin, BuffTimeMax, RegenBonusMin, RegenBonusMax);
             player.lifeRegen += (int)regen;
             player.buffTime[buffIndex] = 2;
+        }
+        public override void Update(NPC npc, ref int buffIndex)
+        {
+            npc.Aya().SpeedModifier -= 0.4f;
         }
         //public override bool ReApply(Player player, int time, int buffIndex)
         //{

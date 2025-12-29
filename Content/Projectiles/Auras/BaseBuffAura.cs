@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 
-namespace AyaMod.Content.Projectiles
+namespace AyaMod.Content.Projectiles.Auras
 {
 
     public class BaseBuffAura : ModProjectile
@@ -24,8 +24,6 @@ namespace AyaMod.Content.Projectiles
 
         public Color innerColor;
         public Color edgeColor;
-        public bool CanApplyToHostileNPC;
-        public bool CanApplyToPlayer;
 
         public float RadiusFadeinThreshold = 0.1f;
         public Ease RadiusFadeinEase = Ease.Linear;
@@ -42,15 +40,13 @@ namespace AyaMod.Content.Projectiles
 
         private float alphaFadeinProgress;
         private float alphaFadeoutProgress;
-        public static BaseBuffAura Spawn(IEntitySource source, Vector2 pos, int timeleft, int buffType, int buffTime, float radius, Color innerColor, Color edgeColor, int owner, bool toNPC = false, bool toPlayer = false)
+        public static BaseBuffAura Spawn(IEntitySource source, Vector2 pos, int timeleft, int buffType, int buffTime, float radius, Color innerColor, Color edgeColor, int owner)
         {
             var projectile = Projectile.NewProjectileDirect(source, pos, Vector2.Zero, ProjectileType<BaseBuffAura>(), 0, 0, owner, timeleft, buffType, radius);
             BaseBuffAura aura = projectile.ModProjectile as BaseBuffAura;
             aura.BuffDuration = buffTime;
             aura.innerColor = innerColor;
             aura.edgeColor = edgeColor;
-            aura.CanApplyToHostileNPC = toNPC;
-            aura.CanApplyToPlayer = toPlayer;
             return aura;
         }
         /// <summary>
@@ -107,32 +103,9 @@ namespace AyaMod.Content.Projectiles
             alphaFadeinProgress = EaseManager.Evaluate(AlphaFadeinEase, Utils.Remap(factor, 0f, AlphaFadeinThreshold, 0f, 1f), 1f);
             alphaFadeoutProgress = EaseManager.Evaluate(AlphaFadeoutEase, Utils.Remap(factor, AlphaFadeoutThreshold, 1f, 1f, 0f), 1f);
 
-            if (CanApplyToPlayer)
-            {
-                ApplyToPlayer();
-            }
-            if (CanApplyToHostileNPC)
-            {
-                ApplyToNPC();
-            }
+            ApplyBuff();
         }
-        public void ApplyToPlayer()
-        {
-            foreach (var player in Main.ActivePlayers)
-            {
-                if (player.Distance(Projectile.Center) > Radius * 0.45f) continue;
-                player.AddBuff((int)BuffType, 2);
-            }
-        }
-        public void ApplyToNPC()
-        {
-            foreach (var npc in Main.ActiveNPCs)
-            {
-                if (npc.friendly || npc.Distance(Projectile.Center) > Radius * 0.45f) continue;
-                npc.AddBuff((int)BuffType, 2);
-            }
-        }
-
+        public virtual void ApplyBuff() { }
         public override bool PreDraw(ref Color lightColor)
         {
             var shader = ShaderLoader.GetShader("CircleEffect2");
