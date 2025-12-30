@@ -16,6 +16,7 @@ namespace AyaMod.Content.Items.Films
         public override void SetDefaults()
         {
             base.SetDefaults();
+            Item.SetShopValues(Terraria.Enums.ItemRarityColor.Blue1, Item.sellPrice(copper:3));
             FilmArgs = [("ammocost", AmmoCostDec.ToString(), AmmoCostDecDev.ToString())];
         }
         public override bool CanBeConsumedAsAmmo(Item weapon, Player player)

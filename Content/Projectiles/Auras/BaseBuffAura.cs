@@ -49,6 +49,15 @@ namespace AyaMod.Content.Projectiles.Auras
             aura.edgeColor = edgeColor;
             return aura;
         }
+        public static T Spawn<T>(IEntitySource source, Vector2 pos, int timeleft, int buffType, int buffTime, float radius, Color innerColor, Color edgeColor, int owner) where T : BaseBuffAura
+        {
+            var projectile = Projectile.NewProjectileDirect(source, pos, Vector2.Zero, ProjectileType<T>(), 0, 0, owner, timeleft, buffType, radius);
+            T aura = projectile.ModProjectile as T;
+            aura.BuffDuration = buffTime;
+            aura.innerColor = innerColor;
+            aura.edgeColor = edgeColor;
+            return aura;
+        }
         /// <summary>
         /// 设置半径淡入的阈值与缓动类型
         /// 阈值为生命周期因子（从0到1）的值：在生命周期因子从 0 到该阈值的区间内，半径按指定的缓动函数从 0 过渡到目标半径
@@ -113,7 +122,7 @@ namespace AyaMod.Content.Projectiles.Auras
 
             Texture2D noiseTex = Request<Texture2D>(AssetDirectory.Extras + "GenFX_PlagueofMurlocs_Water_BW", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
 
-            bool floatingRadius = false;
+            bool floatingRadius = true;
             float radius = Radius * 2f;
             Color inColor = innerColor * alphaFadeinProgress * alphaFadeoutProgress;
             Color edColor = edgeColor * alphaFadeinProgress * alphaFadeoutProgress;

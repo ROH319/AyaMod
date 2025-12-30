@@ -68,14 +68,13 @@ namespace AyaMod.Content.Items.Lens
             return Helper.MergeAdjacentRects(resultRects);
         }
 
-        public void DrawCamera(SpriteBatch spriteBatch, Player player, Vector2 center, float rot, float size, float focusdScale, float maxFocusScale, Color outerFrameColor, Color innerFrameColor, Color focusCenterColor)
+        public void DrawCamera(SpriteBatch spriteBatch, Vector2 center, float rot, float size, float focusdScale, float maxFocusScale, Color outerFrameColor, Color innerFrameColor, Color focusCenterColor)
         {
             float focusFactor = (focusdScale - 1f) / (maxFocusScale - 1f);
 
             float sizex = size;
             float sizey = size * 1.4f;
             var pos = AyaUtils.GetCameraRect(center, rot, sizex, sizey);
-            var mplr = player.GetModPlayer<CameraPlayer>();
 
             //Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, center - Main.screenPosition, null, Color.White.AdditiveColor() * 0.06f, rot, TextureAssets.BlackTile.Value.Size() / 2, new Vector2(sizex / 16f,sizey / 16f), 0, 0);
 
@@ -108,11 +107,6 @@ namespace AyaMod.Content.Items.Lens
             //焦点
             Utils.DrawLine(Main.spriteBatch, center - dir * sizex / 8f, center + dir * sizex / 8f, focusCenterColor, focusCenterColor, borderWidth);
             Utils.DrawLine(Main.spriteBatch, center - ndir * sizey / 8f, center + ndir * sizey / 8f, focusCenterColor, focusCenterColor, borderWidth);
-
-            //draw flash light
-            float flashFactor = mplr.FlashTimer / mplr.FlashTimerMax;
-            float extraScale = Utils.Remap(flashFactor, 0, 1f, 0.9f, 1.3f);
-            //Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, center - Main.screenPosition, null, Color.White.AdditiveColor() * 0.5f * flashFactor, dir.ToRotation(), TextureAssets.BlackTile.Value.Size() / 2, new Vector2(sizex / 16f, sizey / 16f) * extraScale, 0, 0);
 
         }
     }

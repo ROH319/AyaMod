@@ -1,10 +1,6 @@
 ﻿using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Terraria;
 
 namespace AyaMod.Content.Items.Films
 {
@@ -17,6 +13,7 @@ namespace AyaMod.Content.Items.Films
         public override void SetDefaults()
         {
             base.SetDefaults();
+            Item.SetShopValues(Terraria.Enums.ItemRarityColor.Green2, Item.sellPrice(copper: 3));
             FilmArgs = [("hitheal", HitHeal.ToString(), HitHealDev.ToString()), 
                 ("projheal", SnapProjHeal.ToString(), SnapProjHealDev.ToString())];
         }

@@ -917,3 +917,13 @@ Tester: {
 	DisplayName: Tester
 	Tooltip: ""
 }
+
+StrangePlantEssence: {
+	DisplayName: Strange Plant Essence
+	Tooltip: ""
+}
+
+ScarletMoonsFilm: {
+	DisplayName: Scarlet Moons Film
+	Tooltip: ""
+}

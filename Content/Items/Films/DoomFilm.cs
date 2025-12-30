@@ -12,6 +12,12 @@ namespace AyaMod.Content.Items.Films
 {
     public class DoomFilm : BaseFilm
     {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            Item.SetShopValues(Terraria.Enums.ItemRarityColor.Orange3, Item.sellPrice(copper: 6));
+
+        }
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             bool ichor = WorldGen.crimson;

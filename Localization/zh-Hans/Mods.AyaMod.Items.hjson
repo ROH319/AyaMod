@@ -885,7 +885,12 @@ RainforestVoiceHelmet: {
 }
 
 RumorBreakerHelmet: {
-	RumorBreakerBonus: Mods.AyaMod.Items.RumorBreakerHelmet.RumorBreakerBonus
+	RumorBreakerBonus:
+		'''
+		每5次拍摄会对敌人施加净化，降低25防御和40%速度
+		获得一个逐渐聚集的净化光环，随时间增加自身和附近队友的恢复，减速靠近的敌人
+		双击下将光环释放，清除大范围内玩家的大部分负面效果，对附近的所有敌人施加净化
+		'''
 	DisplayName: 谣言粉碎者头盔
 	Tooltip:
 		'''
@@ -895,7 +900,13 @@ RumorBreakerHelmet: {
 }
 
 RumorBroadcasterHelmet: {
-	RumorBroadcasterBonus: Mods.AyaMod.Items.RumorBroadcasterHelmet.RumorBroadcasterBonus
+	RumorBroadcasterBonus:
+		'''
+		每5次拍摄会对敌人施加狂乱，造成持续伤害并使敌人间可能互相攻击
+		获得一个逐渐聚集的谣言漩涡，对靠近的敌人造成伤害
+		双击下将其化作6道浊流射向最近的几个敌人，攻击到敌人后将其卷入谣言漩涡，造成持续伤害
+		敌人同时受狂乱和谣言漩涡影响时，每2s会往周围的敌人扩散2道谣言浊流
+		'''
 	DisplayName: 谣言散播者头盔
 	Tooltip:
 		'''
@@ -1143,4 +1154,14 @@ NoblyDrink: {
 Tester: {
 	DisplayName: 测试用物品
 	Tooltip: ""
+}
+
+StrangePlantEssence: {
+	DisplayName: 奇异植物精华
+	Tooltip: ""
+}
+
+ScarletMoonsFilm: {
+	// DisplayName: Scarlet Moons Film
+	// Tooltip: ""
 }

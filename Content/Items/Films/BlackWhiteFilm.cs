@@ -14,6 +14,7 @@ namespace AyaMod.Content.Items.Films
         public override void SetDefaults()
         {
             base.SetDefaults();
+            Item.SetShopValues(Terraria.Enums.ItemRarityColor.Blue1, Item.sellPrice(copper:3));
             FilmArgs = [("armorpen", ArmorPenBonus.ToString(), ArmorPenBonusDev.ToString())];
         }
         public override void ModifyHitNPCFilm(BaseCameraProj projectile, NPC target, ref NPC.HitModifiers modifiers)

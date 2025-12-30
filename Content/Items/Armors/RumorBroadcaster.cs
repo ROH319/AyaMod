@@ -30,6 +30,7 @@ namespace AyaMod.Content.Items.Armors
         {
             AyaPlayer.DoubleTapHook += RumorBroadcasterKeyEffect;
             GlobalCamera.SnapHook += RumorBroadcasterSnap;
+            AyaGlobalNPC.PostAIHook += NPCSprearRumorAI;
         }
 
         public override void SetStaticDefaults()
@@ -81,10 +82,34 @@ namespace AyaMod.Content.Items.Armors
             //每5次拍摄触发
             if (projectile.player.Camera().GlobalSnapCounter % 5 != 0) return;
 
-            var aura = AuraFriendly.Spawn(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, 2 * 60, BuffType<MadnessBuff>(),
-                3 * 60, 300f, new Color(255, 247, 170, 128), new Color(255, 255, 81, 156), projectile.player.whoAmI);
-            aura.SetRadiusFadeout(1f, Common.Easer.Ease.Linear);
+            var aura = BaseBuffAura.Spawn<AuraFriendly>(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, 3 * 60, BuffType<MadnessBuff>(),
+                3 * 60, 400f, new Color(151, 112, 204, 128) * 0.3f, new Color(101, 53, 165, 156), projectile.player.whoAmI);
+            aura.SetRadiusFadeout(0.99f, Common.Easer.Ease.Linear);
             aura.SetAlphaFadeout(0.6f, Common.Easer.Ease.OutSine);
+        }
+
+        public static void NPCSprearRumorAI(NPC npc)
+        {
+            if (!npc.CanBeChasedBy()) return;
+
+            var gnpc = npc.GetGlobalNPC<AyaGlobalNPC>();
+            gnpc.SpreadRumorCounter++;
+            if (!npc.HasBuff<MadnessBuff>()) return;
+            bool rumorAffected = false;
+            foreach(var p in Main.ActiveProjectiles)
+            {
+                if ((p.type != ProjectileType<RumorShot>() || p.ai[1] <= 1) && p.type != ProjectileType<RumorVortex>()) continue;
+                if(p.Colliding(p.getRect(), npc.getRect()))
+                {
+                    rumorAffected = true;
+                    break;
+                }
+            }
+            if (rumorAffected && gnpc.SpreadRumorCounter > 2 * 60)
+            {
+                RumorVortex.SpreadRumorShot(2, 300f, npc.GetSource_FromThis(), npc.Center, 16f, npc.damage / 4, Main.myPlayer, npc.whoAmI);
+                gnpc.SpreadRumorCounter = 0;
+            }
         }
 
         public override void AddRecipes()
@@ -101,41 +126,48 @@ namespace AyaMod.Content.Items.Armors
         public ref float ChargeTime => ref Projectile.ai[0];
         public ref float Released => ref Projectile.ai[1];
         public ref float State => ref Projectile.ai[2];
-        public override void SetStaticDefaults()
+        public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 128;
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 10 * 60;
+            Projectile.penetrate = -1;
             Projectile.SetImmune(10);
         }
         public override void OnSpawn(IEntitySource source)
         {
             Projectile.timeLeft = (int)ChargeTime;
         }
-        public void Release() { Released = 2; }
+        public void Release() 
+        {
+            if (Projectile.timeLeft > 4)
+                return;
+            Released = 2; 
+        }
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
             if (player == null || !player.Alive()) return;
             if (!player.HasEffect(RumorBroadcasterHelmet.RumorBroadcasterSet)) Projectile.Kill();
 
+            //Main.NewText($"{Projectile.damage}");
             float range = 200;
             NPC npc = AyaUtils.FindCloestNPC(player.Center, range, false);
-            Vector2 idlePos = player.Center;
             if (npc == null)
             {
-                idlePos = player.Center + MathF.Cos(Main.GameUpdateCount * 0.1f).ToRotationVector2() * range / 2;
+                Vector2 idlePos = player.Center + new Vector2(range / 2, 0).RotatedBy(Main.GameUpdateCount * 0.01f);
+                Projectile.Center = Vector2.Lerp(Projectile.Center, idlePos, 0.2f);
+
             }
             else
             {
-                idlePos = npc.Center;
+                Vector2 idlePos = npc.Center;
+                Projectile.Center = Vector2.Lerp(Projectile.Center, idlePos, 0.05f);
             }
-            Projectile.Center = Vector2.Lerp(Projectile.Center, idlePos, 0.2f);
 
             if (Released < 1) 
             {
-                SpreadRumor(Projectile, 3, 300f);
             }
             else
             {
@@ -150,48 +182,33 @@ namespace AyaMod.Content.Items.Armors
         }
         public void ReleaseEffect(Player player)
         {
-            SpreadRumorShot(6, 500f, Projectile.GetSource_FromAI(), Projectile.Center, 10f, Projectile.damage, player.whoAmI);
+            SpreadRumorShot(6, 500f, Projectile.GetSource_FromAI(), Projectile.Center, 12f, Projectile.damage / 2, player.whoAmI);
             Projectile.Kill();
         }
-        public static void SpreadRumorShot(int max, float range, IEntitySource source, Vector2 pos, float speed, int damage, int owner)
+        public static void SpreadRumorShot(int max, float range, IEntitySource source, Vector2 pos, float speed, int damage, int owner, int ignoreNPC = -1)
         {
             int counter = 0;
             foreach (NPC n in Main.ActiveNPCs)
             {
-                if (counter >= max || pos.Distance(n.Center) > 500f || !n.CanBeChasedBy()) continue;
+                if (n.whoAmI == ignoreNPC || counter >= max || pos.Distance(n.Center) > 500f || !n.CanBeChasedBy() || !Collision.CanHitLine(pos,1,1,n.Center,1,1)) continue;
 
                 Vector2 vel = pos.DirectionToSafe(n.Center) * speed;
                 int type = ProjectileType<RumorShot>();
-                Projectile.NewProjectileDirect(source, pos, vel, type, damage, 0f, owner);
+                var p = Projectile.NewProjectileDirect(source, pos, vel, type, damage, 0f, owner, ai0: -1, ai2:ignoreNPC);
                 counter++;
-            }
-        }
-        public static void SpreadRumor(Projectile projectile, int max, float range)
-        {
-            foreach(var npc in Main.ActiveNPCs)
-            {
-                if (!npc.CanBeChasedBy()) continue;
-                var gnpc = npc.GetGlobalNPC<AyaGlobalNPC>();
-                gnpc.SpreadRumorCounter++;
-                if (!npc.HasBuff<MadnessBuff>()) continue;
-                if (!projectile.Colliding(projectile.getRect(), npc.getRect())) continue;
-                if(gnpc.SpreadRumorCounter > 2 * 60)
-                {
-
-                    SpreadRumorShot(max, range, npc.GetSource_FromThis(), npc.Center, 10f, npc.damage / 3, Main.myPlayer);
-                    gnpc.SpreadRumorCounter = 0;
-                }
             }
         }
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
 
-            float scale = texture.Width / (float)Projectile.width * Projectile.scale;
+            float scale = Projectile.width / (float)texture.Width * Projectile.scale;
             int repeat = 6;
             for(int i = 0; i < repeat; i++)
             {
                 float rot = Projectile.rotation + MathHelper.PiOver2 / repeat * i;
+                if (i % 2 == 0) rot *= -1;
+
                 float alpha = Utils.Remap(MathF.Cos((float)(i / (float)repeat * MathHelper.Pi + Main.timeForVisualEffects * 0.01f)), -1f, 1f, 0.1f, 1f);
                 Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * alpha, rot, texture.Size() / 2, scale, 0);
 
@@ -205,22 +222,31 @@ namespace AyaMod.Content.Items.Armors
         public override string Texture => AssetDirectory.Projectiles + "RumorVortex";
         public ref float StickyToNPC => ref Projectile.ai[0];
         public ref float TransformFlag => ref Projectile.ai[1];
-        public override void SetStaticDefaults()
+        public ref float TargetPrev => ref Projectile.ai[2];
+        public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 32;
+            Projectile.width = Projectile.height = 64;
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 10 * 60;
-            Projectile.SetImmune(10);
+            Projectile.penetrate = -1;
+            Projectile.SetImmune(-1);
         }
-        public bool Transformed => TransformFlag < 1;
+        public bool Transformed => TransformFlag > 1;
         public void Transform()
         { 
             TransformFlag = 2;
+            StickyToNPC = -1;
+            Projectile.penetrate = -1;
+            Projectile.velocity = Vector2.Zero;
+            Projectile.timeLeft = 3 * 60;
+            Projectile.Scale(2, false);
+            Projectile.SetImmune(20);
             Projectile.ResetLocalNPCHitImmunity();
         }
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            if (target.whoAmI == TargetPrev) return;
             StickyToNPC = target.whoAmI;
             if (!Transformed) Transform();
         }
@@ -228,13 +254,15 @@ namespace AyaMod.Content.Items.Armors
         {
             if (!Transformed)
             {
-                Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.Obsidian, Projectile.velocity.Length(5), Scale: 2f);
-                d.noGravity = true;
+                for (int i = 0; i < 4; i++)
+                {
+                    Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.Obsidian, Projectile.velocity.Length(5), Scale: 2f);
+                    d.noGravity = true;
+                }
             }
             else 
             {
-                RumorVortex.SpreadRumor(Projectile, 3, 300f);
-                if (StickyToNPC >= 0)
+                if (StickyToNPC >= 0 && StickyToNPC != TargetPrev)
                 {
                     NPC npc = Main.npc[(int)StickyToNPC];
                     if (npc != null && npc.CanBeChasedBy())
@@ -245,6 +273,8 @@ namespace AyaMod.Content.Items.Armors
                     }
                     else StickyToNPC = -1;
                 }
+                Projectile.Opacity = Utils.Remap(Projectile.timeLeft, 0, 45, 0f, 1f);
+                Projectile.rotation += 0.02f;
             }
         }
         public override bool PreDraw(ref Color lightColor)
@@ -253,8 +283,17 @@ namespace AyaMod.Content.Items.Armors
 
             Texture2D texture = TextureAssets.Projectile[Type].Value;
 
-            float scale = texture.Width / (float)Projectile.width * Projectile.scale;
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity, Projectile.rotation, texture.Size() / 2, scale, 0);
+            float scaleFadein = Utils.Remap(Projectile.timeLeft, 2 * 60 + 30, 3 * 60, 1f, 0f);
+            float scale = Projectile.width / (float)texture.Width * Projectile.scale * scaleFadein;
+            int repeat = 6;
+            for (int i = 0; i < repeat; i++)
+            {
+                float rot = Projectile.rotation + MathHelper.PiOver2 / repeat * i;
+                if (i % 2 == 0) rot *= -1;
+                float alpha = Utils.Remap(MathF.Cos((float)(i / (float)repeat * MathHelper.Pi + Main.timeForVisualEffects * 0.01f)), -1f, 1f, 0.1f, 1f);
+                Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * alpha, rot, texture.Size() / 2, scale, 0);
+
+            }
 
             return false;
         }

@@ -1,7 +1,7 @@
-﻿using AyaMod.Content.Items.Films;
+﻿using AyaMod.Common.RecipeConditions;
+using AyaMod.Content.Items.Films;
 using AyaMod.Content.Items.Films.DyeFilms;
 using AyaMod.Content.Items.Materials;
-using AyaMod.Core.Conditions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -161,11 +161,11 @@ namespace AyaMod.Core.Systems
         {
             foreach (var film in filmList)
             {
-                Recipe.Create(film, 200)
+                var recipe = Recipe.Create(film, 200)
                     .AddIngredient<CameraFilm>(200)
-                    .AddIngredient<StrangePlantEssence>()
-                    .AddCondition(condition)
-                    .Register();
+                    .AddIngredient<StrangePlantEssence>();
+                if (condition != null) recipe.AddCondition(condition);
+                recipe.Register();
             }
         }
     }

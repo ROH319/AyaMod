@@ -22,7 +22,8 @@ namespace AyaMod.Content.Buffs
         public static void MadnessAI(NPC npc)
         {
             if(!npc.HasBuff(BuffType<MadnessBuff>())) return;
-            foreach(var n in Main.ActiveNPCs)
+            if ((Main.GameUpdateCount + npc.whoAmI) % 20 != 0) return;
+            foreach (var n in Main.ActiveNPCs)
             {
                 if(n == npc || !n.CanBeChasedBy()) continue;
                 Rectangle rect = n.getRect();

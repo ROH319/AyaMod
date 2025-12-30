@@ -180,6 +180,29 @@ namespace AyaMod.Helpers
             int index = npc.FindBuffIndex(ModContent.BuffType<T>());
             npc.DelBuff(index);
         }
+        public static NPC FindCloestNPC(this Player player, float range = int.MaxValue, bool ignoreImmune = false, bool ignoreTile = false)
+        {
+            NPC target = null;
+            float minDist = range;
+            foreach (var npc in Main.ActiveNPCs)
+            {
+                if (npc.CanBeChasedBy())
+                {
+                    if (ignoreImmune || !(npc.immune[player.whoAmI] != 0))
+                    {
+                        if (minDist == -1 || npc.Distance(player.Center) < minDist)
+                        {
+                            if (ignoreTile || Collision.CanHit(player.Center, 1, 1, npc.position, npc.width, npc.height))
+                            {
+                                target = npc;
+                                minDist = npc.Distance(player.Center);
+                            }
+                        }
+                    }
+                }
+            }
+            return target;
+        }
 
         public static NPC FindCloestTargetWithWhoAmI(this Projectile projectile, float whoami, out bool goodwhoami, float range = int.MaxValue, bool ignoreTile = false)
         {

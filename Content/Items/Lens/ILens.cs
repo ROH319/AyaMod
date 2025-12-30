@@ -15,7 +15,7 @@ namespace AyaMod.Content.Items.Lens
 
         public List<Rectangle> GetRectanglesAgainstEntity(Vector2 center, float size, float rot);
 
-        public void DrawCamera(SpriteBatch spriteBatch, Player player, Vector2 center, float rot, float size, 
+        public void DrawCamera(SpriteBatch spriteBatch, Vector2 center, float rot, float size, 
             float focusdScale, float maxFocusScale, Color outerFrameColor, Color innerFrameColor, Color focusCenterColor);
 
         public virtual void SpawnFlash(Vector2 center, Color color, float size, float rot, int flashTime)

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 
-namespace AyaMod.Core.Conditions
+namespace AyaMod.Common.RecipeConditions
 {
     public static class AyaConditions
     {

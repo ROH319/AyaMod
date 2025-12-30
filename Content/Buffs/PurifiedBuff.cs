@@ -1,4 +1,5 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Content.Items.Armors;
+using AyaMod.Core;
 using AyaMod.Core.Globals;
 using AyaMod.Helpers;
 using System;
@@ -40,7 +41,8 @@ namespace AyaMod.Content.Buffs
             int time = player.buffTime[buffIndex];
             float regen = Utils.Remap(time, BuffTimeMin, BuffTimeMax, RegenBonusMin, RegenBonusMax);
             player.lifeRegen += (int)regen;
-            player.buffTime[buffIndex] = 2;
+            if (player.HasEffect(RumorBreakerHelmet.RumorBreakerSet))
+                player.buffTime[buffIndex] = 2;
         }
         public override void Update(NPC npc, ref int buffIndex)
         {

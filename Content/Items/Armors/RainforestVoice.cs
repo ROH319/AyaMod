@@ -1,8 +1,12 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Content.Buffs;
+using AyaMod.Core;
 using AyaMod.Core.Attributes;
+using AyaMod.Core.Globals;
 using AyaMod.Core.ModPlayers;
+using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.GameContent;
@@ -23,9 +27,24 @@ namespace AyaMod.Content.Items.Armors
         public static int DamageBonus = 16;
         public static int CritBonus = 8;
 
+        public static int ExtraHeartDropChance = 10;
+
         public override void Load()
         {
             AyaPlayer.DoubleTapHook += RainforestKeyEffect;
+            AyaGlobalProjectile.OnProjectileHitNPC += DropExtraHeart; ;
+        }
+
+        public static void DropExtraHeart(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Player player = Main.player[projectile.owner];
+            if (!player.HasBuff(BuffType<RainforeseFlowerBuff>())) return;
+            if (!target.boss && target.life > 0) return;
+
+            if (Main.rand.Next(100) < ExtraHeartDropChance)
+            {
+                Item.NewItem(player.GetSource_FromThis(), target.getRect(), ItemID.Heart);
+            }
         }
 
         public override void SetStaticDefaults()
@@ -61,14 +80,14 @@ namespace AyaMod.Content.Items.Armors
         {
             int type = ProjectileType<RainforestHeart>();
             if (player.ownedProjectileCounts[type] < 1)
-                Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, type, 0, 0f, player.whoAmI);
+                Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, type, 200, 6f, player.whoAmI);
         }
 
         public static void RainforestKeyEffect(Player player)
         {
             if (!player.HasEffect(RainforestVoiceSet)) return;
 
-
+            player.GetModPlayer<RainforestPlayer>().ReverseState();
         }
 
         public override void AddRecipes()
@@ -92,6 +111,7 @@ namespace AyaMod.Content.Items.Armors
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
         }
+        public override bool? CanDamage() => false;
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
@@ -101,16 +121,21 @@ namespace AyaMod.Content.Items.Armors
             Vector2 idlePos = player.Center + new Vector2(0, -60f);
             Projectile.Center = Vector2.Lerp(Projectile.Center, idlePos, 0.5f);
 
+            State = player.GetModPlayer<RainforestPlayer>().RainforestFlowerState ? 0 : 1;
+            Projectile.timeLeft = 2;
             switch (State)
             {
                 case 0:
                     {
-
+                        player.AddBuff(BuffType<RainforeseFlowerBuff>(), 2);
                     }
                     break;
                 case 1:
                     {
-
+                        if (player.ownedProjectileCounts[ProjectileType<RainforestCameraProj>()] < 1)
+                        {
+                            Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ProjectileType<RainforestCameraProj>(), Projectile.damage, Projectile.knockBack, player.whoAmI);
+                        }
                     }
                     break;
                 default:break;
@@ -126,6 +151,81 @@ namespace AyaMod.Content.Items.Armors
                 texture.Size() / 2, Projectile.scale, spriteEffect, 0);
 
             return false;
+        }
+    }
+    public class RainforestCameraProj : BaseCameraProjAuto
+    {
+
+        public override Color outerFrameColor => new Color(165, 228, 138);
+        public override Color innerFrameColor => new Color(182, 196, 28) * 0.7f;
+        public override Color focusCenterColor => base.focusCenterColor;
+        public override Color flashColor => new Color(107, 203, 0).AdditiveColor() * 0.5f;
+
+        public override void SetOtherDefault()
+        {
+            base.SetOtherDefault();
+            SetCameraStats(160, 40, 400f, 1.3f);
+        }
+        public override bool PreAI()
+        {
+            if (player.dead || !player.active)
+            {
+                return false;
+            }
+            if (player.HasEffect(RainforestVoiceHelmet.RainforestVoiceSet) && !player.GetModPlayer<RainforestPlayer>().RainforestFlowerState)
+                Projectile.timeLeft = 2;
+
+            return base.PreAI();
+        }
+        public override NPC GetTargetIndex()
+        {
+
+            return player.FindCloestNPC(sightRange, true, false);
+        }
+    }
+    public class RainforestPlayer : ModPlayer
+    {
+        public int Overheal;
+        public bool RainforestFlowerState;
+        public static int MaxOverheal = 200;
+        public override void Load()
+        {
+            On_Player.Heal += HackHeal;
+        }
+        public override void Unload()
+        {
+            On_Player.Heal -= HackHeal;
+        }   
+        public static void HackHeal(On_Player.orig_Heal orig, Player self, int amount)
+        {
+            if (self.HasBuff<RainforeseFlowerBuff>())
+            {
+                if(self.statLife + amount > self.statLifeMax2)
+                {
+                    self.GetModPlayer<RainforestPlayer>().Overheal += self.statLife + amount - self.statLifeMax2;
+                }
+            }
+            orig(self, amount);
+        }
+        public void ReverseState()
+        {
+            RainforestFlowerState = !RainforestFlowerState;
+        }
+        public override void UpdateLifeRegen()
+        {
+            if(Overheal > 0 && Player.statLife < Player.statLifeMax2)
+            {
+                int regen = 10;
+                Player.lifeRegen += regen;
+                Overheal--;
+            }
+        }
+        public override void PostUpdateMiscEffects()
+        {
+            if(Overheal > MaxOverheal)
+            {
+                Overheal = MaxOverheal;
+            }
         }
     }
     [AutoloadEquip(EquipType.Body)]

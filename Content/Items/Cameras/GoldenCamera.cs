@@ -64,6 +64,23 @@ namespace AyaMod.Content.Items.Cameras
         {
             if (!Projectile.MyClient()) return;
 
+
+            var pos = AyaUtils.GetCameraRect(Projectile.Center, Projectile.rotation, Size * 0.75f, Size * 1.4f * 0.75f);
+
+            int dustamount = 36;
+            for (int i = 0; i < dustamount; i++)
+            {
+                float distFactor = Main.rand.NextFloat(1f, 1f) * 0.65f;
+                Vector2 p = pos[0];
+                float factor = i / (float)dustamount;
+                if (factor < 0.25f) p = Vector2.Lerp(pos[0], pos[1], Utils.Remap(factor, 0, 0.25f, 0f, 1f));
+                else if (factor < 0.5f) p = Vector2.Lerp(pos[1], pos[3], Utils.Remap(factor, 0.25f, 0.5f, 0f, 1f));
+                else if (factor < 0.75f) p = Vector2.Lerp(pos[3], pos[2], Utils.Remap(factor, 0.5f, 0.75f, 0f, 1f));
+                else p = Vector2.Lerp(pos[2], pos[0], Utils.Remap(factor, 0.75f, 1f, 0f, 1f));
+                var d = Dust.NewDustPerfect(p, DustID.GoldFlame, Projectile.DirectionToSafe(p) * 6 * distFactor, Scale: 2f);
+                d.noGravity = true;
+            }
+
             int damage = (int)(Projectile.damage * 0.6f);
             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<GoldenFlash>(), damage, Projectile.knockBack,Projectile.owner);
         }

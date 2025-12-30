@@ -462,7 +462,7 @@ namespace AyaMod.Core.Prefabs
             {
                 float alphaModifier = 1f;
                 if (!CanHit) alphaModifier *= 0.2f;
-                lens.DrawCamera(Main.spriteBatch, player, Projectile.Center,
+                lens.DrawCamera(Main.spriteBatch, Projectile.Center,
                     Projectile.rotation, floatingsize, FocusFactor, CameraStats.MaxFocusScale, outerFrameColor * alphaModifier, innerFrameColor * alphaModifier, focusCenterColor * alphaModifier);
             }
             return true;

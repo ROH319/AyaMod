@@ -13,18 +13,19 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
         {
             NPC target = null;
             float minDist = player.Camera().SizeModifier.ApplyTo(ChaseRange);
+            Vector2 cursorPos = player.Camera().MouseWorld;
             foreach (var npc in Main.ActiveNPCs)
             {
                 if (!npc.CanBeChasedBy()) continue;
-                if (npc.Distance(projectile.Projectile.Center) > minDist) continue;
+                if (npc.Distance(cursorPos) > minDist) continue;
                 if (!Collision.CanHit(player.Center, 1, 1, npc.position, npc.width, npc.height)) continue;
                 target = npc;
-                minDist = npc.Distance(projectile.Projectile.Center);
+                minDist = npc.Distance(cursorPos);
             }
             if (target != null)
             {
                 float chaseFactor = player.GetModPlayer<CameraPlayer>().ChaseSpeedModifier.ApplyTo(projectile.CameraStats.ChaseFactor);
-                projectile.Projectile.Center = Vector2.Lerp(projectile.Projectile.Center, target.Center, chaseFactor * 2f);
+                projectile.Projectile.Center = Vector2.Lerp(projectile.Projectile.Center, target.Center, chaseFactor * 0.25f);
             }
         }
         public static int ChaseRange = 16 * 15;

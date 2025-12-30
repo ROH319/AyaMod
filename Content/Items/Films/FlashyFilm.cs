@@ -2,6 +2,7 @@
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Terraria.ID;
+using Terraria;
 
 namespace AyaMod.Content.Items.Films
 {
@@ -12,6 +13,7 @@ namespace AyaMod.Content.Items.Films
         public override void SetDefaults()
         {
             base.SetDefaults();
+            Item.SetShopValues(Terraria.Enums.ItemRarityColor.Blue1, Item.sellPrice(copper:3));
             FilmArgs = [("flashtime", StunTimeBonus.ToString(), StunTimeBonusDev.ToString())];
         }
         public override void PreAI(BaseCameraProj projectile)

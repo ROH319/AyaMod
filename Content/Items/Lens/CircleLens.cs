@@ -58,7 +58,7 @@ namespace AyaMod.Content.Items.Lens
             }
             return Helper.MergeAdjacentRects(resultRects);
         }
-        public void DrawCamera(SpriteBatch spriteBatch, Player player, Vector2 center, float rot, float size, float focusdScale, float maxFocusScale, Color outerFrameColor, Color innerFrameColor, Color focusCenterColor)
+        public void DrawCamera(SpriteBatch spriteBatch, Vector2 center, float rot, float size, float focusdScale, float maxFocusScale, Color outerFrameColor, Color innerFrameColor, Color focusCenterColor)
         {
             float focusFactor = (focusdScale - 1f) / (maxFocusScale - 1f);
 

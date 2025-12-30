@@ -6,7 +6,7 @@ namespace AyaMod.Content.Items.Materials
 {
     public class StrangePlantEssence : ModItem, IPlaceholderItem
     {
-        public override string Texture => AssetDirectory.Items + Name;
+        public override string Texture => AssetDirectory.Materials + Name;
         public override void SetDefaults()
         {
             Item.width = Item.height = 20;

@@ -8,6 +8,7 @@ using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -81,9 +82,9 @@ namespace AyaMod.Content.Items.Armors
             //每5次拍摄触发
             if (projectile.player.Camera().GlobalSnapCounter % 5 != 0) return;
 
-            var aura = AuraFriendly.Spawn(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, 2 * 60, BuffType<PurifiedBuff>(), 
-                3 * 60, 300f, new Color(255,247,170,128), new Color(255,255,81,156), projectile.player.whoAmI);
-            aura.SetRadiusFadeout(1f, Common.Easer.Ease.Linear);
+            var aura = BaseBuffAura.Spawn<AuraFriendly>(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, 2 * 60, BuffType<PurifiedBuff>(), 
+                3 * 60, 300f, new Color(255,247,170,128) * 0.25f, new Color(255,255,81,156), projectile.player.whoAmI);
+            aura.SetRadiusFadeout(0.99f, Common.Easer.Ease.Linear);
             aura.SetAlphaFadeout(0.6f, Common.Easer.Ease.OutSine);
         }
         public override void AddRecipes()
@@ -112,7 +113,11 @@ namespace AyaMod.Content.Items.Armors
         {
             Projectile.timeLeft = (int)ChargeTime;
         }
-        public void Release() { Released = 2; }
+        public void Release() 
+        {
+            if (Projectile.timeLeft > 5) return;
+            Released = 2; 
+        }
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
@@ -135,6 +140,10 @@ namespace AyaMod.Content.Items.Armors
             }
 
             if (Projectile.timeLeft < 3 && Released < 1) Projectile.timeLeft++;
+            if(Projectile.timeLeft == 5)
+            {
+                SoundEngine.PlaySound(SoundID.MaxMana);
+            }
             Projectile.rotation += 0.02f;
 
         }
@@ -171,12 +180,17 @@ namespace AyaMod.Content.Items.Armors
                 if (npc.Distance(Projectile.Center) > range) continue;
 
                 npc.AddBuff(BuffType<PurifiedBuff>(), duration);
-                int dustamount = 32;
-                for(int i = 0; i < dustamount; i++)
-                {
-                    Dust d = Dust.NewDustDirect(npc.position, npc.width, npc.height, DustID.YellowTorch, 0, Main.rand.NextFloat(-1, -4), Scale: 1.5f);
-                    d.noGravity = true;
-                }
+            }
+
+
+            int dustamount = 180;
+            Vector2 pos = Projectile.Center;
+            float speed = 40f;
+            for (int i = 0; i < dustamount; i++)
+            {
+                Vector2 vel = (MathHelper.TwoPi / dustamount * i).ToRotationVector2() * speed;
+                Dust d = Dust.NewDustPerfect(pos, DustID.YellowTorch, vel, Scale: 3f);
+                d.noGravity = true;
             }
         }
         public static void TryCleanDebuff(Player player)
