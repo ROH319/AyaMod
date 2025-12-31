@@ -34,6 +34,7 @@ namespace AyaMod.Core.ModPlayers
         public bool UltraMoveEnabled = false;
 
         public int DamageReduceFlat = 0;
+        public float SourceDamageReduce = 0f;
         public int ManicStack = 0;
         public float WispDmg = 0;
         public float InfernalWispDmg = 0;
@@ -65,6 +66,10 @@ namespace AyaMod.Core.ModPlayers
             {
                 modifiers.FinalDamage.Flat -= (float)DamageReduceFlat;
                 DamageReduceFlat = 0;
+            }
+            if (SourceDamageReduce > 0)
+            {
+                modifiers.SourceDamage -= SourceDamageReduce;
             }
             noHitTimer = 0;
         }
@@ -181,6 +186,7 @@ namespace AyaMod.Core.ModPlayers
             AyaDash = DashType.None;
 
             DamageReduceFlat = 0;
+            SourceDamageReduce = 0;
             UltraMoveEnabled = false;
 
             ResetAyaEffects();

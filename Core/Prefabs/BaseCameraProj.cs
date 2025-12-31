@@ -338,7 +338,8 @@ namespace AyaMod.Core.Prefabs
 
         public virtual void PreCollidingProjectile(Projectile projectile) { }
 
-        public virtual bool CanClear(Projectile projectile) => projectile.hostile && projectile.damage <= CameraStats.CameraDamage;
+        public virtual bool CanClear(Projectile projectile) => projectile.hostile && projectile.damage <= CameraStats.CameraDamage && 
+            (projectile.ModProjectile == null || projectile.ModProjectile.CanDamage() != false);
 
         public virtual void OnClearProjectile(Projectile projectile) { }
 

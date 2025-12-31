@@ -28,25 +28,46 @@ namespace AyaMod.Content.Items.Armors
         public static int CritBonus = 8;
 
         public static int ExtraHeartDropChance = 10;
+        public static int BossHeartDropChance = 1;
 
         public override void Load()
         {
             AyaPlayer.DoubleTapHook += RainforestKeyEffect;
-            AyaGlobalProjectile.OnProjectileHitNPC += DropExtraHeart; ;
+            AyaGlobalProjectile.OnProjectileHitNPC += DropExtraHeart;
+            GlobalCamera.SnapHook += SnapPickupHeart;
         }
+
 
         public static void DropExtraHeart(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             Player player = Main.player[projectile.owner];
-            if (!player.HasBuff(BuffType<RainforeseFlowerBuff>())) return;
-            if (!target.boss && target.life > 0) return;
+            if (!player.HasBuff<RainforeseFlowerBuff>()) return;
 
-            if (Main.rand.Next(100) < ExtraHeartDropChance)
+            if (target.boss)
             {
-                Item.NewItem(player.GetSource_FromThis(), target.getRect(), ItemID.Heart);
+                if (Main.rand.Next(100) < BossHeartDropChance)
+                    Item.NewItem(player.GetSource_FromThis(), target.getRect(), ItemID.Heart);
+            }
+            else if (target.life <= 0)
+            {
+                if (Main.rand.Next(100) < ExtraHeartDropChance)
+                    Item.NewItem(player.GetSource_FromThis(), target.getRect(), ItemID.Heart);
+            }
+
+        }
+        public static void SnapPickupHeart(BaseCameraProj projectile)
+        {
+            Player player = projectile.player;
+            if (!player.HasEffect(RainforestVoiceChestplate.SnapPickupHeartEffect)) return;
+            foreach(var item in Main.ActiveItems)
+            {
+                if (item.type != ItemID.Heart || !(bool)projectile.Colliding(projectile.Projectile.getRect(), item.getRect())) 
+                    continue;
+
+                item.TurnToAir();
+                player.Heal(20);
             }
         }
-
         public override void SetStaticDefaults()
         {
             RainforestVoiceBonus = this.GetLocalization("RainforestVoiceBonus");
@@ -132,6 +153,7 @@ namespace AyaMod.Content.Items.Armors
                     break;
                 case 1:
                     {
+                        Lighting.AddLight(Projectile.Center, 0,1f,55/ 255f);
                         if (player.ownedProjectileCounts[ProjectileType<RainforestCameraProj>()] < 1)
                         {
                             Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, Vector2.Zero, ProjectileType<RainforestCameraProj>(), Projectile.damage, Projectile.knockBack, player.whoAmI);
@@ -182,6 +204,12 @@ namespace AyaMod.Content.Items.Armors
 
             return player.FindCloestNPC(sightRange, true, false);
         }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            base.PreDraw(ref lightColor);
+
+            return true;
+        }
     }
     public class RainforestPlayer : ModPlayer
     {
@@ -217,11 +245,15 @@ namespace AyaMod.Content.Items.Armors
             {
                 int regen = 10;
                 Player.lifeRegen += regen;
-                Overheal--;
+                float regenEfficiency = 2;
+                int consumeRate = (int)(120 / regen * regenEfficiency);
+                if (Main.GameUpdateCount % consumeRate == 0)
+                    Overheal--;
             }
         }
         public override void PostUpdateMiscEffects()
         {
+            //Main.NewText($"{Overheal} {Main.GameUpdateCount}");
             if(Overheal > MaxOverheal)
             {
                 Overheal = MaxOverheal;
@@ -229,10 +261,12 @@ namespace AyaMod.Content.Items.Armors
         }
     }
     [AutoloadEquip(EquipType.Body)]
+    [PlayerEffect(OverrideEffectName = SnapPickupHeartEffect)]
     public class RainforestVoiceChestplate : ModItem, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Armors + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus);
+        public const string SnapPickupHeartEffect = "SnapPickupHeartEffect";
 
         public static int DamageBonus = 10;
 

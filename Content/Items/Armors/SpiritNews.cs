@@ -83,7 +83,7 @@ namespace AyaMod.Content.Items.Armors
         {
             Player player = Main.player[Projectile.owner];
             if (player == null || !player.Alive()) return;
-
+            if (!player.HasEffect(SpiritNewsHood.SpiritNewsSet)) Projectile.Kill();
             int totalSpirits = player.ownedProjectileCounts[Type];
             int index = Projectile.GetMyGroupIndex();
 
@@ -130,7 +130,7 @@ namespace AyaMod.Content.Items.Armors
             Projectile.width = Projectile.height = 32;
             Projectile.friendly = true;
             Projectile.timeLeft = 6 * 60;
-
+            Projectile.DamageType = ReporterDamage.Instance;
         }
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {

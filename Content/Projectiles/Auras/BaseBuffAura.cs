@@ -22,6 +22,8 @@ namespace AyaMod.Content.Projectiles.Auras
         public ref float Radius => ref Projectile.ai[2];
         public ref float BuffDuration => ref Projectile.localAI[0];
 
+        public float DistortIntensity = 4f;
+
         public Color innerColor;
         public Color edgeColor;
 
@@ -32,6 +34,8 @@ namespace AyaMod.Content.Projectiles.Auras
 
         private float radiusFadeinProgress;
         private float radiusFadeoutProgress;
+        public bool radiusFadeinEnabled = true;
+        public bool radiusFadeoutEnabled = true;
 
         public float AlphaFadeinThreshold = 0.1f;
         public Ease AlphaFadeinEase = Ease.Linear;
@@ -40,6 +44,13 @@ namespace AyaMod.Content.Projectiles.Auras
 
         private float alphaFadeinProgress;
         private float alphaFadeoutProgress;
+
+        public int dustType = -1;
+        public int dustRate = 0;
+        public int dustAmount = 0;
+        public float dustScale = 1f;
+        public float dustRangeMin = 0.9f;
+        public float dustRangeMax = 1f;
         public static BaseBuffAura Spawn(IEntitySource source, Vector2 pos, int timeleft, int buffType, int buffTime, float radius, Color innerColor, Color edgeColor, int owner)
         {
             var projectile = Projectile.NewProjectileDirect(source, pos, Vector2.Zero, ProjectileType<BaseBuffAura>(), 0, 0, owner, timeleft, buffType, radius);
@@ -90,6 +101,15 @@ namespace AyaMod.Content.Projectiles.Auras
             AlphaFadeoutThreshold = threshold;
             AlphaFadeoutEase = easeType;
         }
+        public void SetDust(int type, int rate, int amount, float scale = 1f, float rangeMin = 0.9f, float rangeMax = 1f)
+        {
+            dustType = type;
+            dustRate = rate;
+            dustAmount = amount;
+            dustScale = scale;
+            dustRangeMin = rangeMin;
+            dustRangeMax = rangeMax;
+        }
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 64;
@@ -104,17 +124,37 @@ namespace AyaMod.Content.Projectiles.Auras
         }
         public override void AI()
         {
-            float factor = Projectile.TimeleftFactor();
+            float factor = Projectile.TimeleftFactorPositive();
 
-            radiusFadeinProgress = EaseManager.Evaluate(RadiusFadeinEase, Utils.Remap(factor, 0f, RadiusFadeinThreshold, 0f, 1f), 1f);
-            radiusFadeoutProgress = EaseManager.Evaluate(RadiusFadeoutEase, Utils.Remap(factor, RadiusFadeoutThreshold, 1f, 1f, 0f), 1f);
+            if (radiusFadeinEnabled)
+                radiusFadeinProgress = EaseManager.Evaluate(RadiusFadeinEase, Utils.Remap(factor, 0f, RadiusFadeinThreshold, 0f, 1f), 1f);
+            else radiusFadeinProgress = 1f;
+            if (radiusFadeoutEnabled)
+                radiusFadeoutProgress = EaseManager.Evaluate(RadiusFadeoutEase, Utils.Remap(factor, RadiusFadeoutThreshold, 1f, 1f, 0f), 1f);
+            else radiusFadeoutProgress = 1f;
 
+            //Main.NewText($"{radiusFadeoutProgress}");
             alphaFadeinProgress = EaseManager.Evaluate(AlphaFadeinEase, Utils.Remap(factor, 0f, AlphaFadeinThreshold, 0f, 1f), 1f);
             alphaFadeoutProgress = EaseManager.Evaluate(AlphaFadeoutEase, Utils.Remap(factor, AlphaFadeoutThreshold, 1f, 1f, 0f), 1f);
 
             ApplyBuff();
+            SpawnDust();
         }
         public virtual void ApplyBuff() { }
+        public virtual void SpawnDust()
+        {
+            if (dustType < 0) return;
+            if (Main.GameUpdateCount % dustRate == 0)
+            {
+                for (int i = 0; i < dustAmount; i++)
+                {
+                    float radius = Radius * 0.45f * radiusFadeinProgress * radiusFadeoutProgress;
+                    Vector2 pos = Main.rand.NextVector2Unit() * Main.rand.NextFloat(dustRangeMin, dustRangeMax) * radius + Projectile.Center;
+                    Dust d = Dust.NewDustPerfect(pos, dustType, Scale: dustScale);
+                    d.noGravity = true;
+                }
+            }
+        }
         public override bool PreDraw(ref Color lightColor)
         {
             var shader = ShaderLoader.GetShader("CircleEffect2");
@@ -128,12 +168,12 @@ namespace AyaMod.Content.Projectiles.Auras
             Color edColor = edgeColor * alphaFadeinProgress * alphaFadeoutProgress;
             float innerRadius = radius * 0.45f * radiusFadeinProgress * radiusFadeoutProgress;
             if (floatingRadius) innerRadius *= (MathF.Cos((float)(Main.timeForVisualEffects * 0.02f)) * 0.05f + 1f);
-            shader.Parameters["uTime"].SetValue(-Main.GlobalTimeWrappedHourly * 0.2f);
+            shader.Parameters["uTime"].SetValue(-Main.GlobalTimeWrappedHourly * 0.2f + Projectile.whoAmI * 3.8f);
             shader.Parameters["innerRadius"].SetValue(innerRadius);
             shader.Parameters["Radius"].SetValue(radius);
             shader.Parameters["edgeColor"].SetValue(edColor.ToVector4());
             shader.Parameters["innerColor"].SetValue(inColor.ToVector4());
-            shader.Parameters["twistIntensity"].SetValue(4f);
+            shader.Parameters["twistIntensity"].SetValue(DistortIntensity);
             shader.Parameters["maskFactor"].SetValue(0.05f);
             //shader.CurrentTechnique.Passes[0].Apply();
 
@@ -148,7 +188,18 @@ namespace AyaMod.Content.Projectiles.Auras
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, Main.spriteBatch.GraphicsDevice.BlendState, Main.spriteBatch.GraphicsDevice.SamplerStates[0],
                             Main.spriteBatch.GraphicsDevice.DepthStencilState, Main.spriteBatch.GraphicsDevice.RasterizerState, null, Main.GameViewMatrix.TransformationMatrix);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, Main.spriteBatch.GraphicsDevice.BlendState, Main.spriteBatch.GraphicsDevice.SamplerStates[0],
+                            Main.spriteBatch.GraphicsDevice.DepthStencilState, Main.spriteBatch.GraphicsDevice.RasterizerState, null, Main.GameViewMatrix.TransformationMatrix);
             return false;
+        }
+        public void DisableRadiusFadein()
+        {
+            radiusFadeinEnabled = false;
+        }
+        public void DisableRadiusFadeout()
+        {
+            radiusFadeoutEnabled = false;
         }
     }
 }

@@ -94,7 +94,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.scale = 1f + (float)Main.rand.Next(30) * 0.01f;
             Projectile.extraUpdates = 0;
             Projectile.timeLeft = 90 * Projectile.MaxUpdates;
-
+            Projectile.DamageType = ReporterDamage.Instance;
             Projectile.ArmorPenetration = 20;
         }
 

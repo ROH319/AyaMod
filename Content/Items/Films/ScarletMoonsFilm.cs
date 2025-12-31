@@ -3,12 +3,14 @@ using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films
 {
     public class ScarletMoonsFilm : BaseFilm
     {
         public override string Texture => AssetDirectory.Films + Name;
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(HealPercent, MoonLeechHealPercent);
         public static int HealPercent = 5;
         public static int MoonLeechHealPercent = 2;
         public static int MaxHealAmount = 15;

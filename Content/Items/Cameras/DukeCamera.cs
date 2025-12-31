@@ -54,7 +54,7 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void PostAI()
         {
-            if(!player.ItemTimeIsZero && player.itemTime % 5 == 0)
+            if(!player.ItemTimeIsZero && Main.GameUpdateCount % 5 == 0)
             {
                 var vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(4, 6);
                 int damage = (int)(Projectile.damage * 0.18f);

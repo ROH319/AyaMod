@@ -181,11 +181,11 @@ PurifiedBuff: {
 }
 
 MadnessBuff: {
-	// DisplayName: Madness Buff
-	// Description: Mods.AyaMod.Buffs.MadnessBuff.Description
+	DisplayName: Madness Buff
+	Description: Mods.AyaMod.Buffs.MadnessBuff.Description
 }
 
 RainforeseFlowerBuff: {
-	// DisplayName: Rainforese Flower Buff
-	// Description: Mods.AyaMod.Buffs.RainforeseFlowerBuff.Description
+	DisplayName: 雨林花苞
+	Description: 已储存{0}点过量治疗
 }

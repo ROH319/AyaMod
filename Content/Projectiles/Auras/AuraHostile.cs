@@ -14,7 +14,7 @@ namespace AyaMod.Content.Projectiles.Auras
             foreach (var player in Main.ActivePlayers)
             {
                 if (player.Distance(Projectile.Center) > Radius * 0.45f) continue;
-                player.AddBuff((int)BuffType, 2);
+                player.AddBuff((int)BuffType, (int)BuffDuration);
             }
         }
     }

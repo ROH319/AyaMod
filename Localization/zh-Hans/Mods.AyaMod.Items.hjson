@@ -875,12 +875,21 @@ FormerHellWalkerHelmet: {
 }
 
 RainforestVoiceHelmet: {
-	RainforestVoiceBonus: Mods.AyaMod.Items.RainforestVoiceHelmet.RainforestVoiceBonus
+	RainforestVoiceBonus:
+		'''
+		召唤一颗雨林之心辅助战斗，雨林之心一端为花苞，一端为水晶，双击下反转雨林之心
+		 - 花苞朝上时储存至多200点过量治疗
+		   当玩家血量不满时，存储的治疗会按照5hps的回血返还
+		   杀死敌人或对boss造成伤害都有几率产生红心
+		 - 水晶朝上时召唤叶绿拍摄框
+		   自动聚焦拍摄最近的敌人
+		'''
 	DisplayName: 雨林之声头盔
 	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance@1}
+		侦测周围的生物和危险
 		'''
 }
 
@@ -947,7 +956,11 @@ FormerHellWalkerPants: {
 
 RainforestVoiceChestplate: {
 	DisplayName: 雨林之声胸甲
-	Tooltip: "{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}"
+	Tooltip:
+		'''
+		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
+		允许通过拍摄直接拾取红心
+		'''
 }
 
 RainforestVoicePants: {
@@ -1162,6 +1175,10 @@ StrangePlantEssence: {
 }
 
 ScarletMoonsFilm: {
-	// DisplayName: Scarlet Moons Film
-	// Tooltip: ""
+	DisplayName: 鲜红幼月的胶卷
+	Tooltip:
+		'''
+		拍照伤害的{0}%会转换成治疗，此数值不会超过<maxheal>
+		即使受到月蚀影响也能生效{1}%吸血量
+		'''
 }

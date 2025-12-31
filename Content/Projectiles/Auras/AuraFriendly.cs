@@ -14,7 +14,7 @@ namespace AyaMod.Content.Projectiles.Auras
             foreach (var npc in Main.ActiveNPCs)
             {
                 if (npc.friendly || npc.Distance(Projectile.Center) > Radius * 0.45f) continue;
-                npc.AddBuff((int)BuffType, 2);
+                npc.AddBuff((int)BuffType, (int)BuffDuration);
             }
         }
     }

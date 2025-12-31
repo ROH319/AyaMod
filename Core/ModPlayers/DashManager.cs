@@ -35,11 +35,11 @@ namespace AyaMod.Core.ModPlayers
         public float UltraDashDir;
 
         /// <summary>
-        /// 是否能够冲刺，判断条件为：钩爪勾到了，玩家不被拖拽，玩家不在坐骑上
+        /// 是否能够冲刺，判断条件为：钩爪没勾到，玩家不被拖拽，玩家不在坐骑上
         /// </summary>
         public bool CanDashSpecialCondition => Player.grappling[0] == -1 && !Player.tongued && !Player.mount.Active && !IsUltraDashing;
         
-        public void BanVanallaDash()
+        public void BanVanillaDash()
         {
             Player.dashType = 0;
             Player.dash = 0;
@@ -93,14 +93,14 @@ namespace AyaMod.Core.ModPlayers
 
                 switch (AyaDash)
                 {
-                    case DashType.GaleGeta0:
-                        GaleGeta.GetaDash0(Player, DashDir);
+                    case DashType.GaleGeta2:
+                        GaleGeta2.GetaDash2(Player, DashDir);
                         break;
                     case DashType.GaleGeta1:
                         GaleGeta1.GetaDash1(Player, DashDir);
                         break;
-                    case DashType.GaleGeta2:
-                        GaleGeta2.GetaDash2(Player, DashDir);
+                    case DashType.GaleGeta0:
+                        GaleGeta.GetaDash0(Player, DashDir);
                         break;
                     default:break;
                 }
@@ -108,7 +108,7 @@ namespace AyaMod.Core.ModPlayers
             
             if(DashDelay > 0)
             {
-                BanVanallaDash();
+                BanVanillaDash();
                 DashDelay--;
 
                 WhileDashing(Player);
@@ -118,7 +118,7 @@ namespace AyaMod.Core.ModPlayers
             if(DashTimer > 0)
             {
 
-                BanVanallaDash();
+                BanVanillaDash();
                 DashTimer--;
             }
         }
