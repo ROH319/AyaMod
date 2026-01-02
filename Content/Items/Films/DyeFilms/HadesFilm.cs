@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 
@@ -19,13 +20,22 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override int DyeID => 3038;
         public override float EffectChance => 20;
+        public static float ChainedExplosionChance = 20;
+        public override float GetTotalChance(Player player)
+        {
+            float totalChance = base.GetTotalChance(player);
+            if (player.DevEffect()) totalChance *= 1.5f;
+            return totalChance;
+        }
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if(CheckEffect(projectile.player))
+            if (CheckEffect(projectile.player))
             {
                 bool devEffect = Main.player[projectile.Projectile.owner].DevEffect();
-                Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), target.Center, Vector2.Zero,
-                    ProjectileType<HadesExplosion>(), projectile.Projectile.damage, projectile.Projectile.knockBack, projectile.Projectile.owner,devEffect ? 1 : 0);
+                Vector2 pos = Vector2.Lerp(projectile.Projectile.Center, target.Center, 0.5f);
+                int damage = (int)(damageDone * 0.7f);
+                Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), pos, Vector2.Zero,
+                    ProjectileType<HadesExplosion>(), damage, projectile.Projectile.knockBack, projectile.Projectile.owner,devEffect ? 1 : 0);
             }
         }
 
@@ -34,18 +44,27 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class HadesExplosion : ModProjectile
     {
         public override string Texture => AssetDirectory.Projectiles_Films + Name;
+        public static int frameRate = 4;
 
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Type] = 7;
+        }
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 140;
+            Projectile.width = Projectile.height = 128;
             Projectile.friendly = true;
+            Projectile.DamageType = ReporterDamage.Instance;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = Main.projFrames[Type] * frameRate;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
-            Projectile.penetrate = -1;
-            Projectile.SetImmune(20);
-            Projectile.timeLeft = 3 * 1 * 7;
+            Projectile.SetImmune(-1);
         }
-
+        public override void OnSpawn(IEntitySource source)
+        {
+            Projectile.rotation = AyaUtils.RandAngle;
+        }
         public override void AI()
         {
             if(Projectile.soundDelay == 0)
@@ -53,11 +72,11 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                 SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
                 Projectile.soundDelay = -1;
             }
-            Projectile.FrameLooping(3 * 1, 7);
+            Projectile.FrameLooping(frameRate, Main.projFrames[Type]);
 
             bool num205 = WorldGen.SolidTile(Framing.GetTileSafely((int)Projectile.position.X / 16, (int)Projectile.position.Y / 16));
-            Dust dust22 = Main.dust[Dust.NewDust(new Vector2(Projectile.position.X, Projectile.position.Y), Projectile.width, Projectile.height, 229)];
-            dust22.position = Projectile.Center;
+            Dust dust22 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.Vortex);
+            //dust22.position = Projectile.Center;
             dust22.velocity = Vector2.Zero;
             dust22.noGravity = true;
             if (num205)
@@ -66,7 +85,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         }
         public override void OnKill(int timeLeft)
         {
-            if (Projectile.ai[0] > 0 && Main.rand.Next(100) <= ModContent.GetInstance<HadesFilm>().EffectChance)
+            if (Projectile.ai[0] > 0 && Main.rand.Next(100) < HadesFilm.ChainedExplosionChance)
             {
                 Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.Next(0, 100);
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero,
@@ -76,8 +95,11 @@ namespace AyaMod.Content.Items.Films.DyeFilms
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Rectangle rec = new Rectangle(0, 98 * Projectile.frame, 98, 98);
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, rec, Color.White * Projectile.Opacity, Projectile.rotation, new Vector2(49, 49), Projectile.scale, 0, 0);
+            int sizeY = texture.Height / Main.projFrames[Type];
+            int frameY = Projectile.frame * sizeY;
+            Rectangle rec = new(0, frameY, texture.Width, sizeY);
+            Vector2 origin = rec.Size() / 2f;
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, rec, Color.White * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale, 0);
 
             return false;
         }

@@ -129,5 +129,13 @@ namespace AyaMod.Core.Prefabs
                     damage *= cp.GetCameraDamageModifier(false);
             }
         }
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            var films = Main.LocalPlayer.ChooseFilms(Item, CameraStats.FilmSlot);
+            foreach(var film in films)
+            {
+                tooltips.Add(new TooltipLine(Mod, $"usingFilms:{film.ModItem.Name}",  "正在使用胶卷".WrapWithColorCode(Main.DiscoColor) + $"[i:{film.type}]" + $"{film.Name}".WrapWithColorCode(Main.DiscoColor)));
+            }
+        }
     }
 }

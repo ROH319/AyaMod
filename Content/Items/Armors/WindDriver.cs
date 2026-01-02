@@ -1,4 +1,6 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Content.Items.Materials;
+using AyaMod.Content.Projectiles;
+using AyaMod.Core;
 using AyaMod.Core.Attributes;
 using AyaMod.Core.Globals;
 using AyaMod.Core.ModPlayers;
@@ -45,7 +47,13 @@ namespace AyaMod.Content.Items.Armors
             Item.SetShopValues(Terraria.Enums.ItemRarityColor.Yellow8, Item.sellPrice(gold: 3));
             Item.defense = 8;
         }
-
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Ectoplasm, 12)
+                .AddIngredient<MapleLeaf>(20)
+                .Register();
+        }
         public override void UpdateEquip(Player player)
         {
             player.GetDamage<ReporterDamage>() += DamageBonus / 100f;
@@ -80,7 +88,7 @@ namespace AyaMod.Content.Items.Armors
             if (!player.HasEffect(WindDriverSet)) return;
             player.GetModPlayer<WindDriverPlayer>().ReverseState();
         }
-        public static void SpawnMapleLeaf(Player player, Vector2 projectileCenter, IEntitySource source, int damage, float randOffset = 70, float speed = 32f, float chaseFactor = 0.1f)
+        public static void SpawnMapleLeafFromHeaven(Player player, Vector2 projectileCenter, IEntitySource source, int damage, float randOffset = 70, float speed = 32f, float chaseFactor = 0.1f)
         {
 
             float dir = (projectileCenter.X < player.Center.X).ToDirectionInt();
@@ -97,7 +105,7 @@ namespace AyaMod.Content.Items.Armors
             if (!player.HasEffect(WindDriverSet)) return;
             if (!player.ItemTimeIsZero && Main.GameUpdateCount % 15 == 0)
             {
-                SpawnMapleLeaf(player, projectile.Projectile.Center, projectile.Projectile.GetSource_FromAI(), 60, 70, 32, 0.1f);
+                SpawnMapleLeafFromHeaven(player, projectile.Projectile.Center, projectile.Projectile.GetSource_FromAI(), 60, 70, 32, 0.1f);
             }
         }
 
@@ -121,21 +129,40 @@ namespace AyaMod.Content.Items.Armors
         {
             var player = projectile.player;
             if (!player.HasEffect(WindDriverSet) || !player.GetModPlayer<WindDriverPlayer>().AttackState) return;
-            SpawnMapleLeaf(player, projectile.Projectile.Center, projectile.Projectile.GetSource_FromAI(), 60);
+            SpawnMapleLeafFromHeaven(player, projectile.Projectile.Center, projectile.Projectile.GetSource_FromAI(), 60);
         }
-
+        public static void DashMapleLeaf(Player player)
+        {
+            if (!player.HasEffect(WindDriverSet)) return;
+            if (!player.GetModPlayer<WindDriverPlayer>().AttackState) return;
+            int type = ProjectileType<WindDriverMapleHoming>();
+            int dmg = 40;
+            for (int i = -1;i < 2; i++)
+            {
+                Vector2 vel = player.velocity.RotatedBy(MathHelper.PiOver4 * i + Main.rand.NextFloat(-0.5f,0.5f));
+                vel *= Main.rand.NextFloat(0.8f, 1.5f);
+                Projectile p = Projectile.NewProjectileDirect(player.GetSource_FromThis(), player.Center, vel, type, dmg, 0f, player.whoAmI);
+            }
+        }
     }
 
     public class WindDriverPlayer: ModPlayer
     {
         public bool AttackState;
+        public int DashDelayLaseFrame;
         public void ReverseState()
         {
             AttackState = !AttackState;
         }
         public override void PostUpdate()
         {
-            Main.NewText($"{Player.dash} {Player.dashDelay}");
+            if(Player.dashDelay == -1 && DashDelayLaseFrame != -1)
+            {
+
+                WindDriverHeadgear.DashMapleLeaf(Player);
+            }
+            //Main.NewText($"{Player.dash} {Player.dashDelay} {DashDelayLaseFrame}");
+            DashDelayLaseFrame = Player.dashDelay;
         }
     }
     /// <summary>
@@ -143,42 +170,21 @@ namespace AyaMod.Content.Items.Armors
     /// ai1：目标点Y<br></br>
     /// ai2：追击系数
     /// </summary>
-    public class WindDriverMapleLeaf : ModProjectile
+    public class WindDriverMapleLeaf : MapleLeafProjectile
     {
-        public override string Texture => AssetDirectory.Projectiles + Name;
         public ref float TargetPosX => ref Projectile.ai[0];
         public ref float TargetPosY => ref Projectile.ai[1];
         public ref float ChaseFactor => ref Projectile.ai[2];
-        public override void SetStaticDefaults()
+        public override void SetOtherDefaults()
         {
-            Projectile.SetTrail(2, 60);
-        }
-        public override void SetDefaults()
-        {
-            Projectile.width = Projectile.height = 32;
-            Projectile.friendly = true;
-            Projectile.tileCollide = false;
             Projectile.penetrate = 2;
             Projectile.SetImmune(20);
             Projectile.DamageType = ReporterDamage.Instance;
-            Projectile.timeLeft = 300;
             Projectile.ArmorPenetration = 15;
         }
         public override void AI()
         {
 
-
-            if (Collision.LavaCollision(Projectile.position, Projectile.width, Projectile.height))
-            {
-                Projectile.Kill();
-                return;
-            }
-            if (++Projectile.frameCounter >= 2)
-            {
-                Projectile.frameCounter = 0;
-                if (++Projectile.frame >= 7)
-                    Projectile.frame = 0;
-            }
 
             Vector2 targetPos = new Vector2(TargetPosX, TargetPosY);
             float targetR = (targetPos - Projectile.Center).ToRotation();
@@ -194,76 +200,23 @@ namespace AyaMod.Content.Items.Armors
 
             Projectile.velocity = Projectile.velocity.Length() * r.ToRotationVector2();
 
-
-            Projectile.rotation = Projectile.velocity.ToRotation();
+            base.AI();
 
         }
-        public override bool PreDraw(ref Color lightColor)
+    }
+    public class WindDriverMapleHoming : MapleLeafProjectile
+    {
+        public override void SetOtherDefaults()
         {
-
-            Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
-
-            // 计算光照颜色
-            Vector2 positionCenter = new Vector2(
-                Projectile.position.X + Projectile.width * 0.5f,
-                Projectile.position.Y + Projectile.height * 0.5f);
-            Color baseColor = Color.White;
-
-            // 绘制配置
-            const float MAX_SCALE = 1.3f;
-            const int SEGMENTS = 18;
-            const int TRAIL_STEP = -3;
-            const float SEGMENT_INTERPOLATION = 15f;
-            const int ANIMATION_CYCLE_HEIGHT = 20 * 7; // 7 frames height
-
-            Rectangle baseFrame = new Rectangle(0, 20 * Projectile.frame, 32, 20);
-            Vector2 spriteOrigin = baseFrame.Size() / 2f;
-            SpriteEffects drawDirection = SpriteEffects.None;
-
-            float lifetimeFactor = Projectile.TimeleftFactor();
-            float lifetimefactor2 = Utils.Remap(lifetimeFactor, 0, 1f, 0.5f, 1f);
-            // 绘制拖尾
-            for (int segmentIndex = SEGMENTS; segmentIndex >= 0; segmentIndex += TRAIL_STEP)
-            {
-
-                float baseRotation = Projectile.oldRot[segmentIndex];
-                Vector2 segmentPosition = Projectile.oldPos[segmentIndex];
-
-                // 处理帧动画
-                baseFrame.Y += baseFrame.Height;
-                baseFrame.Y %= ANIMATION_CYCLE_HEIGHT;
-
-                // 计算每个拖尾段的颜色衰减
-                Vector2 lightPosition = segmentPosition + Projectile.Size / 2f;
-                Color segmentColor = baseColor ;
-                float alphafactor = 18 - segmentIndex;
-                segmentColor *= alphafactor / ((float)ProjectileID.Sets.TrailCacheLength[Projectile.type] * 1f);
-                segmentColor *= lifetimefactor2;
-                // 计算拖尾位置
-                Vector2 drawPosition = segmentPosition + Projectile.Size / 2f - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY);
-
-                // 计算拖尾缩放
-                float scaleInterpolation = MathHelper.Lerp(Projectile.scale, MAX_SCALE, segmentIndex / SEGMENT_INTERPOLATION);
-
-                // 绘制拖尾
-                Main.EntitySpriteDraw(
-                    texture,
-                    drawPosition,
-                    baseFrame,
-                    segmentColor,
-                    baseRotation,
-                    spriteOrigin,
-                    scaleInterpolation,
-                    drawDirection,
-                    0);
-            }
-
-            Color bloomColor = Color.Orange.AdditiveColor() * lifetimeFactor * 0.3f;
-            RenderHelper.DrawBloom(6, 4, texture, Projectile.Center - Main.screenPosition, baseFrame, bloomColor, Projectile.rotation, spriteOrigin, Projectile.scale);
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, baseFrame, baseColor * lifetimeFactor, Projectile.rotation, spriteOrigin, Projectile.scale, drawDirection, 0);
-
-
-            return false;
+            Projectile.penetrate = 1;
+            Projectile.SetImmune(20);
+            Projectile.DamageType = ReporterDamage.Instance;
+            Projectile.ArmorPenetration = 15;
+        }
+        public override void AI()
+        {
+            Projectile.Chase(3000f, 27f, 0.03f);
+            base.AI();
         }
     }
     public class WindDriverFeather : ModProjectile
@@ -371,7 +324,13 @@ namespace AyaMod.Content.Items.Armors
             player.GetCritChance<ReporterDamage>() += CritBonus;
             player.hasMagiluminescence = true;
         }
-
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Ectoplasm, 14)
+                .AddIngredient<MapleLeaf>(20)
+                .Register();
+        }
     }
     [AutoloadEquip(EquipType.Legs)]
     [PlayerEffect(OverrideEffectName = WindDriverBuffReduce)]
@@ -395,6 +354,13 @@ namespace AyaMod.Content.Items.Armors
             player.GetCritChance<ReporterDamage>() += CritBonus;
             player.moveSpeed += MoveSpeedBonus / 100f;
             player.AddEffect(WindDriverBuffReduce);
+        }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Ectoplasm, 10)
+                .AddIngredient<MapleLeaf>(20)
+                .Register();
         }
     }
     public class WindDriverBuff : GlobalBuff

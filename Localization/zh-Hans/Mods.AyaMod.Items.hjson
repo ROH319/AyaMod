@@ -227,8 +227,8 @@ AcidFilm: {
 	DisplayName: 酸性胶片
 	Tooltip:
 		'''
-		命中施加减益
-		 -{0}hp/s
+		拍摄产生减益环，造成 [c/4DC741:酸性]:
+		 [c/4DC741:-] <dot> [c/4DC741:hp/s]
 		'''
 }
 
@@ -241,8 +241,8 @@ BlueAcidFilm: {
 	DisplayName: 蓝酸性胶片
 	Tooltip:
 		'''
-		拍摄命中施加减益
-		 -{0}hp/s
+		拍摄产生减益环，造成 [c/415DC7:蓝酸性]:
+		 [c/415DC7:-] <dot> [c/415DC7:hp/s]
 		'''
 }
 
@@ -348,12 +348,12 @@ PinkGelFilm: {
 
 PixieFilm: {
 	DisplayName: 妖精胶卷
-	Tooltip: 增加{0}%暴击伤害
+	Tooltip: 增加<critdmg>%暴击伤害
 }
 
 PrismaticFilm: {
 	DisplayName: 七彩胶片
-	Tooltip: ""
+	Tooltip: 每装备一种稀有度的饰品，增加{0}%武器面板
 }
 
 PurpleOozeFilm: {
@@ -365,8 +365,8 @@ RedAcidFilm: {
 	DisplayName: 红酸性胶片
 	Tooltip:
 		'''
-		命中施加减益
-		 -{0}hp/s
+		拍摄产生减益环，造成 [c/D83A2F:红酸性]:
+		 [c/D83A2F:-] <dot> [c/D83A2F:hp/s]
 		'''
 }
 
@@ -407,7 +407,7 @@ ShadowFilm: {
 
 ShadowflameHadesFilm: {
 	DisplayName: 暗影焰冥王胶片
-	Tooltip: ""
+	Tooltip: 命中有几率爆炸，爆炸产生暗影焰触手
 }
 
 ShiftingPearlsandsFilm: {
@@ -1033,6 +1033,7 @@ WindDriverLeggings: {
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance}
 		{$CommonItemTooltip.PercentIncreasedMovementSpeed@1}
+		移动时加快减益流逝速度
 		'''
 }
 

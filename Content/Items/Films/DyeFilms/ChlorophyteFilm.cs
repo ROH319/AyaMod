@@ -17,6 +17,8 @@ namespace AyaMod.Content.Items.Films.DyeFilms
 
         public override int DyeID => 2883;
 
+        public override float EffectChance => 20;
+        public static int FlourshingDotDmg = 80;
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (CheckEffect(projectile.player))
@@ -38,15 +40,13 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                     {
                         vel += Main.rand.NextVector2Unit() * Main.rand.NextFloat(3, 5) * 0.8f;
                     }
-                    int type = ModContent.ProjectileType<SporeCloud>();
+                    int type = ProjectileType<SporeCloud>();
 
                     Projectile.NewProjectileDirect(npc.GetSource_FromThis(), npc.Center, vel, type, damage, 3f, Main.myPlayer);
                 }
             }
         }
 
-        public override float EffectChance => 20;
-        public static int FlourshingDotDmg = 80;
     }
 
     public class SporeCloud : ModProjectile

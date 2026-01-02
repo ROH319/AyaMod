@@ -13,6 +13,7 @@ BuilderToggles: {
 Keybinds: {
 	UltraMove.DisplayName: Ultra Move
 	SpecialMove.DisplayName: Special Move
+	SlowMove.DisplayName: Slow Move
 }
 
 Conditions.DownedGoblinSummoner: Downed goblin summoner

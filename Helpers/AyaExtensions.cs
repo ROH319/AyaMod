@@ -296,7 +296,7 @@ namespace AyaMod.Helpers
 
             return (float)Math.Acos(cosTheta);
         }
-
+        public static Vector3 Vec3(this Vector2 vector) => new(vector.X, vector.Y, 0);
         public static Vector2 Reflect(this Vector2 vector, Vector2 axis)
         {
             Vector2 n = axis.SafeNormalize(Vector2.One);

@@ -52,13 +52,30 @@ namespace AyaMod.Content.Items.Cameras
         {
             if (!Projectile.MyClient()) return;
 
-            if(EffectCounter < 5) fadeinFactor[EffectCounter] = 1f;
-            if (++EffectCounter >= 6)
+
+            int dmg = (int)(Projectile.damage * 0.25f);
+            SpawnKnives(Projectile.Center, 4, 300f, 10, dmg, Projectile.knockBack, Projectile.GetSource_FromAI(), player.whoAmI);
+
+            if (EffectCounter < 5) fadeinFactor[EffectCounter] = 1f;
+            //if (++EffectCounter >= 6)
+            //{
+            //    Vector2 vec = Projectile.Center - player.Center;
+            //    int damage = (int)(Projectile.damage * 0.2f);
+            //    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), player.Center, Vector2.Zero, ProjectileType<KillerDoll>(), damage, Projectile.knockBack / 2f, Projectile.owner);
+            //    EffectCounter = 0;
+            //}
+        }
+        public static void SpawnKnives(Vector2 center, int count, float range, float speed, int damage, float knockback, IEntitySource source, int owner)
+        {
+            int type = ProjectileType<FlyingKnifeSimple>();
+            for (int i = 0; i < count; i++)
             {
-                Vector2 vec = Projectile.Center - player.Center;
-                int damage = (int)(Projectile.damage * 0.2f);
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), player.Center, Vector2.Zero, ProjectileType<KillerDoll>(), damage, Projectile.knockBack / 2f, Projectile.owner);
-                EffectCounter = 0;
+                float rot = MathHelper.TwoPi / count * i + Main.rand.NextFloat(1f);
+                Vector2 dir = rot.ToRotationVector2();
+                Vector2 spawnpos = center + dir * range;
+                Vector2 velocity = spawnpos.DirectionToSafe(center).RotatedByRandom(MathHelper.PiOver4 / 2) * speed;
+                var p = Projectile.NewProjectileDirect(source, spawnpos, velocity, type, damage, knockback / 2f, owner);
+                p.scale = 0.85f;
             }
         }
 
@@ -83,7 +100,7 @@ namespace AyaMod.Content.Items.Cameras
             for(int i = 0; i < maxknife; i++)
             {
                 if (++drawcount > 5) break;
-                float factor = Utils.Remap(this.fadeinFactor[i], 0f, 1f, 1f, 0f);
+                float factor = Utils.Remap(fadeinFactor[i], 0f, 1f, 1f, 0f);
                 factor = EaseManager.Evaluate(Ease.OutSine, factor, 1f);
                 float rot = visualRotation + i * MathHelper.TwoPi / 5;
                 Vector2 offset = rot.ToRotationVector2() * (20 + 120 * factor);
@@ -149,7 +166,72 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.rotation += MathHelper.Pi / 10f / 3f * rotDirection;
         }
     }
+    public class FlyingKnifeSimple : ModProjectile
+    {
+        public override string Texture => AssetDirectory.Projectiles + "Knife";
+        public override void SetStaticDefaults()
+        {
+            Projectile.SetTrail(2, 24);
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 18;
+            Projectile.friendly = true;
+            Projectile.penetrate = -1;
+            Projectile.SetImmune(20);
+            Projectile.extraUpdates = 3;
+            Projectile.timeLeft = 15 * (1 + Projectile.extraUpdates);
+        }
+        public override bool? CanDamage() => Projectile.ai[2] >= 0;
+        public override void AI()
+        {
+            float factor = Projectile.TimeleftFactor();
 
+            if (Main.rand.NextBool(3, 5))
+            {
+                Dust d = Dust.NewDustDirect(Projectile.position + Projectile.Size / 4, Projectile.width / 2, Projectile.height / 2, DustID.DungeonSpirit);
+                d.noGravity = true;
+                d.velocity = d.velocity * 0.75f + Projectile.velocity * 0.25f;
+                //d.scale *= 0.75f;
+            }
+            Projectile.rotation = Projectile.velocity.ToRotation();
+
+        }
+        public void EndMove()
+        {
+            Projectile.timeLeft = 24;
+            Projectile.ai[2] = -1;
+            Projectile.friendly = false;
+            Projectile.velocity = Vector2.Zero;
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Vector2 origin = texture.Size() / 2;
+
+            float factor = Projectile.TimeleftFactor();
+            float timeleftFactor = Utils.Remap(factor, 0.6f, 1f, 1f, 0f) * Utils.Remap(factor, 0f, 0.4f, 0f, 1f);
+            float alpha = Projectile.Opacity * timeleftFactor;
+            Color color = Color.White.AdditiveColor() * alpha * 0.7f;
+            Color trailBaseColor = new Color(192, 192, 192).AdditiveColor() * alpha * 0.7f;
+            for (int i = 0; i < Projectile.oldPos.Length; i+= (1+Projectile.extraUpdates))
+            {
+                if (Projectile.oldPos[i] == Vector2.Zero || Projectile.oldPos[i] == Projectile.position) continue;
+                float trailFactor = 1f - (float)i / Projectile.oldPos.Length;
+                float rot = i == 0 ? Projectile.rotation : Projectile.oldRot[i];
+                Vector2 drawpos = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
+                Color trailColor = trailBaseColor * trailFactor * 0.6f;
+                Main.spriteBatch.Draw(texture, drawpos, null, trailColor, rot, origin, Projectile.scale, 0, 0);
+            }
+
+            if (Projectile.ai[2] >= 0)
+            {
+                RenderHelper.DrawBloom(10, 4, texture, Projectile.Center - Main.screenPosition, null, trailBaseColor.AdditiveColor() * alpha * 0.25f, Projectile.rotation, origin, Projectile.scale);
+                Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, new Color(210, 210, 210) * alpha, Projectile.rotation, origin, Projectile.scale, 0);
+            }
+            return false;
+        }
+    }
     public class FlyingKnife : ModProjectile
     {
         public override string Texture => AssetDirectory.Projectiles + "Knife";

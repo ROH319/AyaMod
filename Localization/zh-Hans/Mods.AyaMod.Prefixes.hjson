@@ -19,8 +19,8 @@ Classical: {
 	PrefixExtraTooltip: "[c/BE7878:禁止自动拍摄]"
 }
 
-Focused.DisplayName: Focused
-Precise.DisplayName: Precise
+Focused.DisplayName: 专注
+Precise.DisplayName: 精准
 
 Bloodthirsty: {
 	PrefixExtraTooltip:

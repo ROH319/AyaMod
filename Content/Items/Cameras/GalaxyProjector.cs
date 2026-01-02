@@ -956,10 +956,12 @@ namespace AyaMod.Content.Items.Cameras
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
                 RasterizerState originalState = Main.graphics.GraphicsDevice.RasterizerState;
 
+
                 var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
-                var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
+                var model = Matrix.CreateTranslation(-Main.screenPosition.Vec3());
+                var view = Main.GameViewMatrix.TransformationMatrix;
                 // 把变换和所需信息丢给shader
-                effect.Parameters["uTransform"].SetValue(model * projection);
+                effect.Parameters["uTransform"].SetValue(model * view * projection);
                 effect.Parameters["timer"].SetValue((float)Main.timeForVisualEffects * 0.02f);
                 effect.Parameters["maskFactor"].SetValue(0.8f);
                 effect.Parameters["preMult"].SetValue(true);
@@ -1529,9 +1531,10 @@ namespace AyaMod.Content.Items.Cameras
                 RasterizerState originalState = Main.graphics.GraphicsDevice.RasterizerState;
 
                 var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
-                var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
+                var model = Matrix.CreateTranslation(-Main.screenPosition.Vec3());
+                var view = Main.GameViewMatrix.TransformationMatrix;
                 // 把变换和所需信息丢给shader
-                effect.Parameters["uTransform"].SetValue(model * projection);
+                effect.Parameters["uTransform"].SetValue(model * view * projection);
                 effect.Parameters["timer"].SetValue((float)-Main.timeForVisualEffects * 0.02f);
                 effect.Parameters["maskFactor"].SetValue(0.5f);
                 effect.Parameters["preMult"].SetValue(true);
@@ -1795,10 +1798,12 @@ namespace AyaMod.Content.Items.Cameras
                 //rasterizerState.CullMode = CullMode.None;
                 //rasterizerState.FillMode = FillMode.WireFrame;
                 //Main.graphics.GraphicsDevice.RasterizerState = rasterizerState;
+
                 var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
-                var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
+                var model = Matrix.CreateTranslation(-Main.screenPosition.Vec3());
+                var view = Main.GameViewMatrix.TransformationMatrix;
                 // 把变换和所需信息丢给shader
-                effect.Parameters["uTransform"].SetValue(model * projection);
+                effect.Parameters["uTransform"].SetValue(model * view * projection);
                 effect.Parameters["timer"].SetValue((float)-Main.timeForVisualEffects * 0.004f);
                 effect.Parameters["maskFactor"].SetValue(0f);
                 effect.Parameters["preMult"].SetValue(true);
@@ -2099,9 +2104,10 @@ namespace AyaMod.Content.Items.Cameras
                 RasterizerState originalState = Main.graphics.GraphicsDevice.RasterizerState;
 
                 var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
-                var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
+                var model = Matrix.CreateTranslation(-Main.screenPosition.Vec3());
+                var view = Main.GameViewMatrix.TransformationMatrix;
                 // 把变换和所需信息丢给shader
-                effect.Parameters["uTransform"].SetValue(model * projection);
+                effect.Parameters["uTransform"].SetValue(model * view * projection);
                 effect.Parameters["timer"].SetValue((float)Main.timeForVisualEffects * 0.025f);
                 Main.graphics.GraphicsDevice.Textures[0] = mainColor;//颜色
                 Main.graphics.GraphicsDevice.Textures[1] = shape;//形状
@@ -2241,10 +2247,12 @@ namespace AyaMod.Content.Items.Cameras
             //rasterizerState.CullMode = CullMode.None;
             //rasterizerState.FillMode = FillMode.WireFrame;
             //Main.graphics.GraphicsDevice.RasterizerState = rasterizerState;
+
             var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
-            var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
+            var model = Matrix.CreateTranslation(-Main.screenPosition.Vec3());
+            var view = Main.GameViewMatrix.TransformationMatrix;
             // 把变换和所需信息丢给shader
-            effect.Parameters["uTransform"].SetValue(model * projection);
+            effect.Parameters["uTransform"].SetValue(model * view * projection);
             effect.Parameters["timer"].SetValue((float)-Main.timeForVisualEffects * 0.02f);
             effect.Parameters["maskFactor"].SetValue(0.6f);
             effect.Parameters["preMult"].SetValue(true);

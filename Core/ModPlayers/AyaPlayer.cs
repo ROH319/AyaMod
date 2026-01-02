@@ -38,6 +38,7 @@ namespace AyaMod.Core.ModPlayers
         public int ManicStack = 0;
         public float WispDmg = 0;
         public float InfernalWispDmg = 0;
+        public float UnicornWispDmg = 0;
 
         public static event ModPlayerEvents.PlayerDrawEffectDelegate PlayerDrawEffectHook;
         public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
@@ -133,6 +134,7 @@ namespace AyaMod.Core.ModPlayers
 
                 if (targetDir != Vector2.Zero) targetDir = targetDir.SafeNormalize(Vector2.Zero);
                 else return;
+                if (Player.mount.Active) Player.mount.Dismount(Player);
 
                 Player.direction = targetDir.X > 0 ? 1 : -1;
                 if (!IsUltraDashing)
@@ -201,8 +203,11 @@ namespace AyaMod.Core.ModPlayers
             WispDmg += (int)(devEffect ? WispFilm.WispDmgRegenDev : WispFilm.WispDmgRegen);
             WispDmg = MathHelper.Clamp(WispDmg, 0, devEffect ? WispFilm.WispDmgMaxDev : WispFilm.WispDmgMax);
 
-            InfernalWispDmg += InfernalWispDmg;
+            InfernalWispDmg += InfernalWispFilm.WispDmgRegen;
             InfernalWispDmg = MathHelper.Clamp(InfernalWispDmg, 0, InfernalWispFilm.WispDmgMax);
+
+            UnicornWispDmg += UnicornWispFilm.WispDmgRegen;
+            UnicornWispDmg = MathHelper.Clamp(UnicornWispDmg, 0, UnicornWispFilm.WispDmgMax);
 
             PostUpdateBuffsHook?.Invoke(Player);
         }
@@ -220,7 +225,10 @@ namespace AyaMod.Core.ModPlayers
             foreach (ModPlayerEvents.PlayerDelegate p in PreUpdateMovementHook.GetInvocationList())
                 p(Player);
 
-            if(UltraMoveEnabled && IsUltraDashing)
+            AddDashes(Player);
+            UpdateDash();
+
+            if (UltraMoveEnabled && IsUltraDashing)
             {
                 Player.velocity = UltraDashDir.ToRotationVector2() * 30f;
                 if (MathF.Abs(Player.velocity.Y) < 0.1f) Player.velocity.Y = 0.000001f;
@@ -250,8 +258,6 @@ namespace AyaMod.Core.ModPlayers
         public static event ModPlayerEvents.PlayerDelegate PostUpdateMiscEffectsHook = (p) => { };
         public override void PostUpdateMiscEffects()
         {
-            AddDashes(Player);
-            UpdateDash();
 
             if(Player.wingTime == Player.wingTimeMax - 1)
             {

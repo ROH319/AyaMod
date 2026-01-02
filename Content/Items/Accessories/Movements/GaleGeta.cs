@@ -104,6 +104,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 player.velocity.X *= factor;
             }
             player.dashDelay = -1;
+            //Main.NewText($"{player.dashDelay}");
             player.velocity.Y = 0.000001f;
             player.doorHelper.AllowOpeningDoorsByVelocityAloneForATime(12 * 3);
 
@@ -253,9 +254,10 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 //Main.graphics.GraphicsDevice.RasterizerState = rasterizerState;
 
                 var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
-                var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
+                var model = Matrix.CreateTranslation(-Main.screenPosition.Vec3());
+                var view = Main.GameViewMatrix.TransformationMatrix;
                 // 把变换和所需信息丢给shader
-                effect.Parameters["uTransform"].SetValue(model * projection);
+                effect.Parameters["uTransform"].SetValue(model * view * projection);
                 effect.Parameters["timer"].SetValue((float)Main.timeForVisualEffects * 0.02f);
                 Main.graphics.GraphicsDevice.Textures[0] = mainColor;//颜色
                 Main.graphics.GraphicsDevice.Textures[1] = shape;//形状
@@ -285,10 +287,10 @@ namespace AyaMod.Content.Items.Accessories.Movements
             Texture2D ball4 = ModContent.Request<Texture2D>(AssetDirectory.Extras + "Ball4", AssetRequestMode.ImmediateLoad).Value;
             Texture2D ball1 = ModContent.Request<Texture2D>(AssetDirectory.Extras + "Ball1", AssetRequestMode.ImmediateLoad).Value;
             Color ballColor = DrawColor;
-            Main.spriteBatch.Draw(ball4, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, ballColor * Projectile.Opacity * 0.15f, Projectile.rotation, ball4.Size() / 2, Projectile.scale * 0.6f, 0, 0);
-            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor,Color.White,0.3f).AdditiveColor() * Projectile.Opacity * 0.5f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.8f, 0, 0);
-            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor,Color.White,0.3f).AdditiveColor() * Projectile.Opacity * 0.4f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.6f, 0, 0);
-            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor,Color.White,0.3f).AdditiveColor() * Projectile.Opacity * 0.3f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.4f, 0, 0);
+            Main.spriteBatch.Draw(ball4, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, ballColor.AdditiveColor() * Projectile.Opacity * 0.15f, Projectile.rotation, ball4.Size() / 2, Projectile.scale * 0.6f, 0, 0);
+            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor, Color.White, 0.3f).AdditiveColor() * Projectile.Opacity * 0.5f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.8f, 0, 0);
+            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor, Color.White, 0.3f).AdditiveColor() * Projectile.Opacity * 0.4f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.6f, 0, 0);
+            Main.spriteBatch.Draw(ball1, Projectile.Center - Projectile.velocity.SafeNormalize(Vector2.Zero) * 6 - Main.screenPosition, null, Color.Lerp(ballColor, Color.White, 0.3f).AdditiveColor() * Projectile.Opacity * 0.3f, Projectile.rotation, ball1.Size() / 2, Projectile.scale * 0.4f, 0, 0);
 
             return true;
         }

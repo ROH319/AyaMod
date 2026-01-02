@@ -167,3 +167,18 @@ RainforeseFlowerBuff: {
 	DisplayName: Rainforese Flower Buff
 	Description: Mods.AyaMod.Buffs.RainforeseFlowerBuff.Description
 }
+
+MartianElectrifiedBuff: {
+	DisplayName: Martian Electrified Buff
+	Description: Mods.AyaMod.Buffs.MartianElectrifiedBuff.Description
+}
+
+MartianElectrifiedBuff2: {
+	DisplayName: Martian Electrified Buff2
+	Description: Mods.AyaMod.Buffs.MartianElectrifiedBuff2.Description
+}
+
+TwilightBuff: {
+	DisplayName: Twilight Buff
+	Description: Mods.AyaMod.Buffs.TwilightBuff.Description
+}

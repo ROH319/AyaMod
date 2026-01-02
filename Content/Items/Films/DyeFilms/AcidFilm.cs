@@ -18,14 +18,23 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class AcidFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(AcidDotDmg / 2);
         public override int DyeID => 3040;
+
+        public static int AcidDotDmg = 16;
+        public static int AcidDotDmgDev = 24;
+        public static int AcidDotTime = 60;
+        public static int AcidDotTimeDev = 100;
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            FilmArgs = [("dot", (AcidDotDmg / 2).ToString(), (AcidDotDmgDev / 2).ToString())];
+        }
         public override void OnSnap(BaseCameraProj projectile)
         {
             int bufftime = Main.player[projectile.Projectile.owner].DevEffect() ? AcidDotTimeDev : AcidDotTime;
             Color innerColor = new Color(62, 224, 95) * 0.15f;
             Color edgeColor = new Color(0, 165, 35);
-            float radius = projectile.size * 2f;
+            float radius = projectile.size * 1.5f;
             int auratime = 60;
             var aura = BaseBuffAura.Spawn<AuraFriendly>(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, auratime, BuffType<AcidBuff>(), bufftime, radius, innerColor, edgeColor, projectile.Projectile.owner);
             aura.DisableRadiusFadeout();
@@ -35,9 +44,5 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             aura.DistortIntensity = 24f;
         }
 
-        public static int AcidDotDmg = 16;
-        public static int AcidDotDmgDev = 24;
-        public static int AcidDotTime = 60;
-        public static int AcidDotTimeDev = 100;
     }
 }

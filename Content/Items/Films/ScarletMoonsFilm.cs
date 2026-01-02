@@ -11,8 +11,8 @@ namespace AyaMod.Content.Items.Films
     {
         public override string Texture => AssetDirectory.Films + Name;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(HealPercent, MoonLeechHealPercent);
-        public static int HealPercent = 5;
-        public static int MoonLeechHealPercent = 2;
+        public static int HealPercent = 2;
+        public static int MoonLeechHealPercent = 1;
         public static int MaxHealAmount = 15;
         public static int MaxHealAmountDev = 20;
         public override void SetDefaults()

@@ -19,16 +19,87 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class BurningHadesFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-        public override int DyeID => 3597;
+        public override int DyeID => 3597; 
+        public override float EffectChance => 20;
+        public override float GetTotalChance(Player player)
+        {
+            float totalChance = base.GetTotalChance(player);
+            //if (player.DevEffect()) totalChance *= 1.5f;
+            return totalChance;
+        }
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (!CheckEffect(projectile.player)) return;
             Vector2 pos = Vector2.Lerp(projectile.Projectile.Center, target.Center, 0.5f);
+            int explosionDamage = (int)(damageDone * 0.7f);
             Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), pos,
-                Vector2.Zero, ProjectileType<FlameingWave>(), damageDone, projectile.Projectile.knockBack, projectile.Projectile.owner);
+                Vector2.Zero, ProjectileType<BurningHadesExplosion>(), explosionDamage, projectile.Projectile.knockBack, projectile.Projectile.owner);
+            if (projectile.player.DevEffect())
+            {
+                int flameDamage = (int)(damageDone * 0.3f);
+                Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), pos, Vector2.Zero, 
+                    ProjectileType<FlameingWave>(), flameDamage, projectile.Projectile.knockBack, projectile.Projectile.owner);
+            }
         }
     }
+    public class BurningHadesExplosion : ModProjectile
+    {
+        public override string Texture => AssetDirectory.Projectiles_Films + Name;
+        public static int frameRate = 4;
 
+        public override void SetStaticDefaults()
+        {
+            Main.projFrames[Type] = 7;
+        }
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 128;
+            Projectile.friendly = true;
+            Projectile.DamageType = ReporterDamage.Instance;
+            Projectile.penetrate = -1;
+            Projectile.timeLeft = Main.projFrames[Type] * frameRate;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.SetImmune(-1);
+        }
+        public override void OnSpawn(IEntitySource source)
+        {
+            Projectile.rotation = AyaUtils.RandAngle;
+        }
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.AddBuff(BuffID.OnFire3, 60);
+        }
+        public override void AI()
+        {
+            if (Projectile.soundDelay == 0)
+            {
+                SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
+                Projectile.soundDelay = -1;
+            }
+            Projectile.FrameLooping(frameRate, Main.projFrames[Type]);
+
+            Dust dust22 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.FlameBurst);
+            bool num205 = WorldGen.SolidTile(Framing.GetTileSafely((int)dust22.position.X / 16, (int)dust22.position.Y / 16));
+            //dust22.position = Projectile.Center;
+            dust22.velocity = Vector2.Zero;
+            dust22.noGravity = true;
+            if (num205)
+                dust22.noLight = true;
+
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            int sizeY = texture.Height / Main.projFrames[Type];
+            int frameY = Projectile.frame * sizeY;
+            Rectangle rec = new(0, frameY, texture.Width, sizeY);
+            Vector2 origin = rec.Size() / 2f;
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, rec, Color.White * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale, 0);
+
+            return false;
+        }
+    }
     public class FlameingWave : ModProjectile
     {
         public override string Texture => AssetDirectory.EmptyTexturePass;
@@ -147,9 +218,10 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                 //Main.graphics.GraphicsDevice.RasterizerState = rasterizerState;
 
                 var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
-                var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
+                var model = Matrix.CreateTranslation(-Main.screenPosition.Vec3());
+                var view = Main.GameViewMatrix.TransformationMatrix;
                 // 把变换和所需信息丢给shader
-                effect.Parameters["uTransform"].SetValue(model * projection);
+                effect.Parameters["uTransform"].SetValue(model * view * projection);
                 //effect.Parameters["radius"].SetValue(Radius * 0.008f);
                 //effect.Parameters["radius"].SetValue(Projectile.whoAmI / 1000f - Main.GameUpdateCount * 0.014f);
                 effect.Parameters["timer"].SetValue((float)(Projectile.rotation));

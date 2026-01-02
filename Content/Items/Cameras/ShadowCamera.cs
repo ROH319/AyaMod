@@ -63,7 +63,7 @@ namespace AyaMod.Content.Items.Cameras
             if (player.ItemTimeIsZero) return;
             foreach (var projectile in Main.ActiveProjectiles)
             {
-                if (projectile.ai[2] < 0 || projectile.localAI[2] > 0 || projectile.type != ModContent.ProjectileType<ShadowFeather>()) continue;
+                if (projectile.ai[2] < 0 || projectile.localAI[2] > 0 || projectile.type != ProjectileType<ShadowFeather>()) continue;
                 projectile.rotation = projectile.rotation.AngleLerp(projectile.AngleToSafe(Projectile.Center), 0.05f);
             }
         }
@@ -75,13 +75,13 @@ namespace AyaMod.Content.Items.Cameras
             for (int i = 0; i < count; i++)
             {
                 Vector2 vel = AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(4, 7) * 1.5f;
-                var feather = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ModContent.ProjectileType<ShadowFeather>(), (int)(Projectile.damage * 0.15f), 0, Projectile.owner, ai2: -1);
+                var feather = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, vel, ProjectileType<ShadowFeather>(), (int)(Projectile.damage * 0.15f), 0, Projectile.owner, ai2: -1);
                 feather.rotation = vel.ToRotation();
             }
 
             foreach (var projectile in Main.ActiveProjectiles)
             {
-                if (projectile.ai[2] < 0 || projectile.localAI[2] > 0 || projectile.type != ModContent.ProjectileType<ShadowFeather>()) continue;
+                if (projectile.ai[2] < 0 || projectile.localAI[2] > 0 || projectile.type != ProjectileType<ShadowFeather>()) continue;
                 projectile.ai[1] = 30;
                 float dist = projectile.Distance(Projectile.Center);
                 dist = MathHelper.Clamp(dist, 0, 400);
@@ -127,7 +127,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.scale = 2f;
             Projectile.rotation += 0.02f;
 
-            if (!AyaUtils.ProjectileExists((int)Projectile.ai[0], ModContent.ProjectileType<ShadowCameraProj>()))
+            if (!AyaUtils.ProjectileExists((int)Projectile.ai[0], ProjectileType<ShadowCameraProj>()))
                 Projectile.Kill();
 
             var owner = Main.player[Projectile.owner];

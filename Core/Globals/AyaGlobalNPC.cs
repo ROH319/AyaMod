@@ -32,6 +32,8 @@ namespace AyaMod.Core.Globals
         public bool RedAcid;
         public bool Scared;
         public bool FlourshingPoison;
+        public bool MartainElectrified;
+        public bool MartainElectrified2;
 
         public override void ResetEffects(NPC npc)
         {
@@ -47,6 +49,8 @@ namespace AyaMod.Core.Globals
             RedAcid = false;
             Scared = false;
             FlourshingPoison = false;
+            MartainElectrified = false;
+            MartainElectrified2 = false;
         }
         public override bool PreAI(NPC npc)
         {
@@ -123,7 +127,7 @@ namespace AyaMod.Core.Globals
             }
             if (BlueAcid)
             {
-                npc.lifeRegen -= BlueAcidFilm.BlueAcidDotDmg;
+                npc.lifeRegen -= devEffect ? BlueAcidFilm.BlueAcidDotDmgDev : BlueAcidFilm.BlueAcidDotDmg;
                 if (damage < 4)
                     damage = 4;
             }
@@ -143,6 +147,18 @@ namespace AyaMod.Core.Globals
                 npc.lifeRegen -= ShadowCamera.ShadowSuckDotDmg;
                 if (damage < 4) 
                     damage = 4;
+            }
+            if (MartainElectrified)
+            {
+                npc.lifeRegen -= MartianFilm.ElectrifiedDotDmg;
+                if (damage < 16)
+                    damage = 16;
+            }
+            if (MartainElectrified2)
+            {
+                npc.lifeRegen -= MartianFilm.ElectrifiedDotDmgDev;
+                if (damage < 18)
+                    damage = 18;
             }
             if (Madness)
             {

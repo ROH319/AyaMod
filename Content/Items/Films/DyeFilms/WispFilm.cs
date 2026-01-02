@@ -10,17 +10,15 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override int DyeID => 2878;
-        public override void OnSnapInSight(BaseCameraProj projectile)
+        public override void OnSnap(BaseCameraProj projectile)
         {
             if(projectile.player.Aya().WispDmg > projectile.Projectile.damage)
             {
                 int damage = projectile.Projectile.damage;
                 Vector2 vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(2, 4);
-                Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, vel, ProjectileID.SpectreWrath, damage, projectile.Projectile.knockBack, projectile.Projectile.owner, -1);
-
+                var p = Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, vel, ProjectileID.SpectreWrath, damage, projectile.Projectile.knockBack, projectile.Projectile.owner, -1);
+                p.DamageType = ReporterDamage.Instance;
                 projectile.player.Aya().WispDmg -= projectile.Projectile.damage;
-
-                
             }
         }
 

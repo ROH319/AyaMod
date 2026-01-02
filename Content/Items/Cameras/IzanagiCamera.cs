@@ -16,7 +16,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.width = 52;
             Item.height = 48;
 
-            Item.damage = 150;
+            Item.damage = 80;
 
             Item.useTime = Item.useAnimation = 30;
             Item.useStyle = ItemUseStyleID.Rapier;

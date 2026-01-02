@@ -13,6 +13,7 @@ BuilderToggles: {
 Keybinds: {
 	UltraMove.DisplayName: 超高速移动
 	SpecialMove.DisplayName: 特殊移动
+	// SlowMove.DisplayName: Slow Move
 }
 
 Conditions.DownedGoblinSummoner: 击败过哥布林召唤师

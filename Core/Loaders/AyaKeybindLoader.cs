@@ -11,6 +11,7 @@ namespace AyaMod.Core.Loaders
     {
         public static ModKeybind UltraMove;
         public static ModKeybind SpecialMove;
+        public static ModKeybind SlowMove;
 
         public void Load(Mod mod, Type type)
         {
@@ -19,12 +20,14 @@ namespace AyaMod.Core.Loaders
 
             UltraMove = KeybindLoader.RegisterKeybind(mod, "UltraMove", Microsoft.Xna.Framework.Input.Keys.LeftControl);
             SpecialMove = KeybindLoader.RegisterKeybind(mod, "SpecialMove", Microsoft.Xna.Framework.Input.Keys.V);
+            SlowMove = KeybindLoader.RegisterKeybind(mod, "SlowMove", Microsoft.Xna.Framework.Input.Keys.LeftShift);
         }
 
         public void Unload(Mod mod, Type type)
         {
             UltraMove = null;
             SpecialMove = null;
+            SlowMove = null;
         }
     }
 }

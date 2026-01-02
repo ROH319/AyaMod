@@ -129,3 +129,11 @@ RainforestCameraProj.DisplayName: Rainforest Camera Proj
 BaseCameraProjAuto.DisplayName: Base Camera Proj Auto
 WindDriverMapleLeaf.DisplayName: Wind Driver Maple Leaf
 WindDriverFeather.DisplayName: Wind Driver Feather
+WindDriverMapleHoming.DisplayName: Wind Driver Maple Homing
+MapleLeafProjectile.DisplayName: Maple Leaf Projectile
+FlyingKnifeSimple.DisplayName: Flying Knife Simple
+GelAura.DisplayName: Gel Aura
+ShadowflameExplosion.DisplayName: Shadowflame Explosion
+BurningHadesExplosion.DisplayName: Burning Hades Explosion
+InfernalWispProjectile.DisplayName: Infernal Wisp Projectile
+UnicornWispProjectile.DisplayName: Unicorn Wisp Projectile

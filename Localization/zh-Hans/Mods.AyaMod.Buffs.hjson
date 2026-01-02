@@ -189,3 +189,18 @@ RainforeseFlowerBuff: {
 	DisplayName: 雨林花苞
 	Description: 已储存{0}点过量治疗
 }
+
+MartianElectrifiedBuff: {
+	DisplayName: Martian Electrified Buff
+	Description: Mods.AyaMod.Buffs.MartianElectrifiedBuff.Description
+}
+
+MartianElectrifiedBuff2: {
+	DisplayName: Martian Electrified Buff2
+	Description: Mods.AyaMod.Buffs.MartianElectrifiedBuff2.Description
+}
+
+TwilightBuff: {
+	DisplayName: 暮光
+	Description: 你的攻击必定暴击
+}

@@ -215,10 +215,12 @@ namespace AyaMod.Content.Items.Cameras
                 //rasterizerState.FillMode = FillMode.WireFrame;
                 //Main.graphics.GraphicsDevice.RasterizerState = rasterizerState;
 
+
                 var projection = Matrix.CreateOrthographicOffCenter(0, Main.screenWidth, Main.screenHeight, 0, 0, 1);//正交投影
-                var model = Matrix.CreateTranslation(new Vector3(-Main.screenPosition.X, -Main.screenPosition.Y, 0));
+                var model = Matrix.CreateTranslation(-Main.screenPosition.Vec3());
+                var view = Main.GameViewMatrix.TransformationMatrix;
                 // 把变换和所需信息丢给shader
-                effect.Parameters["uTransform"].SetValue(model * projection);
+                effect.Parameters["uTransform"].SetValue(model * view * projection);
                 //effect.Parameters["radius"].SetValue(Radius * 0.008f);
                 //effect.Parameters["radius"].SetValue(Projectile.whoAmI / 1000f - Main.GameUpdateCount * 0.014f);
                 effect.Parameters["timer"].SetValue((float)(Projectile.rotation));
