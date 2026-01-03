@@ -10,7 +10,8 @@ namespace AyaMod.Content.Items.Films
     public class ScarletMoonsFilm : BaseFilm
     {
         public override string Texture => AssetDirectory.Films + Name;
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(HealPercent, MoonLeechHealPercent);
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(HealPercent);
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(MoonLeechHealPercent);
         public static int HealPercent = 2;
         public static int MoonLeechHealPercent = 1;
         public static int MaxHealAmount = 15;
@@ -25,11 +26,11 @@ namespace AyaMod.Content.Items.Films
         {
             if (projectile == null) return;
             int healAmount = damageDone * HealPercent / 100;
-            if(projectile.player.HasBuff(BuffID.MoonLeech))
+            if(projectile.player.DevEffect() && projectile.player.HasBuff(BuffID.MoonLeech))
             {
                 healAmount = damageDone * MoonLeechHealPercent / 100;
             }
-            healAmount = (int)MathHelper.Clamp(healAmount, 0, Main.LocalPlayer.DevEffect() ? MaxHealAmountDev : MaxHealAmount);
+            //healAmount = (int)MathHelper.Clamp(healAmount, 0, MaxHealAmount);
             projectile.player.Heal(healAmount);
         }
 

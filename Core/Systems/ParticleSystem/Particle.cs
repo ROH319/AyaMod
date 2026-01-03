@@ -56,7 +56,7 @@ namespace AyaMod.Core.Systems.ParticleSystem
 
         public IEntitySource Source;
 
-        protected sealed override void Register()
+        public sealed override void Register()
         {
             ModTypeLookup<Particle>.Register(this);
 

@@ -31,6 +31,7 @@ namespace AyaMod.Core.Globals
         public bool BlueAcid;
         public bool RedAcid;
         public bool Scared;
+        public bool ScaredDev;
         public bool FlourshingPoison;
         public bool MartainElectrified;
         public bool MartainElectrified2;
@@ -48,6 +49,7 @@ namespace AyaMod.Core.Globals
             BlueAcid = false;
             RedAcid = false;
             Scared = false;
+            ScaredDev = false;
             FlourshingPoison = false;
             MartainElectrified = false;
             MartainElectrified2 = false;
@@ -59,13 +61,15 @@ namespace AyaMod.Core.Globals
         public static event NPCEvents.NPCDelegate PostAIHook = (n) => { };
         public override void PostAI(NPC npc)
         {
-            if (Scared && !npc.boss && (npc.life / (float)npc.lifeMax) < 0.15f)
-            {
-                npc.StrikeInstantKill();
-            }
 
             if (!npc.boss)
             {
+                float lifePercent = npc.life / (float)npc.lifeMax;
+                if ((Scared && lifePercent < GrimFilm.KillLine / 100f) || (ScaredDev && lifePercent < GrimFilm.KillLineDev / 100f))
+                {
+                    npc.StrikeInstantKill();
+                }
+
                 var speedModifier = SpeedModifier.ApplyTo(1f);
                 npc.position += npc.velocity * (speedModifier - 1f);
             }

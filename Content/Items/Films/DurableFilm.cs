@@ -8,7 +8,8 @@ namespace AyaMod.Content.Items.Films
 {
     public class DurableFilm : BaseFilm
     {
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus.ToString());
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonus, AmmoCostDec);
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(AmmoCostDecDev);
         public static int DamageBonus = 10;
         public static int AmmoCostDec = 30;
         public static int AmmoCostDecDev = 50;

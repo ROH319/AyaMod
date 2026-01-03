@@ -3,6 +3,7 @@ using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
@@ -10,6 +11,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override int DyeID => 2885;
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(ExtraExplosionChance);
         public static float WispDmgRegen = 125 / 60;
         public static int WispDmgMax = 500;
         public static int ExtraExplosionChance = 20;

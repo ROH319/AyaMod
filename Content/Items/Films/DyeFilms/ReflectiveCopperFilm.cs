@@ -10,8 +10,12 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class ReflectiveCopperFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DefenceBonus);
         public override int DyeID => 3553;
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DefenceBonus);
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(DefenceBonusDev, EnduranceBonus);
+        public static int DefenceBonus = 10;
+        public static int DefenceBonusDev = 15;
+        public static int EnduranceBonus = 15;
         public override void Load()
         {
             AyaPlayer.OnHitByBothHook += OnHit;
@@ -27,9 +31,5 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                 projectile.player.AddBuff(BuffType<ReflectiveCopperBuff>(), 2);
             }
         }
-
-        public static int DefenceBonus = 10;
-        public static int DefenceBonusDev = 15;
-        public static int EnduranceBonus = 15;
     }
 }

@@ -3,6 +3,7 @@ using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
@@ -10,6 +11,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override int DyeID => 2884;
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(ExtraAttackChance);
         public static float WispDmgRegen = 200 / 60;
         public static int WispDmgMax = 800;
         public static int ExtraAttackChance = 20;
@@ -21,7 +23,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
                 Vector2 vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(2, 4);
                 int type = ProjectileType<UnicornWispProjectile>();
                 float devEffect = projectile.player.DevEffect() ? 1 : 0;
-                var p = Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, vel, type, damage, projectile.Projectile.knockBack, projectile.Projectile.owner, devEffect);
+                var p = Projectile.NewProjectileDirect(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, vel, type, damage, projectile.Projectile.knockBack, projectile.Projectile.owner, 0, devEffect);
                 p.DamageType = ReporterDamage.Instance;
                 projectile.player.Aya().UnicornWispDmg -= damage;
             }
@@ -57,7 +59,8 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             Timer++;
             if (Timer > 60)
             {
-                Projectile.Chase(2500, 25f, 0.05f);
+                Projectile.Chase(2500, 16f, 0.01f);
+
             }
 
 

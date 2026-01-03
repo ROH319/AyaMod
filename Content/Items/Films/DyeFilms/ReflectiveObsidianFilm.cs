@@ -14,9 +14,16 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class ReflectiveObsidianFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DefenseBonus, DRBonus, thornBonus);
         public override int DyeID => 3554;
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DefenseBonus, DRBonus, thornBonus);
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(DefenseBonusDev, DRBonusDev, thornBonusDev);
 
+        public static int DefenseBonus = 20;
+        public static int DefenseBonusDev = 24;
+        public static int DRBonus = 20;
+        public static int DRBonusDev = 24;
+        public static int thornBonus = 200;
+        public static int thornBonusDev = 350;
         public override void Load()
         {
             AyaPlayer.OnHitByBothHook += ObsidianOnHit;
@@ -49,12 +56,6 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             }
         }
 
-        public static int DefenseBonus = 20;
-        public static int DefenseBonusDev = 24;
-        public static int DRBonus = 20;
-        public static int DRBonusDev = 24;
-        public static int thornBonus = 200;
-        public static int thornBonusDev = 350;
     }
 
     public class ObsidianShard : ModProjectile

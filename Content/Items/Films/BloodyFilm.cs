@@ -1,11 +1,14 @@
 ﻿using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Terraria;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films
 {
     public class BloodyFilm : BaseFilm
     {
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(HitHeal, SnapProjHeal);
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(HitHealDev, SnapProjHealDev);
         public static int HitHeal = 1;
         public static int HitHealDev = 2;
         public static int SnapProjHeal = 4;

@@ -196,226 +196,271 @@ HallowCamera: {
 CameraFilm: {
 	DisplayName: Camera Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.CameraFilm.DeveloperTooltip
 }
 
 AcidFilm: {
 	DisplayName: Acid Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.AcidFilm.DeveloperTooltip
 }
 
 BloodbathFilm: {
 	DisplayName: Bloodbath Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.BloodbathFilm.DeveloperTooltip
 }
 
 BlueAcidFilm: {
 	DisplayName: Blue Acid Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.BlueAcidFilm.DeveloperTooltip
 }
 
 BurningHadesFilm: {
 	DisplayName: Burning Hades Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.BurningHadesFilm.DeveloperTooltip
 }
 
 ChlorophyteFilm: {
 	DisplayName: Chlorophyte Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ChlorophyteFilm.DeveloperTooltip
 }
 
 FogboundFilm: {
 	DisplayName: Fogbound Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.FogboundFilm.DeveloperTooltip
 }
 
 GelFilm: {
 	DisplayName: Gel Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.GelFilm.DeveloperTooltip
 }
 
 GlowingMushroomFilm: {
 	DisplayName: Glowing Mushroom Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.GlowingMushroomFilm.DeveloperTooltip
 }
 
 GrimFilm: {
 	DisplayName: Grim Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.GrimFilm.DeveloperTooltip
 }
 
 HadesFilm: {
 	DisplayName: Hades Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.HadesFilm.DeveloperTooltip
 }
 
 InfernalWispFilm: {
 	DisplayName: Infernal Wisp Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.InfernalWispFilm.DeveloperTooltip
 }
 
 LivingFlameFilm: {
 	DisplayName: Living Flame Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.LivingFlameFilm.DeveloperTooltip
 }
 
 LivingOceanFilm: {
 	DisplayName: Living Ocean Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.LivingOceanFilm.DeveloperTooltip
 }
 
 LivingRainbowFilm: {
 	DisplayName: Living Rainbow Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.LivingRainbowFilm.DeveloperTooltip
 }
 
 LokisFilm: {
 	DisplayName: Lokis Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.LokisFilm.DeveloperTooltip
 }
 
 MartianFilm: {
 	DisplayName: Martian Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.MartianFilm.DeveloperTooltip
 }
 
 MidnightRainbowFilm: {
 	DisplayName: Midnight Rainbow Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.MidnightRainbowFilm.DeveloperTooltip
 }
 
 MirageFilm: {
 	DisplayName: Mirage Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.MirageFilm.DeveloperTooltip
 }
 
 NebulaFilm: {
 	DisplayName: Nebula Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.NebulaFilm.DeveloperTooltip
 }
 
 NegativeFilm: {
 	DisplayName: Negative Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.NegativeFilm.DeveloperTooltip
 }
 
 PhaseFilm: {
 	DisplayName: Phase Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.PhaseFilm.DeveloperTooltip
 }
 
 PinkGelFilm: {
 	DisplayName: Pink Gel Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.PinkGelFilm.DeveloperTooltip
 }
 
 PixieFilm: {
 	DisplayName: Pixie Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.PixieFilm.DeveloperTooltip
 }
 
 PrismaticFilm: {
 	DisplayName: Prismatic Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.PrismaticFilm.DeveloperTooltip
 }
 
 PurpleOozeFilm: {
 	DisplayName: Purple Ooze Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.PurpleOozeFilm.DeveloperTooltip
 }
 
 RedAcidFilm: {
 	DisplayName: Red Acid Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.RedAcidFilm.DeveloperTooltip
 }
 
 ReflectiveCopperFilm: {
 	DisplayName: Reflective Copper Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ReflectiveCopperFilm.DeveloperTooltip
 }
 
 ReflectiveFilm: {
 	DisplayName: Reflective Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ReflectiveFilm.DeveloperTooltip
 }
 
 ReflectiveGoldFilm: {
 	DisplayName: Reflective Gold Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ReflectiveGoldFilm.DeveloperTooltip
 }
 
 ReflectiveMetalFilm: {
 	DisplayName: Reflective Metal Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ReflectiveMetalFilm.DeveloperTooltip
 }
 
 ReflectiveObsidianFilm: {
 	DisplayName: Reflective Obsidian Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ReflectiveObsidianFilm.DeveloperTooltip
 }
 
 ReflectiveSilverFilm: {
 	DisplayName: Reflective Silver Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ReflectiveSilverFilm.DeveloperTooltip
 }
 
 ShadowFilm: {
 	DisplayName: Shadow Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ShadowFilm.DeveloperTooltip
 }
 
 ShadowflameHadesFilm: {
 	DisplayName: Shadowflame Hades Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ShadowflameHadesFilm.DeveloperTooltip
 }
 
 ShiftingPearlsandsFilm: {
 	DisplayName: Shifting Pearlsands Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ShiftingPearlsandsFilm.DeveloperTooltip
 }
 
 ShiftingSandsFilm: {
 	DisplayName: Shifting Sands Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ShiftingSandsFilm.DeveloperTooltip
 }
 
 SkiphsBloodFilm: {
 	DisplayName: Skiphs Blood Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.SkiphsBloodFilm.DeveloperTooltip
 }
 
 SolarFilm: {
 	DisplayName: Solar Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.SolarFilm.DeveloperTooltip
 }
 
 StardustFilm: {
 	DisplayName: Stardust Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.StardustFilm.DeveloperTooltip
 }
 
 TwilightFilm: {
 	DisplayName: Twilight Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.TwilightFilm.DeveloperTooltip
 }
 
 UnicornWispFilm: {
 	DisplayName: Unicorn Wisp Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.UnicornWispFilm.DeveloperTooltip
 }
 
 VoidFilm: {
 	DisplayName: Void Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.VoidFilm.DeveloperTooltip
 }
 
 VortexFilm: {
 	DisplayName: Vortex Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.VortexFilm.DeveloperTooltip
 }
 
 WispFilm: {
 	DisplayName: Wisp Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.WispFilm.DeveloperTooltip
 }
 
 SeijaCamera: {
@@ -836,36 +881,43 @@ Tripod: {
 AdvancedCameraFilm: {
 	DisplayName: Advanced Camera Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.AdvancedCameraFilm.DeveloperTooltip
 }
 
 BlackWhiteFilm: {
 	DisplayName: Black White Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.BlackWhiteFilm.DeveloperTooltip
 }
 
 BloodyFilm: {
 	DisplayName: Bloody Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.BloodyFilm.DeveloperTooltip
 }
 
 DoomFilm: {
 	DisplayName: Doom Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.DoomFilm.DeveloperTooltip
 }
 
 DurableFilm: {
 	DisplayName: Durable Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.DurableFilm.DeveloperTooltip
 }
 
 FlashyFilm: {
 	DisplayName: Flashy Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.FlashyFilm.DeveloperTooltip
 }
 
 MiasmaFilm: {
 	DisplayName: Miasma Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.MiasmaFilm.DeveloperTooltip
 }
 
 SoaringHammer: {
@@ -926,4 +978,5 @@ StrangePlantEssence: {
 ScarletMoonsFilm: {
 	DisplayName: Scarlet Moons Film
 	Tooltip: ""
+	DeveloperTooltip: Mods.AyaMod.Items.ScarletMoonsFilm.DeveloperTooltip
 }

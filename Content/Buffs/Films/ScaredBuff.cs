@@ -22,7 +22,10 @@ namespace AyaMod.Content.Buffs.Films
         {
             npc.buffTime[buffIndex]++;
 
-            npc.Aya().Scared = true;
+            if (npc.buffTime[buffIndex] > 3 * 60)
+                npc.Aya().ScaredDev = true;
+            else
+                npc.Aya().Scared = true;
         }
     }
 }

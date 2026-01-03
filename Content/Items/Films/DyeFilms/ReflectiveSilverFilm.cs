@@ -11,9 +11,15 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class ReflectiveSilverFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DefenceBonusMin, DefenceBonusMax);
-
         public override int DyeID => 3026;
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DefenceBonusMin, DefenceBonusMax);
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(DefenceBonusDevMax, DRBonusMin, DRBonusMax);
+
+        public static int DefenceBonusMin = 8;
+        public static int DefenceBonusMax = 16;
+        public static int DefenceBonusDevMax = 24;
+        public static int DRBonusMin = 10;
+        public static int DRBonusMax = 20;
         public override void Load()
         {
             AyaPlayer.OnHitByBothHook += OnHit;
@@ -27,10 +33,5 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             projectile.player.AddBuff(BuffType<ReflectiveSilverBuff>(), capturecount);
         }
 
-        public static int DefenceBonusMin = 8;
-        public static int DefenceBonusMax = 16;
-        public static int DefenceBonusDevMax = 24;
-        public static int DRBonusMin = 10;
-        public static int DRBonusMax = 20;
     }
 }

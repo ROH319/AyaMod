@@ -13,12 +13,17 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class ChlorophyteFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(FlourshingDotDmg / 2);
-
         public override int DyeID => 2883;
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(FlourshingDotDmg / 2);
 
         public override float EffectChance => 20;
         public static int FlourshingDotDmg = 80;
+        public override float GetTotalChance(Player player)
+        {
+            var value = base.GetTotalChance(player);
+            if (player.DevEffect()) value *= 1.5f;
+            return value;
+        }
         public override void OnHitNPCFilm(BaseCameraProj projectile, NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (CheckEffect(projectile.player))

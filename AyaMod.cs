@@ -34,9 +34,10 @@ namespace AyaMod
         public override void Load()
         {
             Instance = this;
-			AssetDirectory.LoadAsset();
-			Main.QueueMainThreadAction(RenderHelper.CreateRender);
-            Terraria.Main.OnResolutionChanged += Main_OnResolutionChanged;
+            AssetDirectory.LoadAsset();
+            Main.QueueMainThreadAction(RenderHelper.CreateRender);
+
+            Main.OnResolutionChanged += new Action<Vector2>(Main_OnResolutionChanged);
         }
 
         private void Main_OnResolutionChanged(Vector2 obj)
@@ -52,10 +53,9 @@ namespace AyaMod
 
         public override void Unload()
         {
-			Instance = null;
-			AssetDirectory.UnloadAsset();
-            Terraria.Main.OnResolutionChanged -= Main_OnResolutionChanged;
-
+            Instance = null;
+            AssetDirectory.UnloadAsset();
+            Terraria.Main.OnResolutionChanged -= new Action<Vector2>(Main_OnResolutionChanged);
         }
     }
 }

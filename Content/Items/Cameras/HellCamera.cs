@@ -54,22 +54,31 @@ namespace AyaMod.Content.Items.Cameras
         public override Color focusCenterColor => base.focusCenterColor;
         public override Color flashColor => new Color(255, 251, 179).AdditiveColor() * 0.5f;
 
-        public override void OnSnapInSight()
+        public override void OnSnap()
         {
             if (!Projectile.MyClient()) return;
 
-            int count = 1;
-            if (Main.rand.NextBool()) count++;
-            int damage = (int)(Projectile.damage * 0.4f);
-            for (int i = 0;i<count;i++)
-            {
+            int count = 3;
 
+            int damage = (int)(Projectile.damage * 0.4f);
+            for(int i = 0; i < count; i++)
+            {
                 Vector2 pos = Projectile.Center + AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(20, 80);
                 Vector2 vel = AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(4, 7);
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<HellSpirit>(), damage, Projectile.knockBack / 4, Projectile.owner);
-
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ProjectileType<HellSpiritShotHoming>(), damage, Projectile.knockBack, Projectile.owner, 1);
             }
-            base.OnSnapInSight();
+            //int count = 1;
+            //if (Main.rand.NextBool()) count++;
+            //int damage = (int)(Projectile.damage * 0.4f);
+            //for (int i = 0;i<count;i++)
+            //{
+
+            //    Vector2 pos = Projectile.Center + AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(20, 80);
+            //    Vector2 vel = AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(4, 7);
+            //    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<HellSpirit>(), damage, Projectile.knockBack / 4, Projectile.owner);
+
+            //}
+            base.OnSnap();
         }
         public override void HoverProjectile(Projectile projectile)
         {
@@ -218,9 +227,78 @@ namespace AyaMod.Content.Items.Cameras
         public override void AI()
         {
             //ai0控制追踪
-            if (Projectile.ai[0] > 0 && Projectile.localAI[2]<1)
+            if (Projectile.ai[0] > 0 && Projectile.localAI[2] < 1)
             {
                 Projectile.Chase(600, 18,0.012f);
+            }
+            if (Projectile.localAI[2] > 0)
+            {
+                Projectile.velocity *= 0.9f;
+                Projectile.Opacity -= 0.06f;
+                if (Projectile.Opacity < 0.06f) Projectile.Kill();
+            }
+
+            if (Projectile.timeLeft % 1 == 0)
+            {
+                int dustcount = 2;
+                for (int i = 0; i < dustcount; i++)
+                {
+                    //Vector2 offset = AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(2, 12);
+                    //Vector2 pos = Projectile.Center + offset;
+                    //Dust d = Dust.NewDustPerfect(pos, DustID.UltraBrightTorch, Projectile.velocity * 0.7f);
+                    //d.noGravity = true;
+                    Color color = HellSpirit.SpiritBlue;
+                    if (Projectile.ai[0] > 0) color = HellSpirit.SpiritPurple;
+                    Vector2 offset = (Projectile.velocity.ToRotation() + MathHelper.PiOver2).ToRotationVector2() * Main.rand.NextFloat(-8, 8) * 0.6f;
+                    Vector2 vec = offset.ToRotation().ToRotationVector2() * offset.Length() * 0.125f;
+                    if (Projectile.ai[0] > 0)
+                    {
+                        var ball = SoulsParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center + offset, Projectile.velocity * 0f,
+                            color.AdditiveColor() * Projectile.Opacity * 0.6f, 0.5f, 0.7f);
+                        ball.SetAlphaFadeout(new Core.FloatModifier().SetAdditive(-0.05f));
+                        ball.SetScaleFadeout(new Core.FloatModifier().SetAdditive(-0.06f));
+                    }
+                    else
+                    {
+                        var ball = SoulsParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center + offset, Projectile.velocity * 0f,
+                            color.AdditiveColor() * Projectile.Opacity * 0.6f, 0.4f, 0.7f);
+                        ball.SetAlphaFadeout(new Core.FloatModifier().SetAdditive(-0.045f));
+                        ball.SetScaleFadeout(new Core.FloatModifier().SetAdditive(-0.03f));
+                    }
+                    //ball.Scale = 0.6f;
+                }
+            }
+        }
+    }
+    public class HellSpiritShotHoming : ModProjectile
+    {
+        public override string Texture => AssetDirectory.EmptyTexturePass;
+
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 24;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+            Projectile.extraUpdates = 1;
+            Projectile.penetrate = -1;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 15;
+            Projectile.timeLeft = 300 * (1 + Projectile.extraUpdates);
+        }
+        public override bool? CanDamage() => Projectile.ai[1] > 120;
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Projectile.localAI[2]++;
+        }
+
+        public override void AI()
+        {
+            Projectile.ai[1]++;
+            //ai0控制追踪
+            if (Projectile.ai[1] > 120 && Projectile.ai[0] > 0 && Projectile.localAI[2] < 1)
+            {
+                Projectile.Chase(600, 18, 0.012f);
             }
             if (Projectile.localAI[2] > 0)
             {

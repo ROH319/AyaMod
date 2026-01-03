@@ -57,13 +57,13 @@ namespace AyaMod.Content.Items.Cameras
             SpawnKnives(Projectile.Center, 4, 300f, 10, dmg, Projectile.knockBack, Projectile.GetSource_FromAI(), player.whoAmI);
 
             if (EffectCounter < 5) fadeinFactor[EffectCounter] = 1f;
-            //if (++EffectCounter >= 6)
-            //{
-            //    Vector2 vec = Projectile.Center - player.Center;
-            //    int damage = (int)(Projectile.damage * 0.2f);
-            //    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), player.Center, Vector2.Zero, ProjectileType<KillerDoll>(), damage, Projectile.knockBack / 2f, Projectile.owner);
-            //    EffectCounter = 0;
-            //}
+            if (++EffectCounter >= 6)
+            {
+                Vector2 vec = Projectile.Center - player.Center;
+                int damage = (int)(Projectile.damage * 0.2f);
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), player.Center, Vector2.Zero, ProjectileType<KillerDoll>(), damage, Projectile.knockBack / 2f, Projectile.owner);
+                EffectCounter = 0;
+            }
         }
         public static void SpawnKnives(Vector2 center, int count, float range, float speed, int damage, float knockback, IEntitySource source, int owner)
         {
@@ -241,15 +241,16 @@ namespace AyaMod.Content.Items.Cameras
         public ref float OwnerDist => ref Projectile.localAI[1];
         public override void SetStaticDefaults()
         {
-            Projectile.SetTrail(2, 12);
+            Projectile.SetTrail(2, 12 * 6);
         }
         public override void SetDefaults()
         {
             Projectile.width = Projectile.height = 18;
             Projectile.friendly = true;
+            Projectile.extraUpdates = 5;
             Projectile.penetrate = -1;
             Projectile.SetImmune(20);
-            Projectile.timeLeft = 7 * 60;
+            Projectile.timeLeft = 7 * 60 * (1+Projectile.extraUpdates);
         }
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
@@ -263,6 +264,12 @@ namespace AyaMod.Content.Items.Cameras
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
+            for (int i = 0; i < 20; i++)
+            {
+                Dust d = Dust.NewDustDirect(Projectile.position + Projectile.Size / 4, Projectile.width / 2, Projectile.height / 2, DustID.DungeonSpirit);
+                d.noGravity = true;
+                d.velocity = d.velocity * 0.75f + Projectile.velocity * 0.25f;
+            }
             return base.OnTileCollide(oldVelocity);
         }
         public override void OnSpawn(IEntitySource source)
@@ -277,14 +284,14 @@ namespace AyaMod.Content.Items.Cameras
         public override void AI()
         {
             Timer++;
-            if (Timer > 45)
+            if (Timer > 45 * (1+Projectile.extraUpdates))
             {
                 var owner = Main.player[Projectile.owner];
                 if (owner.AliveCheck(Projectile.Center, 4000))
                 {
                     var mousepos = owner.GetModPlayer<CameraPlayer>().MouseWorld;
                     Vector2 tomouse = Projectile.Center.DirectionToSafe(mousepos);
-                    Projectile.velocity = tomouse * 15f;
+                    Projectile.velocity = tomouse * 9f;
                     Projectile.rotation = Projectile.velocity.ToRotation();
                     Timer = int.MinValue;
                 }
@@ -297,14 +304,14 @@ namespace AyaMod.Content.Items.Cameras
                 {
                     Vector2 offset = OwnerDir.ToRotationVector2() * OwnerDist;
                     Projectile.Center = proj.Center + offset;
-                    Projectile.rotation += 0.25f;
+                    Projectile.rotation += 0.25f / (1 + Projectile.extraUpdates);
                 }
                 else
                 {
                     Projectile.Kill();
                 }
             }
-            Projectile.position += Projectile.velocity * 1.5f;
+            //Projectile.position += Projectile.velocity * 1.5f / (1+Projectile.extraUpdates);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -320,7 +327,7 @@ namespace AyaMod.Content.Items.Cameras
             Color trailBaseColor = new Color(192, 192, 192).AdditiveColor() * alpha * 0.7f;
             for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
-                if (Projectile.oldPos[i] == Vector2.Zero) continue;
+                if (Projectile.oldPos[i] == Vector2.Zero || i % (1 + Projectile.extraUpdates) != 0) continue;
                 float factor = 1f - (float)i / Projectile.oldPos.Length;
                 float rot = i == 0 ? Projectile.rotation : Projectile.oldRot[i];
                 Vector2 drawpos = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;

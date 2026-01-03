@@ -38,6 +38,13 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.03f, 152, 1.6f, 0.5f);
             SetCaptureStats(1000, 60);
         }
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.CrystalShard, 12)
+                .AddTile(TileID.MythrilAnvil)
+                .Register();
+        }
     }
 
     public class DoremyCameraProj : BaseCameraProj

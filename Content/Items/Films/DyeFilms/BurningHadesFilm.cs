@@ -19,7 +19,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     public class BurningHadesFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
-        public override int DyeID => 3597; 
+        public override int DyeID => 3597;
         public override float EffectChance => 20;
         public override float GetTotalChance(Player player)
         {

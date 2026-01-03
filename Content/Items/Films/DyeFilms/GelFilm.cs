@@ -12,6 +12,9 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override int DyeID => 3561;
+        public override float EffectChance => 30;
+        public static int SlowFactor = 20;
+        public static int SlowFactorDev = 30;
         public override void OnSnap(BaseCameraProj projectile)
         {
             if (CheckEffect(projectile.player))
@@ -34,9 +37,6 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             }
 
         }
-        public override float EffectChance => 30;
-        public static int SlowFactor = 20;
-        public static int SlowFactorDev = 30;
     }
     public class GelAura : BaseBuffAura
     {

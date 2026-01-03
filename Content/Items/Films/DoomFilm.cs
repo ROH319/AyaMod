@@ -7,11 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films
 {
     public class DoomFilm : BaseFilm
     {
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(Lang.GetBuffName(WorldGen.crimson ? BuffID.Ichor : BuffID.CursedInferno));
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(Lang.GetBuffName(WorldGen.crimson ? BuffID.CursedInferno : BuffID.Ichor));
         public override void SetDefaults()
         {
             base.SetDefaults();
@@ -31,17 +34,18 @@ namespace AyaMod.Content.Items.Films
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            bool dev = Main.LocalPlayer.DevEffect();
-            foreach (var tooltip in tooltips)
-            {
-                if (!tooltip.Name.StartsWith("Tooltip")) continue;
-                var text = tooltip.Text;
-                string ichor = Lang.GetBuffName(BuffID.Ichor);
-                string curse = Lang.GetBuffName(BuffID.CursedInferno);
-                if (!dev && !WorldGen.crimson) ichor = ichor.WrapWithColorCode(Color.Gray);
-                if (!dev && WorldGen.crimson) curse = curse.WrapWithColorCode(Color.Gray);
-                tooltip.Text = text.Replace("<debuff>", ichor + " " + curse);
-            }
+            base.ModifyTooltips(tooltips);
+            //bool dev = Main.LocalPlayer.DevEffect();
+            //foreach (var tooltip in tooltips)
+            //{
+            //    if (!tooltip.Name.StartsWith("Tooltip")) continue;
+            //    var text = tooltip.Text;
+            //    string ichor = Lang.GetBuffName(BuffID.Ichor);
+            //    string curse = Lang.GetBuffName(BuffID.CursedInferno);
+            //    if (!dev && !WorldGen.crimson) ichor = ichor.WrapWithColorCode(Color.Gray);
+            //    if (!dev && WorldGen.crimson) curse = curse.WrapWithColorCode(Color.Gray);
+            //    tooltip.Text = text.Replace("<debuff>", ichor + " " + curse);
+            //}
         }
         public override void AddRecipes()
         {

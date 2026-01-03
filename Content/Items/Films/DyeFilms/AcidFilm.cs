@@ -19,7 +19,8 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override int DyeID => 3040;
-
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(AcidDotDmg / 2);
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(AcidDotDmgDev / 2);
         public static int AcidDotDmg = 16;
         public static int AcidDotDmgDev = 24;
         public static int AcidDotTime = 60;

@@ -26,7 +26,7 @@ namespace AyaMod.Content.PlayerDrawLayers
 
         public override Position GetDefaultPosition() => new Between();
 
-        protected override void Draw(ref PlayerDrawSet drawInfo)
+        public override void Draw(ref PlayerDrawSet drawInfo)
         {
             Player player = drawInfo.drawPlayer;
 

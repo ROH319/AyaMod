@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace AyaMod.Core.Prefabs
@@ -13,11 +14,13 @@ namespace AyaMod.Core.Prefabs
     public abstract class BaseFilm : ModItem
     {
         public override string Texture => AssetDirectory.Films + Name;
+        public virtual LocalizedText DevTooltip => Mod.GetLocalization($"{LocalizationCategory}.{Name}.DeveloperTooltip");
         public virtual StatModifier DamageModifier => StatModifier.Default;
         public List<(string name, string value, string valueDev)> FilmArgs = [];
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 999;
+            _ = DevTooltip;
         }
         public override void SetDefaults()
         {
@@ -46,17 +49,21 @@ namespace AyaMod.Core.Prefabs
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             bool dev = Main.LocalPlayer.DevEffect();
-            foreach (var tooltip in tooltips)
+            //foreach (var tooltip in tooltips)
+            //{
+            //    if (!tooltip.Name.StartsWith("Tooltip")) continue;
+            //    var text = tooltip.Text;
+            //    foreach(var args in FilmArgs)
+            //    {
+            //        if (!text.Contains($"<{args.name}>")) continue;
+            //        string value = dev ? $"[c/808080:{args.value}]" : $"{args.value}";
+            //        string valueDev = dev ? $"{args.valueDev}" : $"[c/808080:{args.valueDev}]";
+            //        tooltip.Text = text.Replace($"<{args.name}>", value + "/" + valueDev);
+            //    }
+            //}
+            if (dev && DevTooltip.Value.Length > 0)
             {
-                if (!tooltip.Name.StartsWith("Tooltip")) continue;
-                var text = tooltip.Text;
-                foreach(var args in FilmArgs)
-                {
-                    if (!text.Contains($"<{args.name}>")) continue;
-                    string value = dev ? $"[c/808080:{args.value}]" : $"{args.value}";
-                    string valueDev = dev ? $"{args.valueDev}" : $"[c/808080:{args.valueDev}]";
-                    tooltip.Text = text.Replace($"<{args.name}>", value + "/" + valueDev);
-                }
+                tooltips.Add(new TooltipLine(Mod, "AyaMod: DevTooltip", DevTooltip.Value) { OverrideColor = Color.Violet});
             }
         }
 

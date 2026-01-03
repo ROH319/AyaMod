@@ -221,6 +221,7 @@ HallowCamera: {
 CameraFilm: {
 	DisplayName: 相机胶片
 	Tooltip: 增加{0}%相机伤害
+	DeveloperTooltip: ""
 }
 
 AcidFilm: {
@@ -228,13 +229,15 @@ AcidFilm: {
 	Tooltip:
 		'''
 		拍摄产生减益环，造成 [c/4DC741:酸性]:
-		 [c/4DC741:-] <dot> [c/4DC741:hp/s]
+		 [c/4DC741:- {0} hp/s]
 		'''
+	DeveloperTooltip: 提高减益时长，每秒伤害提高至{0} hp/s
 }
 
 BloodbathFilm: {
 	DisplayName: 大屠杀胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.BloodbathFilm.DeveloperTooltip
 }
 
 BlueAcidFilm: {
@@ -242,123 +245,146 @@ BlueAcidFilm: {
 	Tooltip:
 		'''
 		拍摄产生减益环，造成 [c/415DC7:蓝酸性]:
-		 [c/415DC7:-] <dot> [c/415DC7:hp/s]
+		 [c/415DC7:- {0} hp/s]
 		'''
+	DeveloperTooltip: 提高减益时长，每秒伤害提高至{0} hp/s
 }
 
 BurningHadesFilm: {
 	DisplayName: 烈焰冥王胶片
-	Tooltip: ""
+	Tooltip: 命中有几率爆炸并施加狱火
+	DeveloperTooltip: 爆炸会产生火焰波
 }
 
 ChlorophyteFilm: {
 	DisplayName: 叶绿胶片
 	Tooltip:
 		'''
-		拍摄命中有几率对敌人施加繁茂毒素
-		 -{0}hp/s
-		 持续产生孢子雾
+		拍摄命中有几率造成 [c/6BCB00:繁茂毒素]:
+		 [c/6BCB00:- {0} hp/s]
+		 [c/6BCB00:持续产生孢子雾]
 		'''
+	DeveloperTooltip: 提高施加概率
 }
 
 FogboundFilm: {
 	DisplayName: 灰雾胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.FogboundFilm.DeveloperTooltip
 }
 
 GelFilm: {
 	DisplayName: 凝胶胶片
 	Tooltip: 拍摄有几率生成滞留粘液，对接触的敌人减速
+	DeveloperTooltip: 增强减速能力
 }
 
 GlowingMushroomFilm: {
 	DisplayName: 发光蘑菇胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.GlowingMushroomFilm.DeveloperTooltip
 }
 
 GrimFilm: {
 	DisplayName: 恐怖胶片
-	Tooltip: 对敌人施加恐惧减益，普通小怪生命值小于15%时直接斩杀
+	Tooltip: 对敌人施加恐惧减益，普通小怪生命值小于{0}%时直接斩杀
+	DeveloperTooltip: 斩杀阈值提高至{0}%
 }
 
 HadesFilm: {
 	DisplayName: 冥王胶片
 	Tooltip: 命中有几率爆炸
+	DeveloperTooltip: 增加爆炸几率，并有{0}%几率产生连环爆炸
 }
 
 InfernalWispFilm: {
 	DisplayName: 地狱妖灵胶片
-	Tooltip: ""
+	Tooltip: 拍摄产生火焰幽灵追踪敌人
+	DeveloperTooltip: 提高伤害池每秒恢复和上限，幽灵弹幕命中时有{0}%概率产生小型爆炸
 }
 
 LivingFlameFilm: {
 	DisplayName: 鲜艳红焰胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.LivingFlameFilm.DeveloperTooltip
 }
 
 LivingOceanFilm: {
 	DisplayName: 鲜艳海蓝胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.LivingOceanFilm.DeveloperTooltip
 }
 
 LivingRainbowFilm: {
 	DisplayName: 鲜艳彩虹胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.LivingRainbowFilm.DeveloperTooltip
 }
 
 LokisFilm: {
 	DisplayName: Loki的胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.LokisFilm.DeveloperTooltip
 }
 
 MartianFilm: {
 	DisplayName: 火星胶片
-	Tooltip: ""
+	Tooltip: 拍摄施加带电减益
+	DeveloperTooltip: 施加的减益变为覆雷，造成的持续伤害更高且使目标受到的伤害增加{0}%
 }
 
 MidnightRainbowFilm: {
 	DisplayName: 午夜彩虹胶片
-	Tooltip: ""
+	Tooltip: 拍摄有几率产生七彩水晶爆炸
+	DeveloperTooltip: ""
 }
 
 MirageFilm: {
 	DisplayName: 幻象胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.MirageFilm.DeveloperTooltip
 }
 
 NebulaFilm: {
 	DisplayName: 星云胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.NebulaFilm.DeveloperTooltip
 }
 
 NegativeFilm: {
 	DisplayName: 阴暗胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.NegativeFilm.DeveloperTooltip
 }
 
 PhaseFilm: {
 	DisplayName: 相位胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.PhaseFilm.DeveloperTooltip
 }
 
 PinkGelFilm: {
 	DisplayName: 粉凝胶胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.PinkGelFilm.DeveloperTooltip
 }
 
 PixieFilm: {
 	DisplayName: 妖精胶卷
-	Tooltip: 增加<critdmg>%暴击伤害
+	Tooltip: 增加{0}%暴击伤害
+	DeveloperTooltip: 改为增加{0}%暴击伤害
 }
 
 PrismaticFilm: {
 	DisplayName: 七彩胶片
 	Tooltip: 每装备一种稀有度的饰品，增加{0}%武器面板
+	DeveloperTooltip: 改为增加{0}%武器面板
 }
 
 PurpleOozeFilm: {
 	DisplayName: 紫泥胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.PurpleOozeFilm.DeveloperTooltip
 }
 
 RedAcidFilm: {
@@ -366,98 +392,117 @@ RedAcidFilm: {
 	Tooltip:
 		'''
 		拍摄产生减益环，造成 [c/D83A2F:红酸性]:
-		 [c/D83A2F:-] <dot> [c/D83A2F:hp/s]
+		 [c/D83A2F:- {0} hp/s]
 		'''
+	DeveloperTooltip: 提高减益时长，每秒伤害提高至{0} hp/s
 }
 
 ReflectiveCopperFilm: {
 	DisplayName: 反光铜胶片
 	Tooltip: 成功消弹后增加{0}防御，受击消失
+	DeveloperTooltip: 改为增加{0}防御和{1}%减伤
 }
 
 ReflectiveFilm: {
 	DisplayName: 反光胶片
 	Tooltip: 成功消弹后下次受伤伤害减少{0}
+	DeveloperTooltip: 受到伤害减少{0}
 }
 
 ReflectiveGoldFilm: {
 	DisplayName: 反光金胶片
 	Tooltip: 根据消除的弹幕量增加{0} ~ {1}防御、{2} ~ {3}%伤害减免，单次生效
+	DeveloperTooltip: 根据消除的弹幕量增加{0} ~ {1}防御、{2} ~ {3}%伤害减免，单次生效
 }
 
 ReflectiveMetalFilm: {
 	DisplayName: 反光金属胶片
-	Tooltip: 消弹后提高{0}防御{1}%伤害减免，以及{2}%反伤，单次生效
+	Tooltip: 消弹后增加{0}防御，{1}%伤害减免，以及{2}%反伤，单次生效
+	DeveloperTooltip: 改为增加{0}防御，{1}%伤害减免，以及{2}%反伤
 }
 
 ReflectiveObsidianFilm: {
 	DisplayName: 反光黑曜石胶片
 	Tooltip: 消弹增加{0}防御{1}%伤害减免，{2}%反伤，受击释放出6块追踪尖锐黑曜石碎片（75%反伤）
+	DeveloperTooltip: 改为增加{0}防御，{1}%伤害减免，{2}%反伤
 }
 
 ReflectiveSilverFilm: {
 	DisplayName: 反光银胶片
 	Tooltip: 成功消弹后根据消除弹幕量增加{0} ~ {1}防御
+	DeveloperTooltip: 增加至多{0}防御和{1} ~ {2}%伤害减免
 }
 
 ShadowFilm: {
 	DisplayName: 暗影胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.ShadowFilm.DeveloperTooltip
 }
 
 ShadowflameHadesFilm: {
 	DisplayName: 暗影焰冥王胶片
 	Tooltip: 命中有几率爆炸，爆炸产生暗影焰触手
+	DeveloperTooltip: 提高爆炸几率
 }
 
 ShiftingPearlsandsFilm: {
 	DisplayName: 珍珠流沙胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.ShiftingPearlsandsFilm.DeveloperTooltip
 }
 
 ShiftingSandsFilm: {
 	DisplayName: 流沙胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.ShiftingSandsFilm.DeveloperTooltip
 }
 
 SkiphsBloodFilm: {
 	DisplayName: Skiphs的胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.SkiphsBloodFilm.DeveloperTooltip
 }
 
 SolarFilm: {
 	DisplayName: 日耀胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.SolarFilm.DeveloperTooltip
 }
 
 StardustFilm: {
 	DisplayName: 星尘胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.StardustFilm.DeveloperTooltip
 }
 
 TwilightFilm: {
 	DisplayName: 暮光胶片
-	Tooltip: ""
+	Tooltip: 消弹后{0}s内必定暴击，根据消弹量增加持续时间
+	DeveloperTooltip: 提高{0}s基础持续时间
 }
 
 UnicornWispFilm: {
 	DisplayName: 独角妖灵胶片
-	Tooltip: ""
+	Tooltip: 拍摄产生粉色幽灵追踪敌人
+	DeveloperTooltip: 提高伤害池每秒恢复和上限，幽灵命中时有{0}%几率产生共鸣
 }
 
 VoidFilm: {
 	DisplayName: 虚空胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.VoidFilm.DeveloperTooltip
 }
 
 VortexFilm: {
 	DisplayName: 星旋胶片
 	Tooltip: ""
+	// DeveloperTooltip: Mods.AyaMod.Items.VortexFilm.DeveloperTooltip
 }
 
 WispFilm: {
 	DisplayName: 妖灵胶片
-	Tooltip: 拍摄产生幽灵弹幕攻击敌人
+	Tooltip: 拍摄产生幽灵攻击敌人
+	DeveloperTooltip: 提高伤害池每秒恢复和上限
 }
 
 SeijaCamera: {
@@ -1080,44 +1125,51 @@ Tripod: {
 AdvancedCameraFilm: {
 	DisplayName: 高级相机胶片
 	Tooltip: 增加{0}%相机伤害
+	DeveloperTooltip: ""
 }
 
 BlackWhiteFilm: {
 	DisplayName: 黑白胶片
-	Tooltip: 拍照具有 <armorpen> 点护甲穿透
+	Tooltip: 拍照具有{0}点护甲穿透
+	DeveloperTooltip: 护甲穿透提高至{0}点
 }
 
 BloodyFilm: {
 	DisplayName: 血色胶片
 	Tooltip:
 		'''
-		拍照命中恢复 <hitheal> 生命值
-		消弹每个恢复 <projheal> 生命值
+		拍照命中恢复{0}生命值
+		消弹每个恢复{1}生命值
 		'''
+	DeveloperTooltip: 拍照命中恢复{0}生命值，消弹每个恢复{1}生命值
 }
 
 DoomFilm: {
 	DisplayName: 厄运胶片
-	Tooltip: 拍摄同时施加 <debuff>
+	Tooltip: 拍摄造成 {0}
+	DeveloperTooltip: 还会造成 {0}
 }
 
 DurableFilm: {
 	DisplayName: 耐用胶片
 	Tooltip:
 		'''
-		<ammocost>%不消耗概率
 		增加{0}%相机伤害
+		{1}%不消耗概率
 		'''
+	DeveloperTooltip: 不消耗概率提高至{0}%
 }
 
 FlashyFilm: {
 	DisplayName: 闪光胶片
-	Tooltip: 增加<flashtime>%眩晕时间
+	Tooltip: 增加{0}%眩晕时间
+	DeveloperTooltip: 眩晕时间提高至{0}%
 }
 
 MiasmaFilm: {
 	DisplayName: 毒气胶片
 	Tooltip: ""
+	DeveloperTooltip: ""
 }
 
 SoaringHammer: {
@@ -1177,9 +1229,6 @@ StrangePlantEssence: {
 
 ScarletMoonsFilm: {
 	DisplayName: 鲜红幼月的胶卷
-	Tooltip:
-		'''
-		拍照伤害的{0}%会转换成治疗，此数值不会超过<maxheal>
-		即使受到月蚀影响也能生效{1}%吸血量
-		'''
+	Tooltip: 拍照伤害的{0}%会转换成治疗
+	DeveloperTooltip: 受到月蚀影响也能生效{1}%吸血量
 }

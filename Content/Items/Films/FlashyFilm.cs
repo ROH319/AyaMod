@@ -3,11 +3,14 @@ using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Terraria.ID;
 using Terraria;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films
 {
     public class FlashyFilm : BaseFilm
     {
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(StunTimeBonus);
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(StunTimeBonusDev);
         public static int StunTimeBonus = 30;
         public static int StunTimeBonusDev = 45;
         public override void SetDefaults()

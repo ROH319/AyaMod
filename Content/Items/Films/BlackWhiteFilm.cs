@@ -4,11 +4,14 @@ using Terraria.ID;
 using Terraria;
 using System.Collections.Generic;
 using Humanizer;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films
 {
     public class BlackWhiteFilm : BaseFilm
     {
+        public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(ArmorPenBonus);
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(ArmorPenBonusDev);
         public static int ArmorPenBonus = 7;
         public static int ArmorPenBonusDev = 9;
         public override void SetDefaults()

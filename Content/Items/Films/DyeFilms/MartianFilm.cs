@@ -7,6 +7,7 @@ using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using System;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
@@ -14,6 +15,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override int DyeID => 2864;
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(VulnerableDamage);
         public static int ElectrifiedDotDmg = 300;
         public static int ElectrifiedDotDmgDev = 360;
         public static int VulnerableDamage = 10;
@@ -38,7 +40,7 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             {
                 buffType = BuffType<MartianElectrifiedBuff2>();
                 innerColor = new Color(248, 255, 186) * 0.15f;
-                edgeColor = new Color(104, 56, 8);
+                edgeColor = new Color(241, 234, 83);
             }
 
             float radius = MathF.Max(200, projectile.size * 2f);
@@ -48,6 +50,8 @@ namespace AyaMod.Content.Items.Films.DyeFilms
             aura.SetRadiusFadein(0.4f, Ease.OutCubic);
             aura.SetAlphaFadeout(0.5f, Ease.OutSine);
             aura.SetDust(DustID.Electric, 2, 3, 1f, 0.8f, 1f);
+            if(projectile.player.DevEffect())
+                aura.SetDust(DustID.FireworkFountain_Yellow, 2, 3, 1f, 0.8f, 1f);
             aura.DistortIntensity = 4f;
         }
     }

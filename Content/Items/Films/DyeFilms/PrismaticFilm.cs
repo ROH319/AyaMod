@@ -10,9 +10,11 @@ namespace AyaMod.Content.Items.Films.DyeFilms
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
         public override int DyeID => 4778;
-        public int ExtraDmg;
-        public static int DamageBonusStep = 5;
         public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(DamageBonusStep);
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(DamageBonusStepDev);
+        public int ExtraDmg;
+        public static int DamageBonusStep = 4;
+        public static int DamageBonusStepDev = 6;
         public override StatModifier DamageModifier => base.DamageModifier + ExtraDmg / 100f;
         public override void PreAI(BaseCameraProj projectile)
         {

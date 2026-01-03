@@ -70,6 +70,7 @@ namespace AyaMod.Content.Items.Cameras
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
                     Main.spriteBatch.GraphicsDevice.DepthStencilState, RasterizerState.CullNone, null, Main.UIScaleMatrix);
             }
+            base.PostDrawTooltip(lines);
         }
     }
 }

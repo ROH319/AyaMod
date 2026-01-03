@@ -23,9 +23,11 @@ namespace AyaMod.Core.Prefabs
             var shader = GameShaders.Armor.GetShaderIdFromItemId(DyeID);
             var data = new DrawData(TextureAssets.Item[Type].Value, position - Main.screenPosition, frame, itemColor, 0, origin, scale, 0);
             //shader.Apply(Item, data);
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
 
+            var matrix = spriteBatch.transformMatrix;
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, spriteBatch.samplerState, spriteBatch.depthStencilState, spriteBatch.rasterizerState, spriteBatch.customEffect, matrix);
+            
             GameShaders.Armor.Apply(shader, Item, data);
             return true;
         }
@@ -35,7 +37,7 @@ namespace AyaMod.Core.Prefabs
             if (DyeID == 0) return;
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, spriteBatch.GraphicsDevice.BlendState, spriteBatch.GraphicsDevice.SamplerStates[0], spriteBatch.GraphicsDevice.DepthStencilState, spriteBatch.GraphicsDevice.RasterizerState, null, Main.UIScaleMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, spriteBatch.GraphicsDevice.BlendState, spriteBatch.GraphicsDevice.SamplerStates[0], spriteBatch.GraphicsDevice.DepthStencilState, spriteBatch.GraphicsDevice.RasterizerState, null, spriteBatch.transformMatrix);
         }
     }
 }

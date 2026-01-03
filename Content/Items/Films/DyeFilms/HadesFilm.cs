@@ -12,12 +12,14 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace AyaMod.Content.Items.Films.DyeFilms
 {
     public class HadesFilm : BaseDyeFilm
     {
         public override string Texture => AssetDirectory.Films + "CameraFilm";
+        public override LocalizedText DevTooltip => base.DevTooltip.WithFormatArgs(ChainedExplosionChance);
         public override int DyeID => 3038;
         public override float EffectChance => 20;
         public static float ChainedExplosionChance = 20;
