@@ -8,3 +8,5 @@ BuilderToggles: {
 	CameraToggleOn: Auto Camera: On
 	CameraToggleOff: Auto Camera: Off
 }
+
+FilmContainerTitle: Mods.AyaMod.UI.FilmContainerTitle

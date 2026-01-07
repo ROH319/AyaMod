@@ -182,3 +182,8 @@ TwilightBuff: {
 	DisplayName: Twilight Buff
 	Description: Mods.AyaMod.Buffs.TwilightBuff.Description
 }
+
+TenguBuff: {
+	DisplayName: Tengu Buff
+	Description: Mods.AyaMod.Buffs.TenguBuff.Description
+}

@@ -2,6 +2,7 @@
 using AyaMod.Content.Items.Lens;
 using AyaMod.Content.Items.Testing;
 using AyaMod.Content.Prefixes.CameraPrefixes;
+using AyaMod.Content.UI;
 using AyaMod.Core.BuilderToggles;
 using AyaMod.Core.Configs;
 using AyaMod.Core.Globals;
@@ -59,6 +60,17 @@ namespace AyaMod.Core.Prefabs
         {
             return false;
         }
+
+        public override bool CanRightClick() => true;
+        public override void RightClick(Player player)
+        {
+            base.RightClick(player);
+            if (FilmContainerUI.Instance.Visible && FilmContainerUI.Instance.OpenTimer.AnyPositive)
+                FilmContainerUI.Instance.Close();
+            else
+                FilmContainerUI.Instance.Open();
+        }
+        public override bool ConsumeItem(Player player) => false;
 
         public override bool AltFunctionUse(Player player) => player.Camera().CameraAltCooldown <= 0;
 

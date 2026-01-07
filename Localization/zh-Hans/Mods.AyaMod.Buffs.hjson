@@ -204,3 +204,8 @@ TwilightBuff: {
 	DisplayName: 暮光
 	Description: 你的攻击必定暴击
 }
+
+TenguBuff: {
+	// DisplayName: Tengu Buff
+	// Description: Mods.AyaMod.Buffs.TenguBuff.Description
+}

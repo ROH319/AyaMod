@@ -60,7 +60,7 @@ namespace AyaMod.Content.Items.Cameras
 
             int count = 3;
 
-            int damage = (int)(Projectile.damage * 0.4f);
+            int damage = (int)(Projectile.damage * 0.3f);
             for(int i = 0; i < count; i++)
             {
                 Vector2 pos = Projectile.Center + AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(20, 80);
@@ -298,7 +298,11 @@ namespace AyaMod.Content.Items.Cameras
             //ai0控制追踪
             if (Projectile.ai[1] > 120 && Projectile.ai[0] > 0 && Projectile.localAI[2] < 1)
             {
-                Projectile.Chase(600, 18, 0.012f);
+                Projectile.Chase(800, 18, 0.012f);
+            }
+            else
+            {
+                Projectile.velocity *= 0.98f;
             }
             if (Projectile.localAI[2] > 0)
             {

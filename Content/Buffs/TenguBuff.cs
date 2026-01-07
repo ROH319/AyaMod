@@ -20,7 +20,7 @@ namespace AyaMod.Content.Buffs
         public static void DashBonus(Player player)
         {
             if (player.HasEffect<TenguBuff>() && (player.dashDelay != 0 || player.Aya().DashDelay != 0))
-                player.velocity *= (1 + TenguTango.DashBonus / 100f);
+                player.position += player.velocity * (TenguTango.SpeedBonus / 100f);
         }
         public override void Update(Player player, ref int buffIndex)
         {

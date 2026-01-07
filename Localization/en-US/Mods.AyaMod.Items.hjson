@@ -980,3 +980,13 @@ ScarletMoonsFilm: {
 	Tooltip: ""
 	DeveloperTooltip: Mods.AyaMod.Items.ScarletMoonsFilm.DeveloperTooltip
 }
+
+TenguTango: {
+	DisplayName: Tengu Tango
+	Tooltip: ""
+}
+
+HammerBag: {
+	DisplayName: Hammer Bag
+	Tooltip: ""
+}

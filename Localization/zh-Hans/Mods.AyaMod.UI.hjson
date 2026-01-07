@@ -8,3 +8,5 @@ BuilderToggles: {
 	CameraToggleOn: 自动拍摄：开
 	CameraToggleOff: 自动拍摄：关
 }
+
+FilmContainerTitle: 胶卷栏

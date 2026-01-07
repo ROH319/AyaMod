@@ -1230,5 +1230,19 @@ StrangePlantEssence: {
 ScarletMoonsFilm: {
 	DisplayName: 鲜红幼月的胶卷
 	Tooltip: 拍照伤害的{0}%会转换成治疗
-	DeveloperTooltip: 受到月蚀影响也能生效{1}%吸血量
+	DeveloperTooltip: 受到月蚀影响也能生效{0}%吸血量
+}
+
+TenguTango: {
+	DisplayName: 天狗踊
+	Tooltip:
+		'''
+		在空中增加{0}%移动速度和{1}%冲刺距离
+		在地面减少{2}%移动速度
+		'''
+}
+
+HammerBag: {
+	DisplayName: 锻锤包
+	Tooltip: ""
 }
