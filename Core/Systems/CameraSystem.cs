@@ -1,4 +1,5 @@
 ﻿using AyaMod.Content.Items.Cameras;
+using AyaMod.Content.Items.Films;
 using AyaMod.Content.Items.Materials;
 using AyaMod.Content.Items.PrefixHammers;
 using AyaMod.Core.Prefabs;
@@ -25,7 +26,7 @@ namespace AyaMod.Core.Systems
         public override void PostWorldGen()
         {
 
-            int maxWoodenCamera = 5;
+            int maxWoodenCamera = 6;
             int maxShadowCamera = 4;
             int maxDesertCamera = 4;
             int woodenPlaced = 0;
@@ -37,9 +38,9 @@ namespace AyaMod.Core.Systems
             {
                 Chest chest = Main.chest[chestIndex];
                 if (chest == null) continue;
-                if (woodenPlaced >= maxWoodenCamera
-                    && shadowPlaced >= maxShadowCamera
-                    && desertPlaced >= maxDesertCamera) break;
+                //if (woodenPlaced >= maxWoodenCamera
+                //    && shadowPlaced >= maxShadowCamera
+                //    && desertPlaced >= maxDesertCamera) break;
 
                 Tile chestTile = Framing.GetTileSafely(chest.x, chest.y);
 
@@ -57,10 +58,13 @@ namespace AyaMod.Core.Systems
                                                                                or WallID.BlueDungeonSlabUnsafe or WallID.GreenDungeonSlabUnsafe or WallID.PinkDungeonSlabUnsafe
                                                                                or WallID.BlueDungeonTileUnsafe or WallID.GreenDungeonTileUnsafe or WallID.PinkDungeonTileUnsafe) continue;
                                     //1/3概率
-                                    if (WorldGen.genRand.NextBool(3) && woodenPlaced > 1) continue;
-                                    chest.AddItem<ToyCamera>();
-                                    woodenPlaced++;
+                                    if (WorldGen.genRand.NextBool(3))
+                                    {
+                                        chest.AddItem<ToyCamera>();
+                                        woodenPlaced++;
+                                    }
                                 }
+                                chest.AddItem<CameraFilm>(100);
                                 break;
                             case 1 * 36://金箱子
                                 {
@@ -70,6 +74,7 @@ namespace AyaMod.Core.Systems
                                             chest.AddItem<ClassicalHammer>();
                                     }
                                 }
+                                chest.AddItem<CameraFilm>(150);
                                 break;
                             case 2 * 36://上锁金箱（地牢）
                                 {
@@ -82,10 +87,18 @@ namespace AyaMod.Core.Systems
                                 {
 
                                     //1/3概率
-                                    if (WorldGen.genRand.NextBool(3)) continue;
-                                    chest.AddItem<ShadowCamera>();
-                                    shadowPlaced++;
+                                    if (WorldGen.genRand.NextBool(3))
+                                    {
+                                        chest.AddItem<ShadowCamera>();
+                                        shadowPlaced++;
+                                    }
                                 }
+                                if (WorldGen.genRand.NextBool(3))
+                                    chest.AddItem<PhantomHammer>();
+                                break;
+                            case 12 * 36://生命木
+                                chest.AddItem<CameraFilm>(200);
+
                                 break;
                         }
                         break;
@@ -97,9 +110,11 @@ namespace AyaMod.Core.Systems
                                 if (desertPlaced < maxDesertCamera)
                                 {
 
-                                    if (WorldGen.genRand.NextBool(3)) continue;
-                                    chest.AddItem<VitricLightning>();
-                                    desertPlaced++;
+                                    if (WorldGen.genRand.NextBool(3))
+                                    {
+                                        chest.AddItem<VitricLightning>();
+                                        desertPlaced++;
+                                    }
                                 }
                                 break;
                         }

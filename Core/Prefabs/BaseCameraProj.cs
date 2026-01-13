@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.Enums;
 using Terraria.ModLoader;
 
 namespace AyaMod.Core.Prefabs
@@ -127,9 +128,10 @@ namespace AyaMod.Core.Prefabs
         public override bool PreAI()
         {
             if (player.HeldItem.ModItem is not BaseCamera) return false;
-            GetCameraStats();
+            BaseCamera camera = (BaseCamera)player.HeldItem.ModItem;
+            GetCameraStats(camera);
 
-            var film = player.ChooseFilms(player.HeldItem, CameraStats.FilmSlot);
+            var film = camera.PickFilm(player, out var _, false);
             film.ForEach(film => films.Add((BaseFilm)film.ModItem));
 
             UpdateFilm(film => film.PreAI(this));
@@ -223,10 +225,9 @@ namespace AyaMod.Core.Prefabs
 
         }
 
-        public virtual void GetCameraStats()
+        public virtual void GetCameraStats(BaseCamera camera)
         {
             if (player.HeldItem.ModItem == null) return;
-            var camera = player.HeldItem.ModItem as BaseCamera;
             if (camera == null) return;
 
             CameraStats = camera.CameraStats;
@@ -376,9 +377,19 @@ namespace AyaMod.Core.Prefabs
         public void Snap()
         {
             var rects = lens.GetRectanglesAgainstEntity(Projectile.Center, Size, Projectile.rotation);
-            foreach(var rect in rects)
+            bool[] tileCutIgnorance = player.GetTileCutIgnorance(allowRegrowth: false, Projectile.trap);
+            DelegateMethods.tilecut_0 = TileCuttingContext.AttackProjectile;
+            DelegateMethods.tileCutIgnore = tileCutIgnorance;
+            foreach (var rect in rects)
             {
-                Utils.PlotTileLine(new Vector2(rect.Left, rect.Center.Y), new Vector2(rect.Right, rect.Center.Y), rect.Height, new Utils.TileActionAttempt(DelegateMethods.CutTiles));
+                //var ac = new Utils.TileActionAttempt((x, y) =>
+                //{
+                //    if (x < 0 || y < 0 || x >= Main.maxTilesX || y >= Main.maxTilesY) return false;
+                //    var tile = Main.tile[x, y];
+                //    if (tile == null) return false; // 防止 NullReferenceException
+                //    return DelegateMethods.CutTiles(x, y);
+                //});
+                Utils.PlotTileLine(new Vector2(rect.Left, rect.Center.Y), new Vector2(rect.Right, rect.Center.Y), rect.Height, DelegateMethods.CutTiles);
             }
 
             CombinedOnSnap();

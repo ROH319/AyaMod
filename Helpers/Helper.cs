@@ -20,12 +20,13 @@ namespace AyaMod.Helpers
         /// </summary>
         /// <param name="chest"></param>
         /// <param name="itemtype"></param>
-        public static void AddItem<T>(this Chest chest) where T : ModItem
+        public static void AddItem<T>(this Chest chest, int stack = 1) where T : ModItem
         {
             foreach (var item in chest.item)
             if (item.IsAir)
             {
-                item.SetDefaults(ModContent.ItemType<T>());
+                item.SetDefaults(ItemType<T>());
+                item.stack = stack;
                 return;
             }
         }
@@ -34,12 +35,13 @@ namespace AyaMod.Helpers
         /// </summary>
         /// <param name="chest"></param>
         /// <param name="itemtype"></param>
-        public static void AddItem<T>(this Chest chest, int itemType)
+        public static void AddItem(this Chest chest, int itemType, int stack = 1)
         {
             foreach (var item in chest.item)
             if (item.IsAir)
             {
                 item.SetDefaults(itemType);
+                item.stack = stack;
                 return;
             }
         }

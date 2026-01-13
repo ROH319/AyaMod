@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.GameInput;
+using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
 
 namespace AyaMod.Content.UI
@@ -58,18 +59,28 @@ namespace AyaMod.Content.UI
                 if (!dragging && ContainsPoint(Main.MouseScreen) && Main.mouseLeft && PlayerInput.MouseInfoOld.LeftButton == ButtonState.Released)
                 {
                     bool upperMost = true;
-                    if (ExtraChildren != null)
-                    {
-                        IEnumerable<UIElement> children = Elements.Concat(ExtraChildren);
+                    IEnumerable<UIElement> children = Elements;
 
-                        foreach (UIElement element in children)
+                    if (ExtraChildren != null)
+                        children = children.Concat(ExtraChildren);
+
+                    foreach(UIElement c in children)
+                    {
+                        if (CheckUpper(c))
                         {
-                            if (element.ContainsPoint(Main.MouseScreen) && (!PanelsDraggable || element as UIPanel == null))
-                            {
-                                upperMost = false;
-                                break;
-                            }
+                            upperMost = false;break;
                         }
+                    } 
+
+                    bool CheckUpper(UIElement element)
+                    {
+                        bool value = element.ContainsPoint(Main.MouseScreen);
+                        if(!value)
+                        {
+                            foreach (UIElement c in element.Children.Where(x => x is not UIGrid.UIInnerList))
+                                value = value |= CheckUpper(c);
+                        }
+                        return value;
                     }
 
                     if (upperMost)

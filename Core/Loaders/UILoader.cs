@@ -60,6 +60,7 @@ namespace AyaMod.Core.Loaders
         {
             foreach(UserInterface ui in UserInterfaces)
             {
+                //Main.NewText($"{ui._lastElementHover?.GetType()}");
                 if (ui?.CurrentState != null && ((BaseUIState)ui.CurrentState).Visible)
                     ui.Update(gameTime);
             }

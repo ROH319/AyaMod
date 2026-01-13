@@ -101,7 +101,7 @@ namespace AyaMod.Content.Items.Cameras
 
         public override bool? CanHitNPC(NPC target)
         {
-            return target.noTileCollide || Collision.CanHitLine(Projectile.Center,1,1,target.position,target.width,target.height);
+            return !target.friendly && (target.noTileCollide || Collision.CanHitLine(Projectile.Center, 1, 1, target.position, target.width, target.height));
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)

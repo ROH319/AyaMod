@@ -186,7 +186,7 @@ namespace AyaMod.Content.Items.Armors
         public override void SetOtherDefault()
         {
             base.SetOtherDefault();
-            SetCameraStats(160, 40, 400f, 1.3f);
+            SetCameraStats(160, 40, 700f, 1.3f);
         }
         public override bool PreAI()
         {

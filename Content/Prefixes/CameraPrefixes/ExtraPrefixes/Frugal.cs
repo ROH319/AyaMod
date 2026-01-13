@@ -17,7 +17,7 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
         {
             if (weapon.DamageType != ReporterDamage.Instance || weapon.prefix != PrefixType<Frugal>())
                 return true;
-            return Main.rand.NextBool(AmmoSaveRate, 100);
+            return Main.rand.NextBool(100 - AmmoSaveRate, 100);
         }
         public static int AmmoSaveRate = 30;
     }

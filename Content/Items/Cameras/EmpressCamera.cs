@@ -120,6 +120,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.penetrate = -1;
             Projectile.timeLeft = 60;
             Projectile.SetImmune(6);
+            Projectile.Opacity = .7f;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -222,8 +223,8 @@ namespace AyaMod.Content.Items.Cameras
                 Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, null, ballColor * timeFadein * timeFadeout * 0.3f, starrot1, star.Size() / 2, Projectile.scale * extraScale, 0, 0);
                 Main.spriteBatch.Draw(star, Projectile.Center - Main.screenPosition, null, ballColor * timeFadein * timeFadeout * 0.3f, starrot2, star.Size() / 2, Projectile.scale * extraScale, 0, 0);
 
-                Main.spriteBatch.Draw(texture, Projectile.Center + Rot.ToRotationVector2() * 0.5f * length - Main.screenPosition, null, Color.White.AdditiveColor(), Rot + MathHelper.PiOver2, new Vector2(0, 128), new Vector2(width / 256f * 0.2f, length / 256f) * Projectile.scale, 0, 0);
-                Main.spriteBatch.Draw(texture, Projectile.Center + Rot.ToRotationVector2() * 0.5f * length - Main.screenPosition, null, Color.White.AdditiveColor(), Rot + MathHelper.PiOver2, new Vector2(0, 128), new Vector2(width / 256f * 0.1f, length / 256f) * Projectile.scale, 0, 0);
+                Main.spriteBatch.Draw(texture, Projectile.Center + Rot.ToRotationVector2() * 0.5f * length - Main.screenPosition, null, (Color.White * Projectile.Opacity).AdditiveColor(), Rot + MathHelper.PiOver2, new Vector2(0, 128), new Vector2(width / 256f * 0.2f, length / 256f) * Projectile.scale, 0, 0);
+                Main.spriteBatch.Draw(texture, Projectile.Center + Rot.ToRotationVector2() * 0.5f * length - Main.screenPosition, null, (Color.White * Projectile.Opacity).AdditiveColor(), Rot + MathHelper.PiOver2, new Vector2(0, 128), new Vector2(width / 256f * 0.1f, length / 256f) * Projectile.scale, 0, 0);
             }
             return false;
         }

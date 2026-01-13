@@ -23,6 +23,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.useTime = Item.useAnimation = 40;
             Item.useStyle = ItemUseStyleID.Rapier;
 
+            Item.shoot = ProjectileType<FlawlessCameraProj>();
             Item.shootSpeed = 8;
             Item.knockBack = 8f;
             Item.SetShopValues(ItemRarityColor.Orange3, Item.sellPrice(0, 1, 0, 0));

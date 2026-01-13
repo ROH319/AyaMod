@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -45,7 +46,7 @@ namespace AyaMod.Content.UI
         public DragablePanel Window;
         public UIPanel UsingFilmPanel;
         public UIPanel FilmContainerPanel;
-        public FilmContainerGrid UsingFilmGrid = new(true) { ListPadding = 0f };
+        public UsingFilmGrid UsingFilmGrid = new() { ListPadding = 0f };
         public FilmContainerGrid FilmContainerGrid = new() { ListPadding = 0f };
         public FilmHideTab HideTab;
         public UIText Title;
@@ -64,6 +65,8 @@ namespace AyaMod.Content.UI
             float BackWidth = 560;
             float BackHeight = 400;
             Vector2 offset = new(Main.screenWidth / 2f - BackWidth / 2f, Main.screenHeight / 2f - BackHeight / 2f);
+
+
 
             Window = new DragablePanel();
             Window.Left.Set(offset.X, 0);
@@ -98,6 +101,7 @@ namespace AyaMod.Content.UI
 
             UsingFilmGrid.SetPadding(8f);
             UsingFilmGrid.PaddingTop = 0f;
+            UsingFilmGrid.PaddingBottom = 0f;
             UsingFilmGrid.Width.Set(0, 1f);
             UsingFilmGrid.Height.Set(0, 1f);
 
@@ -109,6 +113,10 @@ namespace AyaMod.Content.UI
             CloseButton = new SimpleCross();
             CloseButton.Left.Set(Width.Pixels - CloseButton.Width.Pixels, 0f);
             CloseButton.OnLeftClick += (_, _) => Close();
+
+
+            FilmContainerGrid.Scrollbar.Height.Set(FilmContainerPanel.Height.Pixels - 16, 0);
+            FilmContainerGrid.Scrollbar.Left.Set(FilmContainerPanel.Width.Pixels - FilmContainerGrid.Scrollbar.Width.Pixels - 18, 0);
 
             Append(Window);
             Window.Append(UsingFilmPanel);
@@ -131,22 +139,38 @@ namespace AyaMod.Content.UI
 
             Window.BorderColor = Color.Black * OpenTimer.Progress;
             Window.BackgroundColor = new Color(29, 33, 70) * 0.7f * OpenTimer.Progress;
+            Window.Height.Set(460, 0);
+            Window.Width.Set(580,0);
 
             UsingFilmPanel.BorderColor = Color.Black * OpenTimer.Progress;
             UsingFilmPanel.BackgroundColor = new Color(73, 94, 171) * 0.9f * OpenTimer.Progress;
+            UsingFilmPanel.Width.Set(Window.Width.Pixels - 12, 0);
+            
 
             FilmContainerPanel.BorderColor = Color.Black * OpenTimer.Progress;
             FilmContainerPanel.BackgroundColor = new Color(73, 94, 171) * 0.9f * OpenTimer.Progress;
+            FilmContainerPanel.Height.Set(460 - 130,0);
+            FilmContainerPanel.Width.Set(Window.Width.Pixels - 12, 0);
 
             Title.TextColor = Color.White * OpenTimer.Progress;
-            Title.ShadowColor = Color.Black * OpenTimer.Progress;
+            Title.ShadowColor = Color.Black * OpenTimer.Progress; 
+            var vector = FontAssets.MouseText.Value.MeasureString(Title.Text);
+            Title.Height.Set(vector.Y, 0);
+            Title.Width.Set(vector.X, 0f);
+            Title._textScale = 0.5f;
+            Title.PaddingLeft = 0f;
+            Title.Top.Set(12, 0);
+            Title.Left.Set(6, 0);
 
             UsingFilmGrid.Opacity = OpenTimer.Progress;
+            UsingFilmGrid.PaddingBottom = 0f;
 
             FilmContainerGrid.Opacity = OpenTimer.Progress;
+            FilmContainerGrid.PaddingBottom = 0f;
 
+            CloseButton.Width.Set(42, 0);
+            CloseButton.Height.Set(42, 0);
             CloseButton.Left.Set(Window.Width.Pixels - CloseButton.Width.Pixels, 0f);
-
             CloseButton.Opacity = OpenTimer.Progress;
 
             if (Window.IsMouseHovering)
@@ -154,12 +178,12 @@ namespace AyaMod.Content.UI
 
             Recalculate();
         }
-        public void Open()
+        public void Open(int slot = 0)
         {
             Visible = true;
             SoundEngine.PlaySound(SoundID.MenuOpen);
 
-            UsingFilmGrid.Open(Main.LocalPlayer.GetModPlayer<DataPlayer>().UsingFilm);
+            UsingFilmGrid.Open(Main.LocalPlayer.GetModPlayer<DataPlayer>().UsingFilm, slot);
             FilmContainerGrid.Open(Main.LocalPlayer.GetModPlayer<DataPlayer>().FilmVault);
         }
 

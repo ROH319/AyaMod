@@ -140,26 +140,37 @@ namespace AyaMod.Helpers
 
         #endregion
 
-        public static List<Item> ChooseFilms(this Player player, Item weapon, int count = 1)
+        public static List<Item> ChooseFilmsFromInv(this Player player, Item weapon, int count = 1)
         {
             var sItem = weapon;
             List<Item> list = new List<Item>();
 
-            for (int i = 54; i < 58 && list.Count < count; i++)
+            for (int i = 54; i < 58; i++)
             {
                 if (player.inventory[i].stack > 0 && ItemLoader.CanChooseAmmo(sItem, player.inventory[i], player))
                 {
                     list.Add(player.inventory[i]);
                 }
+                if (list.Count >= count) break;
             }
-            for (int i = 0; i < 54 && list.Count < count; i++)
+            for (int i = 0; i < 54; i++)
             {
                 if (player.inventory[i].stack > 0 && ItemLoader.CanChooseAmmo(sItem, player.inventory[i], player))
                 {
                     list.Add(player.inventory[i]);
                 }
+                if (list.Count >= count) break;
             }
 
+            return list;
+        }
+        public static List<Item> ChooseFilmsFromVault(this Player player, Item weapon, int count = 1)
+        {
+            var dp = player.GetModPlayer<DataPlayer>();
+            var list = dp.UsingFilm
+                .Take(count)
+                .Where(item => item.stack > 0 && ItemLoader.CanChooseAmmo(weapon, item, player))
+                .ToList();
             return list;
         }
 

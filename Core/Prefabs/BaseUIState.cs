@@ -22,6 +22,7 @@ namespace AyaMod.Core.Prefabs
         {
             base.Draw(spriteBatch);
 
+            
             //bool displayHitbox = true;
             //if (displayHitbox)
             //{

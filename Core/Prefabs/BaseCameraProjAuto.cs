@@ -124,7 +124,7 @@ namespace AyaMod.Core.Prefabs
         }
         public virtual void AttackMovement(NPC target)
         {
-            Projectile.Chase(target, 10f, 0.04f);
+            Projectile.Chase(target, 12f, 0.06f);
         }
         public virtual Vector2 GetIdlePos() => player.Center;
         public virtual void IdleMovement()

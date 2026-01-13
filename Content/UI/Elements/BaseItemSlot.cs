@@ -29,12 +29,12 @@ namespace AyaMod.Content.UI.Elements
         public override void MouseOver(UIMouseEvent evt)
         {
             base.MouseOver(evt);
-            if (!Item.IsAir)
-            {
-                Item inv = Item;
-                ItemSlot.OverrideHover(ref inv, ItemSlot.Context.VoidItem);
-                ItemSlot.MouseHover(ref inv, ItemSlot.Context.VoidItem);
-            }
+            //if (!Item.IsAir)
+            //{
+            //    Item inv = Item;
+            //    ItemSlot.OverrideHover(ref inv, ItemSlot.Context.VoidItem);
+            //    ItemSlot.MouseHover(ref inv, ItemSlot.Context.VoidItem);
+            //}
         }
         public override void DrawSelf(SpriteBatch spriteBatch)
         {
@@ -61,9 +61,10 @@ namespace AyaMod.Content.UI.Elements
 
             spriteBatch.Draw(invBack, position, null, backColor, 0f, default(Vector2), inventoryScale, SpriteEffects.None, 0f);
 
-            if(!item.IsAir)
+            if (!item.IsAir)
             {
-                float scale = ItemSlot.DrawItemIcon(item, 3, spriteBatch, position + invBack.Size() * inventoryScale / 2f, inventoryScale, 32f, color);
+                ItemSlot.Draw(spriteBatch, ref item, ItemSlot.Context.ChestItem, position, color);
+                //float scale = ItemSlot.DrawItemIcon(item, 3, spriteBatch, position + invBack.Size() * inventoryScale / 2f, inventoryScale, 32f, color);
             }
         }
     }

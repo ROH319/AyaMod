@@ -99,6 +99,7 @@ namespace AyaMod.Content.Items.Armors
 
         public static void DarkHover(BaseCameraProj camera, NPC npc)
         {
+            if (!npc.CanBeChasedBy()) return;
             if(camera.player.HasEffect(DarkRevealerSet))
             {
                 var darkReveal = npc.GetGlobalNPC<DarkRevealNPC>();

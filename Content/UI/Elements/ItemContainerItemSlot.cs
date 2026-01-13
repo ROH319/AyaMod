@@ -39,12 +39,12 @@ namespace AyaMod.Content.UI.Elements
             //}
             //else Item.scale = 1f;
 
-            //if (hovering)
-            //{
-            //    Main.HoverItem = Item.Clone();
-            //    Main.hoverItemName = Item.Name;
-            //    Utils.DrawRect(spriteBatch, style.ToRectangle(), Color.Red);
-            //}
+            if (hovering)
+            {
+                Main.HoverItem = Item.Clone();
+                Main.hoverItemName = Item.Name;
+                //Utils.DrawRect(spriteBatch, style.ToRectangle(), Color.Red);
+            }
             //Utils.DrawBorderString(spriteBatch, $"{_index}", style.ToRectangle().TopLeft(), Color.Red);
         }
         public void LeftClick_ItemSlot()
@@ -52,10 +52,6 @@ namespace AyaMod.Content.UI.Elements
             if (Main.LocalPlayer.ItemAnimationActive)
                 return;
 
-            if(!Main.mouseItem.IsAir)
-            {
-                return;
-            }
 
             Main.mouseItem = Item;
             Item = new Item();

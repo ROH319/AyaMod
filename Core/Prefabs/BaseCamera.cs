@@ -55,20 +55,24 @@ namespace AyaMod.Core.Prefabs
             CameraStats.CameraDamage = maxCaptureDamage;
             CameraStats.CaptureCooldown = captureCooldown;
         }
-
+        public override bool CanShoot(Player player)
+        {
+            //不使用原版的弹药消耗
+            return false;
+        }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             return false;
         }
 
-        public override bool CanRightClick() => true;
+        public override bool CanRightClick() => Main.mouseItem.IsAir;
         public override void RightClick(Player player)
         {
             base.RightClick(player);
             if (FilmContainerUI.Instance.Visible && FilmContainerUI.Instance.OpenTimer.AnyPositive)
                 FilmContainerUI.Instance.Close();
             else
-                FilmContainerUI.Instance.Open();
+                FilmContainerUI.Instance.Open(player.Camera().GetCameraSlot(CameraStats.FilmSlot));
         }
         public override bool ConsumeItem(Player player) => false;
 
@@ -114,12 +118,57 @@ namespace AyaMod.Core.Prefabs
         {
             return player.GetModPlayer<CameraPlayer>().CanAutoSnap(this);
         }
+        public override bool? UseItem(Player player)
+        {
+            PickFilm(player, out bool canshoot);
+            return canshoot;
+        }
+
+        /// <summary>
+        /// 从玩家胶卷槽和物品栏选择胶卷
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="canShoot"></param>
+        /// <param name="consume">是否消耗</param>
+        /// <returns></returns>
+        public virtual List<Item> PickFilm(Player player, out bool canShoot, bool consume = true, int defaultSlot = -1)
+        {
+            if (!ItemLoader.NeedsAmmo(Item, player))
+                consume = false;
+
+            var slot = defaultSlot <= 0 ? player.Camera().GetCameraSlot(CameraStats.FilmSlot) : defaultSlot;
+            var list = player.ChooseFilmsFromVault(Item, slot);
+            int leftSlot = slot - list.Count;
+            if (leftSlot > 0)
+                list.AddRange(player.ChooseFilmsFromInv(Item, leftSlot));
+
+            canShoot = list.Count > 0 || !consume;
+
+            if (!consume) return list;
+
+            foreach (var ammo in list)
+            {
+                //DeathSickle是随便写的弹幕ID ，这个方法里没用到projtoshoot
+                if (ammo.consumable && !player.IsAmmoFreeThisShot(Item, ammo, ProjectileID.DeathSickle))
+                {
+                    CombinedHooks.OnConsumeAmmo(player, Item, ammo);
+                    ammo.stack--;
+                    if(ammo.stack < 0)
+                    {
+                        ammo.active = false;
+                        ammo.TurnToAir();
+                    }
+                }
+            }
+
+            return list;
+        }
 
         public virtual float GetStunTime() => Item.knockBack * 2 * Item.GetGlobalItem<CameraGlobalItem>().StunTimeMult;
 
         public override void ModifyWeaponDamage(Player player, ref StatModifier damage)
         {
-            var films = player.ChooseFilms(player.HeldItem, CameraStats.FilmSlot);
+            var films = PickFilm(player, out var _, false);
             foreach(var film in films)
             {
                 if (film.ModItem is not BaseFilm) continue;
@@ -143,7 +192,7 @@ namespace AyaMod.Core.Prefabs
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            var films = Main.LocalPlayer.ChooseFilms(Item, CameraStats.FilmSlot);
+            var films = PickFilm(Main.LocalPlayer, out var _, false);
             foreach(var film in films)
             {
                 tooltips.Add(new TooltipLine(Mod, $"usingFilms:{film.ModItem.Name}",  "正在使用胶卷".WrapWithColorCode(Main.DiscoColor) + $"[i:{film.type}]" + $"{film.Name}".WrapWithColorCode(Main.DiscoColor)));

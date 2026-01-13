@@ -38,6 +38,8 @@ namespace AyaMod.Core.ModPlayers
         public StatModifier AutoSnapDamageModifier = StatModifier.Default;
         public StatModifier ManualSnapDamageModifier = StatModifier.Default;
 
+        public StatModifier FilmSlotModifier = StatModifier.Default;
+
         public float SingleTargetMultiplier = 0f;
 
         public float FlashTimer;
@@ -78,13 +80,29 @@ namespace AyaMod.Core.ModPlayers
         public override void Load()
         {
             DefaultLens = new DefaultLens();
+
+            On_Player.ChooseAmmo += HookChooseAmmo;
         }
+
+        public static Item HookChooseAmmo(On_Player.orig_ChooseAmmo orig, Player self, Item weapon)
+        {
+            //仅用于修复相机按照原版逻辑找不到胶卷而无法使用的bug，不在这消耗胶卷
+            if (weapon.ModItem != null && weapon.ModItem is BaseCamera camera)
+            {
+                var list = camera.PickFilm(self, out var _, false, 1);
+                return list.Count > 0 ? list[0] : null;
+            }
+            return orig(self, weapon);
+        }
+
         public override void Unload()
         {
             DefaultLens = null;
 
             CheckSnapThrouthWallEvent = null;
             PostUpdateHook = null;
+
+            On_Player.ChooseAmmo -= HookChooseAmmo;
         }
 
         public override void OnEnterWorld()
@@ -104,6 +122,8 @@ namespace AyaMod.Core.ModPlayers
             StunTimeModifier = StatModifier.Default;
             AutoSnapDamageModifier = StatModifier.Default;
             ManualSnapDamageModifier = StatModifier.Default;
+
+            FilmSlotModifier = StatModifier.Default;
 
             SingleTargetMultiplier = 0f;
 
@@ -219,6 +239,20 @@ namespace AyaMod.Core.ModPlayers
                     itemDrop = ItemType<WaveCamera>();
             }
 
+        }
+
+        public override IEnumerable<Item> AddStartingItems(bool mediumCoreDeath)
+        {
+            if(Player.difficulty == PlayerDifficultyID.Creative && !mediumCoreDeath)
+            {
+                return [new Item(ItemType<ToyCamera>(), 1, -1), new Item(ItemType<CameraFilm>(), 300)];
+            }
+            return base.AddStartingItems(mediumCoreDeath);
+        }
+
+        public int GetCameraSlot(int baseValue)
+        {
+            return (int)FilmSlotModifier.ApplyTo(baseValue);
         }
 
         public float GetCameraDamageModifier(bool autoSnap = true)

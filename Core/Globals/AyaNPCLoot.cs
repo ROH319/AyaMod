@@ -78,12 +78,23 @@ namespace AyaMod.Core.Globals
                 case NPCID.Ghost:
                     npcLoot.Add(ItemDropRule.ByCondition(new DownedSkeletron(), ItemType<SpiritHeart>(), 6));
                     break;
+                case NPCID.Pirate:
+                case NPCID.PirateCorsair:
+                case NPCID.PirateCrossbower:
+                case NPCID.PirateDeadeye:
+                case NPCID.PirateDeckhand:
+                    npcLoot.Add(new CommonDrop(ItemType<GreedyHammer>(), 20));
+                    break;
+                case NPCID.PirateCaptain:
+                case NPCID.PirateShip:
+                    npcLoot.Add(new CommonDrop(ItemType<GreedyHammer>(), 8));
+                    break;
                 case NPCID.PirateGhost:
                     npcLoot.Add(new CommonDrop(ItemType<CaptainCamera>(), 10, 1, 1, 4));
                     break;
                 case NPCID.Drippler:
                 case NPCID.BloodZombie:
-                    npcLoot.Add(new CommonDrop(ItemType<BloodyFilm>(), 10, 1, 1, 1));
+                    npcLoot.Add(new CommonDrop(ItemType<BloodyFilm>(), 10, 300, 500, 1));
                     npcLoot.Add(new CommonDrop(ItemType<BloodthirstyHammer>(), 10, 1, 1, 1));
                     break;
                 case NPCID.LunarTowerSolar:

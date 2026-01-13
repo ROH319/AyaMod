@@ -84,7 +84,8 @@ namespace AyaMod.Content.Items.Armors
 
             var aura = BaseBuffAura.Spawn<AuraFriendly>(projectile.Projectile.GetSource_FromAI(), projectile.Projectile.Center, 3 * 60, BuffType<MadnessBuff>(),
                 3 * 60, 400f, new Color(151, 112, 204, 128) * 0.3f, new Color(101, 53, 165, 156), projectile.player.whoAmI);
-            aura.SetRadiusFadeout(0.99f, Common.Easer.Ease.Linear);
+            aura.DisableRadiusFadeout();
+            aura.SetRadiusFadein(0.4f, Common.Easer.Ease.OutCubic);
             aura.SetAlphaFadeout(0.6f, Common.Easer.Ease.OutSine);
         }
 
