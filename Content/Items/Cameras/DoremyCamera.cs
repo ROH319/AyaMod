@@ -395,6 +395,7 @@ namespace AyaMod.Content.Items.Cameras
     public class DreamEssence : ModProjectile
     {
         public override string Texture => AssetDirectory.EmptyTexturePass;
+        public static MultedTrail strip = new MultedTrail();
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.CultistIsResistantTo[Type] = true;
@@ -504,7 +505,7 @@ namespace AyaMod.Content.Items.Cameras
         }
         public float WidthFunction(float progress)
         {
-            return 2f;
+            return 1f;
         }
         public float AlphaFunction(float progress)
         {
@@ -514,15 +515,15 @@ namespace AyaMod.Content.Items.Cameras
         public override bool PreDraw(ref Color lightColor)
         {
             #region 拖尾
-            List<CustomVertexInfo> bars = new List<CustomVertexInfo>();
+            List<CustomVertexInfo> bars = [];
             Vector2 lastTrailPos = Vector2.Zero;
 
             int mult = 1;
             int total = (int)(Projectile.oldPos.Length * mult - mult);
-            //strip.PrepareStrip(Projectile.oldPos, 2, ColorFunction, WidthFunction,
-            //    Projectile.Size / 2 - Main.screenPosition, AlphaFunction);
-            //Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
-            //strip.DrawTrail();
+            strip.PrepareStrip(Projectile.oldPos, 2, ColorFunction, WidthFunction,
+                Projectile.Size / 2 - Main.screenPosition, AlphaFunction);
+            Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
+            strip.DrawTrail();
 
             for (int i = 0; i < total - 1; i++)
             {
@@ -553,17 +554,17 @@ namespace AyaMod.Content.Items.Cameras
             }
 
             //for (int i = 0; i < 2; i++)
-            {
-                if (bars.Count > 2)
-                {
-                    Main.spriteBatch.End();
-                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, default, Main.GameViewMatrix.TransformationMatrix);
-                    Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
-                    Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
-                    Main.spriteBatch.End();
-                    Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-                }
-            }
+            //{
+            //    if (bars.Count > 2)
+            //    {
+            //        Main.spriteBatch.End();
+            //        Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone, default, Main.GameViewMatrix.TransformationMatrix);
+            //        Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
+            //        Main.graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, bars.ToArray(), 0, bars.Count - 2);
+            //        Main.spriteBatch.End();
+            //        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+            //    }
+            //}
             #endregion
 
             float radius = 26 * Projectile.scale;

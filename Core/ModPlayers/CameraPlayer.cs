@@ -1,6 +1,7 @@
 ﻿using AyaMod.Content.Items.Cameras;
 using AyaMod.Content.Items.Films;
 using AyaMod.Content.Items.Lens;
+using AyaMod.Content.Items.Placeables;
 using AyaMod.Core.BuilderToggles;
 using AyaMod.Core.Configs;
 using AyaMod.Core.Prefabs;
@@ -243,11 +244,13 @@ namespace AyaMod.Core.ModPlayers
 
         public override IEnumerable<Item> AddStartingItems(bool mediumCoreDeath)
         {
-            if(Player.difficulty == PlayerDifficultyID.Creative && !mediumCoreDeath)
+            if(mediumCoreDeath)return base.AddStartingItems(mediumCoreDeath);
+            var list = new List<Item>() { new(ItemType<MapleTreeSaplingSeed>(), 4) };
+            if(Player.difficulty == PlayerDifficultyID.Creative)
             {
-                return [new Item(ItemType<ToyCamera>(), 1, -1), new Item(ItemType<CameraFilm>(), 300)];
+                list.AddRange([new Item(ItemType<ToyCamera>(), 1, -1), new Item(ItemType<CameraFilm>(), 300)]);
             }
-            return base.AddStartingItems(mediumCoreDeath);
+            return list;
         }
 
         public int GetCameraSlot(int baseValue)

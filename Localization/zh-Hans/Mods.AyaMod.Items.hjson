@@ -1246,3 +1246,13 @@ HammerBag: {
 	DisplayName: 锻锤包
 	Tooltip: ""
 }
+
+MineCamera: {
+	DisplayName: 采集者
+	Tooltip: ""
+}
+
+SilveryCamera: {
+	DisplayName: 银质相机
+	Tooltip: ""
+}

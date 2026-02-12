@@ -65,15 +65,16 @@ namespace AyaMod.Content.Items.Cameras
                 EffectCounter = 0;
             }
         }
-        public static void SpawnKnives(Vector2 center, int count, float range, float speed, int damage, float knockback, IEntitySource source, int owner)
+        public static void SpawnKnives(Vector2 center, int count, float range, float speed, int damage, float knockback, IEntitySource source, int owner, float maxRandRot = MathHelper.PiOver4 / 2)
         {
             int type = ProjectileType<FlyingKnifeSimple>();
+            float startRot = Main.rand.NextFloat(MathHelper.TwoPi);
             for (int i = 0; i < count; i++)
             {
-                float rot = MathHelper.TwoPi / count * i + Main.rand.NextFloat(1f);
+                float rot = MathHelper.TwoPi / count * i + startRot + Main.rand.NextFloat(1f);
                 Vector2 dir = rot.ToRotationVector2();
                 Vector2 spawnpos = center + dir * range;
-                Vector2 velocity = spawnpos.DirectionToSafe(center).RotatedByRandom(MathHelper.PiOver4 / 2) * speed;
+                Vector2 velocity = spawnpos.DirectionToSafe(center).RotatedByRandom(maxRandRot) * speed;
                 var p = Projectile.NewProjectileDirect(source, spawnpos, velocity, type, damage, knockback / 2f, owner);
                 p.scale = 0.85f;
             }

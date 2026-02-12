@@ -990,3 +990,13 @@ HammerBag: {
 	DisplayName: Hammer Bag
 	Tooltip: ""
 }
+
+MineCamera: {
+	DisplayName: Mine Camera
+	Tooltip: ""
+}
+
+SilveryCamera: {
+	DisplayName: Silvery Camera
+	Tooltip: ""
+}

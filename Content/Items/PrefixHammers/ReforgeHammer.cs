@@ -11,15 +11,25 @@ namespace AyaMod.Content.Items.PrefixHammers
 {
     public class ReforgeHammer : BasePrefixHammer
     {
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.IronBar, 8)
+                .AddTile(TileID.Anvils)
+                .Register();
+            CreateRecipe()
+                .AddIngredient(ItemID.LeadBar, 8)
+                .AddTile(TileID.Anvils)
+                .Register();
+        }
         public override void Load()
         {
             CameraGlobalItem.OnCanRightClick += TryReforgeCamera;
         }
 
-        public bool TryReforgeCamera(Item item)
+        public static bool TryReforgeCamera(Item item)
         {
             if (!Main.mouseRight || !Main.mouseRightRelease) return false;
-            Player player = Main.player[Main.myPlayer];
 
             Item mouseItem = Main.mouseItem;
 
