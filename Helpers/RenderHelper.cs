@@ -27,7 +27,7 @@ namespace AyaMod.Helpers
             render = new RenderTarget2D(gd, width, height, false, format, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
         }
 
-        public static BlendState ReverseSubtract = new BlendState()
+        public static BlendState ReverseSubtract = new()
         {
             ColorSourceBlend = Blend.SourceAlpha,
             AlphaSourceBlend = Blend.SourceAlpha,
@@ -37,7 +37,15 @@ namespace AyaMod.Helpers
             
         };
 
-        public static BlendState MaxAdditive = new BlendState()
+        public static BlendState ReverseSource = new()
+        {
+            ColorSourceBlend = Blend.InverseDestinationColor,
+            ColorDestinationBlend = Blend.InverseSourceColor,
+            AlphaSourceBlend = Blend.Zero,
+            AlphaDestinationBlend = Blend.One,
+        };
+
+        public static BlendState MaxAdditive = new()
         {
             ColorSourceBlend = Blend.SourceAlpha,
             AlphaSourceBlend = Blend.SourceAlpha,

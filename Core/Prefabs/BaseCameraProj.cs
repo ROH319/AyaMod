@@ -266,12 +266,16 @@ namespace AyaMod.Core.Prefabs
             //Main.NewText($"{player.itemAnimation} {player.itemTime} {player.altFunctionUse}");
             if (player.itemTime != 0)
             {
-                if (player.altFunctionUse == 2 && mplr.CameraAltCooldown == 0)
+                if (player.altFunctionUse == 2)
                 {
-                    Projectile.Center = mplr.MouseWorld;
-                    ProjectileRemoval();
-                    player.itemTime = player.itemAnimation = 0;
-                    mplr.CameraAltCooldown = CameraStats.CaptureCooldown;
+                    AltFunctionUse();
+                    if (CanClear() && mplr.CameraAltCooldown == 0)
+                    {
+                        Projectile.Center = mplr.MouseWorld;
+                        ProjectileRemoval();
+                        player.itemTime = player.itemAnimation = 0;
+                        mplr.CameraAltCooldown = CameraStats.CaptureCooldown;
+                    }
                 }
                 else
                 {
@@ -312,7 +316,7 @@ namespace AyaMod.Core.Prefabs
 
             foreach (var projectile in Main.ActiveProjectiles)
             {
-                if (!CanClear(projectile)) continue;
+                if (!CanClearProjectile(projectile)) continue;
 
                 PreCollidingProjectile(projectile);
                 
@@ -335,12 +339,16 @@ namespace AyaMod.Core.Prefabs
             CombinedPostClear(captureCount);
         }
 
+        public virtual void AltFunctionUse() { }
+
         public virtual void PreClear() { }
 
         public virtual void PreCollidingProjectile(Projectile projectile) { }
 
-        public virtual bool CanClear(Projectile projectile) => projectile.hostile && projectile.damage <= CameraStats.CameraDamage && 
+        public virtual bool CanClearProjectile(Projectile projectile) => projectile.hostile && projectile.damage <= CameraStats.CameraDamage && 
             (projectile.ModProjectile == null || projectile.ModProjectile.CanDamage() != false);
+
+        public virtual bool CanClear() => true;
 
         public virtual void OnClearProjectile(Projectile projectile) { }
 

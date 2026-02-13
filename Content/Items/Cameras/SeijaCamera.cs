@@ -1,15 +1,19 @@
 ﻿using AyaMod.Common.Easer;
+using AyaMod.Content.Particles;
 using AyaMod.Core;
 using AyaMod.Core.Prefabs;
+using AyaMod.Core.Systems;
 using AyaMod.Core.Systems.Trails;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
+using static Terraria.Utilities.NPCUtils;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -32,7 +36,6 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.05f, 132, 1.4f, 0.5f);
             SetCaptureStats(1000, 60);
         }
-
         public override bool PreDrawTooltip(ReadOnlyCollection<TooltipLine> lines, ref int x, ref int y)
         {
             float totalY = 0;
@@ -83,7 +86,7 @@ namespace AyaMod.Content.Items.Cameras
         public override Color innerFrameColor => new Color(150, 150, 150) * 0.7f;
         public override Color focusCenterColor => base.focusCenterColor;
         public override Color flashColor => new Color(220, 220, 220).AdditiveColor() * 0.5f;
-
+        public override bool CanClear() => false;
         public override void OnSnapProjectile(Projectile projectile)
         {
             if (projectile.type != ProjectileType<SeijaArrow>()) return;
@@ -104,6 +107,153 @@ namespace AyaMod.Content.Items.Cameras
                 int damage = (int)(Projectile.damage * 0.5f);
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, vel, ProjectileType<SeijaArrow>(), damage, Projectile.knockBack, Projectile.owner);
             }
+        }
+        public override void AltFunctionUse()
+        {
+            foreach(var item in Main.ActiveItems)
+            {
+                if ((bool)!Colliding(Projectile.getRect(), item.getRect())) continue;
+                if (item.TryGetGlobalItem(out SeijaGlobalItem sItem))
+                {
+                    if (sItem.ReverseTimer > 0) continue;
+                    if (!RecipeSystem.SeijaRecipes.KeyContains(item.type) && !RecipeSystem.SeijaRecipes.ValueContains(item.type))
+                        continue;
+                    sItem.ReverseTimer = 45;
+                    ReverseParticle.SpawnReverse(Projectile.GetSource_FromAI(), item.Center, 1f, 45);
+                    ReverseEffect(item.Center);
+                }
+            }
+            player.itemTime = player.itemAnimation = 0;
+
+            CameraFlashReverse.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, Color.White, Projectile.rotation, floatingsize / 16f, floatingsize * 1.4f / 16f, 20);
+
+        }
+        public static void ReverseEffect(Vector2 center)
+        {
+            Helper.PlayPitched("Reverse", volume: 0.7f, pitch: 0.3f, position: center);
+            var types = new int[] { DustID.RedTorch,DustID.BlueTorch };
+            for (int i = 0; i < 30; i++)
+            {
+                int num = Dust.NewDust(center, 1, 1, DustID.ShimmerSpark);
+                Main.dust[num].scale *= 2f;
+                if (Main.rand.NextBool(3)) Main.dust[num].scale *= 1.5f;
+                if (Main.rand.NextBool())
+                    Main.dust[num].color = Color.Red;
+                else
+                    Main.dust[num].color = Color.Blue;
+
+                //var d = Dust.NewDustDirect(center, 1, 1, Main.rand.NextFromList(types));
+                //d.scale = 1.5f;
+                //d.noGravity = true;
+            }
+        }
+        public override void SpawnFlash()
+        {
+            CameraFlashReverse.Spawn(Projectile.GetSource_FromAI(), Projectile.Center, Color.White, Projectile.rotation, floatingsize / 16f, floatingsize * 1.4f / 16f, 20);
+
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+
+            //BlendState inverseColor = new();
+            //inverseColor.ColorSourceBlend = Blend.InverseDestinationColor;
+            //inverseColor.ColorDestinationBlend = Blend.InverseSourceColor;
+            //inverseColor.AlphaSourceBlend = Blend.Zero;
+            //inverseColor.AlphaDestinationBlend = Blend.One;
+
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, inverseColor, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+
+            base.PreDraw(ref lightColor);
+
+            //Main.spriteBatch.End();
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
+
+            return true;
+        }
+    }
+
+    public class SeijaGlobalItem : GlobalItem
+    {
+        public override bool InstancePerEntity => true;
+        public int ReverseTimer;
+        public float ReverseProgress;
+        public static void CheckConvert()
+        {
+            //foreach(var item in Main.ActiveItems)
+            //{
+            //    if (item.TryGetGlobalItem(out SeijaGlobalItem sItem))
+            //    {
+            //        if (sItem.ReverseTimer == 22)
+            //        {
+            //            int targetType = -1;
+
+            //            if (RecipeSystem.SeijaRecipes.TryGetValueByKey(item.type, out int value))
+            //                targetType = value;
+            //            else if (RecipeSystem.SeijaRecipes.TryGetKeyByValue(item.type, out int key))
+            //                targetType = key;
+
+            //            if (targetType == -1) return;
+
+            //            int stack = item.stack;
+            //            var progress = sItem.ReverseProgress;
+            //            var timer = sItem.ReverseTimer;
+            //            var prev = sItem.ReverseTimer;
+            //            item.SetDefaults(targetType);
+            //            item.stack = stack;
+            //            item.GetGlobalItem<SeijaGlobalItem>().ReverseProgress = progress;
+            //            ReverseTimer = timer;
+            //            var post = ReverseTimer;
+            //        }
+            //    }
+            //}
+        }
+        public override void PostUpdate(Item item)
+        {
+            ReverseProgress = Utils.Remap(ReverseTimer, 34, 11, 0f, 1f);
+            if (ReverseTimer == 23) 
+            {
+
+                int targetType = -1;
+
+                {
+                    var values = RecipeSystem.SeijaRecipes.GetValuesByKey(item.type);
+                    if (values.Count > 0)
+                    {
+                        targetType = Main.rand.NextFromList([.. values]);
+                    }
+                }
+                {
+                    var keys = RecipeSystem.SeijaRecipes.GetKeysByValue(item.type);
+                    if (keys.Count > 0)
+                    {
+                        targetType = Main.rand.NextFromList([.. keys]);
+                    }
+                }
+
+                if (targetType == -1) return;
+
+                int stack = item.stack;
+                var progress = ReverseProgress;
+                var timer = ReverseTimer;
+                var prev = ReverseTimer;
+                item.SetDefaults(targetType);
+                item.stack = stack;
+                item.GetGlobalItem<SeijaGlobalItem>().ReverseProgress = progress;
+                item.GetGlobalItem<SeijaGlobalItem>().ReverseTimer = timer - 1;
+                //var post = item.GetGlobalItem<SeijaGlobalItem>().ReverseTimer;
+                //Main.NewText($"{prev} {post} {Main.GameUpdateCount}");
+            }
+
+            //ReverseProgress = Utils.Remap(ReverseTimer, 34, 11, 0f, 1f);
+            if (ReverseTimer > 0)
+                ReverseTimer--;
+        }
+        public override bool PreDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+        {
+            var extraRot = Utils.Remap(ReverseProgress, 0f, 1f, 0, MathHelper.TwoPi);
+            rotation += extraRot;
+            return base.PreDrawInWorld(item, spriteBatch, lightColor, alphaColor, ref rotation, ref scale, whoAmI);
         }
     }
 

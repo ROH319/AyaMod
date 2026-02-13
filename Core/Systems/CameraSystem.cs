@@ -123,6 +123,10 @@ namespace AyaMod.Core.Systems
                 }
             }
         }
+        public override void PreUpdateItems()
+        {
+            SeijaGlobalItem.CheckConvert();
+        }
         public override void PreUpdateEntities()
         {
             foreach (var projectile in Main.ActiveProjectiles)

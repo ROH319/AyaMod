@@ -1,5 +1,7 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Common.Easer;
+using AyaMod.Core;
 using AyaMod.Core.Systems.ParticleSystem;
+using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -59,6 +61,36 @@ namespace AyaMod.Content.Particles
         {
             Texture2D texture = GetTexture().Value;
             spriteBatch.Draw(texture, Center - Main.screenPosition, null, color * alpha, Rotation, texture.Size() / 2, radius / 256f * Scale, 0, 0);
+        }
+    }
+
+    public class CameraFlashReverse : Particle
+    {
+        public override string Texture => AssetDirectory.EmptyTexturePass;
+        public float ScaleX;
+        public float ScaleY;
+        public static CameraFlashReverse Spawn(IEntitySource source, Vector2 center, Color color, float rot, float scaleX, float scaleY, int flashTime)
+        {
+            CameraFlashReverse flash = NewParticle<CameraFlashReverse>(source, center, Vector2.Zero, color, scaleX, rot, 1f, flashTime);
+            flash.ScaleX = scaleX;
+            flash.ScaleY = scaleY;
+            return flash;
+        }
+        public override void AI()
+        {
+            float factor = GetTimeFactor();
+            float alphaFactor = Utils.Remap(EaseManager.Evaluate(Ease.InOutCubic,factor,1f), 0, 1f, 2f, 0f) * 0.8f;
+            alpha = alphaFactor;
+            Scale = Utils.Remap(factor, 0, 1f, 1.3f, 0.7f);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, RenderHelper.ReverseSource, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Draw(TextureAssets.BlackTile.Value, Center - Main.screenPosition, null, color * alpha, Rotation, TextureAssets.BlackTile.Value.Size() / 2, new Vector2(ScaleX, ScaleY) * Scale, 0, 0);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.ZoomMatrix);
         }
     }
 }
