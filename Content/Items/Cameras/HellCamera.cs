@@ -1,20 +1,21 @@
-﻿using AyaMod.Core.Prefabs;
+﻿using AyaMod.Common.Easer;
+using AyaMod.Content.Particles;
+using AyaMod.Core;
+using AyaMod.Core.Prefabs;
+using AyaMod.Helpers;
+using Microsoft.Xna.Framework.Graphics;
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Terraria.Enums;
-using Terraria.ID;
 using Terraria;
-using AyaMod.Helpers;
-using Terraria.ModLoader;
 using Terraria.DataStructures;
-using Microsoft.Xna.Framework.Graphics;
+using Terraria.Enums;
 using Terraria.GameContent;
-using AyaMod.Content.Particles;
-using AyaMod.Common.Easer;
-using AyaMod.Core;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -276,7 +277,7 @@ namespace AyaMod.Content.Items.Cameras
 
         public override void SetDefaults()
         {
-            Projectile.width = Projectile.height = 24;
+            Projectile.width = Projectile.height = 32;
             Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -285,11 +286,29 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 15;
             Projectile.timeLeft = 300 * (1 + Projectile.extraUpdates);
+            Projectile.ArmorPenetration = 10;
         }
         public override bool? CanDamage() => Projectile.ai[1] > 120;
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             Projectile.localAI[2]++;
+
+            for(int j = 0; j < 8; j++)
+            {
+                Vector2 vel = Main.rand.NextVector2Unit() * Main.rand.NextFloat(0.5f, 1.5f);
+                //Vector2 vel = -Vector2.UnitY * Main.rand.NextFloat(2f, 4f);
+
+                //Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(0, 20f) + Vector2.UnitY * target.height;
+                Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(0, 5f);
+                float randscale = Main.rand.NextFloat(0.75f, 1.25f);
+                for (int i = 0; i < 2; i++)
+                {
+                    var color = i == 0 ? HellSpirit.SpiritBlue : Color.White;
+                    float scale = i == 0 ? 1f : 0.6f;
+                    var p = SoulsParticle2.Spawn(Projectile.GetSource_FromAI(), pos, vel, color.AdditiveColor(), scale * .25f * randscale, 40);
+                    p.alpha = 0.9f;
+                }
+            }
         }
 
         public override void AI()
@@ -310,33 +329,47 @@ namespace AyaMod.Content.Items.Cameras
                 Projectile.Opacity -= 0.06f;
                 if (Projectile.Opacity < 0.06f) Projectile.Kill();
             }
-
-            if (Projectile.timeLeft % 1 == 0)
+            int frequency = (int)Utils.Remap(Projectile.velocity.Length(), 0f, 10f, 5f, 3f);
+            if (Projectile.timeLeft % frequency == 0 && Projectile.localAI[2] <= 0)
             {
                 int dustcount = 2;
-                for (int i = 0; i < dustcount; i++)
+                for (int j = 0;j < dustcount; j++)
                 {
                     //Vector2 offset = AyaUtils.RandAngle.ToRotationVector2() * Main.rand.NextFloat(2, 12);
                     //Vector2 pos = Projectile.Center + offset;
                     //Dust d = Dust.NewDustPerfect(pos, DustID.UltraBrightTorch, Projectile.velocity * 0.7f);
                     //d.noGravity = true;
-                    Color color = HellSpirit.SpiritBlue;
-                    if (Projectile.ai[0] > 0) color = HellSpirit.SpiritPurple;
-                    Vector2 offset = (Projectile.velocity.ToRotation() + MathHelper.PiOver2).ToRotationVector2() * Main.rand.NextFloat(-8, 8) * 0.6f;
-                    Vector2 vec = offset.ToRotation().ToRotationVector2() * offset.Length() * 0.125f;
-                    if (Projectile.ai[0] > 0)
+                    //Color color = HellSpirit.SpiritBlue;
+                    //if (Projectile.ai[0] > 0) color = HellSpirit.SpiritPurple;
+                    //Vector2 offset = (Projectile.velocity.ToRotation() + MathHelper.PiOver2).ToRotationVector2() * Main.rand.NextFloat(-8, 8) * 0.6f;
+                    //Vector2 vec = offset.ToRotation().ToRotationVector2() * offset.Length() * 0.125f;
+                    //if (Projectile.ai[0] > 0)
+                    //{
+                    //    var ball = SoulsParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center + offset, Projectile.velocity * 0f,
+                    //        color.AdditiveColor() * Projectile.Opacity * 0.6f, 0.5f, 0.7f);
+                    //    ball.SetAlphaFadeout(new Core.FloatModifier().SetAdditive(-0.05f));
+                    //    ball.SetScaleFadeout(new Core.FloatModifier().SetAdditive(-0.06f));
+                    //}
+                    //else
+                    //{
+                    //    var ball = SoulsParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center + offset, Projectile.velocity * 0f,
+                    //        color.AdditiveColor() * Projectile.Opacity * 0.6f, 0.4f, 0.7f);
+                    //    ball.SetAlphaFadeout(new Core.FloatModifier().SetAdditive(-0.045f));
+                    //    ball.SetScaleFadeout(new Core.FloatModifier().SetAdditive(-0.03f));
+                    //}
+
+                    Vector2 vel = Projectile.velocity * Main.rand.NextFloat(0.3f, 0.6f) + -Vector2.UnitY * Main.rand.NextFloat(2f,4f);
+                    //Vector2 vel = -Vector2.UnitY * Main.rand.NextFloat(4f, 5f);
+                    int maxtimeleft = (int)Utils.Remap(Projectile.velocity.Length(), 0f, 15f, 20f, 10f);
+                    var offset = Utils.Remap(Projectile.velocity.Length(), 0, 10f, 15f, 2f);
+                    Vector2 pos = Projectile.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(0, offset);
+                    float randscale = Main.rand.NextFloat(0.75f, 1.25f);
+                    for (int i = 0; i < 2; i++)
                     {
-                        var ball = SoulsParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center + offset, Projectile.velocity * 0f,
-                            color.AdditiveColor() * Projectile.Opacity * 0.6f, 0.5f, 0.7f);
-                        ball.SetAlphaFadeout(new Core.FloatModifier().SetAdditive(-0.05f));
-                        ball.SetScaleFadeout(new Core.FloatModifier().SetAdditive(-0.06f));
-                    }
-                    else
-                    {
-                        var ball = SoulsParticle.Spawn(Projectile.GetSource_FromAI(), Projectile.Center + offset, Projectile.velocity * 0f,
-                            color.AdditiveColor() * Projectile.Opacity * 0.6f, 0.4f, 0.7f);
-                        ball.SetAlphaFadeout(new Core.FloatModifier().SetAdditive(-0.045f));
-                        ball.SetScaleFadeout(new Core.FloatModifier().SetAdditive(-0.03f));
+                        var color = i == 0 ? HellSpirit.SpiritBlue : Color.White;
+                        float scale = i == 0 ? 1f : 0.6f;
+                        var p = SoulsParticle2.Spawn(Projectile.GetSource_FromAI(), pos, vel, color.AdditiveColor(), scale * .2f * randscale, maxtimeleft);
+                        p.alpha = 0.9f;
                     }
                     //ball.Scale = 0.6f;
                 }

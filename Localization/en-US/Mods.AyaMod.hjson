@@ -18,7 +18,12 @@ Keybinds: {
 
 Conditions.DownedGoblinSummoner: Downed goblin summoner
 DropConditions.PostSkeletron: Needs killed Skeletron
-NPCs.Lantern.DisplayName: Lantern
+
+NPCs: {
+	Lantern.DisplayName: Lantern
+	SoulLantern.DisplayName: Soul Lantern
+}
+
 Tiles.IzanagiObjectOre.MapEntry: Izanagi Object Ore
 WorldGen.BlessWithIzanagiOreMessage: Mods.AyaMod.WorldGen.BlessWithIzanagiOreMessage
 RecipeGroups.AnyDyeItem: Any Dye Item

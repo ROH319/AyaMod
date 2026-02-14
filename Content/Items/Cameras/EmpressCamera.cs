@@ -93,7 +93,7 @@ namespace AyaMod.Content.Items.Cameras
                     float rot = Projectile.rotation + MathHelper.TwoPi / 5 * i + extraRot;
                     Vector2 pos = Projectile.Center + rot.ToRotationVector2() * 90;
 
-                    var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<EmpressLaser>(), laserDmg, Projectile.knockBack, Projectile.owner,
+                    var p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<EmpressLaser>(), laserDmg, 0, Projectile.owner,
                         rot + MathHelper.Pi + MathHelper.PiOver4 / 2, color, maxcount);
                 }
                 EffectCounter = 0;

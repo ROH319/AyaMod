@@ -124,7 +124,7 @@ namespace AyaMod.Content.Items.Cameras
                 Vector2 pos = Projectile.Center + 0.7f* Main.rand.NextFloat(0.9f,1.1f) * Main.rand.NextVector2Unit() * Projectile.width / 2 * Projectile.scale;
                 Vector2 vel = Projectile.DirectionToSafe(pos).RotatedBy(-MathHelper.PiOver2) * 4;
                 //dustid:21,
-                Dust d = Dust.NewDustPerfect(pos, 27, vel, 120, Scale: 0.75f);
+                Dust d = Dust.NewDustPerfect(pos, DustID.Shadowflame, vel, 120, Scale: 0.75f);
                 d.noGravity = true;
             }
 
@@ -359,9 +359,9 @@ namespace AyaMod.Content.Items.Cameras
 
             if (Projectile.ai[2] < 0) return false;
 
-            Texture2D ball7 = Request<Texture2D>(AssetDirectory.Extras + "Ball7_1", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D ball7 = Request<Texture2D>(AssetDirectory.Extras + "Ball7_Alpha", AssetRequestMode.ImmediateLoad).Value;
             Texture2D star = TextureAssets.Extra[98].Value;
-            Texture2D ball4 = Request<Texture2D>(AssetDirectory.Extras + "Ball4_1", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D ball4 = Request<Texture2D>(AssetDirectory.Extras + "Ball4_Alpha", AssetRequestMode.ImmediateLoad).Value;
 
             float ballScale = Projectile.width / (float)ball7.Width * Projectile.scale * 6;
             Color backColor = Color.Lerp(Color.DarkViolet, Color.White, 0f);
@@ -586,8 +586,8 @@ namespace AyaMod.Content.Items.Cameras
             RenderHelper.DrawRing(80, Projectile.Center, radius, pink * Projectile.Opacity, Projectile.rotation, baseScale * 0.4f);
 
 
-            Texture2D ball7 = Request<Texture2D>(AssetDirectory.Extras + "Ball7_1", AssetRequestMode.ImmediateLoad).Value;
-            Texture2D ball4 = Request<Texture2D>(AssetDirectory.Extras + "Ball4_1", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D ball7 = Request<Texture2D>(AssetDirectory.Extras + "Ball7_Alpha", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D ball4 = Request<Texture2D>(AssetDirectory.Extras + "Ball4_Alpha", AssetRequestMode.ImmediateLoad).Value;
 
             float ballScale = Projectile.width / (float)ball7.Width * Projectile.scale * 4;
             Color backColor = Color.Lerp(Color.DarkViolet, Color.White, 0f);

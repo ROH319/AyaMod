@@ -21,6 +21,8 @@ namespace AyaMod.Core.Systems.ParticleSystem
 
         public override string Texture => AssetDirectory.Particles + Name;
 
+        public bool UseAlpha = false;
+
         public Vector2 Center;
         public Vector2 Velocity;
         public float Scale;
@@ -33,6 +35,7 @@ namespace AyaMod.Core.Systems.ParticleSystem
         /// 每帧透明度倍率
         /// </summary>
         public float AlphaMultiplier = 1f;
+        public float scaleMultiplier = 1f;
         /// <summary>
         /// 每帧缩放倍率
         /// </summary>
@@ -44,6 +47,8 @@ namespace AyaMod.Core.Systems.ParticleSystem
         public bool active;
         public float timer;
         public float maxtime = 60;
+
+        public int extraUpdates = 0;
 
         public Vector2[] oldCenter;
         public float[] oldRot;
@@ -125,22 +130,24 @@ namespace AyaMod.Core.Systems.ParticleSystem
 
         public void InnerAI()
         {
-
-            AI();
-            if (ShouldUpdateCenter())
-                Center += Velocity;
-            if (ShouldUpdateRotation())
-                Rotation += AngularSpeed;
-            alpha *= AlphaMultiplier;
-            Scale *= ScaleMultiplier;
-            Velocity *= VelocityMultiplier;
-            if (ShouldUpdateTimer())
-                timer++;
-            if (timer > maxtime) active = false;
-            if (!active)
+            for (int i = 0; i < extraUpdates; i++)
             {
-                oldCenter = null;
-                oldRot = null;
+                AI();
+                if (ShouldUpdateCenter())
+                    Center += Velocity;
+                if (ShouldUpdateRotation())
+                    Rotation += AngularSpeed;
+                alpha *= AlphaMultiplier;
+                Scale *= ScaleMultiplier;
+                Velocity *= VelocityMultiplier;
+                if (ShouldUpdateTimer())
+                    timer++;
+                if (timer > maxtime) active = false;
+                if (!active)
+                {
+                    oldCenter = null;
+                    oldRot = null;
+                }
             }
         }
 
@@ -155,6 +162,8 @@ namespace AyaMod.Core.Systems.ParticleSystem
         public float GetTimeFactor() => timer / maxtime;
 
         public virtual float GetAlpha() => alpha * alphaMultiplier;
+
+        public virtual float GetScale() => Scale * scaleMultiplier;
 
         public void FrameLooping(int frameRate)
         {

@@ -1256,3 +1256,8 @@ SilveryCamera: {
 	DisplayName: 银质相机
 	Tooltip: ""
 }
+
+CobaltCamera: {
+	// DisplayName: Cobalt Camera
+	// Tooltip: ""
+}

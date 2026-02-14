@@ -328,7 +328,7 @@ namespace AyaMod.Content.Items.Cameras
             Texture2D block = TextureAssets.MagicPixel.Value;
             Texture2D star = Request<Texture2D>(AssetDirectory.Extras + "Ball", AssetRequestMode.ImmediateLoad).Value;
             Texture2D mask = Request<Texture2D>(AssetDirectory.Extras + "Ball5", AssetRequestMode.ImmediateLoad).Value;
-            Texture2D ball = Request<Texture2D>(AssetDirectory.Extras + "Ball5_1", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D ball = Request<Texture2D>(AssetDirectory.Extras + "Ball5_Alpha", AssetRequestMode.ImmediateLoad).Value;
             Texture2D shape = Request<Texture2D>(AssetDirectory.Extras + "GFX_clouds1_sparseMotes", AssetRequestMode.ImmediateLoad).Value;
             //Texture2D gradient = Request<Texture2D>(AssetDirectory.Extras + "GalaxyColorMap3", AssetRequestMode.ImmediateLoad).Value;
             Texture2D gradient = Request<Texture2D>(AssetDirectory.Extras + "Blue-Map", AssetRequestMode.ImmediateLoad).Value;
@@ -424,8 +424,8 @@ namespace AyaMod.Content.Items.Cameras
         }
         public static void DrawStars(Vector2[] poses, Vector2 center, Vector2 offset, float scale, float rot, Color color, float r)
         {
-            Texture2D texture = Request<Texture2D>(AssetDirectory.Extras + "Ball4_1", AssetRequestMode.ImmediateLoad).Value;
-            Texture2D bloom = Request<Texture2D>(AssetDirectory.Extras + "Ball7_1", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D texture = Request<Texture2D>(AssetDirectory.Extras + "Ball4_Alpha", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D bloom = Request<Texture2D>(AssetDirectory.Extras + "Ball7_Alpha", AssetRequestMode.ImmediateLoad).Value;
             Vector2 origin = texture.Size() / 2;
             Vector2 bloomOrigin = bloom.Size() / 2;
             float baseScale = 0.15f;
@@ -882,7 +882,7 @@ namespace AyaMod.Content.Items.Cameras
             Texture2D texture = TextureAssets.Projectile[Type].Value;
 
             Texture2D line = TextureAssets.Extra[197].Value;
-            Texture2D starspot = Request<Texture2D>(AssetDirectory.Extras + "Ball4_1", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D starspot = Request<Texture2D>(AssetDirectory.Extras + "Ball4_Alpha", AssetRequestMode.ImmediateLoad).Value;
 
 
 
@@ -1472,7 +1472,7 @@ namespace AyaMod.Content.Items.Cameras
 
             Main.EntitySpriteDraw(ball, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor(), 0, ball.Size() / 2, ballScale * 0.4f, 0);
 
-            Texture2D light = Request<Texture2D>(AssetDirectory.Extras + "Ball4_1", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D light = Request<Texture2D>(AssetDirectory.Extras + "Ball4_Alpha", AssetRequestMode.ImmediateLoad).Value;
 
             Vector2 lightScale = new Vector2(5f, 0.2f) * Projectile.scale * timeFadein * timeFadeout;
 
@@ -1884,7 +1884,7 @@ namespace AyaMod.Content.Items.Cameras
                     Dust d = Dust.NewDustPerfect(pos, DustID.HallowSpray, Projectile.velocity * 0.2f, Scale:0.4f);
                     Vector2 pos2 = Projectile.Center + new Vector2(MathF.Sin(x) * width, 0);
                     //Dust d2 = Dust.NewDustPerfect(pos2, DustID.BlueFairy, Projectile.velocity * 0.2f, Scale: 0.5f);
-                    Dust d2 = Dust.NewDustPerfect(pos2, 295, Projectile.velocity * 0.2f, Scale: 0.5f);
+                    Dust d2 = Dust.NewDustPerfect(pos2, DustID.CorruptTorch, Projectile.velocity * 0.2f, Scale: 0.5f);
                     //d2.noGravity = true;
                     //d2.noGravity = true;
                     //Dust d = Dust.NewDustDirect(Projectile.position + Projectile.Size / 4, Projectile.width / 2, Projectile.height / 2, DustID.HallowSpray, speedx, speedy, Scale: 1.2f);
@@ -1902,7 +1902,7 @@ namespace AyaMod.Content.Items.Cameras
                 //Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.GemDiamond, vel, Scale: 1f);
                 //Dust d = Dust.NewDustPerfect(Projectile.Center, 172, vel, Scale: 1.2f);
                 //Dust d = Dust.NewDustPerfect(Projectile.Center, 187, vel, Scale: 1.2f);
-                Dust d = Dust.NewDustPerfect(Projectile.Center, 181, vel, Scale: 1.2f);
+                Dust d = Dust.NewDustPerfect(Projectile.Center, DustID.GiantCursedSkullBolt, vel, Scale: 1.2f);
                 d.noGravity = true;
             }
         }
@@ -2420,7 +2420,7 @@ namespace AyaMod.Content.Items.Cameras
         }
         private static void NotesDrawer()
         {
-            Texture2D starspot = Request<Texture2D>(AssetDirectory.Extras + "Ball4_1", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D starspot = Request<Texture2D>(AssetDirectory.Extras + "Ball4_Alpha", AssetRequestMode.ImmediateLoad).Value;
 
 
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);

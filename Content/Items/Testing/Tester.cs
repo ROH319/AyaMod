@@ -1,4 +1,5 @@
-﻿using AyaMod.Content.Projectiles.Auras;
+﻿using AyaMod.Content.Particles;
+using AyaMod.Content.Projectiles.Auras;
 using AyaMod.Core;
 using AyaMod.Helpers;
 using System;
@@ -29,7 +30,7 @@ namespace AyaMod.Content.Items.Testing
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
 
-            int index = 0;
+            int index = 1;
 
             switch (index)
             {
@@ -37,6 +38,26 @@ namespace AyaMod.Content.Items.Testing
                     var aura = AuraFriendly.Spawn(source, Main.MouseWorld, 2 * 60, BuffID.Ichor, 60, 400, new Color(20,20,20,128), new Color(168,74,69,255), player.whoAmI);
                     aura.SetRadiusFadein(0.4f, Common.Easer.Ease.OutCubic);
                     aura.SetRadiusFadeout(0.6f, Common.Easer.Ease.OutCubic);
+                    break;
+                case 1:
+                    for (int j = 0; j < 4; j++)
+                    {
+                        Vector2 vel = -Vector2.UnitY * Main.rand.NextFloat(4f,5f);
+                        Vector2 pos = Main.MouseWorld + Main.rand.NextVector2Unit() * Main.rand.NextFloat(0, 30f);
+                        float randscale = Main.rand.NextFloat(0.75f, 1.25f);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            var color = i == 0 ? new Color(49, 92, 219) : Color.White;
+                            float scale = i == 0 ? 1f : 0.6f;
+                            var p = SoulsParticle2.Spawn(source, pos, vel, color.AdditiveColor(), scale * .3f * randscale, 40);
+                            p.alpha = 0.9f;
+                            //var p = LightSpotParticle.Spawn(source, pos, vel, color, scale * .4f * randscale, 40);
+                            //p.alpha = 0.5f;
+                            //p.SetAlphaMult(0.86f);
+                            //p.SetScaleMult(0.99f);
+                            //p.UseAlpha = true;
+                        }
+                    }
                     break;
                 default:break;
             }

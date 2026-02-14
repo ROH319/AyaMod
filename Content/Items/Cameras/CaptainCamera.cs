@@ -148,7 +148,7 @@ namespace AyaMod.Content.Items.Cameras
 
             for(int i = 0; i < dustcount; i++)
             {
-                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 111, Projectile.velocity.X * 0.85f, Projectile.velocity.Y * 0.85f,Scale:1.6f);
+                Dust d = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.HallowSpray, Projectile.velocity.X * 0.85f, Projectile.velocity.Y * 0.85f,Scale:1.6f);
                 d.noGravity = true;
             }
 
@@ -214,7 +214,7 @@ namespace AyaMod.Content.Items.Cameras
 
     public class CaptainWave : ModProjectile
     {
-        public override string Texture => AssetDirectory.Extras + "Ball_1";
+        public override string Texture => AssetDirectory.Extras + "Ball_Alpha";
         public int TrailCount = 10;
 
         public ref float CurrentRadius => ref Projectile.ai[0];

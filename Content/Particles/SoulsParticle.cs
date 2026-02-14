@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using static Terraria.GameContent.Animations.IL_Actions.Sprites;
 
 namespace AyaMod.Content.Particles
 {
@@ -65,6 +66,40 @@ namespace AyaMod.Content.Particles
             }
 
             //base.Draw(spriteBatch); 
+        }
+    }
+
+    public class SoulsParticle2 : SoulsParticle
+    {
+        public override string Texture => AssetDirectory.Extras + "Ball4";
+
+        public static SoulsParticle2 Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color, float scale = 1f, int maxtime = 60)
+        {
+            SoulsParticle2 particle = NewParticle<SoulsParticle2>(source, center, velocity, color, scale, maxtime: maxtime);
+            return particle;
+        }
+        public override void AI()
+        {
+            float factor = GetTimeFactor();
+            float fadeinFactor = EaseManager.Evaluate(Ease.OutQuad, Utils.Remap(factor, 0f, 0.3f, 0f, 1f), 1f);
+            float fadeoutFactor = EaseManager.Evaluate(Ease.OutQuad, Utils.Remap(factor, 0.5f, 1f, 1f, 0f), 1f);
+
+            alphaMultiplier = fadeinFactor * fadeoutFactor;
+
+            float scalefadein = EaseManager.Evaluate(Ease.OutCubic, Utils.Remap(factor, 0f, 0.3f, 0f, 1f), 1f);
+            float scalefadeout = EaseManager.Evaluate(Ease.OutCubic, Utils.Remap(factor, 0.5f, 1f, 1f, 0f), 1f);
+
+            scaleMultiplier = scalefadein * scalefadeout;
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Texture2D texture = UseAlpha ? Request<Texture2D>(Texture + "_Alpha").Value : GetTexture().Value;
+            float scale = GetScale();
+
+            Color drawColor = color * GetAlpha();
+
+            Main.spriteBatch.Draw(texture, Center - Main.screenPosition, null, drawColor, Rotation, texture.Size() / 2, scale, 0, 0);
+
         }
     }
 }

@@ -1000,3 +1000,8 @@ SilveryCamera: {
 	DisplayName: Silvery Camera
 	Tooltip: ""
 }
+
+CobaltCamera: {
+	DisplayName: Cobalt Camera
+	Tooltip: ""
+}

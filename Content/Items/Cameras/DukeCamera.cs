@@ -113,7 +113,7 @@ namespace AyaMod.Content.Items.Cameras
             for (int num261 = 0; num261 < 20; num261++)
             {
                 int num262 = 10;
-                int num263 = Dust.NewDust(Projectile.Center - Vector2.One * num262, num262 * 2, num262 * 2, 212);
+                int num263 = Dust.NewDust(Projectile.Center - Vector2.One * num262, num262 * 2, num262 * 2, DustID.BubbleBurst_White);
                 Dust dust40 = Main.dust[num263];
                 Vector2 vector34 = Vector2.Normalize(dust40.position - Projectile.Center);
                 dust40.position = Projectile.Center + vector34 * num262 * Projectile.scale;
@@ -200,7 +200,7 @@ namespace AyaMod.Content.Items.Cameras
 
     public class DukeWave : ModProjectile
     {
-        public override string Texture => AssetDirectory.Extras + "Ball_1";
+        public override string Texture => AssetDirectory.Extras + "Ball_Alpha";
         public int TrailCount = 10;
 
         public ref float CurrentRadius => ref Projectile.ai[0];

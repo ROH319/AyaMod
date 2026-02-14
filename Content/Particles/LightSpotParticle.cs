@@ -61,7 +61,7 @@ namespace AyaMod.Content.Particles
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Texture2D texture = GetTexture().Value;
+            Texture2D texture = UseAlpha ? Request<Texture2D>(Texture + "_Alpha").Value : GetTexture().Value;
             Vector2 scale = new Vector2(scaleX, scaleY) * Scale * scaleMultiplier;
 
             Color drawColor = color * GetAlpha();
