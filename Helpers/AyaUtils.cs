@@ -31,6 +31,11 @@ namespace AyaMod.Helpers
 
 
         #region NPC
+
+        public static bool NPCExists(int whoami, params int[] types)
+        {
+            return whoami > -1 && whoami < Main.maxNPCs && Main.npc[whoami].active && (types.Length == 0 || types.Contains(Main.npc[whoami].type));
+        }
         /// <summary>
         /// 从原版NPC类复制的方法
         /// </summary>
@@ -63,6 +68,33 @@ namespace AyaMod.Helpers
                         {
                             target = npc;
                             minDist = npc.Distance(pos);
+                        }
+                    }
+                }
+            }
+            return target;
+        }
+        /// <summary>
+        /// 寻找范围内血量最高的NPC，ignoreTile参数为true时会忽略地形阻挡，直接寻找范围内血量最高的NPC
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="range"></param>
+        /// <param name="ignoreTile"></param>
+        /// <returns></returns>
+        public static NPC FindHighestHealthNPC(Vector2 pos, float range = int.MaxValue, bool ignoreTile = false)
+        {
+            NPC target = null;
+            float maxHealth = 0;
+            foreach (var npc in Main.ActiveNPCs)
+            {
+                if (npc.CanBeChasedBy())
+                {
+                    if (npc.life > maxHealth && npc.Distance(pos) < range)
+                    {
+                        if (ignoreTile || Collision.CanHit(pos, 1, 1, npc.position, npc.width, npc.height))
+                        {
+                            target = npc;
+                            maxHealth = npc.life;
                         }
                     }
                 }

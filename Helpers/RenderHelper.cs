@@ -138,5 +138,10 @@ namespace AyaMod.Helpers
 
         public static Color AdditiveColor(this Color color) => color with { A = 0 };
         public static Color WithAlpha(this Color color, byte alpha) => color with { A = alpha };
+
+        internal static void DrawBloom(int v1, object value1, Texture2D texture, Vector2 vector21, object value2, Color color, float v2, Vector2 vector22, float v3)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

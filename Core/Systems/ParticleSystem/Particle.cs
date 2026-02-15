@@ -130,7 +130,7 @@ namespace AyaMod.Core.Systems.ParticleSystem
 
         public void InnerAI()
         {
-            for (int i = 0; i < extraUpdates; i++)
+            for (int i = 0; i < extraUpdates + 1; i++)
             {
                 AI();
                 if (ShouldUpdateCenter())
