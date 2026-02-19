@@ -1,20 +1,21 @@
-﻿using AyaMod.Core.Prefabs;
+﻿using AyaMod.Common.Easer;
+using AyaMod.Core;
+using AyaMod.Core.ModPlayers;
+using AyaMod.Core.Prefabs;
+using AyaMod.Helpers;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Terraria.Enums;
-using Terraria.ID;
 using Terraria;
-using AyaMod.Helpers;
 using Terraria.DataStructures;
-using Microsoft.Xna.Framework.Graphics;
+using Terraria.Enums;
 using Terraria.GameContent;
-using AyaMod.Common.Easer;
-using ReLogic.Content;
-using AyaMod.Core.ModPlayers;
-using AyaMod.Core;
+using Terraria.ID;
+using static Terraria.GameContent.Animations.IL_Actions.Sprites;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -48,6 +49,13 @@ namespace AyaMod.Content.Items.Cameras
 
         public float[] fadeinFactor = new float[5];
         public float visualRotation = 0f;
+        public override void OnSpawn(IEntitySource source)
+        {
+            for(int i = 0; i < 2; i++)
+            {
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), player.Center, Vector2.Zero, ProjectileType<SakuyaCircle>(), 0, 0f, player.whoAmI, Projectile.whoAmI, i);
+            }
+        }
         public override void OnSnapInSight()
         {
             if (!Projectile.MyClient()) return;
@@ -57,11 +65,30 @@ namespace AyaMod.Content.Items.Cameras
             SpawnKnives(Projectile.Center, 4, 300f, 10, dmg, Projectile.knockBack, Projectile.GetSource_FromAI(), player.whoAmI);
 
             if (EffectCounter < 5) fadeinFactor[EffectCounter] = 1f;
-            if (++EffectCounter >= 6)
+            if (++EffectCounter >= 7)
             {
-                Vector2 vec = Projectile.Center - player.Center;
-                int damage = (int)(Projectile.damage * 0.2f);
-                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), player.Center, Vector2.Zero, ProjectileType<KillerDoll>(), damage, Projectile.knockBack / 2f, Projectile.owner);
+                float radius = 20f;
+                foreach(var proj in Main.ActiveProjectiles)
+                {
+                    if (proj.type != ProjectileType<SakuyaCircle>()) continue;
+                    proj.localAI[0] = 4 * 60;
+
+                    
+                    for(int i = 0; i < 30; i++)
+                    {
+                        Vector2 dir = (MathHelper.TwoPi / 20 * i).ToRotationVector2();
+                        for (int j = 0; j < 2; j++)
+                        {
+                            Vector2 pos = proj.Center + dir * (radius + 18f * j);
+                            float speed = 1f + 1.5f * j + Main.rand.NextFloat(0f, 0.5f);
+                            Dust d = Dust.NewDustPerfect(pos, 180, dir.RotateRandom(0.2f) * speed, Scale: 1.75f + 0.75f * j);
+                            d.noGravity = true;
+                        }
+                    }
+                }
+                //Vector2 vec = Projectile.Center - player.Center;
+                //int damage = (int)(Projectile.damage * 0.2f);
+                //Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), player.Center, Vector2.Zero, ProjectileType<KillerDoll>(), damage, Projectile.knockBack / 2f, Projectile.owner);
                 EffectCounter = 0;
             }
         }
@@ -90,6 +117,7 @@ namespace AyaMod.Content.Items.Cameras
                 }
             }
             visualRotation += 0.012f;
+
         }
 
         public override void PostDraw(Color lightColor)
@@ -115,7 +143,128 @@ namespace AyaMod.Content.Items.Cameras
             }
         }
     }
+    public class SakuyaCircle : ModProjectile
+    {
+        public override string Texture => AssetDirectory.EmptyTexturePass;
+        public ref float Owner => ref Projectile.ai[0];
+        public ref float Offset => ref Projectile.ai[1];
+        public ref float OrbitRot => ref Projectile.ai[2];
+        public ref float AttackTimer => ref Projectile.localAI[0];
 
+        public override void SetDefaults()
+        {
+            Projectile.width = Projectile.height = 1;
+            Projectile.friendly = true;
+            Projectile.tileCollide = false;
+            Projectile.ignoreWater = true;
+        }
+        public override bool? CanDamage() => false;
+        public override void OnSpawn(IEntitySource source)
+        {
+            Projectile.Opacity = 0f;
+        }
+        public override void AI()
+        {
+            Projectile.timeLeft++;
+
+            float attackFadein = EaseManager.Evaluate(Ease.InOutSine, Utils.Remap(AttackTimer, 180, 240, 1f, 0f), 1f);
+            float attackFadeout = EaseManager.Evaluate(Ease.InOutSine, Utils.Remap(AttackTimer, 0, 60, 0f, 1f), 1f);
+            float attackFactor = attackFadein * attackFadeout;
+            float radius = 100f + 50f * attackFactor;
+
+            Projectile camera = Main.projectile[(int)Owner];
+            if (camera.TypeAlive(ProjectileType<ScarletCameraProj>()))
+            {
+                Projectile.Opacity = MathHelper.Clamp(Projectile.Opacity + 0.015f, 0f, 1f);
+
+                var player = (camera.ModProjectile as ScarletCameraProj).player;
+                if (!player.AliveCheck(Projectile.Center, 2000))
+                {
+                    Projectile.Kill(); return;
+                }
+
+                if(AttackTimer > 40 && AttackTimer < 180 && AttackTimer % 6 == 0)
+                {
+
+                    for (int i = 0; i < 2; i++)
+                    {
+                        float rot = Projectile.rotation + OrbitRot + i * MathHelper.Pi;
+                        Vector2 dir = rot.ToRotationVector2();
+
+                    }
+
+                    Vector2 pos = Projectile.Center;
+                    int damage = (int)(camera.damage * 0.2f);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ProjectileType<FlyingKnife>(), damage, Projectile.knockBack / 2f, Projectile.owner, Projectile.whoAmI);
+                }
+
+                var proj = (ScarletCameraProj)camera.ModProjectile;
+                Vector2 targetpos = player.Center + (Offset * MathHelper.Pi + OrbitRot).ToRotationVector2() * radius;
+                Projectile.Center = Vector2.Lerp(Projectile.Center, targetpos, 0.9f);
+            }
+            else Projectile.Kill();
+
+            float revolutionSpeed = 0.015f + attackFactor * 0.035f;
+            OrbitRot += revolutionSpeed;
+            Projectile.rotation += 0.02f + attackFactor * 0.015f;
+            AttackTimer = MathHelper.Clamp(AttackTimer - 1, 0f, float.MaxValue);
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Extra[98].Value;
+            Vector2 origin = texture.Size() / 2;
+
+            float attackFadein = EaseManager.Evaluate(Ease.InOutSine, Utils.Remap(AttackTimer, 120, 180, 1f, 0f), 1f);
+            float attackFadeout = EaseManager.Evaluate(Ease.InOutSine, Utils.Remap(AttackTimer, 0, 60, 0f, 1f), 1f);
+            float attackFactor = attackFadein * attackFadeout;
+
+            Color colora = new Color(12, 31, 107) * 1.4f;
+            Color colorb = new Color(109, 153, 226) * 0.6f;
+            //Color colorb = new Color(152, 198, 250) * 0.9f;
+            Color baseColor = Color.Lerp(colora, colorb, attackFactor);
+
+            Color color = baseColor.AdditiveColor() * Projectile.Opacity;
+            float ringRadius = 38f + 8f * attackFactor;
+
+            RenderHelper.DrawRing(72, Projectile.Center, ringRadius, color, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.6f);
+            RenderHelper.DrawRing(72, Projectile.Center, ringRadius * 0.8f, color, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.6f);
+
+            Vector2 offset = Projectile.Center - Main.screenPosition;
+            Vector2 scale1 = new(8 / 64f, 24 / 64f);
+            for (int j = 0; j < 2; j++)
+            {
+                float radius = ringRadius * 0.8f + j * ringRadius * 0.5f - ringRadius * 0.3f;
+                float rotmodifier = 1f;
+                //rotmodifier -= j * clickingFactor * 0.3f;
+                float extraRot = Projectile.rotation + attackFactor * j * MathHelper.TwoPi / 10f;
+                for (int i = 0; i < 5; i++)
+                {
+                    float dir1 = MathHelper.TwoPi / 5 * i + extraRot;
+                    float dir2 = MathHelper.TwoPi / 5 * (i + 1) + extraRot;
+                    Vector2 vec1 = dir1.ToRotationVector2() * radius;
+                    Vector2 vec2 = dir2.ToRotationVector2() * radius;
+                    Vector2 middle = Vector2.Lerp(vec1, vec2, 0.5f) * (0.5f + 0.25f);
+
+                    var dist = (int)(vec1.Distance(middle) / 4f);
+                    var tomiddle = vec1.AngleTo(middle);
+                    var tovec2 = middle.AngleTo(vec2);
+                    for (int k = 1; k < dist; k++)
+                    {
+                        float factor = k / (float)dist;
+                        Vector2 pos1 = Vector2.Lerp(vec1, middle, factor);
+                        Main.spriteBatch.Draw(texture, pos1 + offset, null, color, tomiddle + MathHelper.PiOver2, origin, scale1, 0, 0);
+
+                        Vector2 pos2 = Vector2.Lerp(middle, vec2, factor);
+                        Main.spriteBatch.Draw(texture, pos2 + offset, null, color, tovec2 + MathHelper.PiOver2, origin, scale1, 0, 0);
+                    }
+
+                }
+            }
+
+
+            return false;
+        }
+    }
     public class KillerDoll : ModProjectile
     {
         public override string Texture => AssetDirectory.EmptyTexturePass;
@@ -251,6 +400,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.extraUpdates = 5;
             Projectile.penetrate = -1;
             Projectile.SetImmune(20);
+            //Projectile.scale = 1.5f;
             Projectile.timeLeft = 7 * 60 * (1+Projectile.extraUpdates);
         }
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -276,9 +426,9 @@ namespace AyaMod.Content.Items.Cameras
         public override void OnSpawn(IEntitySource source)
         {
             Projectile.rotation = AyaUtils.RandAngle;
-            Projectile.scale = 0.7f;
-            var proj = Main.projectile[(int)Owner];
-            Vector2 offset = Projectile.Center - proj.Center;
+            //Projectile.scale = 0.7f;
+            var player = Main.player[Projectile.owner];
+            Vector2 offset = Projectile.Center - player.Center;
             OwnerDir = offset.ToRotation();
             OwnerDist = offset.Length();
         }
@@ -295,21 +445,45 @@ namespace AyaMod.Content.Items.Cameras
                     Projectile.velocity = tomouse * 9f;
                     Projectile.rotation = Projectile.velocity.ToRotation();
                     Timer = int.MinValue;
+                    Projectile.ai[2] = 2;
                 }
-                
+
             }
             else if (Timer >= 0)
             {
-                var proj = Main.projectile[(int)Owner];
-                if (proj.type == ProjectileType<KillerDoll>())
+                var player = Main.player[Projectile.owner];
+                if (player.AliveCheck(Projectile.Center,3000))
                 {
                     Vector2 offset = OwnerDir.ToRotationVector2() * OwnerDist;
-                    Projectile.Center = proj.Center + offset;
+                    Projectile.Center = player.Center + offset;
                     Projectile.rotation += 0.25f / (1 + Projectile.extraUpdates);
                 }
                 else
                 {
                     Projectile.Kill();
+                }
+
+            }
+
+            if (Projectile.ai[2] > 0)
+            {
+                if (Main.rand.NextBool(3))
+                {
+                    Dust d = Dust.NewDustDirect(Projectile.position + Projectile.Size / 4, Projectile.width / 2, Projectile.height / 2, DustID.DungeonSpirit);
+                    d.noGravity = true;
+                    d.velocity = d.velocity * 0.75f + Projectile.velocity * 0.25f;
+                }
+            }
+            else
+            {
+
+                if (Timer % (1 + Projectile.extraUpdates) == 0)
+                {
+                    Vector2 pos = Projectile.Center + Projectile.rotation.ToRotationVector2() * 16f * Projectile.scale;
+                    Dust d = Dust.NewDustPerfect(pos, DustID.DungeonSpirit);
+                    //Dust d = Dust.NewDustDirect(Projectile.position + Projectile.Size / 4, Projectile.width / 2, Projectile.height / 2, DustID.DungeonSpirit);
+                    d.noGravity = true;
+                    d.velocity = d.velocity * 0.75f + Projectile.velocity * 0.25f;
                 }
             }
             //Projectile.position += Projectile.velocity * 1.5f / (1+Projectile.extraUpdates);

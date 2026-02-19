@@ -100,9 +100,9 @@ namespace AyaMod.Content.Items.Cameras
         {
             Projectile.timeLeft++;
 
-            float radiusFactor = MathF.Sin(Main.GameUpdateCount * 0.005f);
+            float floatingRadius = MathF.Sin(Main.GameUpdateCount * 0.005f);
             float clickingFactor = EaseManager.Evaluate(Ease.InOutSine, ItemTimer, 30)/*ItemTimer / 30f*/;
-            float radius = 175f + radiusFactor * 25f + clickingFactor * 150f;
+            float radius = 175f + floatingRadius * 25f + clickingFactor * 150f;
             
             Projectile camera = Main.projectile[(int)Owner];
             if (camera.TypeAlive(ProjectileType<AliceCameraProj>()))
@@ -153,8 +153,8 @@ namespace AyaMod.Content.Items.Cameras
             Vector2 origin = texture.Size() / 2;
             float clickingFactor = EaseManager.Evaluate(Ease.InOutSine, ItemTimer, 30);
 
-            Color colora = new Color(242, 104, 30);
-            Color colorb = new Color(242, 145, 55);
+            Color colora = new(242, 104, 30);
+            Color colorb = new(242, 145, 55);
             Color baseColor = Color.Lerp(colora, colorb,clickingFactor);
 
             Color color = baseColor.AdditiveColor() * Projectile.Opacity;
@@ -164,7 +164,7 @@ namespace AyaMod.Content.Items.Cameras
             RenderHelper.DrawRing(72, Projectile.Center, ringRadius * (0.8f - clickingFactor * 0.15f), color, Projectile.rotation, new Vector2(0.25f, 0.8f) * 0.6f);
 
             Vector2 offset = Projectile.Center - Main.screenPosition;
-            Vector2 scale1 = new Vector2(8 / 64f, 24 / 64f);
+            Vector2 scale1 = new(8 / 64f, 24 / 64f);
             for (int j = 0; j < 2; j++)
             {
                 float radius = ringRadius * 0.9f + j * ringRadius * 0.4f - ringRadius * 0.3f * clickingFactor;

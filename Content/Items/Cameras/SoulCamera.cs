@@ -191,59 +191,7 @@ namespace AyaMod.Content.Items.Cameras
                     if (AyaUtils.NPCExists((int)Target)) 
                     {
                         var targetNPC = Main.npc[(int)Target];
-                        AttackList.ForEach(d =>
-                        {
-                            float f = EaseManager.Evaluate(Ease.InCubic, Utils.Remap(d.timer, 20, 0, 0f, 1f), 1f);
-                            for (int i = 0; i < 4; i++)
-                            {
-                                Vector2 pos = Vector2.Lerp(NPC.Center, targetNPC.Center, f + Main.rand.NextFloat(-0.1f, 0.1f));
-                                Dust dust = Dust.NewDustPerfect(pos, 235,Scale:1.5f);
-                                dust.noGravity = true;
-
-                                Dust dust1 = Dust.NewDustPerfect(pos, 191, Scale: Main.rand.NextFloat(1.3f,1.7f));
-                                dust1.noGravity = true;
-                            }
-                            d.Update();
-                            if (d.timer == 0)
-                            {
-
-                                var explosion = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), targetNPC.Center, Vector2.Zero, ProjectileType<SoulExplosion>(), d.damage, 0f, player.whoAmI, targetNPC.whoAmI);
-                                explosion.rotation = NPC.AngleToSafe(targetNPC.Center);
-                                //targetNPC.SimpleStrikeNPC(d.damage, 0);
-                                //player.addDPS(d.damage);
-
-                                float damageFactor = Utils.Remap(d.damage, 110, 440,0f,1f);
-                                float extraDustMult = (int)MathHelper.Lerp(1, 4, damageFactor);
-                                float extraScaleMult = MathHelper.Lerp(1, 2, damageFactor);
-                                for(int i = 0; i < 30 * extraDustMult; i++)
-                                {
-                                    Vector2 dir = (MathHelper.TwoPi / 20f * i).ToRotationVector2();
-                                    dir.X /= 2f;
-                                    dir = dir.RotatedBy(NPC.AngleToSafe(targetNPC.Center));
-                                    Dust dust = Dust.NewDustPerfect(targetNPC.Center + dir * Main.rand.NextFloat(9,11) * 2 * extraDustMult, Main.rand.NextBool(4) ? 191 : 235, dir * Main.rand.NextFloat(1.5f,2.5f) * extraScaleMult, Scale: Main.rand.NextFloat(1f,2f) * extraScaleMult);
-                                    dust.noGravity = true;
-
-                                    Dust dust1 = Dust.NewDustPerfect(targetNPC.Center + dir * Main.rand.NextFloat(27, 33) * 2 * extraScaleMult, Main.rand.NextBool(4) ? 235 : 191, dir * Main.rand.NextFloat(2f,3f) * extraScaleMult, Scale: Main.rand.NextFloat(1.5f, 2.5f) * extraScaleMult);
-                                    dust1.noGravity = true;
-                                }
-
-                                int segments = (int)(NPC.Distance(targetNPC.Center) / 16);
-                                float rot = NPC.AngleToSafe(targetNPC.Center);
-                                for(int i = 0; i < segments; i++)
-                                {
-                                    Vector2 pos2 = Vector2.Lerp(NPC.Center, targetNPC.Center, i / (float)segments);
-                                    var star = StarParticle.Spawn(NPC.GetSource_FromAI(), pos2, Vector2.Zero, Color.Red.AdditiveColor(), 1.5f, 0.25f, 0.75f, 0.9f, 1f, rot, 1f);
-                                    star.SetScaleMult(0.96f);
-                                }
-                                SnapCounter++;
-                                if (SnapCounter >= maxSnapsThreshold)
-                                {
-                                    SnapCounter = 0;
-                                    State = (int)LanternState.Flaming;
-                                }
-                            }
-                        });
-                        AttackList.RemoveAll(d => d.timer <= 0);
+                        HandleAttackList(targetNPC, player);
                     }
                     break;
                 default: break;
@@ -251,6 +199,70 @@ namespace AyaMod.Content.Items.Cameras
             //Main.NewText($"{SoulsCounter} {SnapCounter} {Main.GameUpdateCount}");
             Vector2 targetPos = player.Center + Vector2.UnitX * 50 * player.direction + -Vector2.UnitY * radius;
             NPC.Center = Vector2.Lerp(NPC.Center, targetPos, 0.2f);
+        }
+        private void HandleAttackList(NPC targetNPC, Player player)
+        {
+            AttackList.ForEach(d =>
+            {
+                float f = EaseManager.Evaluate(Ease.InCubic, Utils.Remap(d.timer, 20, 0, 0f, 1f), 1f);
+                for (int i = 0; i < 4; i++)
+                {
+                    Vector2 pos = Vector2.Lerp(NPC.Center, targetNPC.Center, f + Main.rand.NextFloat(-0.1f, 0.1f));
+                    Dust dust = Dust.NewDustPerfect(pos, 235, Scale: 1.5f);
+                    dust.noGravity = true;
+
+                    Dust dust1 = Dust.NewDustPerfect(pos, 191, Scale: Main.rand.NextFloat(1.3f, 1.7f));
+                    dust1.noGravity = true;
+                }
+
+                d.Update();
+                if (d.timer == 0)
+                {
+                    var explosion = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), targetNPC.Center, Vector2.Zero,
+                        ProjectileType<SoulExplosion>(), d.damage, 0f, player.whoAmI, targetNPC.whoAmI);
+                    explosion.rotation = NPC.AngleToSafe(targetNPC.Center);
+
+                    float damageFactor = Utils.Remap(d.damage, 110, 440, 0f, 1f);
+                    int extraDustMult = (int)MathHelper.Lerp(1, 4, damageFactor);
+                    float extraScaleMult = MathHelper.Lerp(1, 2, damageFactor);
+                    for (int i = 0; i < 30 * extraDustMult; i++)
+                    {
+                        Vector2 dir = (MathHelper.TwoPi / 20f * i).ToRotationVector2();
+                        dir.X /= 2f;
+                        dir = dir.RotatedBy(NPC.AngleToSafe(targetNPC.Center));
+                        Dust dust = Dust.NewDustPerfect(targetNPC.Center + dir * Main.rand.NextFloat(9, 11) * 2 * extraDustMult,
+                            Main.rand.NextBool(4) ? 191 : 235,
+                            dir * Main.rand.NextFloat(1.5f, 2.5f) * extraScaleMult,
+                            Scale: Main.rand.NextFloat(1f, 2f) * extraScaleMult);
+                        dust.noGravity = true;
+
+                        Dust dust1 = Dust.NewDustPerfect(targetNPC.Center + dir * Main.rand.NextFloat(27, 33) * 2 * extraScaleMult,
+                            Main.rand.NextBool(4) ? 235 : 191,
+                            dir * Main.rand.NextFloat(2f, 3f) * extraScaleMult,
+                            Scale: Main.rand.NextFloat(1.5f, 2.5f) * extraScaleMult);
+                        dust1.noGravity = true;
+                    }
+
+                    int segments = (int)(NPC.Distance(targetNPC.Center) / 16);
+                    float rot = NPC.AngleToSafe(targetNPC.Center);
+                    for (int i = 0; i < segments; i++)
+                    {
+                        Vector2 pos2 = Vector2.Lerp(NPC.Center, targetNPC.Center, i / (float)segments);
+                        var star = StarParticle.Spawn(NPC.GetSource_FromAI(), pos2, Vector2.Zero, Color.Red.AdditiveColor(),
+                            1.5f, 0.25f, 0.75f, 0.9f, 1f, rot, 1f);
+                        star.SetScaleMult(0.96f);
+                    }
+
+                    SnapCounter++;
+                    if (SnapCounter >= maxSnapsThreshold)
+                    {
+                        SnapCounter = 0;
+                        State = (int)LanternState.Flaming;
+                    }
+                }
+            });
+
+            AttackList.RemoveAll(d => d.timer <= 0);
         }
         public void VisualFlame()
         {
