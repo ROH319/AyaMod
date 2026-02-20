@@ -94,7 +94,7 @@ namespace AyaMod.Content.Items.Cameras
         public ref float SoulsCounter => ref NPC.localAI[0];
         public ref float SnapCounter => ref NPC.localAI[1];
         public List<PreparedDamage> AttackList;
-        public float maxSoulsThreshold = 20;
+        public float maxSoulsThreshold = 12;
         public float maxSnapsThreshold = 4;
         public MultedTrail trail;
         public class PreparedDamage()
@@ -185,7 +185,7 @@ namespace AyaMod.Content.Items.Cameras
 
                     if(!AyaUtils.NPCExists((int)Target))
                     {
-                        var target = AyaUtils.FindHighestHealthNPC(NPC.Center, 1200f, ignoreTile: true)?.whoAmI ?? -1;
+                        var target = AyaUtils.FindHighestHealthNPC(NPC.Center, 1000f, ignoreTile: true)?.whoAmI ?? -1;
                         if (target != -1) Target = target;
                     }
                     if (AyaUtils.NPCExists((int)Target)) 
@@ -222,6 +222,7 @@ namespace AyaMod.Content.Items.Cameras
                         ProjectileType<SoulExplosion>(), d.damage, 0f, player.whoAmI, targetNPC.whoAmI);
                     explosion.rotation = NPC.AngleToSafe(targetNPC.Center);
 
+                    Vector2 toTarget = NPC.DirectionToSafe(targetNPC.Center);
                     float damageFactor = Utils.Remap(d.damage, 110, 440, 0f, 1f);
                     int extraDustMult = (int)MathHelper.Lerp(1, 4, damageFactor);
                     float extraScaleMult = MathHelper.Lerp(1, 2, damageFactor);
@@ -230,15 +231,15 @@ namespace AyaMod.Content.Items.Cameras
                         Vector2 dir = (MathHelper.TwoPi / 20f * i).ToRotationVector2();
                         dir.X /= 2f;
                         dir = dir.RotatedBy(NPC.AngleToSafe(targetNPC.Center));
-                        Dust dust = Dust.NewDustPerfect(targetNPC.Center + dir * Main.rand.NextFloat(9, 11) * 2 * extraDustMult,
+                        Dust dust = Dust.NewDustPerfect(targetNPC.Center + dir * Main.rand.NextFloat(9, 11) * 1.5f * extraDustMult,
                             Main.rand.NextBool(4) ? 191 : 235,
-                            dir * Main.rand.NextFloat(1.5f, 2.5f) * extraScaleMult,
+                            dir * Main.rand.NextFloat(1.5f, 2.5f) * extraScaleMult + toTarget * 2f,
                             Scale: Main.rand.NextFloat(1f, 2f) * extraScaleMult);
                         dust.noGravity = true;
 
                         Dust dust1 = Dust.NewDustPerfect(targetNPC.Center + dir * Main.rand.NextFloat(27, 33) * 2 * extraScaleMult,
                             Main.rand.NextBool(4) ? 235 : 191,
-                            dir * Main.rand.NextFloat(2f, 3f) * extraScaleMult,
+                            dir * Main.rand.NextFloat(2f, 3f) * extraScaleMult + toTarget * 3f,
                             Scale: Main.rand.NextFloat(1.5f, 2.5f) * extraScaleMult);
                         dust1.noGravity = true;
                     }

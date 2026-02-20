@@ -160,6 +160,22 @@ namespace AyaMod.Content.Items.Cameras
                             0.15f, 0.5f, 30, 120, Ease.OutCirc, Ease.OutCubic);
 
             }
+
+            {
+                int pamount = 1;
+                Color drawColor = (Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.6f) * Projectile.Opacity).AdditiveColor();
+                Vector2 vel = (Rot - MathHelper.PiOver2).ToRotationVector2() * Main.rand.NextFloat(0f, 2.5f);
+                for (int i = 0; i < pamount; i++)
+                {
+                    float f = Main.rand.NextFloat(1f);
+                    Vector2 pos = Projectile.Center + Rot.ToRotationVector2() * 2400f * f;
+                    StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, drawColor with { A = 127 }, 25, 0.5f);
+
+                    StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.White.AdditiveColor(), 25, 0.25f);
+
+                }
+            }
+
             Projectile.rotation = Rot;
 
         }

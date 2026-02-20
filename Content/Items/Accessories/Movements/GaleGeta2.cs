@@ -78,7 +78,7 @@ namespace AyaMod.Content.Items.Accessories.Movements
             AyaPlayer ayaPlayer = player.Aya();
 
 
-            float speed = 16f;
+            float speed = 18f;
             float dashDirection;
             switch (direction)
             {

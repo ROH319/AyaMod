@@ -32,7 +32,7 @@ namespace AyaMod.Content.Particles
             {
                 Vector2 dir = (i * MathHelper.PiOver2 + Rotation).ToRotationVector2();
                 Vector2 scale = Scale * new Vector2((1 - factor) / 2f, 1f);
-                Main.spriteBatch.Draw(texture, Center + dir * factor * 20f - Main.screenPosition, null, color * alpha,
+                Main.spriteBatch.Draw(texture, Center + dir * factor * 20f * (Scale) - Main.screenPosition, null, color * alpha,
                     (i + 1) * MathHelper.PiOver2 + Rotation, new Vector2(36), scale, 0, 0);
             }
 

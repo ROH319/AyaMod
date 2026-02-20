@@ -146,8 +146,15 @@ namespace AyaMod.Core.Systems
                 }
             }
         }
+
+        public static event Action OnPreUpdateProjectiles;
         public override void PreUpdateProjectiles()
         {
+            if(OnPreUpdateProjectiles != null)
+            {
+                foreach (Action a in OnPreUpdateProjectiles.GetInvocationList())
+                    a.Invoke();
+            }
             //ISinkProjectile的实现
             for(int i = 0; i < Main.maxProjectiles; i++)
             {
