@@ -1,4 +1,5 @@
 ﻿using AyaMod.Common.Easer;
+using AyaMod.Content.Particles;
 using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
@@ -263,7 +264,24 @@ namespace AyaMod.Content.Items.Cameras
             StartVelRot = Projectile.velocity.ToRotation();
             StartVelSpeed = Projectile.velocity.Length();
         }
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Color drawColor = AyaUtils.HSL2RGB(Hue, 1f, 0.5f).AdditiveColor() * Projectile.Opacity;
 
+            //Color drawColor = (Main.hslToRgb((Hue) % 1f, 1f, 0.6f) * Projectile.Opacity).AdditiveColor();
+            Vector2 v = -target.DirectionToSafe(Projectile.Center) * Main.rand.NextFloat(1f, 3f);
+            float dot = Vector2.Dot(v, Projectile.velocity * 0.2f);
+            Vector2 pos = Projectile.Center;
+            float scale = 1.2f /*+ (dot / 10f)*/;
+            Vector2 vel = v * (-dot / 3f);
+            var p = StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, drawColor, 25, scale);
+
+            var p2 = StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.White.AdditiveColor(), 25, scale / 2f);
+            p.SetVelMult(0.8f);
+            p2.SetVelMult(0.8f);
+            p.SetScaleMult(0.95f);
+            p2.SetScaleMult(0.95f);
+        }
         public override void AI()
         {
             float factor = Projectile.TimeleftFactor();

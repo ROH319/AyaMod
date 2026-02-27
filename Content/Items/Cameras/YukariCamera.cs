@@ -616,7 +616,7 @@ namespace AyaMod.Content.Items.Cameras
         public override void AI()
         {
             float chaseFactor = Utils.Remap(Projectile.timeLeft, 180, 240, 0.06f, 0.01f);
-            Projectile.Chase(2000, 22, 0.03f);
+            Projectile.Chase(2000, 22, chaseFactor);
 
             if (Projectile.ai[0] > 0)
             {
