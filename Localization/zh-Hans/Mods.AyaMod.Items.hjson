@@ -1269,7 +1269,7 @@ HallowPhotogHelmet: {
 
 OrichalcumCamera: {
 	DisplayName: 山铜相机
-	Tooltip: 
+	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance@1}

@@ -67,7 +67,7 @@ namespace AyaMod.Content.Items.Cameras
                 Vector2 dir = (MathHelper.TwoPi / spread * i + startRot).ToRotationVector2();
                 float rotdir = 1;
                 if (i % 2 == 0) rotdir *= -1;
-                int type = ModContent.ProjectileType<JungleCameraLeaf>();
+                int type = ProjectileType<JungleCameraLeaf>();
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + dir * 40, dir, type, 
                     (int)(Projectile.damage * dmgmult), Projectile.knockBack / 4, Projectile.owner, 0.15f * rotdir);
             }

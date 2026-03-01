@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using AyaMod.Content.Items.Cameras;
+using AyaMod.Core;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,6 +113,23 @@ namespace AyaMod.Helpers
             Utils.DrawLine(spriteBatch, boundries[1], boundries[1] - diry * lengthY, borderColor, borderColor, borderWidth);
             Utils.DrawLine(spriteBatch, boundries[2], boundries[2] + diry * lengthY, borderColor, borderColor, borderWidth);
             Utils.DrawLine(spriteBatch, boundries[3], boundries[3] - diry * lengthY, borderColor, borderColor, borderWidth);
+        }
+        public static void DrawElectricLine(int interval, Vector2 start, Vector2 end, Color colorStart, Color colorEnd, float width, float maxOffset)
+        {
+            int count = (int)(Vector2.Distance(start, end) / interval);
+            float[] rots = new float[count];
+            for (int i = 0; i < count; i++) rots[i] = MathF.Sin((float)((Main.timeForVisualEffects * 0.75f + i * 4971) * 0.5f)) * MathF.Cos((float)((Main.GameUpdateCount + i * 225212) * 0.3f));
+            for (int i = 0; i < count - 1; i++)
+            {
+                float factor = i / (float)count;
+                float factor2 = (i + 1) / (float)count;
+                Vector2 sp = Vector2.Lerp(start, end, factor);
+                Vector2 ep = Vector2.Lerp(start, end, factor2);
+                float sr = rots[i];
+                float er = rots[i + 1];
+                float radius = Utils.Remap(MathF.Sin((i) * 5), -1f, 1f, 0.4f, 0.6f) * maxOffset;
+                VitricSpark.DrawSegment(Color.Lerp(colorStart, colorEnd, factor), sp, ep, sr, er, radius, 1f, width);
+            }
         }
 
         public static void DrawBloom(int repeat, float offset, Texture2D texture, Vector2 center, Rectangle? source, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effect = SpriteEffects.None)
