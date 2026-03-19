@@ -19,6 +19,7 @@ namespace AyaMod.Core.Globals
     {
         public static LocalizedText StunTimeTooltip { get; private set; }
 
+
         public override void Load()
         {
             StunTimeTooltip = Mod.GetLocalization($"Items.Extras.{nameof(StunTimeTooltip)}");
@@ -27,6 +28,8 @@ namespace AyaMod.Core.Globals
         public float SizeMult = 1f;
 
         public float StunTimeMult = 1f;
+
+        #region Hooks
 
         public delegate bool ItemChecker(Item item);
         public static event ItemChecker OnCanRightClick = (i) => false;
@@ -62,6 +65,8 @@ namespace AyaMod.Core.Globals
             }
             return base.CanConsumeAmmo(weapon, ammo, player);
         }
+
+        #endregion
 
         public override int ChoosePrefix(Item item, UnifiedRandom rand)
         {

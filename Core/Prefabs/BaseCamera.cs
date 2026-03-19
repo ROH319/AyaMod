@@ -8,6 +8,7 @@ using AyaMod.Core.Configs;
 using AyaMod.Core.Globals;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Helpers;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -38,6 +40,8 @@ namespace AyaMod.Core.Prefabs
             Item.noUseGraphic = true;
             Item.useAmmo = ModContent.ItemType<CameraFilm>();
             SetOtherDefaults();
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useTurn = true;
         }
 
         public virtual void SetOtherDefaults() { }
@@ -92,10 +96,10 @@ namespace AyaMod.Core.Prefabs
             if (!player.GetModPlayer<CameraPlayer>().CanAutoSnap(this))
             {
                 if (!player.controlUseItem && player.itemTime > 2)
-                    player.itemTime = 0;
+                    player.itemTime = player.itemAnimation = 0;
                 if (player.itemTime == 2)
                     if (!player.releaseUseItem)
-                        player.itemTime = 3;
+                        player.itemTime = player.itemAnimation = 3;
                 if(player.Aya().itemTimeLastFrame == 4 && player.itemTime == 3)
                 {
                     Helper.PlayPitched("FocusReady", ClientConfig.Instance.ManualSnapVolume, 0.3f, position: player.Center);
@@ -106,7 +110,7 @@ namespace AyaMod.Core.Prefabs
             {
                 player.Aya().NotUsingCameraTimer = 0;
             }
-            //Main.NewText($"{player.itemTime}");
+            Main.NewText($"{player.itemTime} {player.itemAnimation}");
         }
 
         public virtual void ShootCameraProj(Player player, EntitySource_ItemUse_WithAmmo source, int damage, float knockback)
@@ -199,4 +203,35 @@ namespace AyaMod.Core.Prefabs
             }
         }
     }
+
+    //public class CameraUseStyleItem : GlobalItem
+    //{
+
+    //    public static int CameraUseStyle;
+    //    public override void Load()
+    //    {
+    //        CameraUseStyle = ItemLoader.RegisterUseStyle(Mod, "CameraUseStyle");
+    //    }
+    //    public override bool AppliesToEntity(Item entity, bool lateInstantiation)
+    //    {
+    //        return lateInstantiation && entity.useStyle == CameraUseStyle;
+    //    }
+    //    public override void UseStyle(Item item, Player player, Rectangle heldItemFrame)
+    //    {
+    //        //Texture2D tex = TextureAssets.Item[item.type].Value;
+    //        //var origin = tex.Size() / 2;
+    //        //var loc = new Vector2(0, tex.Height);
+    //        //var toloc = (loc - origin) / 2f;
+    //        //Vector2 tomouse = Main.MouseWorld - player.Center;
+    //        //Vector2 itemCenter = player.Center + tomouse.SafeNormalize(Vector2.Zero) * 4;
+    //        //player.itemRotation = tomouse.ToRotation();
+    //        //Main.NewText($"{player.itemRotation}");
+    //        //player.itemLocation.X = itemCenter.X + (float)(toloc.RotatedBy(player.itemRotation).X * player.direction);
+    //        //player.itemLocation.Y = itemCenter.Y + (float)(toloc.RotatedBy(player.itemRotation).Y);
+    //        //Vector2 vec = Main.OffsetsPlayerHeadgear[player.bodyFrame.Y / 56];
+    //        //player.itemLocation += vec;
+    //        //player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, (float)Math.PI * -3f / 4f * (float)player.direction);
+    //        //player.FlipItemLocationAndRotationForGravity();
+    //    }
+    //}
 }

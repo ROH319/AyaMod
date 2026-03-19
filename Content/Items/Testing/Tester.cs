@@ -33,7 +33,7 @@ namespace AyaMod.Content.Items.Testing
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
 
-            int index = 2;
+            int index = 4;
 
             switch (index)
             {
@@ -66,6 +66,24 @@ namespace AyaMod.Content.Items.Testing
 
                     {
                         Projectile p = Projectile.NewProjectileDirect(source, Main.MouseWorld, Vector2.Zero, ProjectileType<TesterProj>(), damage, 0f, player.whoAmI);
+                    }
+                    break;
+                case 3:
+                    {
+                        Projectile p = Projectile.NewProjectileDirect(source, Main.MouseWorld, Vector2.Zero, ProjectileType<SolarShockWave>(), damage, knockback, player.whoAmI);
+                    }
+                    break;
+                case 4:
+                    {
+                        int prtCount = 5;
+                        for (int i = 0; i < prtCount; i++)
+                        {
+                            Vector2 dir = Main.rand.NextVector2Unit();
+                            Vector2 pos = Main.MouseWorld + dir * Main.rand.NextFloat(0f, 50f);
+                            Vector2 vel = dir * Main.rand.NextFloat(0f, 2f);
+                            var p = SparkParticle.Spawn(source, pos, vel, new Color(250, 255, 119), 45);
+                            p.SetVelMult(0.985f);
+                        }
                     }
                     break;
                 default:break;

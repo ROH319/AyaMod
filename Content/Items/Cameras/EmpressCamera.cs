@@ -120,7 +120,7 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.penetrate = -1;
             Projectile.timeLeft = 60;
             Projectile.SetImmune(6);
-            Projectile.Opacity = .7f;
+            //Projectile.Opacity = .7f;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)

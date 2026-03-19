@@ -1,4 +1,5 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Common.Easer;
+using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
@@ -88,7 +89,7 @@ namespace AyaMod.Content.Items.Cameras
 
     public class GoldenFlash : ModProjectile
     {
-        public override string Texture => AssetDirectory.StarTexturePass;
+        public override string Texture => AssetDirectory.Extras + "Spark";
         
         public override void SetDefaults()
         {
@@ -98,30 +99,41 @@ namespace AyaMod.Content.Items.Cameras
             Projectile.ignoreWater = true;
             Projectile.penetrate = -1;
             Projectile.SetImmune(20);
-            Projectile.timeLeft = 20;
+            Projectile.timeLeft = 75;
             
         }
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.localAI[0] = Projectile.timeLeft;
             Projectile.rotation = Main.rand.NextFloat(0, MathHelper.TwoPi);
         }
 
         public override void AI()
         {
-            Projectile.rotation += 0.05f;
-            float factor = Utils.Remap(Projectile.timeLeft, 0, Projectile.localAI[0], 1, 0);
-            Projectile.scale = MathF.Sin(factor * MathHelper.Pi) * 1.2f;
+            float timeFactor = Projectile.TimeleftFactor();
+            float rotSpeed = Utils.Remap(timeFactor, 0.33f, 1f, 0.01f, 0.175f) * Utils.Remap(timeFactor,0f,0.33f,0.5f,1f);
+            Projectile.rotation += rotSpeed;
+            Projectile.scale = Utils.Remap(timeFactor, 0.33f, 1f, 2f, 0.4f) * Utils.Remap(timeFactor,0f,0.33f,1.25f,1f);
+            Projectile.Opacity = EaseManager.Evaluate(Ease.InSine, Utils.Remap(timeFactor, 0f, 0.33f, 0f, 1f), 1f);
+            //Projectile.rotation += 0.05f;
+            //float factor = Utils.Remap(Projectile.timeLeft, 0, Projectile.localAI[0], 1, 0);
+            //Projectile.scale = MathF.Sin(factor * MathHelper.Pi) * 1.2f;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            for(int i = 0; i < 2; i++)
-            {
-                Color color = Color.White.AdditiveColor() * 0.7f;
-                Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation + MathHelper.PiOver2 * i, texture.Size() / 2, new Vector2(Projectile.scale * 0.8f,Projectile.scale * 1.5f), 0, 0);
-            }
+
+            Texture2D ball = Request<Texture2D>(AssetDirectory.Extras + "Ball7_Alpha", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            float scale = 64f / 630f * Projectile.scale;
+            float ballScale = 64f / ball.Width * Projectile.scale * 1.2f;
+            Main.spriteBatch.Draw(ball, Projectile.Center - Main.screenPosition, null, Color.Gold * Projectile.Opacity, Projectile.rotation, ball.Size() / 2, ballScale, 0f, 1f);
+
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, Color.White.AdditiveColor() * Projectile.Opacity, Projectile.rotation, texture.Size() / 2, scale, 0, 0);
+            //for(int i = 0; i < 2; i++)
+            //{
+            //    Color color = new Color(250,255,119).AdditiveColor() * 0.7f;
+            //    Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.rotation + MathHelper.PiOver2 * i, texture.Size() / 2, new Vector2(Projectile.scale * 0.8f,Projectile.scale * 1.5f), 0, 0);
+            //}
             return false;
         }
     }

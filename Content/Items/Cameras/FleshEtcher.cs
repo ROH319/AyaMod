@@ -77,8 +77,9 @@ namespace AyaMod.Content.Items.Cameras
                     Vector2 direction = new Vector2(0, i).RotatedBy(Math.PI / 2 / (dustcount + 1) * j).RotatedBy(startRot);
                     float speed = Main.rand.NextFloat(1, 3);
                     Vector2 vel = direction.RotatedByRandom(0.3f) * speed;
-                    float scale = Main.rand.NextFloat(0.7f, 1.3f);
+                    float scale = Main.rand.NextFloat(0.7f, 1.3f) * 2f;
                     Dust d = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Unit() * 35, 235, vel, Scale: scale);
+                    d.noGravity = true;
                 }
             }
         }

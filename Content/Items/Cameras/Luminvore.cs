@@ -1,5 +1,7 @@
-﻿using AyaMod.Core;
+﻿using AyaMod.Common.Easer;
+using AyaMod.Core;
 using AyaMod.Core.Prefabs;
+using AyaMod.Core.Systems.ParticleSystem;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -51,19 +53,23 @@ namespace AyaMod.Content.Items.Cameras
         public override Color focusCenterColor => base.focusCenterColor;
         public override Color flashColor => new Color(73,57,90) * 0.5f;
 
+        public override void OnHitNPCAlt(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            int count = 6;
+            for(int i = 0; i < count; i++)
+            {
+                Vector2 dir = (MathHelper.TwoPi / count * i).ToRotationVector2().RotateRandom(1f);
+                Vector2 pos = target.Center + dir * Main.rand.NextFloat(20, 60);
+                Vector2 vel = -dir * Main.rand.NextFloat(2, 4);
+                var p = DarkVeilParticle.Spawn(target.GetSource_OnHit(target), pos, vel, new Color(213, 255, 98), 60);
+                p.SetVelMult(0.95f);
+                p.SetScaleMult(0.99f);
+            }
+        }
         public override void OnSnapInSight()
         {
             int dustamount = 36;
-            float speed = 10f;
-            //for (int i = 0; i < dustamount; i++)
-            //{
-            //    float distFactor = Main.rand.NextFloat(0.3f, 1f);
-            //    Vector2 dir = Main.rand.NextFloat(MathHelper.TwoPi).ToRotationVector2();
-            //    Vector2 pos = Projectile.Center + dir * distFactor * 50;
-            //    Vector2 vel = dir * speed * distFactor;
-            //    var d = Dust.NewDustPerfect(pos, DustID.PurpleTorch, vel, 0, Scale: 2f);
-            //    d.noGravity = true;
-            //}
+            float speed = 6f;
             var pos = AyaUtils.GetCameraRect(Projectile.Center, Projectile.rotation, Size * 0.75f, Size * 1.4f * 0.75f);
 
             for (int i = 0; i < dustamount; i++)
@@ -75,7 +81,7 @@ namespace AyaMod.Content.Items.Cameras
                 else if (factor < 0.5f) p = Vector2.Lerp(pos[1], pos[3], Utils.Remap(factor, 0.25f, 0.5f, 0f, 1f));
                 else if (factor < 0.75f) p = Vector2.Lerp(pos[3], pos[2], Utils.Remap(factor, 0.5f, 0.75f, 0f, 1f));
                 else p = Vector2.Lerp(pos[2], pos[0], Utils.Remap(factor, 0.75f, 1f, 0f, 1f));
-                var d = Dust.NewDustPerfect(p, DustID.PurpleTorch, Projectile.DirectionToSafe(p) * speed * distFactor, Scale: 2.5f);
+                var d = Dust.NewDustPerfect(p, DustID.PurpleTorch, Projectile.DirectionToSafe(p) * speed * distFactor, Scale: 3f);
                 d.noGravity = true;
             }
 
@@ -139,7 +145,7 @@ namespace AyaMod.Content.Items.Cameras
         {
 
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Color color = Color.White * 1f * Projectile.Opacity;
+            Color color = new Color(183,255,117) * 1f * Projectile.Opacity;
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, RenderHelper.ReverseSubtract, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
@@ -159,6 +165,49 @@ namespace AyaMod.Content.Items.Cameras
 
 
             return false;
+        }
+    }
+
+    public class DarkVeilParticle : Particle
+    {
+        public override string Texture => AssetDirectory.Extras + "Mist";
+        public static DarkVeilParticle Spawn(IEntitySource source, Vector2 center, Vector2 velocity, Color color, int totalTime)
+        {
+            DarkVeilParticle particle = NewParticle<DarkVeilParticle>(source, center, velocity, color, maxtime: totalTime);
+            return particle;
+        }
+        public override void AI()
+        {
+            float factor = GetTimeFactor();
+            alphaMultiplier = Utils.Remap(EaseManager.Evaluate(Ease.InCubic, factor,1f), 0f, 1f, 1f, 0f);
+
+            
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Texture2D texture = GetTexture().Value;
+
+            float scale = GetScale() * 48f / texture.Width;
+            Color color = this.color * 0.55f * GetAlpha();
+
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, RenderHelper.ReverseSubtract, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
+
+            int drawcount = 10;
+            float radius = GetScale() * 20f;
+            for (int i = 0; i < drawcount; i++)
+            {
+                Vector2 offset = (MathHelper.TwoPi / drawcount * i).ToRotationVector2() * radius;
+
+                Main.spriteBatch.Draw(texture, Center + offset - Main.screenPosition, null, color * (4f / drawcount), Rotation, texture.Size() / 2, scale, 0, 0);
+
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
+            //Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
+
         }
     }
 }

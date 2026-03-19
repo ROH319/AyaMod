@@ -16,7 +16,7 @@ namespace AyaMod.Content.Items.Cameras
             Item.damage = 10;
 
             Item.useTime = Item.useAnimation = 30;
-            Item.useStyle = ItemUseStyleID.Rapier;
+            Item.useStyle = ItemUseStyleID.Shoot;
             Item.shoot = ProjectileType<SilveryCameraProj>();
             Item.shootSpeed = 8;
             Item.knockBack = 8f;
@@ -25,7 +25,15 @@ namespace AyaMod.Content.Items.Cameras
             SetCameraStats(0.03f, 80, 2f);
             SetCaptureStats(1000, 60);
         }
-
+        public override Vector2? HoldoutOrigin()
+        {
+            return new Vector2(19,15);
+        }
+        public override Vector2? HoldoutOffset()
+        {
+            return base.HoldoutOffset();
+        }
+        
         public override void AddRecipes()
         {
             CreateRecipe()

@@ -178,7 +178,7 @@ namespace AyaMod.Content.Items.Cameras
             if (!CanHit) alphaFactor *= 0.5f;
 
             float bloomScale = Projectile.scale * 584f / 512f * scaleFactor;
-            Main.EntitySpriteDraw(bloom, Projectile.Center - Main.screenPosition, null, new Color(255, 104, 104).AdditiveColor() * (0.2f) * (alphaFactor - 0.25f * itemFactor),
+            Main.EntitySpriteDraw(bloom, Projectile.Center - Main.screenPosition, null, new Color(255, 104, 104).AdditiveColor() * (0.25f) * (alphaFactor - 0.25f * itemFactor),
                 Rotation, bloom.Size() / 2, bloomScale, 0, 0);
 
             Texture2D yyy = Request<Texture2D>(AssetDirectory.Extras + "YinYangYu_Alpha", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
@@ -189,7 +189,7 @@ namespace AyaMod.Content.Items.Cameras
 
             RenderHelper.DrawRing(180, Projectile.Center, radius * 0.9f, Color.White * Projectile.Opacity * 0.2f * alphaFactor, Rotation, new Vector2(0.2f, 0.8f) * 0.6f);
 
-            Main.EntitySpriteDraw(yyy,Projectile.Center - Main.screenPosition, null, Color.White * 0.2f * Projectile.Opacity * alphaFactor, 
+            Main.EntitySpriteDraw(yyy,Projectile.Center - Main.screenPosition, null, Color.White * 0.25f * Projectile.Opacity * alphaFactor, 
                 Rotation + MathHelper.PiOver2 + MathHelper.Pi, yyy.Size() / 2, Projectile.scale * 420f / 960f * scaleFactor, 0, 0);
 
             return base.PreDraw(ref lightColor);

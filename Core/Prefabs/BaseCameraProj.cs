@@ -4,6 +4,7 @@ using AyaMod.Core.Configs;
 using AyaMod.Core.Globals;
 using AyaMod.Core.ModPlayers;
 using AyaMod.Helpers;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Enums;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace AyaMod.Core.Prefabs
@@ -58,6 +60,9 @@ namespace AyaMod.Core.Prefabs
         public bool CanSpawnFlash = true;
 
         public bool CanHit = false;
+
+        public Vector2 holdCameraPos;
+        public float holdCameraRot;
 
         public virtual Color outerFrameColor => Color.Red;
         public virtual Color innerFrameColor => Color.White;
@@ -240,6 +245,7 @@ namespace AyaMod.Core.Prefabs
         public virtual void UpdateHeld()
         {
             player.heldProj = Projectile.whoAmI;
+            player.direction = (Projectile.Center.X > player.Center.X).ToDirectionInt();
         }
 
         public sealed override void AI()
@@ -304,8 +310,21 @@ namespace AyaMod.Core.Prefabs
             ComputedVelocity = Projectile.Center - previous;
             Projectile.rotation = mplr.Player.AngleToSafe(Projectile.Center);
 
+            var aplr = player.GetModPlayer<AyaPlayer>();
+            float itemFactor = Utils.Remap(aplr.ItemTimer, 0, 15, 0, 1f);
+            if (aplr.NotItemTimer > 0)
+                itemFactor = Utils.Remap(aplr.NotItemTimer, 0, 15, 1f, 0f);
+            Vector2 basePos = player.MountedCenter + new Vector2(0,4) + new Vector2(0, -9) * itemFactor;
+            float baseAngle = player.direction > 0 ? 0 : MathHelper.Pi;
+            holdCameraRot = baseAngle.AngleLerp(basePos.AngleTo(Projectile.Center), 0.8f);
+            holdCameraPos = basePos + (holdCameraRot.ToRotationVector2()) * 10;
+            
+            var stretch = itemFactor > 0.5f ? Player.CompositeArmStretchAmount.None : Player.CompositeArmStretchAmount.Quarter;
+            float extrarot = player.direction > 0 ? 0 : MathHelper.Pi;
+            player.SetCompositeArmFront(true, stretch, holdCameraRot + extrarot - MathHelper.PiOver4 / 2f * player.direction);
+            player.SetCompositeArmBack(false, Player.CompositeArmStretchAmount.None, 0f);
             CanHit = CheckInSight();
-            //Main.NewText($"{canhit}");
+            //Main.NewText($"{holdCameraRot}");
         }
 
         public void ProjectileRemoval()
@@ -477,6 +496,16 @@ namespace AyaMod.Core.Prefabs
 
         public override bool PreDraw(ref Color lightColor)
         {
+            if(player.HeldCamera())
+            {
+                Color lc = Lighting.GetColor((int)(holdCameraPos.X / 16f), (int)(holdCameraPos.Y / 16f));
+                Texture2D cameraitem = TextureAssets.Item[player.HeldItem.type].Value;
+                var pos = holdCameraPos + new Vector2(0, player.gfxOffY) - Main.screenPosition;
+                var scale = 0.75f;
+                var effect = player.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically;
+                float rot = holdCameraRot;/*0f;*/
+                Main.spriteBatch.Draw(cameraitem, pos, null, lc, rot, cameraitem.Size() / 2, scale, effect, 0);
+            }
             //Utils.DrawLine(Main.spriteBatch, Projectile.Center, player.Center, Color.Red, Color.Red, 1);
             if (lens != null)
             {

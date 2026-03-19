@@ -65,6 +65,35 @@ namespace AyaMod.Content.Items.Cameras
             if (target.HasBuff<ConfusedBuff>())
             {
                 target.ClearBuff<ConfusedBuff>();
+
+
+                float radius = Size * 0.2f;
+                int count = 24;
+                for(int i = 0; i < count; i++)
+                {
+                    float f = (float)i / count;
+                    Vector2 dir = (MathHelper.TwoPi * f).ToRotationVector2();
+                    Vector2 pos = dir * radius + target.Center;
+                    Dust d = Dust.NewDustPerfect(pos, 297, dir * 2f, Scale:3f);
+                    d.noGravity = true;
+                }
+
+                int kcount = 8;
+                float length = 40f;
+                for(int j = -1; j < 2; j += 2)
+                {
+                    for(int i = -1; i < 2; i++)
+                    {
+                        for(int k = 0; k < kcount; k++)
+                        {
+                            float f = (float)k / kcount;
+                            Vector2 dir = (MathHelper.PiOver2 * j + i * MathHelper.PiOver4).ToRotationVector2();
+                            Vector2 pos = dir * (f + 1.3f) * length + target.Center;
+                            Dust d = Dust.NewDustPerfect(pos, 242, dir * 2f, Scale: 3f);
+                            d.noGravity = true;
+                        }
+                    }
+                }
             }
         }
 

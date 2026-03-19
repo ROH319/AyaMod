@@ -174,7 +174,7 @@ namespace AyaMod.Content.Items.Cameras
 
                     float alphaFactor = Utils.Remap(trailFactor,0,1f,1f,0);
                     alphaFactor *= Utils.Remap(timeleftFactor, 0, 1, 1f, 0.6f);
-                    Color color = new Color(43, 178, 255).AdditiveColor() * alphaFactor * 0.07f * Projectile.Opacity;
+                    Color color = new Color(43, 100, 255).AdditiveColor() * alphaFactor * 0.07f * Projectile.Opacity;
                     if (i == 0) color *= 2f;
                     Main.spriteBatch.Draw(texture, pos - Main.screenPosition, null, color, Projectile.rotation, texture.Size() / 2, Projectile.scale * 0.6f, 0, 0);
 
