@@ -110,7 +110,7 @@ namespace AyaMod.Core.Prefabs
             {
                 player.Aya().NotUsingCameraTimer = 0;
             }
-            Main.NewText($"{player.itemTime} {player.itemAnimation}");
+            //Main.NewText($"{player.itemTime} {player.itemAnimation}");
         }
 
         public virtual void ShootCameraProj(Player player, EntitySource_ItemUse_WithAmmo source, int damage, float knockback)

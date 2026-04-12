@@ -17,8 +17,8 @@ namespace AyaMod.Content.Items.Cameras
     {
         public override void SetOtherDefaults()
         {
-            Item.width = 52;
-            Item.height = 48;
+            Item.width = 40;
+            Item.height = 30;
 
             Item.damage = 72;
 

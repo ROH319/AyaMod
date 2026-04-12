@@ -1,8 +1,10 @@
 ﻿using AyaMod.Common.Easer;
+using AyaMod.Content.Particles;
 using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,6 +119,23 @@ namespace AyaMod.Content.Items.Cameras
             //Projectile.rotation += 0.05f;
             //float factor = Utils.Remap(Projectile.timeLeft, 0, Projectile.localAI[0], 1, 0);
             //Projectile.scale = MathF.Sin(factor * MathHelper.Pi) * 1.2f;
+
+            if(Main.GameUpdateCount % 10 == 0)
+            {
+                int prtCount = 4;
+                var source = Projectile.GetSource_FromAI();
+                for (int i = 0; i < prtCount; i++)
+                {
+                    if (Main.rand.NextBool(2)) continue;
+                    Vector2 dir = Projectile.rotation.ToRotationVector2().RotatedBy(MathHelper.PiOver2 * i + MathHelper.PiOver4);
+                    Vector2 pos = Projectile.Center + dir * Main.rand.NextFloat(10,40) * Projectile.scale;
+                    Vector2 vel = /*dir.RotatedBy(MathHelper.PiOver2) * Main.rand.NextFloat(0f, 2f);*/
+                        Vector2.UnitY * Main.rand.NextFloat(-2, 0);
+                    var p = SparkParticle.Spawn(source, pos, vel, new Color(250, 255, 119), 45, 2f);
+                    p.SetVelMult(0.985f);
+                    p.SetScaleMult(0.92f);
+                }
+            }
         }
 
         public override bool PreDraw(ref Color lightColor)

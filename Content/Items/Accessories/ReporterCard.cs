@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.Localization;
 using AyaMod.Core;
 using Terraria.ID;
+using AyaMod.Content.Items.Materials;
 
 namespace AyaMod.Content.Items.Accessories
 {
@@ -31,13 +32,13 @@ namespace AyaMod.Content.Items.Accessories
         {
             CreateRecipe()
                 .AddIngredient(ItemID.BambooBlock, 10)
-                //TODO：枫叶
+                .AddIngredient<MapleLeaf>(10)
                 .AddIngredient(ItemID.ShadowScale, 5)
                 .AddTile(TileID.WorkBenches)
                 .Register();
             CreateRecipe()
                 .AddIngredient(ItemID.BambooBlock, 10)
-                //TODO：枫叶
+                .AddIngredient<MapleLeaf>(10)
                 .AddIngredient(ItemID.TissueSample, 5)
                 .AddTile(TileID.WorkBenches)
                 .Register();

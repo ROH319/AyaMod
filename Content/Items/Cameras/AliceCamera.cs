@@ -3,6 +3,7 @@ using AyaMod.Content.Particles;
 using AyaMod.Core;
 using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
+using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -15,6 +16,7 @@ using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Physics;
 
 namespace AyaMod.Content.Items.Cameras
 {
@@ -326,7 +328,12 @@ namespace AyaMod.Content.Items.Cameras
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
 
-            Color color = AyaUtils.HSL2RGB(Hue, 1f, 0.5f);
+
+            Texture2D ball = Request<Texture2D>(AssetDirectory.Extras + "Ball4_Alpha", AssetRequestMode.ImmediateLoad).Value;
+
+            float ballScale = Projectile.scale / ball.Width * 96f;
+
+            Color color = AyaUtils.HSL2RGB(Hue, 1f, 0.7f) * Projectile.Opacity;
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, RenderHelper.MaxAdditive, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
@@ -338,12 +345,18 @@ namespace AyaMod.Content.Items.Cameras
                 MeteorStar.DrawStar(Projectile, texture, Projectile.oldPos[i] + Projectile.Size / 2, color, factor * 0.4f, 0.6f, 0.8f, 0.3f);
 
             }
-            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, color, 0.8f, 0.6f, 0.8f, 0.3f);
+            Main.spriteBatch.Draw(ball, Projectile.Center - Main.screenPosition, null, color * 0.22f, 0, ball.Size() / 2, ballScale * 0.75f, 0, 0);
+
+            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, color, 0.8f, 0.65f, 0.8f, 0.3f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone);
 
-            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, Color.White, 0.8f, 0.6f, 0.8f, 0.23f);
+            MeteorStar.DrawStar(Projectile, texture, Projectile.Center, Color.White, 0.8f, 0.5f, 0.6f, 0.23f);
+
+            Main.spriteBatch.Draw(ball, Projectile.Center - Main.screenPosition, null, color * 0.125f, 0, ball.Size() / 2, ballScale, 0, 0);
+            //Main.spriteBatch.Draw(ball, Projectile.Center - Main.screenPosition, null, color * 0.15f, 0, ball.Size() / 2, ballScale * 0.5f, 0, 0);
+            Main.spriteBatch.Draw(ball, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity * 0.45f, 0, ball.Size() / 2, ballScale * 0.45f, 0, 0);
 
 
             return false;

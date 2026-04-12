@@ -45,6 +45,7 @@ namespace AyaMod.Core.Globals
                     break;
                 case NPCID.WallofFlesh:
                     npcLoot.Add(ItemDropRule.Common(ItemType<YukariCamera>(), 4));
+                    npcLoot.Add(ItemDropRule.Common(ItemType<ReporterEmblem>(),4));
                     break;
                 case NPCID.BloodNautilus:
                     npcLoot.Add(ItemDropRule.Common(ItemType<ScarletCamera>(), 1));
@@ -96,6 +97,13 @@ namespace AyaMod.Core.Globals
                 case NPCID.BloodZombie:
                     npcLoot.Add(new CommonDrop(ItemType<BloodyFilm>(), 10, 300, 500, 1));
                     npcLoot.Add(new CommonDrop(ItemType<BloodthirstyHammer>(), 10, 1, 1, 1));
+                    break;
+
+                case NPCID.BigMimicCrimson:
+                    npcLoot.Add(new CommonDrop(ItemType<ManicPupil>(), 10, 1, 1, 3));
+                    break;
+                case NPCID.BigMimicCorruption:
+                    npcLoot.Add(new CommonDrop(ItemType<TranquilPupil>(), 10, 1, 1, 3));
                     break;
                 case NPCID.LunarTowerSolar:
                 case NPCID.LunarTowerVortex:

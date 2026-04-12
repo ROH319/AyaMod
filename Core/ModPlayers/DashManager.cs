@@ -84,7 +84,7 @@ namespace AyaMod.Core.ModPlayers
                     GaleGeta.WhileDashing0(player, modPlayer.DashDir);
                     break;
             }
-            Main.NewText($"{modPlayer.DashDelay} {modPlayer.DashTimer}");
+            //Main.NewText($"{modPlayer.DashDelay} {modPlayer.DashTimer}");
         }
 
         public void UpdateDash()

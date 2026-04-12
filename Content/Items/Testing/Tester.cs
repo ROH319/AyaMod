@@ -81,9 +81,15 @@ namespace AyaMod.Content.Items.Testing
                             Vector2 dir = Main.rand.NextVector2Unit();
                             Vector2 pos = Main.MouseWorld + dir * Main.rand.NextFloat(0f, 50f);
                             Vector2 vel = dir * Main.rand.NextFloat(0f, 2f);
-                            var p = SparkParticle.Spawn(source, pos, vel, new Color(250, 255, 119), 45);
+                            var p = SparkParticle.Spawn(source, pos, vel, new Color(250, 255, 119), 45,2f);
                             p.SetVelMult(0.985f);
+                            p.SetScaleMult(0.92f);
                         }
+                    }
+                    break;
+                case 5:
+                    {
+
                     }
                     break;
                 default:break;

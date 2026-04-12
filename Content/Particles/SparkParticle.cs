@@ -27,8 +27,10 @@ namespace AyaMod.Content.Particles
         {
             float factor = GetTimeFactor();
 
-            scaleMultiplier = (MathF.Sin(Main.GameUpdateCount * 0.1f + whoamI * 17101) * 0.25f + 1f) * EaseManager.Evaluate(Ease.OutQuart, 1f -factor, 1f);
+            //scaleMultiplier = (MathF.Sin(Main.GameUpdateCount * 0.1f + whoamI * 17101) * 0.25f + 1f) * EaseManager.Evaluate(Ease.OutQuart, 1f -factor, 1f);
             alphaMultiplier = Utils.Remap(factor, 0.75f,1f, 1f, 0f) * Utils.Remap(factor,0f,0.25f,0f,1f);
+
+            if (Scale < 0.25f) active = false;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

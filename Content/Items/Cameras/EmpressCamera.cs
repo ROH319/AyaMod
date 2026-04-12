@@ -5,6 +5,7 @@ using AyaMod.Core.Prefabs;
 using AyaMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
+using Mono.Cecil;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
@@ -26,8 +27,8 @@ namespace AyaMod.Content.Items.Cameras
         public override void SetOtherDefaults()
         {
 
-            Item.width = 52;
-            Item.height = 48;
+            Item.width = 42;
+            Item.height = 46;
 
             Item.damage = 200;
 
@@ -163,15 +164,23 @@ namespace AyaMod.Content.Items.Cameras
 
             {
                 int pamount = 1;
-                Color drawColor = (Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.6f) * Projectile.Opacity).AdditiveColor();
+                if (Timer < 30 && Main.rand.NextBool(5)) pamount++;
+                if (Timer > 40 && Main.rand.NextBool(6)) pamount--;
+                if (Timer > 50 && Main.rand.NextBool(6)) pamount--;
+                Color drawColor = (Main.hslToRgb((Hue + 0.5f) % 1f, 1f, 0.75f) * Projectile.Opacity).AdditiveColor();
                 Vector2 vel = (Rot - MathHelper.PiOver2).ToRotationVector2() * Main.rand.NextFloat(0f, 2.5f);
                 for (int i = 0; i < pamount; i++)
                 {
                     float f = Main.rand.NextFloat(1f);
                     Vector2 pos = Projectile.Center + Rot.ToRotationVector2() * 2400f * f;
-                    StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, drawColor with { A = 127 }, 25, 0.5f);
+                    //vel = /*dir.RotatedBy(MathHelper.PiOver2) * Main.rand.NextFloat(0f, 2f);*/
+                    //    Vector2.UnitY * Main.rand.NextFloat(-2, 0);
+                    var p = SparkParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, drawColor, 45, 2f);
+                    p.SetVelMult(0.985f);
+                    p.SetScaleMult(0.92f);
+                    //StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, drawColor with { A = 127 }, 25, 0.5f);
 
-                    StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.White.AdditiveColor(), 25, 0.25f);
+                    //StarSparkParticle.Spawn(Projectile.GetSource_FromAI(), pos, vel, Color.White.AdditiveColor(), 25, 0.25f);
 
                 }
             }

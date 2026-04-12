@@ -1264,14 +1264,14 @@ CobaltCamera: {
 
 HallowPhotogHelmet: {
 	DisplayName: 神圣摄影头盔
-	Tooltip: ""
-}
-
-OrichalcumCamera: {
-	DisplayName: 山铜相机
 	Tooltip:
 		'''
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreaseReporterDamage}
 		{$Mods.AyaMod.Items.CommonItemTooltip.PercentIncreasedReporterCritChance@1}
 		'''
+}
+
+OrichalcumCamera: {
+	DisplayName: 山铜相机
+	Tooltip: ""
 }
