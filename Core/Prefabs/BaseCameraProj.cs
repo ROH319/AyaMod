@@ -130,6 +130,11 @@ namespace AyaMod.Core.Prefabs
             return false;
         }
 
+        public override bool? CanHitNPC(NPC target)
+        {
+            return player.GetModPlayer<CameraPlayer>().CanSnapThroughWall(this) || Collision.CanHit(player.Center, 1, 1, target.TopLeft, target.width, target.height);
+        }
+
         public override bool PreAI()
         {
             if (player.HeldItem.ModItem is not BaseCamera) return false;
@@ -260,7 +265,7 @@ namespace AyaMod.Core.Prefabs
             CheckHoverProjectile();
 
 
-            DealDamageThisFrame = CheckCanDamage() && CanHit;
+            DealDamageThisFrame = CheckCanDamage();
 
             if (DealDamageThisFrame)
             {
@@ -287,6 +292,7 @@ namespace AyaMod.Core.Prefabs
                 {
                     if (DealDamageThisFrame)
                     {
+                        //Main.NewText($"{Main.GameUpdateCount} ???");
                         mplr.OnSnap();
                         Snap();
                     }

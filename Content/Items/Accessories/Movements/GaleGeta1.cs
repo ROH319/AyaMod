@@ -20,6 +20,7 @@ using Terraria;
 using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using static AyaMod.Core.ModPlayers.AyaPlayer;
 
@@ -29,7 +30,6 @@ namespace AyaMod.Content.Items.Accessories.Movements
     public class GaleGeta1 : BaseAccessories, IPlaceholderItem
     {
         public override string Texture => AssetDirectory.Accessories + "Movements/" + Name;
-
         public override void SetDefaults()
         {
             Item.DefaultToAccessory();
@@ -76,7 +76,8 @@ namespace AyaMod.Content.Items.Accessories.Movements
         {
             var index = tooltips.FindIndex(x => x.Text.Contains("<keybind>"));
             var tooltip = tooltips[index];
-            tooltip.Text = tooltip.Text.Replace("<keybind>", AyaKeybindLoader.UltraMove.GetAssignedKeys()[0]);
+            var keybingText = AyaKeybindLoader.UltraMove.GetAssignedKeys().Count > 0 ? AyaKeybindLoader.UltraMove.GetAssignedKeys()[0] : "未绑定";
+            tooltip.Text = tooltip.Text.Replace("<keybind>", keybingText);
         }
 
         public static void AddDash(Player player)

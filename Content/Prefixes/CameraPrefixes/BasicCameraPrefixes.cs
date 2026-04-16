@@ -102,20 +102,6 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes
             StunTooltip = Mod.GetLocalization($"{LocalizationCategory}.{nameof(StunTooltip)}");
             PrefixFocusSpeed = Mod.GetLocalization($"{LocalizationCategory}.{nameof(PrefixFocusSpeed)}");
         }
-        public override void Load()
-        {
-            AyaGlobalProjectile.OnProjectileSpawn += OnProjectileSpawnHook;
-            AyaGlobalProjectile.ModifyProjectileHitNPC += GlobalModifyHitNPCHook;
-            AyaGlobalProjectile.OnProjectileHitNPC += OnProjectileHitNPCHook;
-            AyaGlobalProjectile.OnProjectilePostAI += OnProjectilePostAIHook;
-            GlobalCamera.PreAIHook += PreAIHook;
-            GlobalCamera.PostAIHook += PostAIHook;
-            GlobalCamera.ModifyHitNPCHook += ModifyHitNPCHook;
-            GlobalCamera.OnHitNPCHook += OnHitNPCHook;
-            GlobalCamera.SnapHook += SnapHook;
-            GlobalCamera.SnapInSightHook += SnapInSightHook;
-            AyaPlayer.PostUpdateMiscEffectsHook += PostUpdateMiscEffectsHook;
-        }
 
         public static void OnProjectileSpawnHook(Projectile projectile, IEntitySource source)
         {
@@ -252,5 +238,23 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes
         public virtual void Camera_OnSnap(BaseCameraProj projectile) { }
         public virtual void Camera_OnSnapInSight(BaseCameraProj projectile) { }
         public virtual void Player_PostUpdateMiscEffects(Player player) { }
+    }
+    
+    public class CameraPrefixSystem : ModSystem
+    {
+        public override void Load()
+        {
+            AyaGlobalProjectile.OnProjectileSpawn += BaseCameraPrefix.OnProjectileSpawnHook;
+            AyaGlobalProjectile.ModifyProjectileHitNPC += BaseCameraPrefix.GlobalModifyHitNPCHook;
+            AyaGlobalProjectile.OnProjectileHitNPC += BaseCameraPrefix.OnProjectileHitNPCHook;
+            AyaGlobalProjectile.OnProjectilePostAI += BaseCameraPrefix.OnProjectilePostAIHook;
+            GlobalCamera.PreAIHook += BaseCameraPrefix.PreAIHook;
+            GlobalCamera.PostAIHook += BaseCameraPrefix.PostAIHook;
+            GlobalCamera.ModifyHitNPCHook += BaseCameraPrefix.ModifyHitNPCHook;
+            GlobalCamera.OnHitNPCHook += BaseCameraPrefix.OnHitNPCHook;
+            GlobalCamera.SnapHook += BaseCameraPrefix.SnapHook;
+            GlobalCamera.SnapInSightHook += BaseCameraPrefix.SnapInSightHook;
+            AyaPlayer.PostUpdateMiscEffectsHook += BaseCameraPrefix.PostUpdateMiscEffectsHook;
+        }
     }
 }

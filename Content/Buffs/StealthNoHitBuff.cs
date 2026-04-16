@@ -45,7 +45,7 @@ namespace AyaMod.Content.Buffs
         }
         public static void StealthHurt(Player player, ref Player.HurtInfo hurtInfo)
         {
-            player.ClearBuff(ModContent.BuffType<StealthNoHitBuff>());
+            player.ClearBuff(BuffType<StealthNoHitBuff>());
         }
         public static void StealthDraw(Player player, ref PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {

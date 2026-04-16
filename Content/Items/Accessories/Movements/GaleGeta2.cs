@@ -65,6 +65,13 @@ namespace AyaMod.Content.Items.Accessories.Movements
                 .Register();
         }
 
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            var index = tooltips.FindIndex(x => x.Text.Contains("<keybind>"));
+            var tooltip = tooltips[index];
+            var keybingText = AyaKeybindLoader.UltraMove.GetAssignedKeys().Count > 0 ? AyaKeybindLoader.UltraMove.GetAssignedKeys()[0] : "未绑定";
+            tooltip.Text = tooltip.Text.Replace("<keybind>", keybingText);
+        }
         public static void AddDash(Player player)
         {
             var ayaPlayer = player.Aya();
