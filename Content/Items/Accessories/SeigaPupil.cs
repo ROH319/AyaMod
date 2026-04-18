@@ -22,7 +22,7 @@ namespace AyaMod.Content.Items.Accessories
         public static int ChaseSpeedBonus = 25;
         public override void Load()
         {
-            CameraPlayer.CheckSnapThrouthWallEvent += SeigaSight;
+            //CameraPlayer.CheckSnapThrouthWallEvent += SeigaSight;
         }
         public override void SetDefaults()
         {
@@ -30,17 +30,17 @@ namespace AyaMod.Content.Items.Accessories
             Item.SetShopValues(ItemRarityColor.LightPurple6, Item.sellPrice(gold: 4));
         }
 
-        public static bool SeigaSight(Player player, BaseCameraProj cameraProj)
+        public static bool SeigaSight(Player player, BaseCameraProj cameraProj, Vector2 targetPos)
         {
             if (player.HasEffect<SeigaPupil>() &&
-                player.Distance(cameraProj.Projectile.Center) < SpiritSnapDistance) return true;
+                player.Distance(targetPos) < SpiritSnapDistance) return true;
             return false;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.Camera().ChaseSpeedModifier += ChaseSpeedBonus / 100f;
-            player.AddEffect<SeigaPupil>();
+            player.Camera().SnapThroughWallRange += SpiritSnapDistance;
         }
         public override void AddRecipes()
         {

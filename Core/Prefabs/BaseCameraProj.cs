@@ -72,7 +72,8 @@ namespace AyaMod.Core.Prefabs
         public sealed override void SetDefaults()
         {
             Projectile.penetrate = -1;
-            Projectile.tileCollide = false;
+            Projectile.width = Projectile.height = 1;
+            //Projectile.tileCollide = true;
             Projectile.friendly = true;
 
             Projectile.netUpdate = true;
@@ -87,7 +88,7 @@ namespace AyaMod.Core.Prefabs
         }
 
         public virtual void SetOtherDefault() { }
-
+        public override bool OnTileCollide(Vector2 oldVelocity) => false;
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             if (lens != null)
@@ -130,10 +131,10 @@ namespace AyaMod.Core.Prefabs
             return false;
         }
 
-        public override bool? CanHitNPC(NPC target)
-        {
-            return player.GetModPlayer<CameraPlayer>().CanSnapThroughWall(this) || Collision.CanHit(player.Center, 1, 1, target.TopLeft, target.width, target.height);
-        }
+        //public override bool? CanHitNPC(NPC target)
+        //{
+        //    return player.GetModPlayer<CameraPlayer>().CanSnapThroughWall(this) || Collision.CanHit(player.Center, 1, 1, target.TopLeft, target.width, target.height);
+        //}
 
         public override bool PreAI()
         {
@@ -174,12 +175,18 @@ namespace AyaMod.Core.Prefabs
 
         }
 
-        public bool CheckInSight()
+        public bool CheckInSight(Vector2 pos, out float distance)
         {
-            bool colli = AyaUtils.CheckLineCollisionTile(Projectile.Center, player.Center, 8);
+            bool colli = AyaUtils.CheckCollisionHybrid(player.Center, pos, out distance);
+            //bool colli = AyaUtils.CheckCollisionDistance(player.Center, Projectile.Center, out distance);
+            if (player.GetModPlayer<CameraPlayer>().CanSnapThroughWall(this, pos))
+            {
+                distance = player.Center.Distance(pos);
+                return true;
+            }
             //var colli = Collision.CanHit(Projectile.Center, 1, 1, player.Center, 1, 1);
             //Main.NewText($"{colli}");
-            return player.GetModPlayer<CameraPlayer>().CanSnapThroughWall(this) || colli;
+            return !colli;
         }
 
         public bool CheckCanDamage()
@@ -260,6 +267,7 @@ namespace AyaMod.Core.Prefabs
 
 
             MoveMent(mplr);
+            HandleHoldCamera();
 
             CheckHoverNPC();
             CheckHoverProjectile();
@@ -312,25 +320,42 @@ namespace AyaMod.Core.Prefabs
             float slowedchase = mplr.ChaseSpeedModifier.ApplyTo(CameraStats.ChaseFactor);
             //if (mplr.Player.itemTime != 0) slowedchase *= CameraStats.SlowFactor;
             Vector2 previous = Projectile.Center;
-            Projectile.Center = Vector2.Lerp(Projectile.Center, mplr.MouseWorld, slowedchase);
+            Vector2 targetPos = Vector2.Lerp(Projectile.Center, mplr.MouseWorld, slowedchase);
+
+            CanHit = CheckInSight(targetPos, out float distance);
+
+            if (!CanHit)
+            {
+                if (distance < mplr.SnapThroughWallRange)
+                    distance = MathF.Min(mplr.SnapThroughWallRange, Vector2.Distance(player.Center, targetPos));
+                Projectile.Center = player.Center + player.Center.DirectionToSafe(targetPos) * distance;
+                CanHit = true;
+                //float centerToPlr = Projectile.Center.Distance(player.Center);
+                //float factor = Utils.Remap(centerToPlr - distance, 0, 800, 0.2f, 0.4f);
+                //Projectile.Center = Vector2.Lerp(Projectile.Center, player.Center + player.Center.DirectionToSafe(Projectile.Center) * (distance - 16), 0.8f);
+            }
+            else
+                Projectile.Center = targetPos;
             ComputedVelocity = Projectile.Center - previous;
             Projectile.rotation = mplr.Player.AngleToSafe(Projectile.Center);
 
+            //Main.NewText($"{holdCameraRot}");
+        }
+        public virtual void HandleHoldCamera()
+        {
             var aplr = player.GetModPlayer<AyaPlayer>();
             float itemFactor = Utils.Remap(aplr.ItemTimer, 0, 15, 0, 1f);
             if (aplr.NotItemTimer > 0)
                 itemFactor = Utils.Remap(aplr.NotItemTimer, 0, 15, 1f, 0f);
-            Vector2 basePos = player.MountedCenter + new Vector2(0,4) + new Vector2(0, -9) * itemFactor;
+            Vector2 basePos = player.MountedCenter + new Vector2(0, 4) + new Vector2(0, -9) * itemFactor;
             float baseAngle = player.direction > 0 ? 0 : MathHelper.Pi;
             holdCameraRot = baseAngle.AngleLerp(basePos.AngleTo(Projectile.Center), 0.8f);
             holdCameraPos = basePos + (holdCameraRot.ToRotationVector2()) * 10;
-            
+
             var stretch = itemFactor > 0.5f ? Player.CompositeArmStretchAmount.None : Player.CompositeArmStretchAmount.Quarter;
             float extrarot = player.direction > 0 ? 0 : MathHelper.Pi;
             player.SetCompositeArmFront(true, stretch, holdCameraRot + extrarot - MathHelper.PiOver4 / 2f * player.direction);
             player.SetCompositeArmBack(false, Player.CompositeArmStretchAmount.None, 0f);
-            CanHit = CheckInSight();
-            //Main.NewText($"{holdCameraRot}");
         }
 
         public void ProjectileRemoval()
@@ -427,7 +452,7 @@ namespace AyaMod.Core.Prefabs
 
             CombinedOnSnap();
 
-            bool canhit = CheckInSight();
+            bool canhit = CheckInSight(Projectile.Center, out _);
 
             //Main.NewText($"CanHitLine:{canhit}");
             if (canhit)

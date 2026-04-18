@@ -23,6 +23,7 @@ namespace AyaMod.Core.ModPlayers
     {
         public delegate bool PlayerCameraChecker(Player player, BaseCamera camera);
         public delegate bool PlayerCameraProjChecker(Player player, BaseCameraProj proj);
+        public delegate bool CameraCollisionChecker(Player player, BaseCameraProj proj, Vector2 targetPos);
 
         public Vector2 CameraPosition = Vector2.Zero;
         public Vector2 MouseWorld;
@@ -40,6 +41,8 @@ namespace AyaMod.Core.ModPlayers
         public StatModifier ManualSnapDamageModifier = StatModifier.Default;
 
         public StatModifier FilmSlotModifier = StatModifier.Default;
+
+        public float SnapThroughWallRange = 0f;
 
         public float SingleTargetMultiplier = 0f;
 
@@ -126,6 +129,8 @@ namespace AyaMod.Core.ModPlayers
 
             FilmSlotModifier = StatModifier.Default;
 
+            SnapThroughWallRange = 0f;
+
             SingleTargetMultiplier = 0f;
 
             Developing = false;
@@ -190,8 +195,8 @@ namespace AyaMod.Core.ModPlayers
                 return CurrentLens;
         }
 
-        public static event PlayerCameraProjChecker CheckSnapThrouthWallEvent;
-        public bool CanSnapThroughWall(BaseCameraProj projectile)
+        public static event CameraCollisionChecker CheckSnapThrouthWallEvent;
+        public bool CanSnapThroughWall(BaseCameraProj projectile, Vector2 targetPos)
         {
             bool result = false;
 
@@ -199,9 +204,9 @@ namespace AyaMod.Core.ModPlayers
 
             if (CheckSnapThrouthWallEvent is null) return result;
 
-            foreach(PlayerCameraProjChecker del in CheckSnapThrouthWallEvent.GetInvocationList())
+            foreach(CameraCollisionChecker del in CheckSnapThrouthWallEvent.GetInvocationList())
             {
-                result |= del.Invoke(Player, projectile);
+                result |= del.Invoke(Player, projectile, targetPos);
             }
             return result;
         }

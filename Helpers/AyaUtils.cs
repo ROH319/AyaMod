@@ -171,6 +171,99 @@ namespace AyaMod.Helpers
             }
             return distance;
         }
+        /// <summary>
+        /// 返回从start到end的直线段上，是否有碰撞到实心物块
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="distance"></param>
+        /// <param name="interval"></param>
+        /// <returns>为true表示有碰撞</returns>
+        public static bool CheckCollisionDistance(Vector2 start, Vector2 end, out float distance, int interval = 8)
+        {
+            distance = interval;
+            bool collide = false;
+            Vector2 dir = start.DirectionToSafe(end);
+            float maxDistance = Vector2.Distance(start, end);
+            while (distance < maxDistance)
+            {
+                var checkPos = start + dir * distance;
+                if (PointInTile(checkPos))
+                {
+                    collide = true; break;
+                }
+                distance += interval;
+            }
+            return collide;
+        }
+        /// <summary>
+        /// 先粗步进扫描，发现碰撞后在局部使用二分法精确定位（精度2像素）
+        /// </summary>
+        public static bool CheckCollisionHybrid(Vector2 start, Vector2 end, out float maxReachableDistance, int coarseStep = 8)
+        {
+            float totalLength = Vector2.Distance(start, end);
+            maxReachableDistance = totalLength;
+            Vector2 dir = start.DirectionToSafe(end);
+
+            // 1. 安全检查：起点本身是否卡死
+            if (PointInTile(start))
+            {
+                maxReachableDistance = 0f;
+                return true;
+            }
+
+            float distance = 0f;
+            bool hasCollision = false;
+
+            // 2. 第一阶段：粗粒度步进扫描
+            // 这里的目的只是为了找到“从哪一段开始出事了”
+            while (distance < totalLength)
+            {
+                distance += coarseStep;
+                // 防止超界
+                if (distance > totalLength) distance = totalLength;
+
+                Vector2 checkPos = start + dir * distance;
+
+                if (PointInTile(checkPos))
+                {
+                    hasCollision = true;
+                    break; // 发现碰撞！跳出循环，准备进入第二阶段
+                }
+            }
+
+            // 如果粗扫没发现碰撞，直接通关
+            if (!hasCollision)
+            {
+                return false;
+            }
+
+            // 3. 第二阶段：在碰撞区间内进行二分法精确查找
+            // 此时我们知道：
+            // safeDist = distance - coarseStep (安全)
+            // hitDist = distance (碰撞)
+            float low = distance - coarseStep; // 上一个点肯定是安全的
+            float high = distance;              // 当前点是碰撞的
+
+            // 锁定精度到 2 像素
+            while (high - low > 2f)
+            {
+                float mid = (low + high) / 2f;
+                Vector2 checkPos = start + dir * mid;
+
+                if (PointInTile(checkPos))
+                {
+                    high = mid; // 中点有碰撞，边界在左边
+                }
+                else
+                {
+                    low = mid;  // 中点安全，边界在右边
+                }
+            }
+
+            maxReachableDistance = low;
+            return true;
+        }
 
         public static bool PointInTile(Vector2 point)
         {

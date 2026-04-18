@@ -18,7 +18,7 @@ namespace AyaMod.Content.Items.Accessories
         public static int SpiritSnapDistance = 20 * 16;
         public override void Load()
         {
-            CameraPlayer.CheckSnapThrouthWallEvent += SpiritDele;
+            //CameraPlayer.CheckSnapThrouthWallEvent += SpiritDele;
         }
         public override void SetDefaults()
         {
@@ -26,18 +26,26 @@ namespace AyaMod.Content.Items.Accessories
             Item.SetShopValues(ItemRarityColor.Blue1, Item.sellPrice(gold: 1));
         }
 
-        public static bool SpiritDele(Player player, BaseCameraProj cameraProj)
+
+        public static bool SpiritDele(Player player, BaseCameraProj cameraProj, Vector2 targetPos)
         {
-            if (player.HasEffect<SpiritHeart>() && 
-                player.velocity.X == 0 && 
-                player.velocity.Y == 0 && 
-                player.Distance(cameraProj.Projectile.Center) < SpiritSnapDistance) return true;
+            if (player.HasEffect<SpiritHeart>() &&
+                player.velocity.X == 0 &&
+                player.velocity.Y == 0 &&
+                player.Distance(targetPos) < SpiritSnapDistance)
+            {
+                Main.NewText($"{player.Distance(targetPos)} {SpiritSnapDistance}");
+                return true;
+            }
             return false;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.AddEffect<SpiritHeart>();
+            //player.AddEffect<SpiritHeart>();
+            if (player.velocity.X == 0 &&
+                player.velocity.Y == 0)
+                player.Camera().SnapThroughWallRange += SpiritSnapDistance;
         }
     }
 }

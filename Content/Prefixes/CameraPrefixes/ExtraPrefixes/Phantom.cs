@@ -32,6 +32,6 @@ namespace AyaMod.Content.Prefixes.CameraPrefixes.ExtraPrefixes
             return null;
         }
 
-        public static bool PhantomSnap(Player player, BaseCameraProj proj) => player.HeldItem.prefix == PrefixType<Phantom>();
+        public static bool PhantomSnap(Player player, BaseCameraProj proj, Vector2 targetPos) => player.HeldItem.prefix == PrefixType<Phantom>();
     }
 }
